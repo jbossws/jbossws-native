@@ -40,7 +40,8 @@ public class Constants
 
    public static final String WSSE_PREFIX = "wsse";
 
-   public static final String WSSE_NS = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
+   public static final String WSSE_NS = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0";
+                                         
 
    public static final String WSU_PREFIX = "wsu";
 
