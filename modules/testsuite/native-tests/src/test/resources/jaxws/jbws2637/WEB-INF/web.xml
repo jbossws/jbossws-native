@@ -5,7 +5,7 @@
                              http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
   <servlet>
     <servlet-name>Endpoint</servlet-name>
-    <servlet-class>org.jboss.test.ws.jaxws.jbws2637.Endpoint</servlet-class>
+    <servlet-class>org.jboss.test.ws.jaxws.jbws2637.EndpointImpl</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Endpoint</servlet-name>
