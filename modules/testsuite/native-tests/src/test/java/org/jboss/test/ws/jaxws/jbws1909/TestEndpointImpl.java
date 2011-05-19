@@ -23,9 +23,7 @@ package org.jboss.test.ws.jaxws.jbws1909;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 
-import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -35,10 +33,7 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.handler.MessageContext;
 
-import org.jboss.logging.Logger;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.classloading.ClassLoaderProvider;
@@ -54,21 +49,9 @@ import org.w3c.dom.Element;
 @Stateless
 public class TestEndpointImpl implements TestEndpoint
 {
-   // provide logging
-   private final static Logger log = Logger.getLogger(TestEndpointImpl.class);
-
-   @Resource
-   WebServiceContext context;
-
    @WebMethod
    public String echo(String input)
    {
-      MessageContext msgContext = context.getMessageContext();
-      for (String key : msgContext.keySet())
-      {
-         log.info(key + "=" + msgContext.get(key));
-      }
-
       ClassLoader cl = ClassLoaderProvider.getDefaultProvider().getServerIntegrationClassLoader();
       SPIProvider spiProvider = SPIProviderResolver.getInstance(cl).getProvider();
       EndpointRegistry registry = spiProvider.getSPI(EndpointRegistryFactory.class, cl).getEndpointRegistry();
