@@ -6,3 +6,7 @@ org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*
 
 # [JBWS-2217] Fix BPEL jaxrpc samples
 org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*
+
+# [JBPAPP-6593]:java.io.IOException: stream is closed issue in jboss-remoting-2.5.4.SP1
+org/jboss/test/ws/jaxws/jbws1807/JBWS1807TestCase.*
+org/jboss/test/ws/jaxws/samples/httpbinding/*TestCase.*
