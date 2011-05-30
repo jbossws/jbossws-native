@@ -783,27 +783,6 @@
                  <!-- AS7 integration exclusions -->
                  <!-- ////////////////////////// -->
 
-                 <!-- AS7 integration regressions -->
-                 <exclude>org/jboss/test/ws/jaxws/samples/jaxbintros/JAXBIntroTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws771/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1422/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1446/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1505/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1566/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1850/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1872/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1909/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2000/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2014/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2166/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2218/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2221/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2257/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2449/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2565/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2701/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2934/**</exclude>
-
                  <!-- EJB3 client API dependencies -->
                  <exclude>org/jboss/test/ws/jaxws/jbws944/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
