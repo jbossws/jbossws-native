@@ -791,24 +791,19 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/securityDomain/**</exclude>
 
-                 <!-- EJB3 Ann driven deployments -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude> <!-- TODO: implement EJB security integration -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude> <!-- F Failed to determine resource binding value for BindingDescription -->
+                 <!-- TODO: implement EJB security integration -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude>
 
-                 <!-- EAR deployment is freezing -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1556/**</exclude>
+                 <!-- TODO: Unexpected element 'class-loading' encountered -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude>
+
+                 <!-- TODO: Classpath visibility issues - investigate -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1822/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude>
 
-                 <!-- EJB3 support for @Remote views not yet implemented -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1845/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1283/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1694/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1799/**</exclude>
-
-                 <!-- EJB3 DD driven deployments -->
+                 <!-- TODO: EJB3 DD driven deployments -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1309/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1841/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2011/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2074/**</exclude>
