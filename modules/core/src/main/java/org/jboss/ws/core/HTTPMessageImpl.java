@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.core;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -32,8 +34,10 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.util.NotImplementedException;
+import org.jboss.ws.WSException;
 import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
+import org.jboss.wsf.common.IOUtils;
 
 /**
  * A generic HTTP message 
@@ -49,7 +53,22 @@ public class HTTPMessageImpl implements HTTPMessageAbstraction
    public HTTPMessageImpl(MimeHeaders mimeHeaders, InputStream inputStream)
    {
       this.mimeHeaders = mimeHeaders;
-      this.xmlFragment = new XMLFragment(new StreamSource(inputStream));
+      this.xmlFragment = new XMLFragment(new StreamSource(cache(inputStream)));
+   }
+
+   private static InputStream cache(final InputStream is)
+   {
+      try
+      {
+         ByteArrayOutputStream baos = new ByteArrayOutputStream(1024);
+         IOUtils.copyStream(baos, is);
+         byte[] bytes = baos.toByteArray();
+         return new ByteArrayInputStream(bytes);
+      }
+      catch (IOException e)
+      {
+         throw new WSException(e);
+      }
    }
 
    public HTTPMessageImpl(Source source)
