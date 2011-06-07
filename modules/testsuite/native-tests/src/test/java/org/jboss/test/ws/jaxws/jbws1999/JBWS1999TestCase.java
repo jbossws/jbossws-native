@@ -56,7 +56,7 @@ public class JBWS1999TestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS1999TestCase.class, "jaxws-jbws1999.war");
+      return new JBossWSTestSetup(JBWS1999TestCase.class, "jaxws-jbws1999.war", !isTargetJBoss6());
    }
 
    public void testNoSecurity() throws Exception

@@ -59,7 +59,7 @@ public class SimpleDispatchTestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(SimpleDispatchTestCase.class, "jaxws-samples-wssecurity-username.war jaxws-samples-wssecurity-encrypt.war");
+      return new JBossWSTestSetup(SimpleDispatchTestCase.class, "jaxws-samples-wssecurity-username.war jaxws-samples-wssecurity-encrypt.war", !isTargetJBoss6());
    }
 
    @Override
