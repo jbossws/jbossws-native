@@ -21,8 +21,9 @@
  */
 package org.jboss.test.ws.jaxws.jbws1988;
 
-import java.io.File;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
@@ -47,7 +48,30 @@ public class UsernameAuthTestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(UsernameAuthTestCase.class, "jaxws-jbws1988-config.sar jaxws-jbws1988.jar");
+      JBossWSTestSetup testSetup;
+      if (!isTargetJBoss6())
+      {
+         testSetup = new JBossWSTestSetup(UsernameAuthTestCase.class, "jaxws-jbws1988.jar");
+         Map<String, String> authenticationOptions = new HashMap<String, String>();
+         authenticationOptions.put("usersProperties",
+               getResourceFile("jaxws/jbws1988/META-INF/jbossws-users.properties").getAbsolutePath());
+         authenticationOptions.put("rolesProperties",
+               getResourceFile("jaxws/jbws1988/META-INF/jbossws-roles.properties").getAbsolutePath());
+         authenticationOptions.put("hashAlgorithm", "SHA");
+         authenticationOptions.put("hashEncoding", "BASE64");
+         authenticationOptions.put("hashCharset", "UTF-8");
+         authenticationOptions.put("hashUserPassword", "false");
+         authenticationOptions.put("hashStorePassword", "true");
+         authenticationOptions.put("storeDigestCallback", "org.jboss.ws.extensions.security.auth.callback.UsernameTokenCallback");
+         authenticationOptions.put("unauthenticatedIdentity", "anonymous");
+         testSetup.addSecurityDomainRequirement("JBossWSDigest", authenticationOptions);
+      }
+      else
+      {
+         testSetup = new JBossWSTestSetup(UsernameAuthTestCase.class,
+            "jaxws-jbws1988-config.sar jaxws-jbws1988.jar");
+      }
+      return testSetup;
    }
    
    public void testAuth() throws Exception

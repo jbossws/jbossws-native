@@ -793,6 +793,7 @@
 
                  <!-- TODO: implement EJB security integration -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1988/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/context/WebServiceContextEJBTestCase*</exclude>
 
                  <!-- TODO: Unexpected element 'class-loading' encountered -->
@@ -848,8 +849,7 @@
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
 
-                 <!-- # [JBWS-3257] No class available with name 'org.jboss.security.plugins.JaasSecurityDomain' -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
+                 <!-- # [JBWS-3308] Extends AS7 RemoteDeployer for supporting deployment of different security domains -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
 
