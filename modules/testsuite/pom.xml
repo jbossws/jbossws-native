@@ -838,9 +838,6 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/xop/doclit/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/eardeployment/WSDLPublishTestCase*</exclude>
 
-                 <!-- # [JBWS-3246] Resuscitate JSON -->
-                 <exclude>org/jboss/test/ws/jaxws/json/JsonTestCase*</exclude>
-
                  <!-- # [JBWS-3271] -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1815/JBWS1815TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxws/handlerlifecycle/HandlerLifecycleTestCase*</exclude>
