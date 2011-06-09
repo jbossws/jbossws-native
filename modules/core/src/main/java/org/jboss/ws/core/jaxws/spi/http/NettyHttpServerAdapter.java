@@ -180,7 +180,7 @@ final class NettyHttpServerAdapter implements HttpServer
       final ClassLoader loader = endpointClass.getClassLoader();
 
       final ArchiveDeployment dep = (ArchiveDeployment) NettyHttpServerAdapter.DEPLOYMENT_FACTORY.newDeployment(contextRoot, loader);
-      final org.jboss.wsf.spi.deployment.Endpoint endpoint = NettyHttpServerAdapter.DEPLOYMENT_FACTORY.newEndpoint(endpointClass.getName());
+      final org.jboss.wsf.spi.deployment.Endpoint endpoint = NettyHttpServerAdapter.DEPLOYMENT_FACTORY.newHttpEndpoint(endpointClass.getName());
       endpoint.setShortName(this.getEndpointRegistryPath(epImpl));
       endpoint.setURLPattern(epImpl.getPathWithoutContext());
       dep.getService().addEndpoint(endpoint);
