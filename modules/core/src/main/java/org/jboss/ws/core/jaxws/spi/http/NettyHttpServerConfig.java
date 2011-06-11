@@ -23,9 +23,11 @@ package org.jboss.ws.core.jaxws.spi.http;
 
 import java.io.File;
 import java.net.UnknownHostException;
+import java.util.List;
 
 import org.jboss.ws.WSException;
 import org.jboss.wsf.spi.management.ServerConfig;
+import org.jboss.wsf.spi.metadata.config.EndpointConfig;
 
 /**
  * Netty HTTP server config that configures user temp 
@@ -190,6 +192,18 @@ final class NettyHttpServerConfig implements ServerConfig
     * @param port int
     */
    public void setWebServiceSecurePort(final int port)
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   @Override
+   public void addEndpointConfig(EndpointConfig config)
+   {
+      throw new UnsupportedOperationException();
+   }
+
+   @Override
+   public List<EndpointConfig> getEndpointConfigs()
    {
       throw new UnsupportedOperationException();
    }
