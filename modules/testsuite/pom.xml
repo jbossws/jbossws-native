@@ -837,11 +837,6 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/xop/doclit/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/eardeployment/WSDLPublishTestCase*</exclude>
 
-                 <!-- # [JBWS-3271] -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1815/JBWS1815TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/handlerlifecycle/HandlerLifecycleTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/handlerchain/HandlerChainTestCase*</exclude>
-
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
 
