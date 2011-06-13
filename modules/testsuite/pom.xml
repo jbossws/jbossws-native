@@ -833,10 +833,6 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/serviceref/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/**</exclude>
 
-                 <!-- # [JBWS-3240] Rewrite tests relying on $JBOSS_HOME/server/default/tmp/jbossws folder existence -->
-                 <exclude>org/jboss/test/ws/jaxws/samples/xop/doclit/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/eardeployment/WSDLPublishTestCase*</exclude>
-
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
 
