@@ -77,11 +77,6 @@
       </list>
     </property>
   </deploymentAspect>
-
-  <deploymentAspect class="org.jboss.wsf.stack.jbws.EventingDeploymentAspect">
-    <property name="requires" class="java.lang.String">UnifiedMetaDataModel</property>
-  </deploymentAspect>
-
   -->
 
 </deploymentAspects>

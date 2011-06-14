@@ -47,6 +47,7 @@ import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 import org.jboss.wsf.spi.deployment.DeploymentAspect;
 import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
+import org.jboss.wsf.spi.deployment.HttpEndpoint;
 import org.jboss.wsf.stack.jbws.EagerInitializeDeploymentAspect;
 import org.jboss.wsf.stack.jbws.PublishContractDeploymentAspect;
 import org.jboss.wsf.stack.jbws.ServiceEndpointInvokerDeploymentAspect;
@@ -182,7 +183,7 @@ final class NettyHttpServerAdapter implements HttpServer
       final ArchiveDeployment dep = (ArchiveDeployment) NettyHttpServerAdapter.DEPLOYMENT_FACTORY.newDeployment(contextRoot, loader);
       final org.jboss.wsf.spi.deployment.Endpoint endpoint = NettyHttpServerAdapter.DEPLOYMENT_FACTORY.newHttpEndpoint(endpointClass.getName());
       endpoint.setShortName(this.getEndpointRegistryPath(epImpl));
-      endpoint.setURLPattern(epImpl.getPathWithoutContext());
+      ((HttpEndpoint)endpoint).setURLPattern(epImpl.getPathWithoutContext());
       dep.getService().addEndpoint(endpoint);
       dep.setRootFile(new ResourceLoaderAdapter(loader));
       dep.setRuntimeClassLoader(loader);

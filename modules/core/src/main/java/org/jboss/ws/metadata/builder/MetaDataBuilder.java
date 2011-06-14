@@ -72,6 +72,7 @@ import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.deployment.HttpEndpoint;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.jboss.wsf.spi.metadata.j2ee.EJBArchiveMetaData;
@@ -146,7 +147,7 @@ public abstract class MetaDataBuilder
       {
          Endpoint endpoint = dep.getService().getEndpointByName(linkName);
          if (endpoint != null)
-            urlPattern = endpoint.getURLPattern();
+            urlPattern = ((HttpEndpoint)endpoint).getURLPattern();
       }
 
       // Endpoint API hack
