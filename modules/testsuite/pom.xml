@@ -820,7 +820,7 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/**/*EJB3TestCase*</exclude>
                  <exclude>org/jboss/test/ws/management/recording/**</exclude>
 
-                 <!-- # [JBWS-3219] unexpected element 'port-qname' encountered -->
+                 <!-- # [JBWS-3219] unexpected element 'port-qname' encountered - we're waiting for jboss-metadata-common-7.0.0.Beta5 release in AS7 trunk -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2307/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2527/**</exclude>
 
