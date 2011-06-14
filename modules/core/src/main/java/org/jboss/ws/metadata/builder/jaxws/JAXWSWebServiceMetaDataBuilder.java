@@ -376,7 +376,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
                   }
 
                   // MTOM settings
-                  if (portComp.isEnableMtom())
+                  if (portComp.isMtomEnabled())
                   {
                      log.debug("Enabling MTOM");
                      MTOMFeature feature = new MTOMFeature(true, portComp.getMtomThreshold());

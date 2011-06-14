@@ -70,7 +70,7 @@ public class TestWSDDParser extends JBossWSTest
       assertTrue(portComp.getWsdlService().getLocalPart().equals("WSDDEndpointImplService"));
 
       // mtom
-      assertTrue(portComp.isEnableMtom());
+      assertTrue(portComp.isMtomEnabled());
 
       // handler chains
       UnifiedHandlerChainMetaData handlerChain = portComp.getHandlerChains().getHandlerChains().get(0);
