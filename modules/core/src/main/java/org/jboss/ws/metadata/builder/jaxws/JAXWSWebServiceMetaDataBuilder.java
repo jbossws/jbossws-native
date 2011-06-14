@@ -481,7 +481,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       wsMetaData.addService(result.serviceMetaData);
 
       if (dep instanceof ArchiveDeployment)
-         result.wsdlLocation = ((ArchiveDeployment)dep).getMetaDataFileURL(wsdlLocation);
+         result.wsdlLocation = ((ArchiveDeployment)dep).getResourceResolver().resolve(wsdlLocation);
 
       return result;
    }

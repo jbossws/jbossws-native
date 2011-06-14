@@ -98,7 +98,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
             // Unmarshall the jaxrpc-mapping.xml
             String mappingFile = wsdMetaData.getJaxrpcMappingFile();
-            serviceMetaData.setMappingLocation(dep.getMetaDataFileURL(mappingFile));
+            serviceMetaData.setMappingLocation(dep.getResourceResolver().resolve(mappingFile));
             JavaWsdlMapping javaWsdlMapping = serviceMetaData.getJavaWsdlMapping();
             if (javaWsdlMapping == null)
                throw new WSException("jaxrpc-mapping-file not configured from webservices.xml");

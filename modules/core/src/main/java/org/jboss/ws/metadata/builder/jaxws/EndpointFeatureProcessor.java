@@ -220,7 +220,7 @@ public class EndpointFeatureProcessor
          {
             try
             {
-               URL xsdURL = ((ArchiveDeployment)dep).getMetaDataFileURL(xsdLoc);
+               URL xsdURL = ((ArchiveDeployment)dep).getResourceResolver().resolve(xsdLoc);
                xsdLoc = xsdURL.toExternalForm();
             }
             catch (IOException ex)
