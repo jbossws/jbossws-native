@@ -80,7 +80,7 @@ public class MultipartRelatedXOPEncoder extends MultipartRelatedEncoder
       rootPart.setText(envStr, "UTF-8");
 
       rootPart.setContentID(MimeConstants.ROOTPART_CID);
-      rootPart.setHeader(MimeConstants.CONTENT_TYPE, MimeConstants.TYPE_APPLICATION_XOP_XML + "; type=\"" + soapType + "\""); 
+      rootPart.setHeader(MimeConstants.CONTENT_TYPE, MimeConstants.TYPE_APPLICATION_XOP_XML + "; charset=UTF-8; type=\"" + soapType + "\""); 
       rootPart.setHeader(MimeConstants.CONTENT_TRANSFER_ENCODING, MimeConstants.TEXT_8BIT_ENCODING);
 
       multipart.addBodyPart(rootPart);
