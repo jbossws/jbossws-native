@@ -25,8 +25,16 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.FileInputStream;
 import java.net.URL;
+import java.util.Map;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import javax.xml.namespace.QName;
 
@@ -35,6 +43,9 @@ import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
 import org.jboss.wsf.common.IOUtils;
 import org.w3c.dom.Element;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Node;
+import org.w3c.dom.NamedNodeMap;
 
 /**
  * Extracts the schema from a given WSDL
@@ -48,11 +59,19 @@ public class SchemaExtractor
    private static Logger log = Logger.getLogger(SchemaExtractor.class);
 
    private File xsdFile;
+   private String path;
    
-   public URL getSchemaUrl(URL wsdlURL) throws IOException
+   public InputStream[] getSchemas(URL wsdlURL) throws IOException
    {
+      //Get the path to the WSDL
+      Pattern p = Pattern.compile("[a-zA-Z]+\\.[a-zA-Z]+$");
+      Matcher m = p.matcher(wsdlURL.getFile());
+      path = m.replaceFirst("");
+
       // parse the wsdl
       Element root = DOMUtils.parse(wsdlURL.openStream());
+
+      List<Attr> nsAttrs = getNamespaceAttrs(root);
 
       // get the types element
       QName typesQName = new QName(root.getNamespaceURI(), "types");
@@ -77,25 +96,91 @@ public class SchemaExtractor
       }
       Element schemaElement = schemaElements.get(0);
 
-      File tmpdir = IOUtils.createTempDirectory();
-      xsdFile = File.createTempFile("jbossws_schema", ".xsd", tmpdir);
-      xsdFile.deleteOnExit();
+      //Add namespace declarations from root element
+      for(Attr nsAttr : nsAttrs)
+      {
+         Attr replacedAttr = schemaElement.setAttributeNodeNS(nsAttr);
+         if(replacedAttr != null) //then put it back
+         {
+            schemaElement.setAttributeNodeNS(replacedAttr);
+         }
+      }
 
-      OutputStreamWriter outwr = new OutputStreamWriter(new FileOutputStream(xsdFile));
+      List<InputStream> streams = new ArrayList<InputStream>();
+
+      pullImportedSchemas(schemaElement, streams);
+
+      //Add the WSDL schema to the schema array
+      ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+      OutputStreamWriter outwr = new OutputStreamWriter( outStream );
       DOMWriter domWriter = new DOMWriter(outwr);
       domWriter.setPrettyprint(true);
       domWriter.print(schemaElement);
-      outwr.close();
 
-      return xsdFile.toURL();
+      streams.add(new ByteArrayInputStream(outStream.toByteArray()));
+
+      return streams.toArray(new InputStream[streams.size()]);
    }
-   
-   public void close()
+
+   private List<Attr> getNamespaceAttrs(Element element)
    {
-      if (xsdFile != null)
+      List<Attr> nsAttrs = new ArrayList<Attr>();
+
+      NamedNodeMap nodes = element.getAttributes();
+
+      for(int i=0; i < nodes.getLength(); i++)
       {
-         xsdFile.delete();
-         xsdFile = null;
+         Node node = nodes.item(i);
+         Attr attr = (Attr)node;
+         if(attr.getName().startsWith("xmlns"))
+            nsAttrs.add((Attr)attr.cloneNode(true));
+      }
+
+      return nsAttrs;
+   }
+
+   private void pullImportedSchemas(Element schemaElement, List<InputStream> streams)
+   {
+      QName importQName = new QName( "http://www.w3.org/2001/XMLSchema", "import" );
+      List<Element> importElements = DOMUtils.getChildElementsAsList( schemaElement, importQName );
+
+      ArrayList<String> schemaLocations = new ArrayList<String>();
+      for( Element importElement : importElements )
+      {
+         String schemaLocation = importElement.getAttribute( "schemaLocation" );
+         schemaLocations.add( schemaLocation );
+      }
+
+      ByteArrayOutputStream outStream = null;
+
+      for( int i=0; i < schemaLocations.size(); i++ )
+      {
+         String schemaLocation = schemaLocations.get( i );
+
+         try
+         {
+            FileInputStream in = new FileInputStream( path + schemaLocation );
+            outStream = new ByteArrayOutputStream();
+ 
+            int bt = 0;
+            while(( bt = in.read() ) != -1 )
+            {
+               outStream.write( (byte)bt );
+            }
+ 
+            InputStream inputStream = new ByteArrayInputStream(outStream.toByteArray());
+            inputStream.mark(0);
+ 
+            Element root = DOMUtils.parse(inputStream);
+            pullImportedSchemas(root, streams);
+ 
+            inputStream.reset();
+            streams.add(inputStream);
+         }
+         catch(IOException ioe)
+         {
+            log.warn("Error obtaining schema: " + path + schemaLocation);
+         }
       }
    }
 }

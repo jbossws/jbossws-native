@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- ====================================================================== -->
 <!--                                                                        -->
 <!--  JBoss, the OpenSource J2EE webOS                                      -->
@@ -8,31 +7,25 @@
 <!--  See terms of license at http://www.gnu.org.                           -->
 <!--                                                                        -->
 <!-- ====================================================================== -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-
   <name>JBoss Web Services - Stack Native</name>
   <groupId>org.jboss.ws.native</groupId>
   <artifactId>jbossws-native</artifactId>
   <packaging>pom</packaging>
-
   <version>3.1.2-SNAPSHOT</version>
-
   <!-- Parent -->
   <parent>
     <groupId>org.jboss.ws</groupId>
     <artifactId>jbossws-parent</artifactId>
     <version>1.0.8.GA</version>
   </parent>
-
   <!-- Source Control Management -->
   <scm>
     <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossws/stack/native/branches/jbossws-native-3.1.2</connection>
     <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossws/stack/native/branches/jbossws-native-3.1.2</developerConnection>
     <url>http://fisheye.jboss.com/viewrep/JBossWS/stack/native/branches/jbossws-native-3.1.2</url>
   </scm>
-
   <!-- Modules -->
   <modules>
     <module>modules/endorsed</module>
@@ -41,12 +34,11 @@
     <module>modules/management</module>
     <module>modules/resources</module>
   </modules>
-
   <!-- Properties -->
   <properties>
-    <jbossws.common.version>1.1.0-SNAPSHOT</jbossws.common.version>
-    <jbossws.framework.version>3.1.2-SNAPSHOT</jbossws.framework.version>
-    <jbossws.spi.version>1.1.2-SNAPSHOT</jbossws.spi.version>
+    <jbossws.common.version>1.1.0</jbossws.common.version>
+    <jbossws.framework.version>3.1.2</jbossws.framework.version>
+    <jbossws.spi.version>1.1.2</jbossws.spi.version>
     <!-- [JBWS-2505] -->
     <!-- START -->
     <!--
@@ -77,7 +69,6 @@
     <xalan.version>2.7.1.patch02</xalan.version>
     <xerces.version>2.9.1</xerces.version>
   </properties>
-
   <!-- DependencyManagement -->
   <dependencyManagement>
     <dependencies>
@@ -273,40 +264,40 @@
         <type>sar</type>
         <exclusions>
           <exclusion>
-             <groupId>jboss</groupId>
-             <artifactId>jboss-jmx</artifactId>
+            <groupId>jboss</groupId>
+            <artifactId>jboss-jmx</artifactId>
           </exclusion>
           <exclusion>
-             <groupId>jboss</groupId>
-             <artifactId>jboss-system-jmx</artifactId>
+            <groupId>jboss</groupId>
+            <artifactId>jboss-system-jmx</artifactId>
           </exclusion>
           <exclusion>
-             <groupId>jboss</groupId>
-             <artifactId>jboss-common</artifactId>
+            <groupId>jboss</groupId>
+            <artifactId>jboss-common</artifactId>
           </exclusion>
           <exclusion>
-             <groupId>jboss</groupId>
-             <artifactId>jboss-j2ee</artifactId>
+            <groupId>jboss</groupId>
+            <artifactId>jboss-j2ee</artifactId>
           </exclusion>
           <exclusion>
-             <groupId>jboss</groupId>
-             <artifactId>jboss-j2se</artifactId>
+            <groupId>jboss</groupId>
+            <artifactId>jboss-j2se</artifactId>
           </exclusion>
           <exclusion>
-             <groupId>jboss</groupId>
-             <artifactId>jboss-system</artifactId>
+            <groupId>jboss</groupId>
+            <artifactId>jboss-system</artifactId>
           </exclusion>
           <exclusion>
-             <groupId>org.jboss.microcontainer</groupId>
-             <artifactId>jboss-microcontainer</artifactId>
+            <groupId>org.jboss.microcontainer</groupId>
+            <artifactId>jboss-microcontainer</artifactId>
           </exclusion>
           <exclusion>
-             <groupId>jboss.jbossws</groupId>
-             <artifactId>jboss-jaxrpc</artifactId>
+            <groupId>jboss.jbossws</groupId>
+            <artifactId>jboss-jaxrpc</artifactId>
           </exclusion>
           <exclusion>
-             <groupId>jboss.jbossws</groupId>
-             <artifactId>jboss-saaj</artifactId>
+            <groupId>jboss.jbossws</groupId>
+            <artifactId>jboss-saaj</artifactId>
           </exclusion>
           <!-- 
           <exclusion>
@@ -367,7 +358,6 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-
   <!-- Plugins -->
   <build>
     <plugins>
@@ -375,9 +365,9 @@
         <artifactId>maven-resources-plugin</artifactId>
         <version>2.4</version>
         <configuration>
-           <escapeWindowsPaths>false</escapeWindowsPaths>
-        </configuration>      
-     </plugin>
+          <escapeWindowsPaths>false</escapeWindowsPaths>
+        </configuration>
+      </plugin>
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>
         <executions>
@@ -389,10 +379,10 @@
             </goals>
             <configuration>
               <tasks>
-                <echo />
-                <echo message="profile=${jbossws.integration.target}" />
-                <echo message="jboss.home=${jboss.home}" />
-                <echo />
+                <echo/>
+                <echo message="profile=${jbossws.integration.target}"/>
+                <echo message="jboss.home=${jboss.home}"/>
+                <echo/>
               </tasks>
             </configuration>
           </execution>
@@ -432,7 +422,6 @@
       </plugin>
     </plugins>
   </build>
-
   <!-- Repositories -->
   <repositories>
     <repository>
@@ -450,10 +439,8 @@
       </snapshots>
     </repository>
   </repositories>
-  
   <!-- Profiles -->
   <profiles>
-
     <!--
     Name:  bindist
     Descr: Build the binary distribution
@@ -476,7 +463,6 @@
         </plugins>
       </build>
     </profile>
-
     <!--
     Name:  srcdist
     Descr: Build the source distribution
@@ -499,7 +485,6 @@
         </plugins>
       </build>
     </profile>
-
     <!--
     Name:  jboss510
     Descr: JBoss-5.1.0 specific options
@@ -511,7 +496,6 @@
         <jboss.home>${jboss510.home}</jboss.home>
       </properties>
     </profile>
-
     <!--
     Name:  jdk16
     Descr: Compile with jdk1.6
@@ -534,7 +518,6 @@
         </plugins>
       </build>
     </profile>
-
     <!--
     Name:  smoketest
     Descr: Executes the smoke tests
@@ -557,7 +540,6 @@
         </plugins>
       </build>
     </profile>
-
     <!--
     Name:  testsuite
     Descr: Executes the testsuite
@@ -569,5 +551,4 @@
       </modules>
     </profile>
   </profiles>
-
 </project>
