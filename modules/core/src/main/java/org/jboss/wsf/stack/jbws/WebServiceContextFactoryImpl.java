@@ -23,28 +23,21 @@ package org.jboss.wsf.stack.jbws;
 
 import javax.xml.ws.handler.MessageContext;
 
-import org.jboss.ws.common.invocation.WebServiceContextEJB;
-import org.jboss.ws.common.invocation.WebServiceContextJSE;
+import org.jboss.ws.common.invocation.WebServiceContextAdapter;
 import org.jboss.wsf.spi.invocation.ExtensibleWebServiceContext;
-import org.jboss.wsf.spi.invocation.InvocationType;
 import org.jboss.wsf.spi.invocation.WebServiceContextFactory;
 
 /**
+ * Web service context factory implementation.
  * 
  * @author alessio.soldano@jboss.com
- * 
+ * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public class WebServiceContextFactoryImpl extends WebServiceContextFactory
+public final class WebServiceContextFactoryImpl extends WebServiceContextFactory
 {
-   public ExtensibleWebServiceContext newWebServiceContext(InvocationType type, MessageContext messageContext)
+   @Override
+   public ExtensibleWebServiceContext newWebServiceContext(MessageContext messageContext)
    {
-      ExtensibleWebServiceContext context = null;
-
-      if(type.toString().indexOf("EJB")!=-1 || type.toString().indexOf("MDB")!=-1)
-         context = new WebServiceContextEJB(new NativeWebServiceContext(messageContext));
-      else
-         context = new WebServiceContextJSE(new NativeWebServiceContext(messageContext));
-
-      return context;
+      return new WebServiceContextAdapter(new NativeWebServiceContext(messageContext));
    }
 }

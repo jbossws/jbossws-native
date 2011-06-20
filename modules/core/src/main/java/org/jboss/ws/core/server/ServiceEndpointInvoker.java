@@ -324,22 +324,17 @@ public class ServiceEndpointInvoker
       if (msgContext instanceof SOAPMessageContextJAXWS)
       {
          final DeploymentType deploymentType = ep.getService().getDeployment().getType(); 
-         if (DeploymentType.JAXWS_JSE == deploymentType)
+         if ((DeploymentType.JAXWS_JSE == deploymentType) || (DeploymentType.JAXWS_EJB3 == deploymentType))
          {
             if (msgContext.get(MessageContext.SERVLET_REQUEST) != null)
             {
-               WebServiceContext wsContext = contextFactory.newWebServiceContext(InvocationType.JAXWS_JSE, (SOAPMessageContextJAXWS)msgContext);
+               WebServiceContext wsContext = contextFactory.newWebServiceContext((SOAPMessageContextJAXWS)msgContext);
                invContext.addAttachment(WebServiceContext.class, wsContext);
             }
             else
             {
                log.warn("Cannot provide WebServiceContext, since the current MessageContext does not provide a ServletRequest");
             }
-         }
-         else if (DeploymentType.JAXWS_EJB3 == deploymentType)
-         {
-            WebServiceContext wsContext = contextFactory.newWebServiceContext(InvocationType.JAXWS_EJB3, (SOAPMessageContextJAXWS)msgContext);
-            invContext.addAttachment(WebServiceContext.class, wsContext);
          }
          invContext.addAttachment(javax.xml.ws.handler.MessageContext.class, msgContext);
       }
