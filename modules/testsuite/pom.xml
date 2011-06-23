@@ -831,7 +831,7 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
 
-                 <!-- TODO: <security-identity> element parsing is not yet implemented -->
+                 <!-- [AS7-1101][JBWS-3322] fixing of these two issues will solve the following two tests -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2957/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2999/**</exclude>
 
