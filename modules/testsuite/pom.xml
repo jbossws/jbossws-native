@@ -834,7 +834,7 @@
 
                  <!-- TODO: implement EJB security integration -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1988/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/context/WebServiceContextEJBTestCase*</exclude>
 
                  <!-- TODO: tests using org.jboss.ejb3.annotation.SecurityDomain -->
