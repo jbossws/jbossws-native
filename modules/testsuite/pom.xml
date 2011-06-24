@@ -821,9 +821,6 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/serviceref/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/**</exclude>
 
-                 <!-- [AS7-1093] failing deployments succesfully deployed -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1582/JBWS1582TestCase*</exclude>
-
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
 
