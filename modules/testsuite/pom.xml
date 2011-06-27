@@ -812,8 +812,10 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws2307/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2527/**</exclude>
 
-                 <!-- [AS7-1125] implement service-ref/wsdl-override parsing -->
+                 <!-- [AS7-1101][AS7-1125] waiting for metadata upgrade in AS7 -->
                  <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2957/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2999/**</exclude>
 
                  <!-- # [JBWS-3232] javax.naming.NameNotFoundException: Name 'service' not found in context 'env' -->
                  <exclude>org/jboss/test/ws/jaxws/jbws3140/**</exclude>
@@ -831,10 +833,6 @@
                  <!-- # [JBWS-3308] Extends AS7 RemoteDeployer for supporting deployment of different security domains -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
-
-                 <!-- [AS7-1101][JBWS-3322] fixing of these two issues will solve the following two tests -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2957/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2999/**</exclude>
 
                  <!-- TODO: implement EJB security integration -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude>
