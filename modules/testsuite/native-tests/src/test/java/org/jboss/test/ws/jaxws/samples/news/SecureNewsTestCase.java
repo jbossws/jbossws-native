@@ -41,7 +41,7 @@ public class SecureNewsTestCase extends JBossWSTest
       return new JBossWSTestSetup
       (
          SecureNewsTestCase.class,
-         "jaxws-samples-news-step2-newspaper.jar, jaxws-samples-news-step2-agency-client.jar"
+         "jaxws-samples-news-step2-newspaper.jar, jaxws-samples-news-step2-agency-client.jar", !isTargetJBoss6()
       );
    }
    

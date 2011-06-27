@@ -812,6 +812,9 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws2307/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2527/**</exclude>
 
+                 <!-- [AS7-1125] implement service-ref/wsdl-override parsing -->
+                 <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
+
                  <!-- # [JBWS-3232] javax.naming.NameNotFoundException: Name 'service' not found in context 'env' -->
                  <exclude>org/jboss/test/ws/jaxws/jbws3140/**</exclude>
 
@@ -837,11 +840,6 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/context/WebServiceContextEJBTestCase*</exclude>
-
-                 <!-- TODO: tests using org.jboss.ejb3.annotation.SecurityDomain -->
-                 <exclude>org/jboss/test/ws/jaxws/samples/news/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/securityDomain/**</exclude>
               </excludes>
             </configuration>
           </plugin>
