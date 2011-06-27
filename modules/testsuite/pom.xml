@@ -715,6 +715,12 @@
           <groupId>org.jboss</groupId>
           <artifactId>jbossxb</artifactId>
         </dependency>
+        <!-- provides org.jboss.ejb3.annotation.SecurityDomain annotation -->
+        <dependency>
+          <groupId>org.jboss.ejb3</groupId>
+          <artifactId>jboss-ejb3-ext-api</artifactId>
+          <version>2.0.0-beta-1</version>
+        </dependency>
         <!-- Apache XML security depends on Xalan impl classes :( -->
         <dependency>
           <groupId>apache-xalan</groupId>
@@ -743,11 +749,6 @@
                     <!-- TODO: tests using org.jboss.ejb3.client.ClientLauncher -->
                     <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
                     <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/**</exclude>
-
-                    <!-- TODO: tests using org.jboss.ejb3.annotation.SecurityDomain -->
-                    <exclude>org/jboss/test/ws/jaxws/samples/news/**</exclude>
-                    <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
-                    <exclude>org/jboss/test/ws/jaxws/samples/securityDomain/**</exclude>
                   </testExcludes>
                 </configuration>
                 <goals>
