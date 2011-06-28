@@ -833,11 +833,7 @@
                  <!-- # [JBWS-3308] Extends AS7 RemoteDeployer for supporting deployment of different security domains -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
-
-                 <!-- TODO: implement EJB security integration -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1991/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/context/WebServiceContextEJBTestCase*</exclude>
               </excludes>
             </configuration>
           </plugin>

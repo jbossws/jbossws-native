@@ -32,13 +32,14 @@ import javax.xml.ws.WebServiceContext;
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.annotation.EndpointConfig;
 import org.jboss.ws.api.annotation.WebContext;
-
+import org.jboss.ejb3.annotation.SecurityDomain;
 
 @Stateless
 @WebService(name = "Hello", serviceName = "HelloService", targetNamespace = "http://org.jboss.ws/jbws1988")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @WebContext(contextRoot = "/jaxws-jbws1988", urlPattern = "/*")
 @EndpointConfig(configName = "Standard WSSecurity Endpoint")
+@SecurityDomain(value="JBossWSDigest")
 @RolesAllowed({"friend"}) 
 public class HelloJavaBean
 {

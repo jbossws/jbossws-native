@@ -29,16 +29,17 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
 import javax.xml.ws.WebServiceContext;
 
+import org.jboss.ejb3.annotation.SecurityDomain;
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.annotation.EndpointConfig;
 import org.jboss.ws.api.annotation.WebContext;
-
 
 @Stateless
 @WebService(name = "Hello", serviceName = "HelloService", targetNamespace = "http://org.jboss.ws/jbws1991")
 @SOAPBinding(style = SOAPBinding.Style.RPC)
 @WebContext(contextRoot = "/jaxws-jbws1991", urlPattern = "/*")
 @EndpointConfig(configName = "Standard WSSecurity Endpoint")
+@SecurityDomain(value="JBossWS")
 @RolesAllowed({"friend"}) 
 public class HelloJavaBean
 {
