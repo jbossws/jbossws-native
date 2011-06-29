@@ -789,9 +789,6 @@
                  <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/**</exclude>
 
-                 <!-- TODO: Unexpected element 'class-loading' encountered -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude>
-
                  <!-- TODO: Classpath visibility issues - investigate -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2634/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude>
@@ -826,6 +823,7 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws944/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/serviceref/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude>
 
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
