@@ -22,16 +22,17 @@
 package org.jboss.ws.metadata.builder.jaxws;
 
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import javax.jws.WebService;
 import javax.xml.ws.WebServiceProvider;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.utils.DelegateClassLoader;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
-import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.Service;
 import org.jboss.wsf.spi.metadata.j2ee.EJBArchiveMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.EJBMetaData;
@@ -45,6 +46,7 @@ import org.jboss.wsf.spi.metadata.j2ee.EJBMetaData;
  */
 public class JAXWSMetaDataBuilderEJB3
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JAXWSMetaDataBuilderEJB3.class);
    // provide logging
    private final Logger log = Logger.getLogger(JAXWSMetaDataBuilderEJB3.class);
 
@@ -63,7 +65,7 @@ public class JAXWSMetaDataBuilderEJB3
 
          ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
          if(null == runtimeClassLoader)
-            throw new IllegalArgumentException("Runtime loader cannot be null");
+            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "RUNTIME_LOADER_CANNOT_BE_NULL"));
          wsMetaData.setClassLoader(new DelegateClassLoader(runtimeClassLoader, SecurityActions.getContextClassLoader()));
 
          // The container objects below provide access to all of the ejb metadata
@@ -88,7 +90,7 @@ public class JAXWSMetaDataBuilderEJB3
                   String lastDomain = wsMetaData.getSecurityDomain();
                   String securityDomain = anSecurityDomain.value();
                   if (lastDomain != null && lastDomain.equals(securityDomain) == false)
-                     throw new IllegalStateException("Multiple security domains not supported: " + securityDomain);
+                     throw new IllegalStateException(BundleUtils.getMessage(bundle, "MULTIPLE_SECURITY_DOMAINS_NOT_SUPPORTED",  securityDomain));
 
                   wsMetaData.setSecurityDomain(securityDomain);
                }
@@ -106,7 +108,7 @@ public class JAXWSMetaDataBuilderEJB3
       }
       catch (Exception ex)
       {
-         throw new WSException("Cannot build meta data: " + ex.getMessage(), ex);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_BUILD_META_DATA",  ex.getMessage()),  ex);
       }
    }
 }

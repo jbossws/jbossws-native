@@ -21,12 +21,16 @@
  */
 package org.jboss.ws.core.jaxrpc;
 
+import java.util.ResourceBundle;
+
 import javax.xml.namespace.QName;
 
 import org.apache.xerces.xs.XSModel;
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.core.soap.MessageContextAssociation;
@@ -36,7 +40,6 @@ import org.jboss.ws.metadata.jaxrpcmapping.PackageMapping;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
-import org.jboss.ws.common.JavaUtils;
 
 /**
  * The serialization context for JAXRPC endpoints/clients
@@ -46,6 +49,7 @@ import org.jboss.ws.common.JavaUtils;
  */
 public class SerializationContextJAXRPC extends SerializationContext
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SerializationContextJAXRPC.class);
    // provide logging
    private static final Logger log = Logger.getLogger(SerializationContextJAXRPC.class);
 
@@ -117,7 +121,7 @@ public class SerializationContextJAXRPC extends SerializationContext
    {
       SOAPMessageContextJAXRPC msgContext = (SOAPMessageContextJAXRPC)MessageContextAssociation.peekMessageContext();
       if (msgContext == null)
-         throw new WSException("MessageContext not available");
+         throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
 
       OperationMetaData opMetaData = msgContext.getOperationMetaData();
       ServiceMetaData serviceMetaData = opMetaData.getEndpointMetaData().getServiceMetaData();

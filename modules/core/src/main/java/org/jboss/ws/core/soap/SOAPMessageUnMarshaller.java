@@ -24,11 +24,13 @@ package org.jboss.ws.core.soap;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.client.UnMarshaller;
 
 /**
@@ -38,6 +40,7 @@ import org.jboss.ws.core.client.UnMarshaller;
  */
 public class SOAPMessageUnMarshaller implements UnMarshaller
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPMessageUnMarshaller.class);
    // Provide logging
    private static Logger log = Logger.getLogger(SOAPMessageUnMarshaller.class);
 
@@ -54,7 +57,7 @@ public class SOAPMessageUnMarshaller implements UnMarshaller
       }
       catch (SOAPException e)
       {
-         log.error("Cannot unmarshall SOAPMessage", e);
+         log.error(BundleUtils.getMessage(bundle, "CANNOT_UNMARSHALL_SOAPMESSAGE"),  e);
          IOException e2 = new IOException(e.toString());
          e2.initCause(e);
          throw e2;

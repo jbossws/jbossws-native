@@ -22,6 +22,7 @@
 package org.jboss.ws.extensions.addressing.jaxrpc;
 
 import java.net.URISyntaxException;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.handler.GenericHandler;
@@ -35,6 +36,7 @@ import javax.xml.ws.addressing.soap.SOAPAddressingBuilder;
 import javax.xml.ws.addressing.soap.SOAPAddressingProperties;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
@@ -49,6 +51,7 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
  */
 public class WSAddressingServerHandler extends GenericHandler
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSAddressingServerHandler.class);
    // Provide logging
    private static Logger log = Logger.getLogger(WSAddressingServerHandler.class);
 
@@ -145,7 +148,7 @@ public class WSAddressingServerHandler extends GenericHandler
             }
             else
             {
-               log.warn("Unable to resolve replyAction for " + opMetaData.getQName());
+               log.warn(BundleUtils.getMessage(bundle, "UNABLE_TO_RESOLVE_REPLYACTION",  opMetaData.getQName()));
             }
 
          }
@@ -157,7 +160,7 @@ public class WSAddressingServerHandler extends GenericHandler
       }
       catch (URISyntaxException e)
       {
-         log.error("Error setting response action", e);
+         log.error(BundleUtils.getMessage(bundle, "ERROR_SETTING_RESPONSE_ACTION"),  e);
       }
 
       outProps.writeHeaders(soapMessage);

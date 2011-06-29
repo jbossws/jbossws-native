@@ -22,6 +22,8 @@
 package org.jboss.ws.core.soap;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.io.InputStream;
 import java.io.Reader;
 import java.util.ArrayList;
@@ -65,6 +67,7 @@ import org.w3c.dom.UserDataHandler;
  */
 public class SOAPPartImpl extends SOAPPart
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPPartImpl.class);
    // provide logging
    private static Logger log = Logger.getLogger(SOAPPartImpl.class);
 
@@ -167,7 +170,7 @@ public class SOAPPartImpl extends SOAPPart
          else if (node instanceof Element)
             domElement = (Element)node;
          else
-            throw new SOAPException("Unsupported DOMSource node: " + node);
+            throw new SOAPException(BundleUtils.getMessage(bundle, "UNSUPPORTED_DOMSOURCE_NODE",  node));
 
          EnvelopeBuilder envBuilder = (EnvelopeBuilder) ServiceLoader.loadService(EnvelopeBuilder.class.getName(), EnvelopeBuilderDOM.class.getName());
          envBuilder.setStyle(Style.DOCUMENT);
@@ -189,12 +192,12 @@ public class SOAPPartImpl extends SOAPPart
          }
          catch (IOException e)
          {
-            throw new SOAPException("Cannot parse stream source", e);
+            throw new SOAPException(BundleUtils.getMessage(bundle, "CANNOT_PARSE_STREAM_SOURCE"),  e);
          }
       }
       else
       {
-         throw new SOAPException("Unsupported source parameter: " + source);
+         throw new SOAPException(BundleUtils.getMessage(bundle, "UNSUPPORTED_SOURCE_PARAMETER",  source));
       }
    }
 
@@ -574,12 +577,12 @@ public class SOAPPartImpl extends SOAPPart
 
    public void setParentElement(SOAPElement parent) throws SOAPException
    {
-      throw new SOAPException("The parent element of a soap part is not defined");
+      throw new SOAPException(BundleUtils.getMessage(bundle, "THE_PARENT_ELEMENT_NOT_DEFINED"));
    }
 
    public void setValue(String value)
    {
-      throw new IllegalStateException("Setting value of a soap part is not defined");
+      throw new IllegalStateException(BundleUtils.getMessage(bundle, "SETTING_VALUE_NOT_DEFINED"));
    }
 
 }

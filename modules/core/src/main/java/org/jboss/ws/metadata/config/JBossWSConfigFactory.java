@@ -26,15 +26,17 @@ import java.io.InputStream;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ResourceBundle;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.metadata.config.binding.OMFactoryJAXRPC;
-import org.jboss.ws.metadata.config.jaxrpc.ConfigRootJAXRPC;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.ResourceLoaderAdapter;
 import org.jboss.ws.common.utils.DelegateClassLoader;
 import org.jboss.ws.common.utils.JBossWSEntityResolver;
+import org.jboss.ws.metadata.config.binding.OMFactoryJAXRPC;
+import org.jboss.ws.metadata.config.jaxrpc.ConfigRootJAXRPC;
 import org.jboss.wsf.spi.classloading.ClassLoaderProvider;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.config.CommonConfig;
@@ -53,6 +55,7 @@ import org.w3c.dom.Element;
  */
 public class JBossWSConfigFactory
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JBossWSConfigFactory.class);
    // provide logging
    private final Logger log = Logger.getLogger(JBossWSConfigFactory.class);
 
@@ -107,17 +110,17 @@ public class JBossWSConfigFactory
          }
          else
          {
-            throw new WSException("Invalid config namespace: " + nsURI);
+            throw new WSException(BundleUtils.getMessage(bundle, "INVALID_CONFIG_NS",  nsURI));
          }
 
       }
       catch (JBossXBException e)
       {
-         throw new WSException("Error while parsing configuration", e);
+         throw new WSException(BundleUtils.getMessage(bundle, "ERROR_WHILE_PARSING"),  e);
       }
       catch (IOException e)
       {
-         throw new WSException("Failed to read config file: " + configURL, e);
+         throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_READ_CONFIG_FILE",  configURL),  e);
       }
       finally
       {
@@ -158,9 +161,9 @@ public class JBossWSConfigFactory
       if(log.isDebugEnabled()) log.debug("getConfig: [name=" + configName + ",url=" + configFile + "]");
 
       if (configName == null)
-         throw new IllegalArgumentException("Config name cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CONFIG_NAME_CANNOT_BE_NULL"));
       if (configFile == null)
-         throw new IllegalArgumentException("Config file cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CONFIG_FILE_CANNOT_BE_NULL"));
 
       // Get the config root
       URL configURL = filenameToURL(vfsRoot, configFile);
@@ -178,7 +181,7 @@ public class JBossWSConfigFactory
       }
 
       if (config == null)
-         throw new WSException("Cannot obtain config: " + configName);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_CONFIG",  configName));
 
       return config;
    }
@@ -209,7 +212,7 @@ public class JBossWSConfigFactory
       }
       
       if (configURL == null)
-         throw new WSException("Cannot find configFile: " + configFile);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_CONFIGFILE",  configFile));
       
       return configURL;
    }

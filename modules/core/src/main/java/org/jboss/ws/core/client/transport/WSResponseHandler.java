@@ -24,6 +24,7 @@ package org.jboss.ws.core.client.transport;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -33,13 +34,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
-import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelHandler.Sharable;
+import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
+import org.jboss.ws.api.util.BundleUtils;
 
 /**
  * A Netty channel upstream handler that receives MessageEvent
@@ -51,6 +53,7 @@ import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 @Sharable
 public class WSResponseHandler extends SimpleChannelUpstreamHandler
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSResponseHandler.class);
    private FutureResult future;
 
    public WSResponseHandler()
@@ -177,7 +180,7 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
          }
          if (cancelled)
          {
-            throw new InterruptedException("Operation Cancelled");
+            throw new InterruptedException(BundleUtils.getMessage(bundle, "OPERATION_CANCELLED"));
          }
          if (exception != null)
          {
@@ -197,11 +200,11 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
          }
          if (cancelled)
          {
-            throw new InterruptedException("Operation Cancelled");
+            throw new InterruptedException(BundleUtils.getMessage(bundle, "OPERATION_CANCELLED"));
          }
          if (!done)
          {
-            throw new TimeoutException("Timeout Exceeded");
+            throw new TimeoutException(BundleUtils.getMessage(bundle, "TIMEOUT_EXCEEDED"));
          }
          if (exception != null)
          {

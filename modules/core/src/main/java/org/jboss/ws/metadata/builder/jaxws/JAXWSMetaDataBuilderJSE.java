@@ -21,8 +21,11 @@
  */
 package org.jboss.ws.metadata.builder.jaxws;
 
+import java.util.ResourceBundle;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.utils.DelegateClassLoader;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
@@ -37,6 +40,7 @@ import org.jboss.wsf.spi.deployment.Endpoint;
  */
 public class JAXWSMetaDataBuilderJSE
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JAXWSMetaDataBuilderJSE.class);
    // provide logging
    private final Logger log = Logger.getLogger(JAXWSMetaDataBuilderJSE.class);
 
@@ -52,7 +56,7 @@ public class JAXWSMetaDataBuilderJSE
          wsMetaData.setDeploymentName(dep.getCanonicalName());
          ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
          if(null == runtimeClassLoader)
-            throw new IllegalArgumentException("Runtime classloader cannot be null");
+            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "RUNTIME_CLASSLOADER_CANNOT_BE_NULL"));
          wsMetaData.setClassLoader(new DelegateClassLoader(runtimeClassLoader, SecurityActions.getContextClassLoader()));
 
          // For every bean
@@ -73,7 +77,7 @@ public class JAXWSMetaDataBuilderJSE
       }
       catch (Exception ex)
       {
-         throw new WSException("Cannot build meta data: " + ex.getMessage(), ex);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_BUILD_META_DATA",  ex.getMessage()),  ex);
       }
    }
 }

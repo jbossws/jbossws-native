@@ -24,12 +24,14 @@ package org.jboss.ws.tools;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.rpc.encoding.TypeMapping;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
@@ -47,6 +49,7 @@ import org.jboss.ws.tools.helpers.JavaToWSDLHelper;
 
 public class JavaToWSDL11
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JavaToWSDL11.class);
    // provide logging
    private static final Logger log = Logger.getLogger(JavaToWSDL11.class);
 
@@ -108,7 +111,7 @@ public class JavaToWSDL11
       Boolean val = features.get(name);
       if (val != null)
          return val.booleanValue();
-      throw new WSException("Feature unrecognized");
+      throw new WSException(BundleUtils.getMessage(bundle, "FEATURE_UNRECOGNIZED"));
    }
 
    /**
@@ -131,7 +134,7 @@ public class JavaToWSDL11
    public TypeMapping getTypeMapping()
    {
       if (typeMapping == null)
-         throw new WSException("TypeMapping has not been generated");
+         throw new WSException(BundleUtils.getMessage(bundle, "TYPEMAPPING_HAS_NOT_BEEN_GENERATED"));
       return typeMapping;
    }
 
@@ -165,7 +168,7 @@ public class JavaToWSDL11
          }
          catch (IOException e)
          {
-            log.error("Error during Java->WSDL generation:", e);
+            log.error(BundleUtils.getMessage(bundle, "ERROR_DURING_GENERATION"),  e);
          }
       }
 
@@ -200,7 +203,7 @@ public class JavaToWSDL11
    {
       WSDLDefinitions wsdl = null;
       if (umd == null)
-         throw new WSException("Unified Meta Data Model is null");
+         throw new WSException(BundleUtils.getMessage(bundle, "UNIFIED_META_DATA_MODEL_IS_NULL"));
 
       for (ServiceMetaData service : umd.getServices())
       {

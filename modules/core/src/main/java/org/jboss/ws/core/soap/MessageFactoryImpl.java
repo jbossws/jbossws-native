@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import javax.mail.internet.ContentType;
 import javax.mail.internet.ParseException;
@@ -37,17 +38,18 @@ import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.Service.Mode;
+import javax.xml.ws.WebServiceFeature;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.api.util.ServiceLoader;
+import org.jboss.ws.common.IOUtils;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedDecoder;
 import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.metadata.umdm.FeatureSet;
-import org.jboss.ws.api.util.ServiceLoader;
-import org.jboss.ws.common.IOUtils;
 
 /**
  * MessageFactory implementation
@@ -56,6 +58,7 @@ import org.jboss.ws.common.IOUtils;
  */
 public class MessageFactoryImpl extends MessageFactory
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(MessageFactoryImpl.class);
    private static Logger log = Logger.getLogger(MessageFactoryImpl.class);
 
    // The envelope namespace used by the MessageFactory
@@ -84,7 +87,7 @@ public class MessageFactoryImpl extends MessageFactory
       else if (SOAPConstants.DYNAMIC_SOAP_PROTOCOL.equals(protocol))
          dynamic = true;
       else
-         throw new SOAPException("Unknown protocol: " + protocol);
+         throw new SOAPException(BundleUtils.getMessage(bundle, "UNKNOWN_PROTOCOL",  protocol));
    }
 
    /**
@@ -164,7 +167,7 @@ public class MessageFactoryImpl extends MessageFactory
    public SOAPMessage createMessage() throws SOAPException
    {
       if (dynamic)
-         throw new UnsupportedOperationException("Cannot create default message when protocol is dynamic");
+         throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_DEFAULT_MESSAGE"));
 
       SOAPMessageImpl soapMessage = new SOAPMessageImpl();
       SOAPPartImpl soapPart = (SOAPPartImpl)soapMessage.getSOAPPart();
@@ -252,7 +255,7 @@ public class MessageFactoryImpl extends MessageFactory
             }
             catch (Exception ex)
             {
-               throw new SOAPException("Cannot decode multipart related message", ex);
+               throw new SOAPException(BundleUtils.getMessage(bundle, "CANNOT_DECODE_MULTIPART_RELATED_MESSAGE"),  ex);
             }
 
             inputStream = decoder.getRootPart().getDataHandler().getInputStream();
@@ -266,12 +269,12 @@ public class MessageFactoryImpl extends MessageFactory
          {
             if (!features.isFeatureEnabled(FastInfosetFeature.class))
             {
-               throw new SOAPException("FastInfoset support is not enabled, use FastInfosetFeature to enable it.");
+               throw new SOAPException(BundleUtils.getMessage(bundle, "FASTINFOSET_SUPPORT_IS_NOT_ENABLED"));
             }
          }
          else if (isSoapContent(contentType) == false)
          {
-            throw new SOAPException("Unsupported content type: " + contentType);
+            throw new SOAPException(BundleUtils.getMessage(bundle, "UNSUPPORTED_CONTENT_TYPE",  contentType));
          }
 
          if (mimeHeaders != null)
@@ -327,7 +330,7 @@ public class MessageFactoryImpl extends MessageFactory
       }
       catch (ParseException e)
       {
-         throw new SOAPException("Could not parse content type:" + e);
+         throw new SOAPException(BundleUtils.getMessage(bundle, "COULD_NOT_PARSE_CONTENT_TYPE",  e));
       }
    }
 

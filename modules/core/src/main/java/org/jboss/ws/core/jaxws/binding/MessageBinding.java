@@ -22,6 +22,8 @@
 package org.jboss.ws.core.jaxws.binding;
 
 import java.util.List;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.util.Map;
 
 import javax.xml.namespace.QName;
@@ -52,6 +54,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public class MessageBinding implements CommonBinding, BindingExt
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(MessageBinding.class);
    // provide logging
    private static final Logger log = Logger.getLogger(MessageBinding.class);
 
@@ -75,7 +78,7 @@ public class MessageBinding implements CommonBinding, BindingExt
 
          SOAPMessageContextJAXWS msgContext = (SOAPMessageContextJAXWS)MessageContextAssociation.peekMessageContext();
          if (msgContext == null)
-            throw new WSException("MessageContext not available");
+            throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
 
          ParameterMetaData paramMetaData = opMetaData.getParameters().get(0);
          QName xmlName = paramMetaData.getXmlName();
@@ -98,7 +101,7 @@ public class MessageBinding implements CommonBinding, BindingExt
       {
          SOAPMessageContextJAXWS msgContext = (SOAPMessageContextJAXWS)MessageContextAssociation.peekMessageContext();
          if (msgContext == null)
-            throw new WSException("MessageContext not available");
+            throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
 
          // Associate current message with message context
          MessageAbstraction resMessage = (MessageAbstraction)epInv.getReturnValue();
@@ -130,7 +133,7 @@ public class MessageBinding implements CommonBinding, BindingExt
       }
       else
       {
-         log.warn("Cannot set fault message in message context");
+         log.warn(BundleUtils.getMessage(bundle, "CANNOT_SET_FAULT_MESSAGE_IN_MESSAGE_CONTEXT"));
       }
       return faultMessage;
    }

@@ -24,6 +24,7 @@ package org.jboss.ws.core.soap.attachment;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import javax.activation.DataHandler;
 import javax.mail.MessagingException;
@@ -33,6 +34,7 @@ import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MimeHeader;
 import javax.xml.soap.SOAPException;
 
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 
 /**
@@ -44,6 +46,7 @@ import org.jboss.ws.core.soap.SOAPMessageImpl;
  */
 public abstract class MultipartRelatedEncoder
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(MultipartRelatedEncoder.class);
    protected SOAPMessageImpl soapMessage;
    protected MimeMultipart multipart;
 
@@ -113,7 +116,7 @@ public abstract class MultipartRelatedEncoder
    public void writeTo(OutputStream os) throws IOException
    {
       if (multipart == null)
-         throw new IOException("No data to write because encoding failed on construction");
+         throw new IOException(BundleUtils.getMessage(bundle, "NO_DATA_TO_WRITE"));
 
       try
       {

@@ -22,6 +22,8 @@
 package org.jboss.ws.core.soap;
 
 import java.io.InputStream;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -46,11 +48,13 @@ import org.xml.sax.ErrorHandler;
  * <p/>
  * This class should not expose functionality that is not part of
  * {@link javax.xml.soap.SOAPBodyElement}. Client code should use <code>SOAPBodyElement</code>.
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPBodyElementDoc.class);
  *
  * @author Thomas.Diesler@jboss.org
  */
 public class SOAPBodyElementDoc extends SOAPContentElement implements SOAPBodyElement
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(EndpointMetaData.class);
    // provide logging
    private static Logger log = Logger.getLogger(SOAPBodyElementDoc.class);
    
@@ -109,7 +113,7 @@ public class SOAPBodyElementDoc extends SOAPContentElement implements SOAPBodyEl
             URL wsdlURL = epMetaData.getServiceMetaData().getWsdlFileOrLocation();
             if (wsdlURL == null)
             {
-               log.warn("Validation error: Cannot obtain wsdl URL");
+               log.warn(BundleUtils.getMessage(bundle, "VALIDATION_ERROR"));
             }
             else
             {

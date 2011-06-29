@@ -28,11 +28,13 @@ import java.rmi.Remote;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.Service;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 
 /**
  * This is the proxy that implements the service interface .
@@ -44,6 +46,7 @@ import org.jboss.logging.Logger;
  */
 public class ServiceProxy implements InvocationHandler
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ServiceProxy.class);
    // provide logging
    private static final Logger log = Logger.getLogger(ServiceProxy.class);
 
@@ -135,7 +138,7 @@ public class ServiceProxy implements InvocationHandler
             return retObj;
          }
 
-         throw new JAXRPCException("Don't know how to invoke: " + method);
+         throw new JAXRPCException(BundleUtils.getMessage(bundle, "NOT_KNOW_HOW_TO_INVOKE",  method));
       }
       catch (Exception e)
       {
@@ -153,7 +156,7 @@ public class ServiceProxy implements InvocationHandler
       if (ex instanceof InvocationTargetException)
          th = ((InvocationTargetException)ex).getTargetException();
 
-      log.error("Service error", th);
+      log.error(BundleUtils.getMessage(bundle, "SERVICE_ERROR"),  th);
       throw th;
    }
 }

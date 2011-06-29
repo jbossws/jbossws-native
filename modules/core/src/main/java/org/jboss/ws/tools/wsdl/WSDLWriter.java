@@ -22,6 +22,8 @@
 package org.jboss.ws.tools.wsdl;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.io.Writer;
 import java.util.Iterator;
 
@@ -50,6 +52,7 @@ import org.w3c.dom.Element;
  */
 public class WSDLWriter
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLWriter.class);
    // provide logging
    protected static final Logger log = Logger.getLogger(WSDLWriter.class);
 
@@ -67,7 +70,7 @@ public class WSDLWriter
    public WSDLWriter(WSDLDefinitions wsdl)
    {
       if (wsdl == null)
-         throw new IllegalArgumentException("WSDL definitions is NULL");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "WSDL_DEFINITIONS_IS_NULL"));
 
       this.wsdl = wsdl;
    }
@@ -88,7 +91,7 @@ public class WSDLWriter
       }
       else
       {
-         throw new WSException("Unsupported wsdl version: " + wsdlNamespace);
+         throw new WSException(BundleUtils.getMessage(bundle, "UNSUPPORTED_WSDL_VERSION",  wsdlNamespace));
       }
    }
 

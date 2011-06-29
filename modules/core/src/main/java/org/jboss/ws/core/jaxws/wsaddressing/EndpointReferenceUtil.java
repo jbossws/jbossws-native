@@ -22,6 +22,8 @@
 package org.jboss.ws.core.jaxws.wsaddressing;
 
 import java.io.ByteArrayInputStream;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.io.ByteArrayOutputStream;
 
 import javax.xml.transform.Source;
@@ -40,6 +42,7 @@ import javax.xml.ws.wsaddressing.W3CEndpointReference;
  *
  */
 public class EndpointReferenceUtil {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(EndpointReferenceUtil.class);
    
    public static <T extends EndpointReference> T transform(Class<T> clazz, EndpointReference epr)
    {
@@ -56,7 +59,7 @@ public class EndpointReferenceUtil {
          }
          else
          {
-            throw new WebServiceException("Unsupported EndpointReference: " + epr);
+            throw new WebServiceException(BundleUtils.getMessage(bundle, "UNSUPPORTED_EPR",  epr));
          }
       }
       else if (clazz.isAssignableFrom(NativeEndpointReference.class))
@@ -65,7 +68,7 @@ public class EndpointReferenceUtil {
       }
       //transformations from different types of EndpointReference could be supported in future...
 
-      throw new WebServiceException("EndpointReference of type " + clazz + " not supported.");
+      throw new WebServiceException(BundleUtils.getMessage(bundle, "EPR_OF_TYPE_NOT_SUPPORTED",  clazz ));
    }
    
    public static Source getSourceFromEndpointReference(EndpointReference epr)

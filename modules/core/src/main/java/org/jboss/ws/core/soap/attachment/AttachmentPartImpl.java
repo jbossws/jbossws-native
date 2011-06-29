@@ -22,6 +22,8 @@
 package org.jboss.ws.core.soap.attachment;
 
 import org.jboss.util.Base64;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.IOUtils;
 import org.jboss.ws.WSException;
 
@@ -43,6 +45,7 @@ import java.util.Iterator;
  */
 public class AttachmentPartImpl extends AttachmentPart
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(AttachmentPartImpl.class);
    private MimeHeaders mimeHeaders = new MimeHeaders();
 
    private DataHandler dataHandler;
@@ -95,7 +98,7 @@ public class AttachmentPartImpl extends AttachmentPart
    public Object getContent() throws SOAPException
    {
       if (dataHandler == null)
-         throw new SOAPException("No content available");
+         throw new SOAPException(BundleUtils.getMessage(bundle, "NO_CONTENT_AVAILABLE"));
 
       try
       {
@@ -110,7 +113,7 @@ public class AttachmentPartImpl extends AttachmentPart
    public DataHandler getDataHandler() throws SOAPException
    {
       if (dataHandler == null)
-         throw new SOAPException("No data handler on attachment");
+         throw new SOAPException(BundleUtils.getMessage(bundle, "NO_DATA_HANDLER_ON_ATTACHMENT"));
 
       return dataHandler;
    }
@@ -206,7 +209,7 @@ public class AttachmentPartImpl extends AttachmentPart
    public void setDataHandler(DataHandler dataHandler)
    {
       if (dataHandler == null)
-         throw new IllegalArgumentException("Null data handler");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NULL_DATA_HANDLER"));
 
       this.dataHandler = dataHandler;
       setContentType(dataHandler.getContentType());
@@ -357,7 +360,7 @@ public class AttachmentPartImpl extends AttachmentPart
    public void setBase64Content(InputStream content, String contentType) throws SOAPException
    {
       if(null == content)
-         throw new SOAPException("Content is null");
+         throw new SOAPException(BundleUtils.getMessage(bundle, "CONTENT_IS_NULL"));
 
       try
       {
@@ -402,7 +405,7 @@ public class AttachmentPartImpl extends AttachmentPart
    public void setRawContent(InputStream content, String contentType) throws SOAPException
    {
       if(null == content)
-         throw new SOAPException("Content is null");
+         throw new SOAPException(BundleUtils.getMessage(bundle, "CONTENT_IS_NULL"));
       
       dataHandler = new DataHandler(new ByteArrayDataSource(content, contentType));
       setContentType(contentType);
@@ -458,12 +461,12 @@ public class AttachmentPartImpl extends AttachmentPart
 
       public InputStream getInputStream() throws IOException {
          if (data == null)
-            throw new IOException("no data");
+            throw new IOException(BundleUtils.getMessage(bundle, "NO_DATA"));
          return new ByteArrayInputStream(data);
       }
 
       public OutputStream getOutputStream() throws IOException {
-         throw new IOException("cannot do this");
+         throw new IOException(BundleUtils.getMessage(bundle, "CANNOT_DO_THIS"));
       }
 
       public String getContentType() {

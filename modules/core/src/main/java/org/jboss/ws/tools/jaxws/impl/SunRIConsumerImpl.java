@@ -21,17 +21,19 @@
  */
 package org.jboss.ws.tools.jaxws.impl;
 
-import com.sun.tools.ws.wscompile.WsimportTool;
-
-import org.jboss.ws.common.utils.JBossWSEntityResolver;
-import org.jboss.ws.common.utils.NullPrintStream;
-import org.jboss.ws.api.tools.WSContractConsumer;
-
 import java.io.File;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+
+import org.jboss.ws.api.tools.WSContractConsumer;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.utils.JBossWSEntityResolver;
+import org.jboss.ws.common.utils.NullPrintStream;
+
+import com.sun.tools.ws.wscompile.WsimportTool;
 
 /**
  * WSContractConsumer that delegates to the Sun CompileTool.
@@ -41,6 +43,7 @@ import java.util.List;
  */
 public class SunRIConsumerImpl extends WSContractConsumer
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SunRIConsumerImpl.class);
    private List<File> bindingFiles;
    private File catalog;
    private boolean extension;
@@ -174,7 +177,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
          if (sourceDir != null)
          {
             if (!sourceDir.exists() && !sourceDir.mkdirs())
-               throw new IllegalStateException("Could not make directory: " + sourceDir.getName());
+               throw new IllegalStateException(BundleUtils.getMessage(bundle, "COULD_NOT_CREATE_DIRECTORY",  sourceDir.getName()));
 
             args.add("-s");
             args.add(sourceDir.getAbsolutePath());
@@ -205,7 +208,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
       }
 
       if (!outputDir.exists() && !outputDir.mkdirs())
-         throw new IllegalStateException("Could not make directory: " + outputDir.getName());
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "COULD_NOT_CREATE_DIRECTORY",  outputDir.getName()));
 
       // Always add the output directory and the wsdl location
       args.add("-d");
@@ -214,7 +217,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
       if (target != null)
       {
          if(!target.equals("2.0") && !target.equals("2.1") && !target.equals("2.2"))
-            throw new IllegalArgumentException("WSConsume (native) supports only JAX-WS 2.0, 2.1 and 2.2");
+            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "WSCONSUME_JAXWS21_22"));
 
          args.add("-target");
          args.add(target);
@@ -247,7 +250,7 @@ public class SunRIConsumerImpl extends WSContractConsumer
          boolean success = compileTool.run(args.toArray(new String[args.size()]));
 
          if (!success)
-            throw new IllegalStateException("WsImport invocation failed. Try the verbose switch for more information");
+            throw new IllegalStateException(BundleUtils.getMessage(bundle, "WSIMPORT_INVOCATION_FAILED"));
       }
       catch (RuntimeException rte)
       {

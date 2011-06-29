@@ -22,6 +22,8 @@
 package org.jboss.ws.tools;
 
 import java.beans.BeanInfo;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
@@ -57,6 +59,7 @@ import org.jboss.ws.common.JavaUtils;
  */
 public class ToolsUtils
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ToolsUtils.class);
 
    /**
     * Maintains a static reference to the TypeMapping just for
@@ -67,7 +70,7 @@ public class ToolsUtils
    //Hide the constructor - this is a class with static methods
    private ToolsUtils()
    {
-      throw new WSException("Cannot instantiate ToolsUtils.");
+      throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_INSTANTIATE_TOOLSUTILS"));
    }
 
    /**
@@ -78,7 +81,7 @@ public class ToolsUtils
    public static void checkParameterType( Class paramType)
    {
       if (Remote.class.isAssignableFrom(paramType))
-         throw new IllegalArgumentException("JAXWS-2.0 Assertion::" + "Method param shouldn't extend Remote");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "METHOD_PARAM_SHOULDN_NOT_EXTEND_REMOTE"));
    }
 
    /**
@@ -89,7 +92,7 @@ public class ToolsUtils
    public static String firstLetterUpperCase(String fname)
    {
       if (fname == null || fname.length() == 0)
-         throw new WSException("String passed is null");
+         throw new WSException(BundleUtils.getMessage(bundle, "STRING_PASSED_IS_NULL"));
       //Ensure that the first character is uppercase
       if (Character.isLowerCase(fname.charAt(0)))
       {
@@ -109,7 +112,7 @@ public class ToolsUtils
    public static String firstLetterLowerCase(String fname)
    {
       if (fname == null || fname.length() == 0)
-         throw new WSException("String passed is null");
+         throw new WSException(BundleUtils.getMessage(bundle, "STRING_PASSED_IS_NULL"));
       //Ensure that the first character is lowercase
       if (Character.isUpperCase(fname.charAt(0)))
       {
@@ -131,14 +134,14 @@ public class ToolsUtils
    public static String getJavaIdentifier(String xmlName)
    {
       if(xmlName == null || xmlName.length() == 0)
-         throw new IllegalArgumentException("xmlName is null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "XMLNAME_IS_NULL"));
       xmlName = xmlName.trim(); //Get rid of whitespaces
 
       //Remove leading and trailing punctuation marks
       xmlName = trimPunctuationMarks( xmlName);
 
       if(xmlName == null)
-         throw new WSException("xmlName has become null");
+         throw new WSException(BundleUtils.getMessage(bundle, "XMLNAME_IS_NULL"));
 
       //Get rid of characters that are not legal characters
       int lenStr = xmlName.length();
@@ -366,7 +369,7 @@ public class ToolsUtils
    public static int getNumberOfParticles(Class javaBean)
    {
       if(isJavaBean(javaBean) == false)
-         throw new IllegalArgumentException("Illegal JavaBean argument");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_JAVABEAN_ARGUMENT"));
 
       //Get number of public fields
       Field[] pubFields = javaBean.getFields();
@@ -493,7 +496,7 @@ public class ToolsUtils
    private static String trimPunctuationMarks( String str)
    {
       if(str  == null)
-         throw new IllegalArgumentException("Str is null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "STR_IS_NULL"));
       //Check if the first character is permissible
       if(Character.isJavaIdentifierStart(str.charAt(0)) == false)
           str = str.substring(1);

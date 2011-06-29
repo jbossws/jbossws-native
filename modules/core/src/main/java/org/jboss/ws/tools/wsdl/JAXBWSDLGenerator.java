@@ -22,6 +22,7 @@
 package org.jboss.ws.tools.wsdl;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.parsers.DocumentBuilder;
@@ -29,8 +30,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Result;
 import javax.xml.transform.dom.DOMResult;
 
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.metadata.wsdl.DOMTypes;
 import org.w3c.dom.Document;
@@ -45,6 +47,7 @@ import com.sun.xml.bind.api.JAXBRIContext;
  */
 public class JAXBWSDLGenerator extends WSDLGenerator
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JAXBWSDLGenerator.class);
    private JAXBRIContext ctx;
 
    public JAXBWSDLGenerator(JAXBRIContext ctx)
@@ -103,7 +106,7 @@ public class JAXBWSDLGenerator extends WSDLGenerator
       }
       catch (Exception exception)
       {
-         throw new WSException("Could not generate schema: " + exception.getMessage(), exception);
+         throw new WSException(BundleUtils.getMessage(bundle, "COULD_NOT_GENERATE_SCHEMA",  exception.getMessage()),  exception);
       }
    }
 

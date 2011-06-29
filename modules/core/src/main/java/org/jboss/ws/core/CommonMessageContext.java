@@ -21,24 +21,27 @@
  */
 package org.jboss.ws.core;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
+
+import javax.xml.soap.AttachmentPart;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.handler.MessageContext.Scope;
+
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.soap.attachment.SwapableMemoryDataSource;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;
-
-import javax.xml.soap.AttachmentPart;
-import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.handler.MessageContext.Scope;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * The common JAXRPC/JAXWS MessageContext
@@ -48,6 +51,7 @@ import java.util.Set;
  */
 public abstract class CommonMessageContext implements Map<String, Object>
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(CommonMessageContext.class);
    private static Logger log = Logger.getLogger(CommonMessageContext.class);
 
    // expandToDOM in the SOAPContentElement should not happen during normal operation 
@@ -133,7 +137,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
    public SOAPMessage getSOAPMessage()
    {
       if(message!=null && ((message instanceof SOAPMessage) == false))
-         throw new UnsupportedOperationException("No SOAPMessage avilable. Current message context carries " + message.getClass());
+         throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "NO_SOAPMESSAGE_AVILABLE",  message.getClass()));
       return (SOAPMessage)message;
    }
 
@@ -225,7 +229,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
    {
       ScopedProperty prevProp = scopedProps.get(key);
       if (prevProp != null && !isValidInScope(prevProp))
-         throw new IllegalArgumentException("Cannot set value for HANDLER scoped property: " + key);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_SET_VALUE_FOR_HANDLER_SCOPED_PROPERTY",  key));
 
       ScopedProperty newProp = new ScopedProperty(key, value, currentScope);
       if (log.isTraceEnabled())
@@ -239,7 +243,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
    {
       ScopedProperty prevProp = scopedProps.get(key);
       if (prevProp != null && !isValidInScope(prevProp))
-         throw new IllegalArgumentException("Cannot set remove for HANDLER scoped property: " + key);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_SET_REMOVE_FOR_HANDLER_SCOPED_PROPERTY",  key));
 
       return scopedProps.remove(key);
    }
@@ -359,7 +363,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
             }
             catch (SOAPException e)
             {
-               log.warn("Failed to cleanup attachment part", e);
+               log.warn(BundleUtils.getMessage(bundle, "FAILED_TO_CLEANUP_ATTACHMENT_PART"),  e);
             }
          }
       }

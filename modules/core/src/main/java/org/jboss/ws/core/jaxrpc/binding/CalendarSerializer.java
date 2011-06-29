@@ -22,6 +22,8 @@
 package org.jboss.ws.core.jaxrpc.binding;
 
 import java.util.Calendar;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
@@ -43,6 +45,7 @@ import org.w3c.dom.NamedNodeMap;
  */
 public class CalendarSerializer extends SerializerSupport
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(CalendarSerializer.class);
    // provide logging
    private static final Logger log = Logger.getLogger(CalendarSerializer.class);
 
@@ -59,7 +62,7 @@ public class CalendarSerializer extends SerializerSupport
       else if (Constants.TYPE_LITERAL_DATETIME.equals(xmlType))
          valueStr = SimpleTypeBindings.marshalDateTime((Calendar)value);
       else
-         throw new IllegalArgumentException("Invalid xmlType: " + xmlType);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_XMLTYPE",  xmlType));
 
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
       String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);

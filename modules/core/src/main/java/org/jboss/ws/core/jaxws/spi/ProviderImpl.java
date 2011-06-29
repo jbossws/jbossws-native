@@ -25,6 +25,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
@@ -41,9 +42,10 @@ import javax.xml.ws.spi.ServiceDelegate;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.core.jaxws.wsaddressing.EndpointReferenceUtil;
 import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
-import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -55,6 +57,7 @@ import org.w3c.dom.Element;
  */
 public final class ProviderImpl extends Provider
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ProviderImpl.class);
 
    private static final Logger log = Logger.getLogger(ProviderImpl.class);
 
@@ -93,7 +96,7 @@ public final class ProviderImpl extends Provider
    {
       // JAX-WS Endpoint API is broken by design and reveals many implementation details 
       // of JAX-WS RI that are not portable cross different application servers :(
-      log.warn("createEndpoint(String,Class,Invoker,WebServiceFeature...) not implemented"); // TODO implement?
+      log.warn(BundleUtils.getMessage(bundle, "CREATEENDPOINT_NOT_IMPLEMENT"));
 
       return null;
    }
@@ -169,7 +172,7 @@ public final class ProviderImpl extends Provider
    public EndpointReference readEndpointReference(final Source eprInfoset)
    {
       if (eprInfoset == null)
-         throw new NullPointerException("Provided eprInfoset cannot be null");
+         throw new NullPointerException(BundleUtils.getMessage(bundle, "PROVIDED_EPRINFOSET_CANNOT_BE_NULL"));
 
       try
       {
@@ -197,10 +200,10 @@ public final class ProviderImpl extends Provider
       }
       catch (MalformedURLException e)
       {
-         throw new IllegalArgumentException("Invalid endpoint address: " + address);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_ENDPOINT_ADDRESS",  address));
       }
 
-      throw new IllegalArgumentException("Unsupported protocol: " + address);
+      throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_PROTOCOL",  address));
    }
 
    private String getBindingId(final String bindingId, final Class<?> implementorClass)

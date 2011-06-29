@@ -21,9 +21,12 @@
  */
 package org.jboss.wsf.stack.jbws;
 
+import java.util.ResourceBundle;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.metadata.config.CommonConfig;
@@ -34,6 +37,7 @@ import org.jboss.wsf.spi.metadata.config.CommonConfig;
  */
 public final class ServletConfigHelper
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ServletConfigHelper.class);
    
    /**
     * Constructor
@@ -55,7 +59,7 @@ public final class ServletConfigHelper
       {
          ServerEndpointMetaData epMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
          if (epMetaData == null)
-            throw new IllegalStateException("Cannot obtain endpoint meta data");
+            throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINTMD"));
 
          epMetaData.setConfigName(configName, configFile);
       }

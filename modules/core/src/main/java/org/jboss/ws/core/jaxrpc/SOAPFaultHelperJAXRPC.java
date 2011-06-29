@@ -24,6 +24,7 @@ package org.jboss.ws.core.jaxrpc;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
@@ -43,8 +44,9 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPFaultException;
 import org.jboss.ws.core.binding.AbstractDeserializerFactory;
@@ -74,6 +76,7 @@ import org.w3c.dom.Element;
  */
 public class SOAPFaultHelperJAXRPC
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPFaultHelperJAXRPC.class);
    // provide logging
    private static Logger log = Logger.getLogger(SOAPFaultHelperJAXRPC.class);
 
@@ -126,7 +129,7 @@ public class SOAPFaultHelperJAXRPC
                // Get the deserializer from the type mapping
                AbstractDeserializerFactory desFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(javaType, xmlType);
                if (desFactory == null)
-                  throw new JAXRPCException("Cannot obtain deserializer factory for: " + xmlType);
+                  throw new JAXRPCException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_DESERIALIZER_FACTORY",  xmlType));
 
                // Try jaxb deserialization
                try
@@ -146,7 +149,7 @@ public class SOAPFaultHelperJAXRPC
                   DeserializerSupport des = (DeserializerSupport)desFactory.getDeserializer();
                   Object userEx = des.deserialize(xmlName, xmlType, xmlFragment, serContext);
                   if (userEx == null || (userEx instanceof Exception) == false)
-                     throw new WSException("Invalid deserialization result: " + userEx);
+                     throw new WSException(BundleUtils.getMessage(bundle, "INVALID_DESERIALIZATION_RESULT",  userEx));
 
                   faultEx.initCause((Exception)userEx);
                }
@@ -156,7 +159,7 @@ public class SOAPFaultHelperJAXRPC
                }
                catch (Exception ex)
                {
-                  log.error("Cannot deserialize fault detail", ex);
+                  log.error(BundleUtils.getMessage(bundle, "CANNOT_DESERIALIZE_FAULT_DETAIL"),  ex);
                }
             }
             else
@@ -206,7 +209,7 @@ public class SOAPFaultHelperJAXRPC
       }
 
       Throwable faultCause = faultEx.getCause();
-      log.error("SOAP request exception", faultCause != null ? faultCause : faultEx);
+      log.error(BundleUtils.getMessage(bundle, "SOAP_REQUEST_EXCEPTION"),  faultCause != null ? faultCause : faultEx);
 
       try
       {
@@ -219,8 +222,8 @@ public class SOAPFaultHelperJAXRPC
       }
       catch (Exception ex)
       {
-         log.error("Error creating SOAPFault message", ex);
-         throw new JAXRPCException("Cannot create SOAPFault message for: " + faultEx);
+         log.error(BundleUtils.getMessage(bundle, "ERROR_CREATING_SOAPFAULT_MESSAGE"),  ex);
+         throw new JAXRPCException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_SOAPFAULT_MESSAGE",  faultEx));
       }
    }
 
@@ -275,7 +278,7 @@ public class SOAPFaultHelperJAXRPC
             // Get the serializer from the type mapping
             AbstractSerializerFactory serFactory = (AbstractSerializerFactory)typeMapping.getSerializer(javaType, xmlType);
             if (serFactory == null)
-               throw new JAXRPCException("Cannot obtain serializer factory for: " + xmlType);
+               throw new JAXRPCException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SERIALIZER_FACTORY",  xmlType));
 
             try
             {
@@ -345,19 +348,19 @@ public class SOAPFaultHelperJAXRPC
    private static void assertFaultCode(QName faultCode)
    {
       if (faultCode == null)
-         throw new IllegalArgumentException("faultcode cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "FAULTCODE_CANNOT_BE_NULL"));
 
       // For lazy folkes like the CTS that don't bother to give
       // a namesapce URI, assume they use a standard code
       String nsURI = faultCode.getNamespaceURI();
       if ("".equals(nsURI))
       {
-         log.warn("Empty namespace URI with fault code '" + faultCode + "', assuming: " + Constants.NS_SOAP11_ENV);
+         log.warn(BundleUtils.getMessage(bundle, "EMPTY_NAMESPACE_URI", new Object[]{ faultCode , Constants.NS_SOAP11_ENV}));
          faultCode = new QName(Constants.NS_SOAP11_ENV, faultCode.getLocalPart());
       }
 
       // WS-I allows non custom faultcodes if you use a non soap namespace
       if (Constants.NS_SOAP11_ENV.equals(nsURI) && allowedFaultCodes.contains(faultCode) == false)
-         throw new IllegalArgumentException("Illegal faultcode '" + faultCode + "', allowed values are: " + allowedFaultCodes);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_FAULTCODE", new Object[]{ faultCode ,  allowedFaultCodes}));
    }
 }

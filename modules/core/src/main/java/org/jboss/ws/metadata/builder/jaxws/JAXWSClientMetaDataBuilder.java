@@ -26,6 +26,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.jws.soap.SOAPBinding;
 import javax.xml.namespace.QName;
@@ -35,16 +36,19 @@ import javax.xml.ws.RespectBindingFeature;
 import javax.xml.ws.soap.AddressingFeature;
 import javax.xml.ws.soap.MTOMFeature;
 
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.annotation.EndpointConfig;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.ResourceLoaderAdapter;
 import org.jboss.ws.core.jaxws.client.NativeServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
 import org.jboss.ws.extensions.policy.metadata.PolicyMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
@@ -52,8 +56,6 @@ import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
-import org.jboss.ws.api.annotation.EndpointConfig;
-import org.jboss.ws.common.ResourceLoaderAdapter;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
@@ -69,6 +71,7 @@ import org.w3c.dom.Element;
  */
 public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JAXWSClientMetaDataBuilder.class);
    public ServiceMetaData buildMetaData(QName serviceName, URL wsdlURL, UnifiedVirtualFile vfsRoot)
    {
       return this.buildMetaData(serviceName, wsdlURL, vfsRoot, null);
@@ -78,7 +81,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          ClassLoader classLoader)
    {
       if (wsdlURL == null)
-         throw new IllegalArgumentException("Invalid wsdlURL: " + wsdlURL);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_WSDLURL",  wsdlURL));
 
       if (log.isDebugEnabled())
          log.debug("START buildMetaData: [service=" + serviceName + "]");
@@ -119,7 +122,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       }
       catch (Exception ex)
       {
-         throw new WSException("Cannot build meta data: " + ex.getMessage(), ex);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_BUILD_META_DATA",  ex.getMessage()),  ex);
       }
    }
 
@@ -135,7 +138,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
             if (portEPRs != null && portEPRs.size() != 0)
             {
                if (portEPRs.size() > 1)
-                  throw new IllegalStateException("Only one EPR can be specified on port");
+                  throw new IllegalStateException(BundleUtils.getMessage(bundle, "ONLY_ONE_EPR_ALLOWED"));
 
                Element eprElement = portEPRs.get(0).getElement();
                
@@ -166,7 +169,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       if (serviceName == null)
       {
          if (wsdlDefinitions.getServices().length != 1)
-            throw new IllegalArgumentException("Expected a single service element");
+            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "EXPECTED_A_SINGLE_SERVICE_ELEMENT"));
 
          wsdlService = wsdlDefinitions.getServices()[0];
          serviceMetaData.setServiceName(wsdlService.getName());
@@ -181,7 +184,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          for (WSDLService wsdls : wsdlDefinitions.getServices())
             serviceNames.add(wsdls.getName());
 
-         throw new IllegalArgumentException("Cannot obtain wsdl service: " + serviceName + " we have " + serviceNames);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_WSDL_SERVICE", new Object[]{ serviceName ,  serviceNames}));
       }
 
       // Build endpoint meta data

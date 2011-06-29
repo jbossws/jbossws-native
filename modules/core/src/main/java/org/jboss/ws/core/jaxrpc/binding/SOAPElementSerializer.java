@@ -22,6 +22,8 @@
 package org.jboss.ws.core.jaxrpc.binding;
 
 import javax.xml.namespace.QName;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import javax.xml.soap.SOAPElement;
 import javax.xml.transform.Result;
 
@@ -41,6 +43,7 @@ import org.w3c.dom.NamedNodeMap;
  */
 public class SOAPElementSerializer extends SerializerSupport
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPElementSerializer.class);
    // provide logging
    private static final Logger log = Logger.getLogger(SOAPElementSerializer.class);
 
@@ -54,9 +57,9 @@ public class SOAPElementSerializer extends SerializerSupport
    {
       log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
       if (value == null)
-         throw new IllegalArgumentException("SOAPElement value cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SOAPELEMENT_VALUE_CANNOT_BE_NULL"));
       if ((value instanceof SOAPElement) == false)
-         throw new IllegalArgumentException("Value is not a SOAPElement: " + value.getClass().getName());
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "VALUE_IS_NOT_A_SOAPELEMENT",  value.getClass().getName()));
 
       String xmlFragment = DOMWriter.printNode((SOAPElement)value, false);
       return new BufferedStreamResult(xmlFragment);

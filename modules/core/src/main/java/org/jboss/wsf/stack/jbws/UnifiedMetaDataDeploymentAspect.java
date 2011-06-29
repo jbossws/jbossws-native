@@ -21,6 +21,10 @@
  */
 package org.jboss.wsf.stack.jbws;
 
+import java.util.ResourceBundle;
+
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.integration.AbstractDeploymentAspect;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderEJB3;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderJSE;
@@ -28,11 +32,10 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.ws.common.integration.AbstractDeploymentAspect;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
+import org.jboss.wsf.spi.deployment.Endpoint;
 
 /**
  * A deployer that builds the UnifiedDeploymentInfo 
@@ -42,6 +45,7 @@ import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
  */
 public class UnifiedMetaDataDeploymentAspect extends AbstractDeploymentAspect
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(UnifiedMetaDataDeploymentAspect.class);
    @Override
    public void start(Deployment dep)
    {
@@ -70,7 +74,7 @@ public class UnifiedMetaDataDeploymentAspect extends AbstractDeploymentAspect
          }
          else
          {
-            throw new IllegalStateException("Invalid deployment type:  " + dep.getType());
+            throw new IllegalStateException(BundleUtils.getMessage(bundle, "INVALID_DEPLOYMENT_TYPE",  dep.getType()));
          }
 
          dep.addAttachment(UnifiedMetaData.class, umd);
@@ -112,7 +116,7 @@ public class UnifiedMetaDataDeploymentAspect extends AbstractDeploymentAspect
       }
 
       if (epMetaData == null)
-         throw new IllegalStateException("Cannot find endpoint meta data for: " + epName);
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_FIND_ENDPOINTMD",  epName));
 
       return epMetaData;
    }

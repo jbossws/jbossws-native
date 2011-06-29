@@ -26,12 +26,14 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ResourceBundle;
 
 import javax.activation.ActivationDataFlavor;
 import javax.activation.DataContentHandler;
 import javax.activation.DataSource;
 import javax.xml.transform.stream.StreamSource;
 
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.IOUtils;
 
 /**
@@ -43,6 +45,7 @@ import org.jboss.ws.common.IOUtils;
  */
 public class XmlDataContentHandler implements DataContentHandler
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(XmlDataContentHandler.class);
    private DataFlavor[] flavors = new ActivationDataFlavor[]
    {
          new ActivationDataFlavor(StreamSource.class, "text/xml", "XML"),
@@ -95,10 +98,10 @@ public class XmlDataContentHandler implements DataContentHandler
    public void writeTo(Object obj, String mimeType, OutputStream os) throws IOException
    {
       if (! mimeType.startsWith(MimeConstants.TYPE_TEXT_XML) && ! mimeType.startsWith("application/xml"))
-         throw new IOException("Expected text/xml or application/xml, got " + mimeType);
+         throw new IOException(BundleUtils.getMessage(bundle, "EXPECTED_TEXT_XML",  mimeType));
 
       if (! (obj instanceof StreamSource))
-         throw new IOException("XML Content handler only supports a StreamSource content object");
+         throw new IOException(BundleUtils.getMessage(bundle, "ONLY_SUPPORTS_STREAMSOURCE"));
 
       // TODO - add support for reader source
       InputStream stream = ((StreamSource) obj).getInputStream();

@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import javax.activation.ActivationDataFlavor;
 import javax.activation.DataContentHandler;
@@ -41,6 +42,7 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 
 /**
  * <code>ImageDataContentHandler</code> is a JAF content handler that handles
@@ -60,6 +62,7 @@ import org.jboss.logging.Logger;
  */
 public class ImageDataContentHandler extends Component implements DataContentHandler
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ImageDataContentHandler.class);
    // provide logging
    private static Logger log = Logger.getLogger(ImageDataContentHandler.class);
 
@@ -91,7 +94,7 @@ public class ImageDataContentHandler extends Component implements DataContentHan
          catch (IllegalArgumentException iae)
          {
             //This mime type is not supported
-            log.warn("Unsupported MIME Type '" + mimeTypes[i] +"'");
+            log.warn(BundleUtils.getMessage(bundle, "UNSUPPORTED_MIME_TYPE",  mimeTypes[i] ));
          }
       }
       int size = flavs.size();
@@ -129,7 +132,7 @@ public class ImageDataContentHandler extends Component implements DataContentHan
       }
       catch (InterruptedException e)
       {
-         throw new IOException("Could not convert image " + e.getMessage());
+         throw new IOException(BundleUtils.getMessage(bundle, "COULD_NOT_CONVERT_IMAGE",  e.getMessage()));
       }
    }
 
@@ -180,14 +183,14 @@ public class ImageDataContentHandler extends Component implements DataContentHan
    public void writeTo(Object obj, String mimeType, OutputStream os) throws IOException
    {
       if (obj == null)
-         throw new IOException("Cannot write null source object");
+         throw new IOException(BundleUtils.getMessage(bundle, "CANNOT_WRITE_NULL_SOURCE_OBJECT"));
       
       if (!(obj instanceof Image))
-         throw new IOException("Requires the source object to be a java.awt.Image but is: " + obj.getClass().getName());
+         throw new IOException(BundleUtils.getMessage(bundle, "IMAGE_EXPECTED",  obj.getClass().getName()));
 
       ImageWriter writer = getImageWriter(mimeType);
       if (writer == null)
-         throw new IOException("Image encoding not available for mime type " + mimeType + " on this vm");
+         throw new IOException(BundleUtils.getMessage(bundle, "IMAGE_ENCODING_NOT_AVAILABLE",  mimeType ));
 
       BufferedImage buffered = getBufferedImage((Image) obj);
       ImageOutputStream stream = ImageIO.createImageOutputStream(os);

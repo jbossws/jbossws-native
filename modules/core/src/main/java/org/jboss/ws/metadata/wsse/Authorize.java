@@ -22,6 +22,8 @@
 package org.jboss.ws.metadata.wsse;
 
 import java.io.Serializable;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,6 +37,7 @@ import java.util.List;
  */
 public class Authorize implements Serializable
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(Authorize.class);
 
    private Unchecked unchecked;
 
@@ -49,7 +52,7 @@ public class Authorize implements Serializable
    {
       if (isUnchecked())
       {
-         throw new IllegalStateException("Can not add role after setting 'Unchecked'");
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CAN_NOT_ADD_ROLE"));
       }
       roles.add(role);
    }
@@ -63,7 +66,7 @@ public class Authorize implements Serializable
    {
       if (roles.isEmpty() == false)
       {
-         throw new IllegalStateException("Can not set 'Unchecked' with role(s) defined.");
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CAN_NOT_SET_UNCHECKED"));
       }
       this.unchecked = unchecked;
    }

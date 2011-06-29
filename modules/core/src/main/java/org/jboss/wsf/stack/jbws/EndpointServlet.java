@@ -96,7 +96,7 @@ public final class EndpointServlet extends AbstractEndpointServlet implements Se
             }
             catch (Exception exception)
             {
-               log.error(exception.getMessage(), exception);
+               log.error(exception.getLocalizedMessage(),  exception);
             }
          }
          this.preDestroyRegistry.clear();

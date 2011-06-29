@@ -32,6 +32,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.apache.xerces.xs.StringList;
@@ -55,8 +56,9 @@ import org.apache.xerces.xs.XSTerm;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
 import org.jboss.xb.binding.NamespaceRegistry;
@@ -71,6 +73,7 @@ import org.w3c.dom.Node;
 
 public class JBossXSModel implements XSModel, Cloneable
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JBossXSModel.class);
    // provide logging
    private static final Logger log = Logger.getLogger(JBossXSModel.class);
 
@@ -330,7 +333,7 @@ public class JBossXSModel implements XSModel, Cloneable
       //Add type to the namespace item
       String ns = xst.getNamespace();
       if (ns == null)
-         throw new WSException("Illegal namespace:null");
+         throw new WSException(BundleUtils.getMessage(bundle, "ILLEGAL_NAMESPACE"));
       JBossXSNamespaceItem jbnm = createNamespaceItemIfNotExistent(ns);
       jbnm.addXSTypeDefinition(xst);
 
@@ -451,7 +454,7 @@ public class JBossXSModel implements XSModel, Cloneable
          }
          catch (IOException e)
          {
-            log.error("Cannot parse xsModelString: " + xsModelString, e);
+            log.error(BundleUtils.getMessage(bundle, "CANNOT_PARSE_XSMODEL",  xsModelString), e);
          }
 
       }
@@ -508,7 +511,7 @@ public class JBossXSModel implements XSModel, Cloneable
    private JBossXSNamespaceItem createNamespaceItemIfNotExistent(String ns)
    {
       if (ns == null)
-         throw new IllegalArgumentException("Illegal null argument:ns");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "ns"));
 
       JBossXSNamespaceItem jbnm = nsimap.get(ns);
       if (jbnm == null)

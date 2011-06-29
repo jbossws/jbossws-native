@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.metadata.wsdl.xmlschema;
 
+import java.util.ResourceBundle;
+
 import org.apache.xerces.xs.ShortList;
 import org.apache.xerces.xs.XSAnnotation;
 import org.apache.xerces.xs.XSComplexTypeDefinition;
@@ -31,6 +33,7 @@ import org.apache.xerces.xs.XSNamedMap;
 import org.apache.xerces.xs.XSObjectList;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.util.NotImplementedException;
+import org.jboss.ws.api.util.BundleUtils;
 
 /**
  * Represents an XS Element Declaration
@@ -39,6 +42,7 @@ import org.jboss.util.NotImplementedException;
  */
 public class JBossXSElementDeclaration extends JBossXSObject implements XSElementDeclaration
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JBossXSElementDeclaration.class);
    protected String targetNamespace = null;
    protected JBossXSTypeDefinition xstype = null;
    protected boolean nillable = false;
@@ -74,7 +78,7 @@ public class JBossXSElementDeclaration extends JBossXSObject implements XSElemen
    public JBossXSElementDeclaration(XSElementDeclaration xe)
    {
       if (xe == null)
-         throw new IllegalArgumentException("Illegal Null Argument:xe");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT","xe"));
 
       xsed = xe;
       name = xe.getName();

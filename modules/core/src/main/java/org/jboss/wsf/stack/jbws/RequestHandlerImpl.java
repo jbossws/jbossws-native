@@ -22,6 +22,8 @@
 package org.jboss.wsf.stack.jbws;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -110,6 +112,7 @@ import com.sun.xml.fastinfoset.dom.DOMDocumentSerializer;
  */
 public class RequestHandlerImpl implements RequestHandler
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(RequestHandlerImpl.class);
    // provide logging
    private static final Logger log = Logger.getLogger(RequestHandlerImpl.class);
 
@@ -127,7 +130,7 @@ public class RequestHandlerImpl implements RequestHandler
    public RequestHandlerImpl(final ServerConfig serverConfig)
    {
       if (serverConfig == null) 
-         throw new IllegalArgumentException("server config cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SERVER_CONFIG_CANNOT_BE_NULL"));
       
       this.init(serverConfig);
    }
@@ -151,7 +154,7 @@ public class RequestHandlerImpl implements RequestHandler
       }
       else
       {
-         throw new WSException("Unsupported method: " + method);
+         throw new WSException(BundleUtils.getMessage(bundle, "UNSUPPORTED_METHOD",  method));
       }
    }
 
@@ -210,7 +213,7 @@ public class RequestHandlerImpl implements RequestHandler
 
       ClassLoader classLoader = endpoint.getService().getDeployment().getRuntimeClassLoader();
       if (classLoader == null)
-         throw new IllegalStateException("Deployment has no classloader associated");
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "NO_CLASSLOADER_ASSOCIATED"));
 
       // Set the thread context class loader
       ClassLoader ctxClassLoader = SecurityActions.getContextClassLoader();
@@ -255,7 +258,7 @@ public class RequestHandlerImpl implements RequestHandler
 
       ServerEndpointMetaData sepMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
       if (sepMetaData == null)
-         throw new IllegalStateException("Cannot obtain endpoint meta data");
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINTMD"));
 
       Type type = sepMetaData.getType();
 
@@ -344,7 +347,7 @@ public class RequestHandlerImpl implements RequestHandler
          {
             SOAPPart part = ((SOAPMessage)resMessage).getSOAPPart();
             if (part == null)
-               throw new SOAPException("Cannot obtain SOAPPart from response message");
+               throw new SOAPException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SOAPPART"));
 
             // R1126 An INSTANCE MUST return a "500 Internal Server Error" HTTP status code
             // if the response envelope is a Fault.
@@ -431,7 +434,7 @@ public class RequestHandlerImpl implements RequestHandler
          {
             SOAPMessage soapMessage = (SOAPMessage)resMessage;
             if (soapMessage.getAttachments().hasNext())
-               throw new IllegalStateException("Attachments not supported with FastInfoset");
+               throw new IllegalStateException(BundleUtils.getMessage(bundle, "NOT_SUPPORTED_WITH_FASTINFOSET"));
 
             SOAPEnvelope soapEnv = soapMessage.getSOAPPart().getEnvelope();
             DOMDocumentSerializer serializer = new DOMDocumentSerializer();
@@ -443,7 +446,7 @@ public class RequestHandlerImpl implements RequestHandler
          {
             SOAPMessage soapMessage = (SOAPMessage)resMessage;
             if (soapMessage.getAttachments().hasNext())
-               throw new IllegalStateException("Attachments not supported with JSON");
+               throw new IllegalStateException(BundleUtils.getMessage(bundle, "NOT_SUPPORTED_WITH_JSON"));
 
             SOAPBodyImpl soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
             BadgerFishDOMDocumentSerializer serializer = new BadgerFishDOMDocumentSerializer(output);
@@ -465,7 +468,7 @@ public class RequestHandlerImpl implements RequestHandler
 
       ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
       if (sepMetaData == null)
-         throw new IllegalStateException("Cannot obtain endpoint meta data");
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINTMD"));
 
       long beginProcessing = 0;
       boolean debugEnabled = log.isDebugEnabled();
@@ -518,7 +521,7 @@ public class RequestHandlerImpl implements RequestHandler
          // Get the Invoker
          ServiceEndpointInvoker epInvoker = ep.getAttachment(ServiceEndpointInvoker.class);
          if (epInvoker == null)
-            throw new IllegalStateException("Cannot obtain ServiceEndpointInvoker");
+            throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SEINVOKER"));
 
          // Invoke the service endpoint
          epInvoker.invoke(reqContext);
@@ -570,7 +573,7 @@ public class RequestHandlerImpl implements RequestHandler
          }
          catch (Exception ex)
          {
-            log.error("Cannot process metrics", ex);
+            log.error(BundleUtils.getMessage(bundle, "CANNOT_PROCESS_METRICS"),  ex);
          }
 
          if (debugEnabled)
@@ -643,7 +646,7 @@ public class RequestHandlerImpl implements RequestHandler
          {
             final String epAddress = endpoint.getAddress();
             if (epAddress == null)
-               throw new IllegalArgumentException("Invalid endpoint address: " + epAddress);
+               throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_ENDPOINT_ADDRESS",  epAddress));
 
             final URL wsdlUrl = new URL(epAddress + "?wsdl");
             IOUtils.copyStream(outStream, wsdlUrl.openStream());
@@ -711,7 +714,7 @@ public class RequestHandlerImpl implements RequestHandler
    {
       ServerEndpointMetaData epMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
       if (epMetaData == null)
-         throw new IllegalStateException("Cannot obtain endpoint meta data");
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINTMD"));
       
       //The WSDLFilePublisher should set the location to an URL 
       URL wsdlLocation = epMetaData.getServiceMetaData().getWsdlLocation();
@@ -726,7 +729,7 @@ public class RequestHandlerImpl implements RequestHandler
 
    private void handleException(Exception ex) throws ServletException
    {
-      log.error("Error processing web service request", ex);
+      log.error(BundleUtils.getMessage(bundle, "ERROR_PROCESSING_WEB_SERVICE_REQUEST"),  ex);
 
       if (ex instanceof JAXRPCException)
          throw (JAXRPCException)ex;

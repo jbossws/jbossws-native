@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.mail.MessagingException;
 import javax.xml.soap.AttachmentPart;
@@ -47,8 +48,9 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.SOAPMessageAbstraction;
 import org.jboss.ws.core.soap.SOAPContent.State;
@@ -74,6 +76,7 @@ import org.w3c.dom.NodeList;
  */
 public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstraction
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPMessageImpl.class);
    private static Logger log = Logger.getLogger(SOAPMessageImpl.class);
    private Map<String, Object> properties = new HashMap<String, Object>();
    private boolean saveRequired = true;
@@ -119,7 +122,7 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
             return soapBody;
          }
       }
-      throw new SOAPException("Cannot obtain SOAPBody from SOAPMessage");
+      throw new SOAPException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SOAPBODY"));
    }
 
    public SOAPHeader getSOAPHeader() throws SOAPException
@@ -134,7 +137,7 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
             return soapHeader;
          }
       }
-      throw new SOAPException("Cannot obtain SOAPHeader from SOAPMessage");
+      throw new SOAPException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SOAPHEADER"));
    }
 
    public CIDGenerator getCidGenerator()
@@ -216,7 +219,7 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
       }
       catch (UnsupportedEncodingException ex)
       {
-         log.error("Cannot decode name for cid: " + ex);
+         log.error(BundleUtils.getMessage(bundle, "CANNOT_DECODE_NAME",  ex));
       }
       
       return cidDecoded;
@@ -236,7 +239,7 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
       catch (SOAPException ex)
       {
          // this used to not throw SOAPException
-         log.error("Ignore SOAPException: " + ex);
+         log.error(BundleUtils.getMessage(bundle, "IGNORE_SOAPEXCEPTION",  ex));
       }
 
       return null;
@@ -278,7 +281,7 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
    public void setMimeHeaders(MimeHeaders headers)
    {
       if (headers == null)
-         throw new IllegalArgumentException("MimeHeaders cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "MIMEHEADERS_CANNOT_BE_NULL"));
       this.mimeHeaders = headers;
    }
 
@@ -308,7 +311,7 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
    public Iterator getAttachments(MimeHeaders headers)
    {
       if (headers == null)
-         throw new WSException("MimeHeaders can not be null");
+         throw new WSException(BundleUtils.getMessage(bundle, "MIMEHEADERS_CANNOT_BE_NULL"));
 
       return new MimeMatchingAttachmentsIterator(headers, attachments);
    }
@@ -339,7 +342,7 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
             boolean hasAttachments = attachments.size() > 0;
 
             if (isXOPMessage() && !XOPContext.isMTOMEnabled() && hasAttachments)
-               throw new IllegalStateException("XOP parameter not properly inlined");
+               throw new IllegalStateException(BundleUtils.getMessage(bundle, "XOP_PARAMETER_NOT_PROPERLY_INLINED"));
 
             // default content-type
             CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();

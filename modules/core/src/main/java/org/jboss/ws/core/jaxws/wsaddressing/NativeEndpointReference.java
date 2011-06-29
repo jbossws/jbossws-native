@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -44,6 +45,7 @@ import javax.xml.transform.Source;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
 
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Element;
 
@@ -63,6 +65,7 @@ import org.w3c.dom.Element;
 @XmlType(name = "EndpointReferenceType", namespace = NativeEndpointReference.WSA_NS)
 public final class NativeEndpointReference extends EndpointReference
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(NativeEndpointReference.class);
    protected static final String WSA_NS = "http://www.w3.org/2005/08/addressing";
    private static final String WSAM_NS = "http://www.w3.org/2007/05/addressing/metadata";
    private static final String WSDLI_NS = "http://www.w3.org/ns/wsdl-instance";
@@ -134,7 +137,7 @@ public final class NativeEndpointReference extends EndpointReference
                {
                   int spaceIndex = wsdlLocation.indexOf(" ");
                   if (spaceIndex == -1)
-                     throw new IllegalArgumentException("wsdlLocation have to specify both wsdl namespace and target wsdl location");
+                     throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SPECIFY_NS_WSLOCATION"));
                   
                   this.setWsdlLocation(wsdlLocation.substring(spaceIndex).trim());
                }
@@ -170,11 +173,11 @@ public final class NativeEndpointReference extends EndpointReference
       }
       catch (JAXBException e)
       {
-         throw new WebServiceException("Error unmarshalling NativeEndpointReference ", e);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "ERROR_UNMARSHALLING_NATIVEEPR"),  e);
       }
       catch (ClassCastException e)
       {
-         throw new WebServiceException("Source did not contain NativeEndpointReference", e);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "SOURCE_DID_NOT_CONTAIN_NATIVEEPR"),  e);
       }
    }
 
@@ -327,7 +330,7 @@ public final class NativeEndpointReference extends EndpointReference
    public static EndpointReference readFrom(Source eprInfoset)
    {
       if (eprInfoset == null)
-         throw new NullPointerException("Provided eprInfoset cannot be null");
+         throw new NullPointerException(BundleUtils.getMessage(bundle, "PROVIDED_EPRINFOSET_CANNOT_BE_NULL"));
       try
       {
          return new NativeEndpointReference(eprInfoset);
@@ -363,7 +366,7 @@ public final class NativeEndpointReference extends EndpointReference
             }
 
             if (wsdlNamespace == null && this.wsdlLocation != null)
-               throw new IllegalStateException("Either serviceName or endpointName have to be specified when providing wsdlLocation");
+               throw new IllegalStateException(BundleUtils.getMessage(bundle, "SERVICENAME_OR_ENDPOINTNAME_HAVE_TO_BE_SPECIFIED"));
             
             this.metadata.addAttribute(WSDL_LOCATION_QNAME, wsdlNamespace + " " + this.wsdlLocation);
          }
@@ -376,7 +379,7 @@ public final class NativeEndpointReference extends EndpointReference
       }
       catch (JAXBException e)
       {
-         throw new WebServiceException("Error marshalling NativeEndpointReference. ", e);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "ERROR_MARSHALLING_NATIVEEPR"),  e);
       }
    }
 
@@ -400,7 +403,7 @@ public final class NativeEndpointReference extends EndpointReference
       }
       catch (JAXBException ex)
       {
-         throw new WebServiceException("Cannot obtain JAXB context", ex);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_JAXB_CONTEXT"),  ex);
       }
    }
 
@@ -419,7 +422,7 @@ public final class NativeEndpointReference extends EndpointReference
    private QName getQName(Element e, String nodeValue)
    {
       if (nodeValue == null)
-         throw new RuntimeException("Missing text content for element: " + e.getNodeName());
+         throw new RuntimeException(BundleUtils.getMessage(bundle, "MISSING_TEXT_CONTENT",  e.getNodeName()));
       
       final int separatorIndex = nodeValue.indexOf(':');
       if (separatorIndex == -1)

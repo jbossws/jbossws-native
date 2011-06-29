@@ -25,6 +25,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ResourceBundle;
 
 import javax.jws.Oneway;
 import javax.jws.WebMethod;
@@ -36,6 +37,7 @@ import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.holders.Holder;
 
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -51,6 +53,7 @@ import org.jboss.ws.tools.ToolsUtils;
  */
 public class ToolsAnnotationMetaDataBuilder
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ToolsAnnotationMetaDataBuilder.class);
    private ToolsEndpointMetaData tmd = null;
    private String targetNamespace = null;
    private String typeNamespace = null;
@@ -125,8 +128,7 @@ public class ToolsAnnotationMetaDataBuilder
       {
          Class paramType = paramTypes[j];
          if(Remote.class.isAssignableFrom(paramType))
-            throw new WSException("OpName:" + opname + " param:" + paramType.getName() +
-                  " should not extend Remote" );
+            throw new WSException(BundleUtils.getMessage(bundle, "OPNAME_PARAM_SHOULD_NOT_EXTEND_REMOTE", new Object[]{ opname ,  paramType.getName() }));
          //Get the ParameterMetaData for the individual parameters
          om.addParameter(getParameterMetaData(paramType, om, j + 1));
       }
@@ -200,8 +202,7 @@ public class ToolsAnnotationMetaDataBuilder
          return null;
 
       if(Remote.class.isAssignableFrom( type ))
-         throw new WSException(om.getJavaName() + " has return type which " +
-               "should not extend java.rmi.Remote" );
+         throw new WSException(BundleUtils.getMessage(bundle, "OP_RETURN_TYPE_SHOULD_NOT_EXTEND_REMOTE", om.getJavaName()));
       WebResult wr = (WebResult)type.getAnnotation(WebResult.class);
       String tns = targetNamespace;
       String name = "result";

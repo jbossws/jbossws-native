@@ -22,6 +22,8 @@
 package org.jboss.ws.tools.helpers;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -78,6 +80,7 @@ import org.jboss.ws.common.JavaUtils;
  */
 public class JavaToWSDLHelper extends WSDLGenerator
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JavaToWSDLHelper.class);
    private JavaToXSDIntf javaToXSD = new JavaToXSD();
    private JavaWsdlMapping javaWsdlMapping = new JavaWsdlMapping();
    private Map<QName, JavaXmlTypeMapping> mappedTypes = new HashMap<QName, JavaXmlTypeMapping>();
@@ -364,7 +367,7 @@ public class JavaToWSDLHelper extends WSDLGenerator
       //  ask JavaToXSD to provide a list of xsmodels to be plugged
       //  into WSDLTypes
       if (xsModel == null)
-         throw new WSException("XSModel is null");
+         throw new WSException(BundleUtils.getMessage(bundle, "IS_NULL", "xsModel"));
 
       WSDLTypes wsdlTypes = wsdl.getWsdlTypes();
       WSDLUtils.addSchemaModel(wsdlTypes, namespace, xsModel);

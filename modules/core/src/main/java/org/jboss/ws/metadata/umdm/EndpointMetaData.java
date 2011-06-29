@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.jws.soap.SOAPBinding.ParameterStyle;
@@ -43,12 +44,16 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
-import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.Service.Mode;
+import javax.xml.ws.WebServiceFeature;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.binding.BindingCustomization;
+import org.jboss.ws.api.binding.JAXBBindingCustomization;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonSOAPBinding;
 import org.jboss.ws.core.binding.TypeMappingImpl;
@@ -71,13 +76,10 @@ import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.config.EndpointFeature;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
-import org.jboss.ws.api.binding.BindingCustomization;
-import org.jboss.ws.api.binding.JAXBBindingCustomization;
-import org.jboss.ws.common.JavaUtils;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.config.CommonConfig;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 
 import com.sun.xml.bind.api.JAXBRIContext;
 
@@ -89,6 +91,7 @@ import com.sun.xml.bind.api.JAXBRIContext;
  */
 public abstract class EndpointMetaData extends ExtensibleMetaData implements ConfigurationProvider, InitalizableMetaData
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(EndpointMetaData.class);
    // provide logging
    private static Logger log = Logger.getLogger(EndpointMetaData.class);
 
@@ -214,7 +217,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void setBindingId(String bindingId)
    {
       if (SUPPORTED_BINDINGS.contains(bindingId) == false)
-         throw new WSException("Unsupported binding: " + bindingId);
+         throw new WSException(BundleUtils.getMessage(bundle, "UNSUPPORTED_BINDING",  bindingId));
 
       this.bindingId = bindingId;
    }
@@ -233,7 +236,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (wsMetaData.isEagerInitialized())
       {
          if (UnifiedMetaData.isFinalRelease() == false)
-            log.warn("Set SEI name after eager initialization");
+            log.warn(BundleUtils.getMessage(bundle, "SET_SEI_NAME_AFTER_EAGER_INIT"));
 
          // reinitialize
          initializeInternal();
@@ -261,13 +264,13 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
             tmpClass = classLoader.loadClass(seiName);
             if (serviceMetaData.getUnifiedMetaData().isEagerInitialized())
             {
-               log.warn("Loading SEI after eager initialization");
+               log.warn(BundleUtils.getMessage(bundle, "LOADING_SEI_AFTER_EAGER_INIT"));
                seiClass = tmpClass;
             }
          }
          catch (ClassNotFoundException ex)
          {
-            throw new WSException("Cannot load service endpoint interface: " + seiName, ex);
+            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_SEI",  seiName),  ex);
          }
       }
       return tmpClass;
@@ -287,7 +290,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void setEncodingStyle(Use value)
    {
       if (value != null && use != null && !use.equals(value))
-         throw new WSException("Mixed encoding styles not supported");
+         throw new WSException(BundleUtils.getMessage(bundle, "MIXED_STYLES_NOT_SUPPORTED"));
 
       log.trace("setEncodingStyle: " + value);
       this.use = value;
@@ -307,7 +310,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void setStyle(Style value)
    {
       if (value != null && style != null && !style.equals(value))
-         throw new WSException("Mixed styles not supported");
+         throw new WSException(BundleUtils.getMessage(bundle, "MIXED_STYLES_NOT_SUPPORTED"));
 
       if (log.isTraceEnabled())
          log.trace("setStyle: " + value);
@@ -328,7 +331,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void setParameterStyle(ParameterStyle value)
    {
       if (value != null && parameterStyle != null && !parameterStyle.equals(value))
-         throw new WSException("Mixed SOAP parameter styles not supported");
+         throw new WSException(BundleUtils.getMessage(bundle, "MIXED_SOAP_PARAMETER_STYLES_NOT_SUPPORTED"));
 
       if (log.isDebugEnabled())
          log.debug("setParameterStyle: " + value);
@@ -427,7 +430,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
             }
             else
             {
-               throw new WSException("Cannot uniquely indentify operation: " + xmlName);
+               throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_UNIQUELY_INDENTIFY_OP",  xmlName));
             }
          }
       }
@@ -454,7 +457,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
                }
                else
                {
-                  throw new WSException("Cannot uniquely indentify operation: " + xmlName);
+                  throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_UNIQUELY_INDENTIFY_OP",  xmlName));
                }
             }
          }
@@ -468,7 +471,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if (opMetaDataCache.size() == 0)
       {
          // This can happen when the SEI mapping was not found
-         log.warn("Access to empty operation meta data cache, reinitializing");
+         log.warn(BundleUtils.getMessage(bundle, "ACCESS_TO_EMPTY_OP_META_DATA_CACHE"));
          initializeInternal();
       }
 
@@ -645,7 +648,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
                }
                catch (ClassNotFoundException e)
                {
-                  log.warn("Cannot load class for type: " + xmlType + "," + javaTypeName);
+                  log.warn(BundleUtils.getMessage(bundle, "CANNOT_LOAD_CLASS", new Object[]{ xmlType,  javaTypeName}));
                }
             }
          }
@@ -854,7 +857,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private void setConfigNameInternal(String configName, String configFile)
    {
       if (configName == null)
-         throw new IllegalArgumentException("Config name cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CONFIG_NAME_CANNOT_BE_NULL"));
 
       if (configFile == null)
       {

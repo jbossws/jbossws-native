@@ -21,9 +21,12 @@
  */
 package org.jboss.ws.metadata.accessor;
 
+import java.util.ResourceBundle;
+
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
 
 import com.sun.xml.bind.api.JAXBRIContext;
@@ -31,6 +34,7 @@ import com.sun.xml.bind.api.RawAccessor;
 
 final class JAXBAccessorFactory implements AccessorFactory
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JAXBAccessorFactory.class);
    private final Class clazz;
    private final JAXBRIContext ctx;
 
@@ -60,7 +64,7 @@ final class JAXBAccessorFactory implements AccessorFactory
       }
    
       if (accessor == null)
-         throw new IllegalStateException("Could not obtain accessor for parameter: " + parameter);
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "COULD_NOT_OBTAIN_ACCESSOR",  parameter));
    
       return new JAXBAccessor(accessor);
    }

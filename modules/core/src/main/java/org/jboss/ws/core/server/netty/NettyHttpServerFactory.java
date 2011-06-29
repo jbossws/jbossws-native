@@ -22,6 +22,8 @@
 package org.jboss.ws.core.server.netty;
 
 import java.util.HashMap;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.util.Map;
 
 /**
@@ -31,6 +33,7 @@ import java.util.Map;
  */
 public final class NettyHttpServerFactory
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(NettyHttpServerFactory.class);
 
    /**
     * Servers registry.
@@ -59,11 +62,11 @@ public final class NettyHttpServerFactory
    {
       if (port <= 0)
       {
-         throw new IllegalArgumentException("Not positive port value");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NOT_POSITIVE_PORT_VALUE"));
       }
       if (requestHandlerFactory == null)
       {
-         throw new NullPointerException("Factory cannot be null");
+         throw new NullPointerException(BundleUtils.getMessage(bundle, "FACTORY_CANNOT_BE_NULL"));
       }
 
       synchronized (NettyHttpServerFactory.SERVERS)

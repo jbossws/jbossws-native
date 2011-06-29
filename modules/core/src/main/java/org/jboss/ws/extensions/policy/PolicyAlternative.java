@@ -25,8 +25,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
 import org.w3c.dom.Element;
@@ -54,6 +56,7 @@ import org.w3c.dom.Element;
  */
 public class PolicyAlternative
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(PolicyAlternative.class);
    private Collection<PolicyAssertion> assertions = new ArrayList<PolicyAssertion>();
 
    // Hide constructor
@@ -95,7 +98,7 @@ public class PolicyAlternative
       }
       catch (IOException ex)
       {
-         throw new WSException("Cannot parse: " + xmlString, ex);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_PARSE",  xmlString),  ex);
       }
    }
    

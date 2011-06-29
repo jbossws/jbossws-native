@@ -21,6 +21,9 @@
  */
 package org.jboss.ws.extensions.security.element;
 
+import java.util.ResourceBundle;
+
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.extensions.security.Constants;
 import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
@@ -32,6 +35,7 @@ import org.w3c.dom.Element;
  */
 public class SecurityTokenReference
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SecurityTokenReference.class);
    private String id;
 
    private Reference reference;
@@ -46,7 +50,7 @@ public class SecurityTokenReference
    public SecurityTokenReference(Element element) throws WSSecurityException
    {
       if (! "SecurityTokenReference".equals(element.getLocalName()))
-         throw new WSSecurityException("SecurityTokenReference was passed an invalid local name");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "SECURITYTOKENREFERENCE_INVALID_LOCAL_NAME"));
 
       String id = element.getAttributeNS(Constants.WSU_NS, Constants.ID);
       if (id == null || id.length() == 0)
@@ -54,7 +58,7 @@ public class SecurityTokenReference
 
       Element child = Util.getFirstChildElement(element);
       if (child == null)
-         throw new WSSecurityException("Invalid message, SecurityTokenRefence is empty: " + id);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "SECURITYTOKENREFENCE_IS_EMPTY",  id));
 
       this.reference = Reference.getReference(child);
    }

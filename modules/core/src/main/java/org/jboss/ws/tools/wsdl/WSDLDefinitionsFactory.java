@@ -21,16 +21,14 @@
  */
 package org.jboss.ws.tools.wsdl;
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
-import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
-import org.jboss.ws.metadata.wsdl.WSDLException;
-import org.jboss.ws.common.DOMUtils;
-import org.jboss.ws.common.utils.JBossWSEntityResolver;
-import org.jboss.ws.common.utils.ResourceURL;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.EntityResolver;
+import java.io.InputStream;
+import java.io.StringWriter;
+import java.net.ConnectException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.wsdl.Definition;
 import javax.wsdl.factory.WSDLFactory;
@@ -39,13 +37,16 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import java.io.InputStream;
-import java.io.StringWriter;
-import java.net.ConnectException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.utils.JBossWSEntityResolver;
+import org.jboss.ws.common.utils.ResourceURL;
+import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
+import org.jboss.ws.metadata.wsdl.WSDLException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.EntityResolver;
 
 /**
  * A factory that creates a <code>WSDLDefinitions</code> object from an URL.
@@ -59,6 +60,7 @@ import java.util.Map;
  */
 public class WSDLDefinitionsFactory
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLDefinitionsFactory.class);
    // provide logging
    private static final Logger log = Logger.getLogger(WSDLDefinitionsFactory.class);
 
@@ -97,7 +99,7 @@ public class WSDLDefinitionsFactory
    public WSDLDefinitions parse(URL wsdlLocation) throws WSDLException
    {
       if (wsdlLocation == null)
-         throw new IllegalArgumentException("URL cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "URL_CANNOT_BE_NULL"));
 
       if (log.isDebugEnabled())
          log.debug("parse: " + wsdlLocation.toExternalForm());
@@ -131,7 +133,7 @@ public class WSDLDefinitionsFactory
          }
          else
          {
-            throw new WSDLException("Invalid default namespace: " + defaultNamespace);
+            throw new WSDLException(BundleUtils.getMessage(bundle, "INVALID_DEFAULT_NAMESPACE",  defaultNamespace));
          }
 
          if (log.isTraceEnabled())
@@ -184,11 +186,11 @@ public class WSDLDefinitionsFactory
       }
       catch (ConnectException ex)
       {
-         throw new WSDLException("Cannot connect to: " + wsdlLocation);
+         throw new WSDLException(BundleUtils.getMessage(bundle, "CANNOT_CONNECT_TO",  wsdlLocation));
       }
       catch (Exception ex)
       {
-         throw new WSDLException("Cannot parse wsdlLocation: " + wsdlLocation, ex);
+         throw new WSDLException(BundleUtils.getMessage(bundle, "CANNOT_PARSE_WSDLLOCATION",  wsdlLocation),  ex);
       }
    }
 

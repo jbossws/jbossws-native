@@ -22,6 +22,7 @@
 package org.jboss.ws.core.soap;
 
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import javax.xml.soap.Node;
 import javax.xml.soap.SOAPBodyElement;
@@ -30,6 +31,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.Text;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
 import org.w3c.dom.Attr;
@@ -44,6 +46,7 @@ import org.w3c.dom.NamedNodeMap;
  */
 public class HRefInlineHandler
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(HRefInlineHandler.class);
    // provide logging
    private static Logger log = Logger.getLogger(HRefInlineHandler.class);
 
@@ -123,7 +126,7 @@ public class HRefInlineHandler
       }
 
       if (idElement == null)
-         throw new IllegalStateException("Cannot get href element: " + href);
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_GET_HREF_ELEMENT",  href));
 
       // process nested hrefs
       processElement(idElement);

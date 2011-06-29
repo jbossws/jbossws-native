@@ -25,12 +25,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.ws.addressing.EndpointReference;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.core.StubExt;
@@ -52,6 +54,7 @@ import org.jboss.ws.core.client.transport.NettyClient;
  */
 public abstract class HTTPRemotingConnection implements RemoteConnection
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(HTTPRemotingConnection.class);
    // provide logging
    private static Logger log = Logger.getLogger(HTTPRemotingConnection.class);
    
@@ -91,10 +94,10 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
    public MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway) throws IOException
    {
       if (endpoint == null)
-         throw new IllegalArgumentException("Given endpoint cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "GIVEN_ENDPOINT_CANNOT_BE_NULL"));
 
       if (closed)
-         throw new IOException("Connection is already closed");
+         throw new IOException(BundleUtils.getMessage(bundle, "CONNECTION_IS_ALREADY_CLOSED"));
 
       String targetAddress;
       Map<String, Object> callProps = new HashMap<String, Object>();

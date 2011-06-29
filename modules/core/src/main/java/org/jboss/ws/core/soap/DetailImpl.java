@@ -22,6 +22,8 @@
 package org.jboss.ws.core.soap;
 
 import java.util.ArrayList;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,6 +53,7 @@ import org.w3c.dom.NodeList;
  */
 public class DetailImpl extends SOAPFaultElementImpl implements Detail
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(DetailImpl.class);
    // provide logging
    private static Logger log = Logger.getLogger(DetailImpl.class);
 
@@ -88,7 +91,7 @@ public class DetailImpl extends SOAPFaultElementImpl implements Detail
       }
       catch (SOAPException e)
       {
-         throw new WSException("Unable to create fault detail", e);
+         throw new WSException(BundleUtils.getMessage(bundle, "UNABLE_TO_CREATE_FAULT_DETAIL"),  e);
       }
    }
 

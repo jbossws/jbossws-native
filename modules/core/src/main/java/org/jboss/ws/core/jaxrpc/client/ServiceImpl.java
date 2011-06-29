@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -41,6 +42,8 @@ import javax.xml.rpc.handler.HandlerInfo;
 import javax.xml.rpc.handler.HandlerRegistry;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.ResourceLoaderAdapter;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCClientMetaDataBuilder;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
@@ -51,13 +54,12 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
-import org.jboss.ws.common.ResourceLoaderAdapter;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * Service class acts as a factory for:
@@ -73,6 +75,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public class ServiceImpl implements ServiceExt
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ServiceImpl.class);
    // provide logging
    private static final Logger log = Logger.getLogger(ServiceImpl.class);
 
@@ -247,7 +250,7 @@ public class ServiceImpl implements ServiceExt
    {
       EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
       if (epMetaData == null)
-         throw new ServiceException("Cannot find endpoint for name: " + portName);
+         throw new ServiceException(BundleUtils.getMessage(bundle, "CANNOT_FIND_ENDPOINT",  portName));
 
       List<Call> calls = new ArrayList<Call>();
       for (OperationMetaData opMetaData : epMetaData.getOperations())
@@ -270,7 +273,7 @@ public class ServiceImpl implements ServiceExt
     */
    public HandlerRegistry getHandlerRegistry()
    {
-      throw new UnsupportedOperationException("Components should not use the getHandlerRegistry() method.");
+      throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "SHOULD_NOT_USE_METHOD", "getHandlerRegistry()"));
    }
 
    /**
@@ -289,7 +292,7 @@ public class ServiceImpl implements ServiceExt
     */
    public TypeMappingRegistry getTypeMappingRegistry()
    {
-      throw new UnsupportedOperationException("Components should not use the getTypeMappingRegistry() method.");
+      throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "SHOULD_NOT_USE_METHOD", "getTypeMappingRegistry()"));
    }
 
    /**
@@ -327,14 +330,14 @@ public class ServiceImpl implements ServiceExt
    public Remote getPort(Class seiClass) throws ServiceException
    {
       if (seiClass == null)
-         throw new IllegalArgumentException("SEI class cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SEI_CLASS_CANNOT_BE_NULL"));
 
       String seiName = seiClass.getName();
       if (Remote.class.isAssignableFrom(seiClass) == false)
-         throw new ServiceException("SEI does not implement java.rmi.Remote: " + seiName);
+         throw new ServiceException(BundleUtils.getMessage(bundle, "NOT_IMPLEMENT_REMOTE",  seiName));
 
       if (serviceMetaData == null)
-         throw new ServiceException("Service meta data not available");
+         throw new ServiceException(BundleUtils.getMessage(bundle, "SERVICE_META_DATA_NOT_AVAILABLE"));
 
       try
       {
@@ -346,7 +349,7 @@ public class ServiceImpl implements ServiceExt
          }
 
          if (epMetaData == null)
-            throw new ServiceException("Cannot find endpoint meta data for: " + seiName);
+            throw new ServiceException(BundleUtils.getMessage(bundle, "CANNOT_FIND_ENDPOINT_META_DATA",  seiName));
 
          return createProxy(seiClass, epMetaData);
       }
@@ -356,7 +359,7 @@ public class ServiceImpl implements ServiceExt
       }
       catch (Exception ex)
       {
-         throw new ServiceException("Cannot create proxy", ex);
+         throw new ServiceException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_PROXY"),  ex);
       }
    }
 
@@ -370,18 +373,18 @@ public class ServiceImpl implements ServiceExt
    public Remote getPort(QName portName, Class seiClass) throws ServiceException
    {
       if (seiClass == null)
-         throw new IllegalArgumentException("SEI class cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SEI_CLASS_CANNOT_BE_NULL"));
 
       if (serviceMetaData == null)
-         throw new ServiceException("Service meta data not available");
+         throw new ServiceException(BundleUtils.getMessage(bundle, "SERVICE_META_DATA_NOT_AVAILABLE"));
 
       String seiName = seiClass.getName();
       if (Remote.class.isAssignableFrom(seiClass) == false)
-         throw new ServiceException("SEI does not implement java.rmi.Remote: " + seiName);
+         throw new ServiceException(BundleUtils.getMessage(bundle, "NOT_IMPLEMENT_REMOTE",  seiName));
 
       EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
       if (epMetaData == null)
-         throw new ServiceException("Cannot obtain endpoint meta data for: " + portName);
+         throw new ServiceException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINT_META_DATA",  portName));
 
       try
       {
@@ -396,7 +399,7 @@ public class ServiceImpl implements ServiceExt
       }
       catch (Exception ex)
       {
-         throw new ServiceException("Cannot create proxy", ex);
+         throw new ServiceException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_PROXY"),  ex);
       }
    }
 

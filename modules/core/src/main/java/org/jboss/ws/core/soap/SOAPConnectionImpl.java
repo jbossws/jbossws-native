@@ -21,11 +21,14 @@
  */
 package org.jboss.ws.core.soap;
 
+import java.util.ResourceBundle;
+
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.addressing.EndpointReference;
 
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.client.EndpointInfo;
 import org.jboss.ws.core.client.HTTPRemotingConnection;
@@ -43,6 +46,7 @@ import org.jboss.ws.core.client.SOAPProtocolConnectionJMS;
  */
 public class SOAPConnectionImpl extends SOAPConnection
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPConnectionImpl.class);
 
    private RemoteConnection remotingConnection;
 
@@ -59,7 +63,7 @@ public class SOAPConnectionImpl extends SOAPConnection
    public SOAPMessage call(SOAPMessage reqMessage, Object endpoint) throws SOAPException
    {
       if (reqMessage == null)
-         throw new IllegalArgumentException("Given SOAPMessage cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SOAPMESSAGE_CANNOT_BE_NULL"));
 
       MessageAbstraction resMessage = callInternal(reqMessage, endpoint, false);
       return (SOAPMessage)resMessage;
@@ -82,7 +86,7 @@ public class SOAPConnectionImpl extends SOAPConnection
    public SOAPMessage callOneWay(SOAPMessage reqMessage, Object endpoint) throws SOAPException
    {
       if (reqMessage == null)
-         throw new IllegalArgumentException("Given SOAPMessage cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SOAPMESSAGE_CANNOT_BE_NULL"));
 
       MessageAbstraction resMessage = callInternal(reqMessage, endpoint, true);
       return (SOAPMessage)resMessage;
@@ -91,7 +95,7 @@ public class SOAPConnectionImpl extends SOAPConnection
    private RemoteConnection getRemotingConnection(Object endpoint)
    {
       if (endpoint == null)
-         throw new IllegalArgumentException("Given endpoint cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ENDPOINT_CANNOT_BE_NULL"));
 
       String targetAddress = null;
       if (endpoint instanceof EndpointInfo)
@@ -129,7 +133,7 @@ public class SOAPConnectionImpl extends SOAPConnection
       {
          HTTPRemotingConnection conn = (HTTPRemotingConnection) remotingConnection;
          if (conn.isClosed())
-            throw new SOAPException("SOAPConnection is already closed");
+            throw new SOAPException(BundleUtils.getMessage(bundle, "SOAPCONNECTION_IS_ALREADY_CLOSED"));
 
          conn.setClosed(true);
       }

@@ -22,6 +22,8 @@
 package org.jboss.ws.extensions.addressing;
 
 import java.util.Collection;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -57,6 +59,7 @@ import javax.xml.ws.addressing.Relationship;
  */
 public class AddressingPropertiesImpl extends ElementExtensibleImpl implements AddressingProperties
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(AddressingPropertiesImpl.class);
    private static AddressingConstants ADDR = new AddressingConstantsImpl();
 
    // A REQUIRED absolute URI representing the address of the intended receiver of this message.
@@ -169,7 +172,7 @@ public class AddressingPropertiesImpl extends ElementExtensibleImpl implements A
 		if(initialized) return;
 		
 		if (epr == null)
-         throw new IllegalArgumentException("Invalid null endpoint reference");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_NULL_ENDPOINT_REFERENCE"));
 
 		this.to = epr.getAddress();
       

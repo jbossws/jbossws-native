@@ -22,6 +22,7 @@
 package org.jboss.ws.core.jaxws.handler;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.soap.SOAPElement;
@@ -35,6 +36,8 @@ import javax.xml.ws.WebServiceException;
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.core.HTTPMessageImpl;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.soap.EnvelopeBuilder;
@@ -44,7 +47,6 @@ import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.XMLFragment;
-import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -58,6 +60,7 @@ import org.w3c.dom.NodeList;
  */
 public class LogicalMessageImpl implements LogicalMessage
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(LogicalMessageImpl.class);
    // provide logging
    private static final Logger log = Logger.getLogger(LogicalMessageImpl.class);
 
@@ -129,7 +132,7 @@ public class LogicalMessageImpl implements LogicalMessage
          }
          catch (SOAPException ex)
          {
-            throw new WebServiceException("Cannot set xml payload", ex);
+            throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_SET_XML_PAYLOAD"),  ex);
          }
       }
       else if (message instanceof HTTPMessageImpl)

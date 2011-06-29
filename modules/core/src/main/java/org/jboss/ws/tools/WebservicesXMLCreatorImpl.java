@@ -26,18 +26,20 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.DOMUtils;
+import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.tools.interfaces.WebservicesXMLCreator;
 import org.jboss.wsf.spi.metadata.webservices.PortComponentMetaData;
 import org.jboss.wsf.spi.metadata.webservices.WebserviceDescriptionMetaData;
 import org.jboss.wsf.spi.metadata.webservices.WebservicesFactory;
 import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
-import org.jboss.ws.common.DOMUtils;
-import org.jboss.ws.common.DOMWriter;
 import org.w3c.dom.Element;
 
 /**
@@ -47,6 +49,7 @@ import org.w3c.dom.Element;
  */
 public class WebservicesXMLCreatorImpl implements WebservicesXMLCreator
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WebservicesXMLCreatorImpl.class);
    // provide logging
    protected static final Logger log = Logger.getLogger(WebservicesXMLCreatorImpl.class);
    protected String targetNamespace = null;
@@ -132,7 +135,7 @@ public class WebservicesXMLCreatorImpl implements WebservicesXMLCreator
          }
          catch (Exception e)
          {
-            throw new WSException("Could not unmarshal existing webservices descriptor: " + wsXmlFile, e);
+            throw new WSException(BundleUtils.getMessage(bundle, "COULD_NOT_UNMARSHAL_DESCRIPTOR",  wsXmlFile),  e);
          }
          finally
          {
@@ -183,20 +186,20 @@ public class WebservicesXMLCreatorImpl implements WebservicesXMLCreator
    private void checkEssentials()
    {
       if (serviceName == null)
-         throw new WSException("serviceName is null");
+         throw new WSException(BundleUtils.getMessage(bundle, "SERVICENAME_IS_NULL"));
       if (wsdlFile == null)
-         throw new WSException("wsdlFile is null");
+         throw new WSException(BundleUtils.getMessage(bundle, "WSDLFILE_IS_NULL"));
       if (mappingFile == null)
-         throw new WSException("mappingFile is null");
+         throw new WSException(BundleUtils.getMessage(bundle, "MAPPINGFILE_IS_NULL"));
       if (targetNamespace == null)
-         throw new WSException("targetNamespace is null");
+         throw new WSException(BundleUtils.getMessage(bundle, "TARGETNAMESPACE_IS_NULL"));
       if (portName == null)
-         throw new WSException("portName is null");
+         throw new WSException(BundleUtils.getMessage(bundle, "PORTNAME_IS_NULL"));
       if (seiName == null)
-         throw new WSException("seiName is null");
+         throw new WSException(BundleUtils.getMessage(bundle, "SEINAME_IS_NULL"));
       if (servletLink == null && ejbLink == null)
-         throw new WSException("Either servletLink or ejbLink should not be null");
+         throw new WSException(BundleUtils.getMessage(bundle, "EITHER_SERVLETLINK_OR_EJBLINK_SHOULD_NOT_BE_NULL"));
       if (servletLink != null && ejbLink != null)
-         throw new WSException("One of servletLink or ejbLink should be null");
+         throw new WSException(BundleUtils.getMessage(bundle, "ONE_OF_SERVLETLINK_OR_EJBLINK_SHOULD_BE_NULL"));
    }
 }

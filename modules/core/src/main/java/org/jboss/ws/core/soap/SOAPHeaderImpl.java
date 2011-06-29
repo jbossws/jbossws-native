@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
@@ -34,6 +35,7 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.Text;
 
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.utils.SAAJUtils;
 import org.w3c.dom.Comment;
@@ -50,6 +52,7 @@ import org.w3c.dom.Node;
  */
 public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPHeaderImpl.class);
    public SOAPHeaderImpl(String prefix, String namespace)
    {
       super("Header", prefix, namespace);
@@ -61,7 +64,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    {      
       QName qname = child.getElementQName();
       if (qname == null || qname.getNamespaceURI().length() == 0)
-         throw new SOAPException("Invalid SOAPHeaderElement name: " + qname);
+         throw new SOAPException(BundleUtils.getMessage(bundle, "INVALID_SOAPHEADERELEMENT_NAME",  qname));
 
       // Check that we get a SOAPHeaderElement
       if ((child instanceof SOAPHeaderElement) == false)
@@ -77,7 +80,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    {
       // JBCTS-440 #addTextNodeTest2 adds a text node to a SOAPHeader and expects a SOAPException
       if (Constants.NS_SOAP12_ENV.equals(getNamespaceURI()))
-         throw new SOAPException("Attaching a Text node to this SOAP 1.2 Element is not legal: " + getLocalName());
+         throw new SOAPException(BundleUtils.getMessage(bundle, "ATTACHING_TEXT_NODE_ILLEGAL",  getLocalName()));
 
       return super.addTextNode(value);
    }
@@ -87,7 +90,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    public SOAPHeaderElement addHeaderElement(Name name) throws SOAPException
    {
       if (name == null)
-         throw new SOAPException("Invalid SOAPHeaderElement name: " + name);
+         throw new SOAPException(BundleUtils.getMessage(bundle, "INVALID_SOAPHEADERELEMENT_NAME",  name));
 
       return addHeaderElement(((NameImpl)name).toQName());
    }
@@ -95,7 +98,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    public SOAPHeaderElement addHeaderElement(QName qname) throws SOAPException
    {
       if (qname == null || qname.getNamespaceURI().length() == 0 || qname.getPrefix().length() == 0)
-         throw new SOAPException("Invalid SOAPHeaderElement name: " + qname);
+         throw new SOAPException(BundleUtils.getMessage(bundle, "INVALID_SOAPHEADERELEMENT_NAME",  qname));
 
       SOAPHeaderElementImpl headerElement = new SOAPHeaderElementImpl(qname);
       addChildElement(headerElement);
@@ -122,7 +125,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    public Iterator examineHeaderElements(String actor)
    {
       if (actor == null)
-         throw new IllegalArgumentException("Invalid actor: " + actor);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_ACTOR",  actor));
 
       // make a defensive copy
       ArrayList<SOAPHeaderElement> list = new ArrayList<SOAPHeaderElement>();
@@ -142,7 +145,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    public Iterator examineMustUnderstandHeaderElements(String actor)
    {
       if (actor == null)
-         throw new IllegalArgumentException("Invalid actor: " + actor);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_ACTOR",  actor));
 
       // make a defensive copy
       ArrayList<SOAPHeaderElement> list = new ArrayList<SOAPHeaderElement>();
@@ -173,7 +176,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    public Iterator extractHeaderElements(String actor)
    {
       if (actor == null)
-         throw new IllegalArgumentException("Invalid actor: " + actor);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_ACTOR",  actor));
 
       // make a defensive copy
       ArrayList<SOAPHeaderElement> list = new ArrayList<SOAPHeaderElement>();
@@ -217,7 +220,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    public SOAPHeaderElement addNotUnderstoodHeaderElement(QName qname) throws SOAPException
    {
       if (Constants.NS_SOAP11_ENV.equals(getNamespaceURI()))
-         throw new UnsupportedOperationException("SOAP 1.1 Header does not support the concept of NotUnderstood");
+         throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "SOAP11_NOT_SUPPORT_NOTUNDERSTOOD"));
 
       // create NotUnderstood header block
       QName notUnderstoodName = new QName(getNamespaceURI(), "NotUnderstood", getPrefix());
@@ -232,10 +235,10 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    public SOAPHeaderElement addUpgradeHeaderElement(Iterator supportedSoapUris) throws SOAPException
    {
       if (supportedSoapUris == null)
-         throw new SOAPException("list of supported URIs cannot be null");
+         throw new SOAPException(BundleUtils.getMessage(bundle, "LIST_OF_SUPPORTED_URIS_CANNOT_BE_NULL"));
 
       if (!supportedSoapUris.hasNext())
-         throw new SOAPException("list of supported URIs cannot be empty");
+         throw new SOAPException(BundleUtils.getMessage(bundle, "LIST_OF_SUPPORTED_URIS_CANNOT_BE_EMPTY"));
 
       final String namespaceURI = getNamespaceURI();
       final String prefix = getPrefix();
@@ -257,7 +260,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    public SOAPHeaderElement addUpgradeHeaderElement(String[] supportedSoapUris) throws SOAPException
    {
       if (supportedSoapUris == null)
-         throw new SOAPException("list of supported URIs cannot be null");
+         throw new SOAPException(BundleUtils.getMessage(bundle, "LIST_OF_SUPPORTED_URIS_CANNOT_BE_NULL"));
 
       return addUpgradeHeaderElement(Arrays.asList(supportedSoapUris).iterator());
    }
@@ -265,7 +268,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    public SOAPHeaderElement addUpgradeHeaderElement(String supportedSoapUri) throws SOAPException
    {
       if (supportedSoapUri == null)
-         throw new SOAPException("supported URI cannot be null");
+         throw new SOAPException(BundleUtils.getMessage(bundle, "SUPPORTED_URI_CANNOT_BE_NULL"));
 
       return addUpgradeHeaderElement(Collections.singletonList(supportedSoapUri).iterator());
    }
@@ -283,7 +286,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
    private static SOAPHeaderElementImpl convertToHeaderElement(Node node)
    {
       if (!(node instanceof SOAPElementImpl))
-         throw new IllegalArgumentException("SOAPElement expected");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SOAPELEMENT_EXPECTED"));
 
       SOAPElementImpl element = (SOAPElementImpl)node;
 

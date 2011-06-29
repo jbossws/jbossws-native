@@ -22,6 +22,8 @@
 package org.jboss.ws.extensions.security.operation;
 
 import java.util.Calendar;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.util.Collection;
 
 import org.jboss.ws.extensions.security.element.SecurityHeader;
@@ -33,6 +35,7 @@ import org.w3c.dom.Document;
 
 public class RequireTimestampOperation implements RequireOperation
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(RequireTimestampOperation.class);
    private String maxAge;
    
    public RequireTimestampOperation(String maxAge)
@@ -44,7 +47,7 @@ public class RequireTimestampOperation implements RequireOperation
    {
       Timestamp stamp = header.getTimestamp();
       if (stamp == null)
-         throw new FailedCheckException("Required timestamp not present.");
+         throw new FailedCheckException(BundleUtils.getMessage(bundle, "REQUIRED_TIMESTAMP_NOT_PRESENT"));
 
       // If there is no maxAge specified then we are done
       if (maxAge == null)
@@ -56,6 +59,6 @@ public class RequireTimestampOperation implements RequireOperation
       expired.add(Calendar.SECOND, max);
 
       if (! Calendar.getInstance().before(expired))
-         throw new FailedCheckException("Timestamp of message is too old.");
+         throw new FailedCheckException(BundleUtils.getMessage(bundle, "TIMESTAMP_IS_TOO_OLD"));
    }
 }

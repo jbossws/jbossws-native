@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.activation.DataHandler;
@@ -46,6 +47,7 @@ import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonClient;
 import org.jboss.ws.core.CommonMessageContext;
@@ -72,6 +74,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public class ClientImpl extends CommonClient implements BindingProvider, FeatureAwareEndpointMetaData
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ClientImpl.class);
    private static Logger log = Logger.getLogger(ClientImpl.class);
 
    // the associated endpoint meta data
@@ -326,7 +329,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Feature
       }
       else
       {
-         throw new WebServiceException("Unsuported binding: " + bindingId, ex);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "UNSUPPORTED_BINDING",  bindingId),  ex);
       }
    }
 
@@ -390,7 +393,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Feature
    public void setConfigName(String configName, String configFile)
    {
       if (configName == null)
-         throw new IllegalArgumentException("Config name cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CONFIG_NAME_CANNOT_BE_NULL"));
 
       String orgConfigName = epConfigMetaData.getConfigName();
       String orgConfigFile = epConfigMetaData.getConfigFile();

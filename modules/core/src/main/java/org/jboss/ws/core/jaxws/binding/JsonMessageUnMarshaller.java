@@ -24,11 +24,13 @@ package org.jboss.ws.core.jaxws.binding;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.client.UnMarshaller;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.extensions.json.BadgerFishDOMDocumentParser;
@@ -40,6 +42,7 @@ import org.w3c.dom.Document;
  */
 public class JsonMessageUnMarshaller implements UnMarshaller
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JsonMessageUnMarshaller.class);
    // Provide logging
    private static Logger log = Logger.getLogger(JsonMessageUnMarshaller.class);
 
@@ -61,7 +64,7 @@ public class JsonMessageUnMarshaller implements UnMarshaller
       }
       catch (SOAPException ex)
       {
-         IOException ioex = new IOException("Cannot unmarshall json input stream");
+         IOException ioex = new IOException(BundleUtils.getMessage(bundle, "CANNOT_UNMARSHALL_JSON_INPUT_STREAM"));
          ioex.initCause(ex);
          throw ioex;
       }

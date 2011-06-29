@@ -25,14 +25,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
 
 /**
  * The common metdata data for a handler element
@@ -42,6 +44,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public abstract class HandlerMetaData implements InitalizableMetaData, Serializable
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(HandlerMetaData.class);
    // provide logging
    private final Logger log = Logger.getLogger(HandlerMetaData.class);
    
@@ -98,7 +101,7 @@ public abstract class HandlerMetaData implements InitalizableMetaData, Serializa
    public Class getHandlerClass()
    {
       if (handlerClassName == null)
-         throw new IllegalStateException("Handler class name cannot be null");
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "HANDLER_CLASS_NAME_CANNOT_BE_NULL"));
       
       Class localClass = handlerClass;
       if (localClass == null)
@@ -110,7 +113,7 @@ public abstract class HandlerMetaData implements InitalizableMetaData, Serializa
          }
          catch (ClassNotFoundException ex)
          {
-            throw new WSException("Cannot load handler: " + handlerClassName, ex);
+            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_HANDLER",  handlerClassName),  ex);
          }
       }
       return localClass;
@@ -159,7 +162,7 @@ public abstract class HandlerMetaData implements InitalizableMetaData, Serializa
       if (securityHandlers.contains(handlerClassName) && epMetaData != null)
       {
          if (epMetaData.getServiceMetaData().getSecurityConfiguration() == null)
-            log.warn("WS-Security requires security configuration");
+            log.warn(BundleUtils.getMessage(bundle, "REQUIRES_SECURITY_CONFIGURATION"));
       }
    }
 

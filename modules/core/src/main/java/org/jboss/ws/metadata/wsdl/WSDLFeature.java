@@ -22,6 +22,9 @@
 package org.jboss.ws.metadata.wsdl;
 
 import java.io.Serializable;
+import java.util.ResourceBundle;
+
+import org.jboss.ws.api.util.BundleUtils;
 
 /**
  * A feature component describes an abstract piece of functionality typically associated with the exchange of
@@ -36,6 +39,7 @@ import java.io.Serializable;
  */
 public class WSDLFeature implements Serializable
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLFeature.class);
    private static final long serialVersionUID = 8096857958254222743L;
    
    /** A REQUIRED uri attribute information item */
@@ -46,7 +50,7 @@ public class WSDLFeature implements Serializable
    public WSDLFeature(String uri)
    {
       if (uri == null)
-         throw new IllegalArgumentException("Illegal feature URI: " + uri);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_FEATURE_URI",  uri));
 
       this.uri = uri;
    }
@@ -54,7 +58,7 @@ public class WSDLFeature implements Serializable
    public WSDLFeature(String uri, boolean required)
    {
       if (uri == null)
-         throw new IllegalArgumentException("Illegal feature URI: " + uri);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_FEATURE_URI",  uri));
 
       this.uri = uri;
       this.required = required;

@@ -22,6 +22,8 @@
 package org.jboss.ws.tools;
 
 import java.io.File;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -39,6 +41,7 @@ import org.jboss.ws.metadata.wsdl.WSDLUtils;
  */
 public class HolderWriter
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(HolderWriter.class);
 
    private static final WSDLUtils utils = WSDLUtils.getInstance();
 
@@ -73,7 +76,7 @@ public class HolderWriter
          }
          catch (IOException e)
          {
-            throw new WSException("Unable to create JAX-RPC holder.", e);
+            throw new WSException(BundleUtils.getMessage(bundle, "UNABLE_TO_CREATE_JAX_RPC_HOLDER"),  e);
          }
       }
 

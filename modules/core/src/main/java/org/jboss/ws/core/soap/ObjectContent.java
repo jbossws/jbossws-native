@@ -23,6 +23,7 @@ package org.jboss.ws.core.soap;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
@@ -30,17 +31,18 @@ import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.core.binding.AbstractSerializerFactory;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.SerializationContext;
-import org.jboss.ws.core.binding.AbstractSerializerFactory;
 import org.jboss.ws.core.binding.SerializerSupport;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.NullValueSerializer;
 import org.jboss.ws.core.jaxws.SerializationContextJAXWS;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.ws.common.JavaUtils;
 
 /**
  * Represents the OBJECT_VALID state of an {@link SOAPContentElement}.<br>
@@ -50,6 +52,7 @@ import org.jboss.ws.common.JavaUtils;
  */
 public class ObjectContent extends SOAPContent
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ObjectContent.class);
 
    private static Logger log = Logger.getLogger(ObjectContent.class);
 
@@ -93,7 +96,7 @@ public class ObjectContent extends SOAPContent
       }
       else
       {
-         throw new IllegalArgumentException("Illegal state requested: " + nextState);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_STATE_REQUESTED",  nextState));
       }
 
       return next;
@@ -101,23 +104,23 @@ public class ObjectContent extends SOAPContent
 
    public Source getPayload()
    {
-      throw new IllegalStateException("Payload not available");
+      throw new IllegalStateException(BundleUtils.getMessage(bundle, "PAYLOAD_NOT_AVAILABLE"));
    }
 
    public void setPayload(Source source)
    {
-      throw new IllegalStateException("Payload cannot be set on object content");
+      throw new IllegalStateException(BundleUtils.getMessage(bundle, "PAYLOAD_CANNOT_BE_SET_ON_OBJECT_CONTENT"));
    }
 
    public XMLFragment getXMLFragment()
    {
 
-      throw new IllegalStateException("XMLFragment not available");
+      throw new IllegalStateException(BundleUtils.getMessage(bundle, "XMLFRAGMENT_NOT_AVAILABLE"));
    }
 
    public void setXMLFragment(XMLFragment xmlFragment)
    {
-      throw new IllegalStateException("XMLFragment not available");
+      throw new IllegalStateException(BundleUtils.getMessage(bundle, "XMLFRAGMENT_NOT_AVAILABLE"));
    }
 
    public Object getObjectValue()
@@ -141,7 +144,7 @@ public class ObjectContent extends SOAPContent
 
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext == null)
-         throw new WSException("MessageContext not available");
+         throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
 
       SerializationContext serContext = msgContext.getSerializationContext();
       serContext.setJavaType(javaType);
@@ -209,7 +212,7 @@ public class ObjectContent extends SOAPContent
       }
 
       if (serializerFactory == null)
-         throw new WSException("Cannot obtain serializer factory for: [xmlType=" + xmlType + ",javaType=" + javaType + "]");
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SERIALIZER_FACTORY", new Object[]{ xmlType,  javaType }));
 
       return serializerFactory;
    }

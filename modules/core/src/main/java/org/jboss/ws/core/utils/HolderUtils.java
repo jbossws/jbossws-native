@@ -27,6 +27,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Calendar;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.holders.BigDecimalHolder;
@@ -52,6 +53,7 @@ import javax.xml.rpc.holders.ShortWrapperHolder;
 import javax.xml.rpc.holders.StringHolder;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.JavaUtils;
 
 /**
@@ -64,6 +66,7 @@ import org.jboss.ws.common.JavaUtils;
  */
 public class HolderUtils
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(HolderUtils.class);
    private static final Logger log = Logger.getLogger(HolderUtils.class);
 
    /** True if the given type is a holder. */
@@ -87,10 +90,10 @@ public class HolderUtils
    public static Class getJAXRPCHolderType(Class valueType)
    {
       if (valueType == null)
-         throw new IllegalArgumentException("Illegal null parameter");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_PARAMETER"));
 
       if (javax.xml.rpc.holders.Holder.class.isAssignableFrom(valueType))
-         throw new IllegalArgumentException("Is already a holder: " + valueType.getName());
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ALREADY_A_HOLDER",  valueType.getName()));
 
       if (valueType == BigDecimal.class)
          return BigDecimalHolder.class;
@@ -135,7 +138,7 @@ public class HolderUtils
       if (valueType == Object.class)
          return ObjectHolder.class;
 
-      log.warn("Cannot get holder type for: " + valueType);
+      log.warn(BundleUtils.getMessage(bundle, "CANNOT_GET_HOLDER_TYPE",  valueType));
 
       return null;
    }
@@ -153,7 +156,7 @@ public class HolderUtils
       boolean jaxrpcHolder = javax.xml.rpc.holders.Holder.class.isAssignableFrom(holderClass);
       boolean jaxwsHolder = javax.xml.ws.Holder.class.isAssignableFrom(holderClass);
       if (!jaxrpcHolder && !jaxwsHolder)
-         throw new IllegalArgumentException("Is not a holder: " + holderClass.getName());
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "IS_NOT_A_HOLDER",  holderClass.getName()));
 
       if (jaxwsHolder)
          return JavaUtils.erasure(getGenericValueType(holderType));
@@ -166,7 +169,7 @@ public class HolderUtils
       }
       catch (NoSuchFieldException e)
       {
-         throw new IllegalArgumentException("Cannot find public value field: " + holderClass);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_FIND_PUBLIC_VALUE_FIELD",  holderClass));
       }
 
       return field.getType();
@@ -185,7 +188,7 @@ public class HolderUtils
       boolean jaxrpcHolder = javax.xml.rpc.holders.Holder.class.isAssignableFrom(holderClass);
       boolean jaxwsHolder = javax.xml.ws.Holder.class.isAssignableFrom(holderClass);
       if (!jaxrpcHolder && !jaxwsHolder)
-         throw new IllegalArgumentException("Is not a holder: " + holderClass.getName());
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "IS_NOT_A_HOLDER",  holderClass.getName()));
 
       // No generic info
       if (jaxwsHolder)
@@ -199,7 +202,7 @@ public class HolderUtils
       }
       catch (NoSuchFieldException e)
       {
-         throw new IllegalArgumentException("Cannot find public value field: " + holderClass);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_FIND_PUBLIC_VALUE_FIELD",  holderClass));
       }
 
       return field.getType();
@@ -214,10 +217,10 @@ public class HolderUtils
    public static Object getHolderValue(Object holder)
    {
       if (holder == null)
-         throw new IllegalArgumentException("Illegal null parameter");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_PARAMETER"));
 
       if (!javax.xml.rpc.holders.Holder.class.isInstance(holder) && !javax.xml.ws.Holder.class.isInstance(holder))
-         throw new IllegalArgumentException("Is not a holder: " + holder);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "IS_NOT_A_HOLDER",  holder));
 
       try
       {
@@ -231,7 +234,7 @@ public class HolderUtils
       }
       catch (Exception e)
       {
-         throw new IllegalArgumentException("Cannot access public value field: " + holder);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_ACCESS_PUBLIC_VALUE_FIELD",  holder));
       }
    }
 
@@ -246,15 +249,15 @@ public class HolderUtils
    public static void setHolderValue(Object holder, Object value)
    {
       if (holder == null)
-         throw new IllegalArgumentException("Holder instance was null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "HOLDER_INSTANCE_WAS_NULL"));
 
       if (!javax.xml.rpc.holders.Holder.class.isInstance(holder) && !javax.xml.ws.Holder.class.isInstance(holder))
-         throw new IllegalArgumentException("Is not a holder: " + holder);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "IS_NOT_A_HOLDER",  holder));
 
       Class valueType = getValueType(holder.getClass());
 
       if (value != null && JavaUtils.isAssignableFrom(valueType, value.getClass()) == false)
-         throw new IllegalArgumentException("Holder [" + holder.getClass().getName() + "] value not assignable: " + value);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "HOLDER_VALUE_NOT_ASSIGNABLE", new Object[]{ holder.getClass().getName() ,  value}));
 
       if (valueType.isArray())
          value = JavaUtils.syncArray(value, valueType);
@@ -271,7 +274,7 @@ public class HolderUtils
       }
       catch (Exception e)
       {
-         throw new IllegalArgumentException("Cannot access public value field: " + holder);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_ACCESS_PUBLIC_VALUE_FIELD",  holder));
       }
    }
 
@@ -303,7 +306,7 @@ public class HolderUtils
    public static Object createHolderInstance(Object value, Class<?> holderType)
    {
       if (! isHolderType(holderType))
-         throw new IllegalArgumentException("Not a holder type:" + holderType.getName());
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NOT_A_HOLDER_TYPE",  holderType.getName()));
 
       Object holder;
 
@@ -317,7 +320,7 @@ public class HolderUtils
       }
       catch (Exception e)
       {
-         throw new IllegalArgumentException("Cannot instanciate holder: " + holderType);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_INSTANCIATE_HOLDER",  holderType));
       }
 
       setHolderValue(holder, value);

@@ -21,12 +21,11 @@
  */
 package org.jboss.ws.core.jaxws.client;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -40,17 +39,15 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.sax.SAXSource;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Dispatch;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Response;
+import javax.xml.ws.Service.Mode;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
-import javax.xml.ws.Service.Mode;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.PortInfo;
@@ -58,8 +55,8 @@ import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.ConfigProvider;
 import org.jboss.ws.core.EndpointMetadataProvider;
@@ -78,7 +75,6 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
-import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FeatureAwareClientEndpointMetaDataAdapter;
@@ -87,12 +83,9 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
-import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
-import org.xml.sax.InputSource;
 
 
 /**
@@ -104,6 +97,7 @@ import org.xml.sax.InputSource;
  */
 public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMetadataProvider, FeatureAwareEndpointMetaData
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(DispatchImpl.class);
    // provide logging
    private final Logger log = Logger.getLogger(DispatchImpl.class);
 
@@ -221,7 +215,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
       Boolean useSOAPAction = (Boolean) reqContext.get(BindingProvider.SOAPACTION_USE_PROPERTY);
       if (Boolean.TRUE.equals(useSOAPAction) && soapAction == null)
       {
-            throw new IllegalStateException("Cannot obtain: " + BindingProvider.SOAPACTION_URI_PROPERTY);
+            throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN",  BindingProvider.SOAPACTION_URI_PROPERTY));
       }
       
       MimeHeaders mimeHeaders = reqMsg.getMimeHeaders();
@@ -335,7 +329,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
    {
       String bindingID = bindingProvider.getBinding().getBindingID();
       if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
-         throw new IllegalStateException("Unsupported binding: " + bindingID);
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "UNSUPPORTED_BINDING",  bindingID));
 
       RemoteConnection remotingConnection;
       if (HTTPBinding.HTTP_BINDING.equals(bindingID))
@@ -403,7 +397,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
       }
 
       String msg = "Cannot dispatch message";
-      log.error(msg, ex);
+      log.error(BundleUtils.getMessage(bundle, ""),  ex);
       throw new WebServiceException(msg, ex);
    }
 
@@ -438,7 +432,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
       }
       else
       {
-         throw new WebServiceException("Illegal argument combination [type=" + (type != null ? type.getName() : null) + ",mode=" + mode + "]");
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "ILLEGAL_ARGUMENT", new Object[]{ (type != null ? type.getName() : null) ,  mode }));
       }
    }
 
@@ -462,7 +456,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
 
       String bindingID = bindingProvider.getBinding().getBindingID();
       if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
-         throw new IllegalStateException("Unsupported binding: " + bindingID);
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "UNSUPPORTED_BINDING",  bindingID));
 
       MessageAbstraction message;
       if (HTTPBinding.HTTP_BINDING.equals(bindingID))
@@ -484,7 +478,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
    {
       String bindingID = bindingProvider.getBinding().getBindingID();
       if (EndpointMetaData.SUPPORTED_BINDINGS.contains(bindingID) == false)
-         throw new IllegalStateException("Unsupported binding: " + bindingID);
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "UNSUPPORTED_BINDING",  bindingID));
 
       boolean unwrap = !(reqObj instanceof JAXBElement);
       Object resObj = null;
@@ -524,9 +518,9 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
       public AsyncRunnable(ResponseImpl response, AsyncHandler handler, Object payload)
       {
          if (response == null)
-            throw new IllegalArgumentException("Async response cannot be null");
+            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ASYNC_RESPONSE_CANNOT_BE_NULL"));
          if (payload == null)
-            throw new IllegalArgumentException("Async payload cannot be null");
+            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ASYNC_PAYLOAD_CANNOT_BE_NULL"));
 
          this.response = response;
          this.handler = handler;
@@ -560,7 +554,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
       private void handleAsynInvokeException(Exception ex)
       {
          String msg = "Cannot dispatch message";
-         log.error(msg, ex);
+         log.error(BundleUtils.getMessage(bundle, ""),  ex);
 
          WebServiceException wsex;
          if (ex instanceof WebServiceException)

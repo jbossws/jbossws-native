@@ -22,6 +22,8 @@
 package org.jboss.ws.metadata.wsdl.xsd;
 
 import java.io.File;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -41,6 +43,7 @@ import org.jboss.ws.metadata.wsdl.xmlschema.WSSchemaUtils;
  */
 public class XSDWriter
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(XSDWriter.class);
    // provide logging
    protected static final Logger log = Logger.getLogger(XSDWriter.class);
    
@@ -53,7 +56,7 @@ public class XSDWriter
    public void writeXSD(Writer writer, XSModel xsmodel, WSDLDefinitions wsdl)
    {
       if (xsmodel == null)
-         throw new IllegalArgumentException("xsmodel is NULL");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "xsmodel"));
       
       this.wsdl = wsdl;
       
@@ -71,7 +74,7 @@ public class XSDWriter
    throws IOException
    {
       if(ns == null)
-         throw new IllegalArgumentException("Illegal Null Argument:ns");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "ns"));
       String xsdString = "";
       if(xsmodel instanceof JBossXSModel)
       {

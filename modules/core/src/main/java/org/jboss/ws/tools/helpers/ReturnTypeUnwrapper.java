@@ -22,6 +22,8 @@
 package org.jboss.ws.tools.helpers;
 
 import javax.xml.namespace.QName;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 
 import org.apache.xerces.xs.XSComplexTypeDefinition;
 import org.apache.xerces.xs.XSElementDeclaration;
@@ -41,6 +43,7 @@ import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
  */
 public class ReturnTypeUnwrapper
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ReturnTypeUnwrapper.class);
 
    public JBossXSModel xsmodel;
    public QName xmlType;
@@ -64,13 +67,13 @@ public class ReturnTypeUnwrapper
       XSTypeDefinition xt = xsmodel.getTypeDefinition(xmlType.getLocalPart(), xmlType.getNamespaceURI());
 
       if (xt instanceof XSComplexTypeDefinition == false)
-         throw new WSException("[JAX-RPC 2.3.1.2] Tried to unwrap a non-complex type.");
+         throw new WSException(BundleUtils.getMessage(bundle, "UNWRAP_NON_COMPLEX_TYPE"));
 
       XSComplexTypeDefinition wrapper = (XSComplexTypeDefinition)xt;
 
       boolean hasAttributes = wrapper.getAttributeUses().getLength() > 0;
       if (hasAttributes)
-         throw new WSException("[JAX-RPC 2.3.1.2] Can not unwrap, complex type contains attributes.");
+         throw new WSException(BundleUtils.getMessage(bundle, "CAN_NOT_UNWRAP"));
 
       boolean unwrapped = false;
 
@@ -80,7 +83,7 @@ public class ReturnTypeUnwrapper
          XSTerm term = particle.getTerm();
 
          if (term instanceof XSModelGroup == false)
-            throw new WSException("[JAX-RPC 2.3.1.2] Expected model group, could not unwrap");
+            throw new WSException(BundleUtils.getMessage(bundle, "EXPECTED_MODEL_GROUP"));
 
          XSModelGroup group = (XSModelGroup)term;
 
@@ -117,7 +120,7 @@ public class ReturnTypeUnwrapper
       }
       else
       {
-         throw new WSException("[JAX-RPC 2.3.1.2] Unable to unwrap model group with multiple particles.");
+         throw new WSException(BundleUtils.getMessage(bundle, "UNABLE_TO_UNWRAP_MODEL"));
       }
 
       return unwrappedElement != null;

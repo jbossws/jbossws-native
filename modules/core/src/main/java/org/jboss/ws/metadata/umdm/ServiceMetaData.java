@@ -30,12 +30,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.TypeMappingRegistry;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.TypeMappingRegistryImpl;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.SchemaBindingBuilder;
@@ -60,6 +62,7 @@ import org.jboss.xb.binding.sunday.unmarshalling.SchemaBinding;
  */
 public class ServiceMetaData implements InitalizableMetaData
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ServiceMetaData.class);
    // provide logging
    private static final Logger log = Logger.getLogger(ServiceMetaData.class);
 
@@ -219,7 +222,7 @@ public class ServiceMetaData implements InitalizableMetaData
             if (epMetaData != null)
             {
                // The CTS uses Service.getPort(Class) with multiple endpoints implementing the same SEI
-               log.warn("Multiple possible endpoints implementing SEI: " + seiName);
+               log.warn(BundleUtils.getMessage(bundle, "MULTIPLE_POSSIBLE_ENDPOINTS_IMPLEMENTING_SEI",  seiName));
             }
             epMetaData = epmd;
          }
@@ -234,7 +237,7 @@ public class ServiceMetaData implements InitalizableMetaData
       // This happends when we have multiple port components in sharing the same wsdl port
       // The EndpointMetaData name is the wsdl port, so we cannot have multiple meta data for the same port.
       if (endpoints.get(portName) != null)
-         throw new WSException("EndpointMetaData name must be unique: " + portName);
+         throw new WSException(BundleUtils.getMessage(bundle, "ENDPOINTMETADATA_NAME_MUST_BE_UNIQUE",  portName));
 
       endpoints.put(portName, epMetaData);
    }
@@ -265,7 +268,7 @@ public class ServiceMetaData implements InitalizableMetaData
             }
             catch (IOException e)
             {
-               throw new WSException("Cannot parse jaxrpc-mapping.xml", e);
+               throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_PARSE_MAPPING"),  e);
             }
          }
       }
@@ -322,7 +325,7 @@ public class ServiceMetaData implements InitalizableMetaData
             }
             catch (IOException ex)
             {
-               throw new IllegalStateException("Cannot find wsdl: " + wsdlFile);
+               throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_FIND_WSDL",  wsdlFile));
             }
          }
       }
@@ -334,7 +337,7 @@ public class ServiceMetaData implements InitalizableMetaData
       Use encStyle = getEncodingStyle();
       TypeMappingImpl typeMapping = (TypeMappingImpl)tmRegistry.getTypeMapping(encStyle.toURI());
       if (typeMapping == null)
-         throw new WSException("No type mapping for encoding style: " + encStyle);
+         throw new WSException(BundleUtils.getMessage(bundle, "NO_TYPE_MAPPING",  encStyle));
 
       return typeMapping;
    }
@@ -363,7 +366,7 @@ public class ServiceMetaData implements InitalizableMetaData
                }
                else if (encStyle.equals(epMetaData.getEncodingStyle()) == false)
                {
-                  throw new WSException("Conflicting encoding styles not supported");
+                  throw new WSException(BundleUtils.getMessage(bundle, "CONFLICTING_ENCODING_STYLES"));
                }
             }
          }
@@ -399,7 +402,7 @@ public class ServiceMetaData implements InitalizableMetaData
             handlerCount += epMetaData.getHandlerMetaData(HandlerType.ALL).size();
          }
          if (handlerCount == 0)
-            log.warn("WS-Security requires a security handler to be configured");
+            log.warn(BundleUtils.getMessage(bundle, "REQUIRES_A_SECURITY_HANDLER"));
       }
 
       // Validate endpoints
@@ -440,7 +443,7 @@ public class ServiceMetaData implements InitalizableMetaData
    public void assertTargetNamespace(String targetNS)
    {
       if (getServiceName().getNamespaceURI().equals(targetNS) == false)
-         throw new WSException("Requested namespace is not WSDL target namespace: " + targetNS);
+         throw new WSException(BundleUtils.getMessage(bundle, "NOT_WSDL_TNS",  targetNS));
    }
 
    public String toString()

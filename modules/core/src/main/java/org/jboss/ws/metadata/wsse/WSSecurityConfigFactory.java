@@ -24,9 +24,11 @@ package org.jboss.ws.metadata.wsse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 
 /**
@@ -37,6 +39,7 @@ import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
  */
 public class WSSecurityConfigFactory
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSSecurityConfigFactory.class);
    // provide logging
    final Logger log = Logger.getLogger(WSSecurityConfigFactory.class);
 
@@ -115,7 +118,7 @@ public class WSSecurityConfigFactory
       catch (IOException ex)
       {
          if (failOnNotFound)
-            throw new WSException("Cannot find required security resource: " + resource);
+            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_REQUIRED_SECURITY_RESOURCE",  resource));
       }
       return resourceURL;
    }

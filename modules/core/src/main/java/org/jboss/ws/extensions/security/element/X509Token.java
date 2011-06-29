@@ -22,6 +22,8 @@
 package org.jboss.ws.extensions.security.element;
 
 import java.io.ByteArrayInputStream;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -35,6 +37,7 @@ import org.w3c.dom.Element;
 
 public class X509Token extends BinarySecurityToken
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(X509Token.class);
    private X509Certificate cert;
 
    public static final String TYPE = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3";
@@ -54,7 +57,7 @@ public class X509Token extends BinarySecurityToken
          setId(id);
 
       if (! Constants.BASE64_ENCODING_TYPE.equals(element.getAttribute("EncodingType")))
-         throw new WSSecurityException("Invalid encoding type (only base64 is supported) for token:" + id);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "INVALID_ENCODING_TYPE_(ONLY_BASE64_IS_SUPPORTED)_FOR_TOKEN",  id));
 
       setCert(decodeCert(XMLUtils.getFullTextChildrenFromElement(element)));
    }
@@ -80,7 +83,7 @@ public class X509Token extends BinarySecurityToken
       }
       catch (CertificateEncodingException e)
       {
-         throw new RuntimeException("Could not encode X509 token", e);
+         throw new RuntimeException(BundleUtils.getMessage(bundle, "COULD_NOT_ENCODE_X509_TOKEN"),  e);
       }
    }
 
@@ -103,7 +106,7 @@ public class X509Token extends BinarySecurityToken
       }
       catch(Exception e)
       {
-         throw new WSSecurityException("Error decoding BinarySecurityToken: " + e.getMessage());
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "ERROR_DECODING_BINARYSECURITYTOKEN",  e.getMessage()));
       }
    }
 

@@ -24,12 +24,14 @@ package org.jboss.ws.extensions.security.operation;
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.security.auth.Subject;
 
 import org.jboss.logging.Logger;
 import org.jboss.security.SimplePrincipal;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.extensions.security.exception.FailedAuthenticationException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.jboss.ws.metadata.wsse.Authorize;
@@ -52,6 +54,7 @@ import org.jboss.wsf.spi.security.SecurityDomainContext;
  */
 public class AuthorizeOperation
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(AuthorizeOperation.class);
    private static final Logger log = Logger.getLogger(AuthorizeOperation.class);
 
    private Authorize authorize;
@@ -102,7 +105,7 @@ public class AuthorizeOperation
 
       if (sdc.isValid(principal, credential, subject) == false)
       {
-         String msg = "Authentication failed, principal=" + principal;
+         String msg = BundleUtils.getMessage(bundle, "AUTHENTICATION_FAILED", principal);
          log.error(msg);
          SecurityException e = new SecurityException(msg);
          throw new FailedAuthenticationException(e);
@@ -129,7 +132,8 @@ public class AuthorizeOperation
       if (sdc.doesUserHaveRole(principal, expectedRoles) == false)
       {
          Set<Principal> userRoles = sdc.getUserRoles(principal);
-         String msg = "Insufficient method permissions, principal=" + principal + ", requiredRoles=" + expectedRoles + ", principalRoles=" + userRoles;
+         String msg = BundleUtils.getMessage(bundle, "INSUFFICIENT_METHOD_PERMISSIONS", 
+               new Object[]{principal, expectedRoles,  userRoles});
          log.error(msg);
          SecurityException e = new SecurityException(msg);
          throw new FailedAuthenticationException(e);

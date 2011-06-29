@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.TimeZone;
 
 import javax.security.auth.callback.Callback;
@@ -33,6 +34,7 @@ import javax.security.auth.callback.CallbackHandler;
 
 import org.jboss.logging.Logger;
 import org.jboss.security.Base64Encoder;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.extensions.security.SecurityStore;
 import org.jboss.ws.extensions.security.auth.callback.UsernameTokenCallback;
 import org.jboss.ws.extensions.security.auth.callback.UsernameTokenCallbackHandler;
@@ -45,6 +47,7 @@ import org.w3c.dom.Document;
 
 public class SendUsernameOperation implements EncodingOperation
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SendUsernameOperation.class);
    private static Logger log = Logger.getLogger(SendUsernameOperation.class);
    
    private String username;
@@ -106,7 +109,7 @@ public class SendUsernameOperation implements EncodingOperation
       }
       catch(Exception e)
       {
-         log.error("Password hash calculation failed ", e);
+         log.error(BundleUtils.getMessage(bundle, "PASSWORD_HASH_CALCULATION_FAILED"),  e);
       }
       return passwordHash;
    }

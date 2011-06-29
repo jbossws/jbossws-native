@@ -22,11 +22,14 @@
 package org.jboss.ws.extensions.security.element;
 
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 abstract public class Reference implements SecurityElement
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(Reference.class);
    public static final String DIRECT_REFERENCE = "directReference";
    public static final String KEY_IDENTIFIER = "keyIdentifier";
    public static final String X509ISSUER_SERIAL = "x509IssuerSerial";
@@ -48,7 +51,7 @@ abstract public class Reference implements SecurityElement
       }
       else
       {
-         throw new WSSecurityException("Unkown reference element: " + name);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "UNKOWN_REFERENCE_ELEMENT",  name));
       }
    }
    
@@ -68,7 +71,7 @@ abstract public class Reference implements SecurityElement
       }
       else
       {
-         throw new WSSecurityException("Unkown token reference type: " + tokenRefType);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "UNKOWN_TOKEN_REFERENCE_TYPE",  tokenRefType));
       }
    }
 }

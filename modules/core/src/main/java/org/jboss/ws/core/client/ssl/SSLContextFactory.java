@@ -36,6 +36,7 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
@@ -46,6 +47,7 @@ import javax.net.ssl.X509KeyManager;
 import javax.net.ssl.X509TrustManager;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.StubExt;
 
 /**
@@ -162,6 +164,8 @@ public class SSLContextFactory
    private Boolean socketUseClientMode = null;
    private Boolean serverSocketUseClientMode = null;
    private Boolean serverAuthMode = null;
+   
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SSLContextFactory.class);
 
    private static final Logger log = Logger.getLogger(SSLContextFactory.class);
 
@@ -236,7 +240,7 @@ public class SSLContextFactory
       }
       else
       {
-         throw new IllegalArgumentException("Can not set remoting socket factory with null protocol");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CAN_NOT_SET_REMOTING_SOCKET_FACTORY"));
       }
    }
 
@@ -844,7 +848,7 @@ public class SSLContextFactory
       }
       catch(Exception e)
       {
-         IOException ioe = new IOException("Error creating server socket factory SSL context: " + e.getMessage());
+         IOException ioe = new IOException(BundleUtils.getMessage(bundle, "ERROR_CREATING_SERVER_SOCKET_FACTORY",  e.getMessage()));
          ioe.setStackTrace(e.getStackTrace());
          throw ioe;
       }
@@ -883,7 +887,7 @@ public class SSLContextFactory
       }
       catch(Exception e)
       {
-         IOException ioe = new IOException("Error creating socket factory SSL context: " + e.getMessage());
+         IOException ioe = new IOException(BundleUtils.getMessage(bundle, "ERROR_CREATING_SOCKET_FACTORY",  e.getMessage()));
          ioe.setStackTrace(e.getStackTrace());
          throw ioe;
       }
@@ -924,7 +928,7 @@ public class SSLContextFactory
             else
             {
                // because this ssl context will create server socket factories, will throw if can not find keystore
-               IOException ioe = new IOException("Can not find keystore url.");
+               IOException ioe = new IOException(BundleUtils.getMessage(bundle, "CAN_NOT_FIND_KEYSTORE_URL"));
                ioe.initCause(e);
                throw ioe;
             }
@@ -947,7 +951,7 @@ public class SSLContextFactory
       }
       catch(Exception e)
       {
-         IOException ioe = new IOException("Error initializing server socket factory SSL context: " + e.getMessage());
+         IOException ioe = new IOException(BundleUtils.getMessage(bundle, "ERROR_INITIALIZING_SERVER_SOCKET_FACTORY",  e.getMessage()));
          ioe.setStackTrace(e.getStackTrace());
          throw ioe;
       }
@@ -1002,7 +1006,7 @@ public class SSLContextFactory
             }
             else
             {
-               IOException ioe = new IOException("Can not find truststore url.");
+               IOException ioe = new IOException(BundleUtils.getMessage(bundle, "CAN_NOT_FIND_TRUSTSTORE_URL"));
                ioe.initCause(e);
                throw ioe;
             }
@@ -1014,7 +1018,7 @@ public class SSLContextFactory
       }
       catch(Exception e)
       {
-         IOException ioe = new IOException("Error initializing socket factory SSL context: " + e.getMessage());
+         IOException ioe = new IOException(BundleUtils.getMessage(bundle, "ERROR_INITIALIZING_SOCKET_FACTORY",  e.getMessage()));
          ioe.setStackTrace(e.getStackTrace());
          throw ioe;
       }
@@ -1117,7 +1121,7 @@ public class SSLContextFactory
             if(!containsAlias)
             {
                // can not continue as supplied alias does not exist as key entry
-               throw new IOException("Can not find key entry for key store (" + ksPathURL + ") with given alias (" + alias + ")");
+               throw new IOException(BundleUtils.getMessage(bundle, "CAN_NOT_FIND_KEY_ENTRY", new Object[]{ ksPathURL, alias }));
             }
          }
 
@@ -1198,7 +1202,7 @@ public class SSLContextFactory
 
       if ( storePathURL == null )
       {
-         throw new NullStoreURLException("Can not find store file for url because store url is null.");
+         throw new NullStoreURLException(BundleUtils.getMessage(bundle, "CAN_NOT_FIND_STORE_FILE"));
       }
 
       // now that keystore instance created, need to load data from file

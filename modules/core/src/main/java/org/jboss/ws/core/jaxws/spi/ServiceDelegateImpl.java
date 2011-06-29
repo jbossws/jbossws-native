@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -43,9 +44,9 @@ import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Dispatch;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Service;
+import javax.xml.ws.Service.Mode;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
-import javax.xml.ws.Service.Mode;
 import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.AddressingProperties;
 import javax.xml.ws.addressing.JAXWSAConstants;
@@ -54,6 +55,9 @@ import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.spi.ServiceDelegate;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.ResourceLoaderAdapter;
+import org.jboss.ws.common.utils.DelegateClassLoader;
 import org.jboss.ws.core.EndpointMetadataProvider;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxws.client.ClientFeatureProcessor;
@@ -68,23 +72,21 @@ import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.umdm.FeatureAwareClientEndpointMetaDataAdapter;
 import org.jboss.ws.metadata.umdm.FeatureAwareEndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
-import org.jboss.ws.common.ResourceLoaderAdapter;
-import org.jboss.ws.common.utils.DelegateClassLoader;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.w3c.dom.Element;
 
 /**
@@ -98,6 +100,7 @@ import org.w3c.dom.Element;
  */
 public class ServiceDelegateImpl extends ServiceDelegate
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ServiceDelegateImpl.class);
    // provide logging
    private static final Logger log = Logger.getLogger(ServiceDelegateImpl.class);
 
@@ -143,7 +146,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
          }
          catch (IOException e)
          {
-            log.warn("Cannot access wsdlURL: " + wsdlURL);
+            log.warn(BundleUtils.getMessage(bundle, "CANNOT_ACCESS_WSDLURL",  wsdlURL));
             wsdlURL = null;
          }
       }
@@ -207,7 +210,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    private <T> QName getPortTypeName(Class<T> seiClass)
    {
       if (!seiClass.isAnnotationPresent(WebService.class))
-         throw new IllegalArgumentException("Cannot find @WebService on: " + seiClass.getName());
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_FIND_WEBSERVICE",  seiClass.getName()));
 
       WebService anWebService = seiClass.getAnnotation(WebService.class);
       String localPart = anWebService.name();
@@ -259,10 +262,10 @@ public class ServiceDelegateImpl extends ServiceDelegate
    private void assertSEIConstraints(Class seiClass)
    {
       if (seiClass == null)
-         throw new IllegalArgumentException("Service endpoint interface cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SEI_CANNOT_BE_NULL"));
 
       if (!seiClass.isAnnotationPresent(WebService.class))
-         throw new WebServiceException("SEI is missing @WebService annotation: " + seiClass);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "MISSING_WEBSERVICE_ANNO",  seiClass));
    }
 
    @Override
@@ -307,7 +310,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    {
       EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
       if (epMetaData == null)
-         throw new WebServiceException("Cannot find port: " + portName);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_FIND_PORT",  portName));
 
       return epMetaData;
    }
@@ -383,7 +386,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    public void setExecutor(Executor executor)
    {
       if ((executor instanceof ExecutorService) == false)
-         throw new IllegalArgumentException("Supported executors must implement " + ExecutorService.class.getName());
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "EXECUTORS_MUST_IMPLEMENT",  ExecutorService.class.getName()));
 
       this.executor = (ExecutorService)executor;
    }
@@ -391,7 +394,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    private <T> T createProxy(Class<T> seiClass, EndpointMetaData epMetaData) throws WebServiceException
    {
       if (seiClass == null)
-         throw new IllegalArgumentException("SEI class cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SEI_CLASS_CANNOT_BE_NULL"));
 
       try
       {
@@ -417,7 +420,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
          catch (RuntimeException rte)
          {
             URL codeLocation = seiClass.getProtectionDomain().getCodeSource().getLocation();
-            log.error("Cannot create proxy for SEI " + seiClass.getName() + " from: " + codeLocation);
+            log.error(BundleUtils.getMessage(bundle, "CANNOT_CREATE_PROXY_FOR_SEI", new Object[]{ seiClass.getName() ,  codeLocation}));
             throw rte;
          }
 
@@ -432,7 +435,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
       }
       catch (Exception ex)
       {
-         throw new WebServiceException("Cannot create proxy", ex);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_PROXY"),  ex);
       }
    }
    
@@ -563,17 +566,17 @@ public class ServiceDelegateImpl extends ServiceDelegate
       assertSEIConstraints(seiClass);
 
       if (serviceMetaData == null)
-         throw new WebServiceException("Service meta data not available");
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "SERVICE_META_DATA_NOT_AVAILABLE"));
 
       // com/sun/ts/tests/jaxws/api/javax_xml_ws/Service#GetPort1NegTest1WithWsdl
       EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
       if (epMetaData == null && serviceMetaData.getEndpoints().size() > 0)
-         throw new WebServiceException("Cannot get port meta data for: " + portName);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_GET_PORT_META_DATA",  portName));
 
       // This is the case when the service could not be created from wsdl
       if (serviceMetaData.getEndpoints().size() == 0)
       {
-         log.warn("Cannot get port meta data for: " + portName);
+         log.warn(BundleUtils.getMessage(bundle, "CANNOT_GET_PORT_META_DATA",  portName));
 
          QName portType = getPortTypeName(seiClass);
          epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, portType, Type.JAXWS);
@@ -595,7 +598,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
       assertSEIConstraints(seiClass);
 
       if (serviceMetaData == null)
-         throw new WebServiceException("Service meta data not available");
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "SERVICE_META_DATA_NOT_AVAILABLE"));
 
       String seiClassName = seiClass.getName();
       EndpointMetaData epMetaData = serviceMetaData.getEndpointByServiceEndpointInterface(seiClassName);
@@ -620,7 +623,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
       }
 
       if (epMetaData == null)
-         throw new WebServiceException("Cannot get port meta data for: " + seiClassName);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_GET_PORT_META_DATA",  seiClassName));
 
       return getPortInternal(epMetaData, seiClass);
    }

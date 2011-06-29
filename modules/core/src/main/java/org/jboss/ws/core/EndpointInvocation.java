@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.activation.DataHandler;
@@ -38,6 +39,8 @@ import javax.xml.soap.SOAPException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.utils.HolderUtils;
@@ -46,7 +49,6 @@ import org.jboss.ws.core.utils.MimeUtils.ByteArrayConverter;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
-import org.jboss.ws.common.JavaUtils;
 import org.w3c.dom.Element;
 
 /** A web service invocation.
@@ -56,6 +58,7 @@ import org.w3c.dom.Element;
  */
 public class EndpointInvocation
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(EndpointInvocation.class);
    // provide logging
    private static final Logger log = Logger.getLogger(EndpointInvocation.class);
 
@@ -177,7 +180,7 @@ public class EndpointInvocation
    {
       ParameterMetaData retMetaData = opMetaData.getReturnParameter();
       if (value != null && retMetaData == null)
-         throw new WSException("Operation does not have a return value: " + opMetaData.getQName());
+         throw new WSException(BundleUtils.getMessage(bundle, "OPERATION_DOES_NOT_HAVE_A_RETURN_VALUE",  opMetaData.getQName()));
 
       if (log.isDebugEnabled())
          log.debug("setReturnValue: " + getTypeName(value));
@@ -211,7 +214,7 @@ public class EndpointInvocation
       String javaName = paramMetaData.getJavaTypeName();
 
       if (xmlType == null)
-         throw new IllegalStateException("Cannot obtain xml type for: [xmlName=" + xmlName + ",javaName=" + javaName + "]");
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_XML_TYPE", new Object[]{ xmlName ,  javaName }));
 
       Object retValue = paramValue;
 
@@ -230,7 +233,7 @@ public class EndpointInvocation
             // Conformance (MIME type mismatch): On receipt of a message where the MIME type of a part does not
             // match that described in the WSDL an implementation SHOULD throw a WebServiceException.
             if (mimeTypes != null && !MimeUtils.isMemberOf(mimeType, mimeTypes))
-               log.warn("Mime type " + mimeType + " not allowed for parameter " + xmlName + " allowed types are " + mimeTypes);
+               log.warn(BundleUtils.getMessage(bundle, "MIME_TYPE_NOT_ALLOWED", new Object[]{ mimeType ,  xmlName ,  mimeTypes}));
 
             retValue = part.getDataHandler();
          }
@@ -240,7 +243,7 @@ public class EndpointInvocation
             String mimeType = MimeUtils.getBaseMimeType(part.getContentType());
 
             if (mimeTypes != null && !MimeUtils.isMemberOf(mimeType, mimeTypes))
-               throw new SOAPException("Mime type " + mimeType + " not allowed for parameter " + xmlName + " allowed types are " + mimeTypes);
+               throw new SOAPException(BundleUtils.getMessage(bundle, "MIME_TYPE_NOT_ALLOWED", new Object[]{ mimeType ,  xmlName ,  mimeTypes}));
 
             if (retValue != null)
             {
@@ -254,7 +257,8 @@ public class EndpointInvocation
                   }
                   else
                   {
-                     throw new SOAPException("javaType [" + javaType.getName() + "] is not assignable from attachment content: " + valueType.getName());
+                     throw new SOAPException(BundleUtils.getMessage(bundle, "JAVATYPE_IS_NOT_ASSIGNABLE", 
+                           new Object[]{ javaType.getName(), valueType.getName()}));
                   }
                }
             }
@@ -319,7 +323,7 @@ public class EndpointInvocation
                if (value != null && !paramMetaData.isSwA() && !paramMetaData.isXOP())
                {
                   if (JavaUtils.isAssignableFrom(javaType, inputType) == false)
-                     throw new WSException("Parameter '" + javaType + "' not assignable from: " + inputType);
+                     throw new WSException(BundleUtils.getMessage(bundle, "PARAMETER_NOT_ASSIGNABLE", new Object[]{ javaType ,  inputType}));
                }
             }
          }
@@ -360,7 +364,7 @@ public class EndpointInvocation
          {
             Class valueType = retValue.getClass();
             if (JavaUtils.isAssignableFrom(targetParameterType, valueType) == false)
-               throw new WSException("Parameter " + targetParameterType.getName() + " is not assignable from: " + getTypeName(retValue));
+               throw new WSException(BundleUtils.getMessage(bundle, "PARAMETER_NOT_ASSIGNABLE", new Object[]{ targetParameterType.getName() ,  getTypeName(retValue)}));
 
             if (valueType.isArray())
                retValue = JavaUtils.syncArray(retValue, targetParameterType);
@@ -391,7 +395,7 @@ public class EndpointInvocation
             }
             catch (Exception e)
             {
-               throw new WSException("Could not add output param: " + param.getName(), e);
+               throw new WSException(BundleUtils.getMessage(bundle, "COULD_NOT_ADD_OUTPUT_PARAM",  param.getName()),  e);
 
             }
          }

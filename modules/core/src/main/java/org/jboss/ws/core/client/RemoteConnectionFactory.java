@@ -21,9 +21,12 @@
  */
 package org.jboss.ws.core.client;
 
+import java.util.ResourceBundle;
+
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.api.util.ServiceLoader;
 import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.feature.JsonEncodingFeature;
-import org.jboss.ws.api.util.ServiceLoader;
 
 /**
  * A factory for remote connections 
@@ -33,11 +36,12 @@ import org.jboss.ws.api.util.ServiceLoader;
  */
 public class RemoteConnectionFactory
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(RemoteConnectionFactory.class);
    public RemoteConnection getRemoteConnection(EndpointInfo epInfo)
    {
       String targetAddress = epInfo.getTargetAddress();
       if (targetAddress == null)
-         throw new IllegalArgumentException("Cannot obtain target address from: " + epInfo);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_TARGET_ADDRESS",  epInfo));
       
       String key = null;
       targetAddress = targetAddress.toLowerCase();
@@ -47,7 +51,7 @@ public class RemoteConnectionFactory
          key = RemoteConnection.class.getName() + ".jms";
       
       if (key == null)
-         throw new IllegalArgumentException("Cannot obtain remote connetion for: " + targetAddress);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_REMOTE_CONNETION",  targetAddress));
       
       if (epInfo.isFeatureEnabled(FastInfosetFeature.class))
       {
@@ -60,7 +64,7 @@ public class RemoteConnectionFactory
       
       RemoteConnection con = (RemoteConnection)ServiceLoader.loadService(key, null, this.getClass().getClassLoader());
       if (con == null)
-         throw new IllegalArgumentException("Cannot obtain remote connetion for: " + key);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_REMOTE_CONNETION",  key));
       
       return con;
    }

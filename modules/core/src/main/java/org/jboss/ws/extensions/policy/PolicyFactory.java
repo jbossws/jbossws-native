@@ -23,10 +23,12 @@ package org.jboss.ws.extensions.policy;
 
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
@@ -40,6 +42,7 @@ import org.w3c.dom.NamedNodeMap;
  */
 public class PolicyFactory
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(PolicyFactory.class);
    // PolicyFactory Singelton
    private static PolicyFactory factory = new PolicyFactory();
    
@@ -61,7 +64,7 @@ public class PolicyFactory
       }
       catch (IOException ex)
       {
-         throw new IllegalArgumentException("Cannot parse: " + strPolicy, ex);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_PARSE",  strPolicy),  ex);
       }
    }
 
@@ -93,13 +96,13 @@ public class PolicyFactory
       QName oneQName = new QName(Policy.URI_POLICY, "ExactlyOne");
       Element elExactlyOne = DOMUtils.getFirstChildElement(elPolicy, oneQName);
       if (elExactlyOne == null)
-         throw new WSException("Cannot find child element: " + oneQName);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_CHILD_ELEMENT",  oneQName));
 
       // Parse wsp:All
       QName allQName = new QName(Policy.URI_POLICY, "All");
       Element elAll = DOMUtils.getFirstChildElement(elExactlyOne, allQName);
       if (elAll == null)
-         throw new WSException("Cannot find child element: " + allQName);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_CHILD_ELEMENT",  allQName));
 
       Iterator it = DOMUtils.getChildElements(elExactlyOne, allQName);
       while (it.hasNext())

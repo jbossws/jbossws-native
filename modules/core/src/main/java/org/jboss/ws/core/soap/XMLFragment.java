@@ -30,6 +30,7 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ResourceBundle;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
@@ -40,10 +41,11 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.util.xml.BufferedStreamResult;
-import org.jboss.ws.util.xml.BufferedStreamSource;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
+import org.jboss.ws.util.xml.BufferedStreamResult;
+import org.jboss.ws.util.xml.BufferedStreamSource;
 import org.w3c.dom.Element;
 
 /**
@@ -61,6 +63,7 @@ import org.w3c.dom.Element;
  */
 public class XMLFragment
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(XMLFragment.class);
    // provide logging
    private static Logger log = Logger.getLogger(XMLFragment.class);
 
@@ -97,7 +100,7 @@ public class XMLFragment
       }
       else
       {
-         throw new IllegalArgumentException("Unsupported result type: " + result);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_RESULT_TYPE",  result));
       }
    }
 
@@ -193,7 +196,7 @@ public class XMLFragment
             int off = 0;
 
             if (len == -1)
-               throw new IOException("StreamSource already exhausted");
+               throw new IOException(BundleUtils.getMessage(bundle, "STREAMSOURCE_ALREADY_EXHAUSTED"));
 
             // Remove XML processing instruction
             String xmlProc = new String(cbuf, 0, XML_PROC.length());
@@ -204,7 +207,7 @@ public class XMLFragment
                   off++;
 
                if (cbuf[off] != '>')
-                  throw new IllegalStateException("Cannot find end of XML processing instruction");
+                  throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_FIND_END_INSTRUCTION"));
 
                off++;
                len -= off;
@@ -222,7 +225,7 @@ public class XMLFragment
          }
          else
          {
-            throw new IllegalArgumentException("Unsupported source type: " + source);
+            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_SOURCE_TYPE",  source));
          }
 
          endSourceAccess();
@@ -273,7 +276,7 @@ public class XMLFragment
    {
       if (source instanceof StreamSource && streamSourceAccessMarker != null)
       {
-         log.error("StreamSource was previously accessed from", streamSourceAccessMarker);
+         log.error(BundleUtils.getMessage(bundle, "STREAMSOURCE_WAS_PREVIOUSLY_ACCESSED"),  streamSourceAccessMarker);
       }
       WSException.rethrow(ex);
    }

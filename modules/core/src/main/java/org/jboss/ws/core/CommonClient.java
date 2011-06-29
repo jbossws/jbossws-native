@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
@@ -44,8 +45,10 @@ import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.ResourceLoaderAdapter;
 import org.jboss.ws.core.DirectionHolder.Direction;
 import org.jboss.ws.core.client.EndpointInfo;
 import org.jboss.ws.core.client.RemoteConnection;
@@ -60,14 +63,13 @@ import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
+import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
-import org.jboss.ws.common.ResourceLoaderAdapter;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
@@ -79,6 +81,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public abstract class CommonClient implements StubExt, HeaderSource
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(CommonClient.class);
    // provide logging
    private static Logger log = Logger.getLogger(CommonClient.class);
 
@@ -132,7 +135,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
          {
             epMetaData = serviceMetaData.getEndpoint(portName);
             if (epMetaData == null)
-               throw new WSException("Cannot find endpoint for name: " + portName);
+               throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_ENDPOINT_FOR_NAME",  portName));
          }
 
          if (epMetaData != null)
@@ -178,7 +181,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
    public OperationMetaData getOperationMetaData()
    {
       if (operationName == null)
-         throw new WSException("Operation name not set");
+         throw new WSException(BundleUtils.getMessage(bundle, "OPERATION_NAME_NOT_SET"));
 
       return getOperationMetaData(operationName);
    }
@@ -188,7 +191,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
    public OperationMetaData getOperationMetaData(QName opName)
    {
       if (opName == null)
-         throw new IllegalArgumentException("Cannot get OperationMetaData for null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_GET_OPERATIONMETADATA"));
 
       EndpointMetaData epMetaData = getEndpointMetaData();
       OperationMetaData opMetaData = epMetaData.getOperation(opName);
@@ -199,7 +202,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
       }
 
       if (opMetaData == null)
-         throw new WSException("Cannot obtain operation meta data for: " + opName);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_OPERATION_META_DATA_FOR",  opName));
 
       return opMetaData;
    }
@@ -300,8 +303,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
                  if ((paramMetaData.getMode().equals(ParameterMode.IN) || paramMetaData.getMode().equals(ParameterMode.INOUT)) 
               		   && epInv.getRequestParamValue(qname) == null)
                  {
-                    throw new WebServiceException("The RPC/Literal Operation [" + opMetaData.getQName()
-                          + "] parameters can not be null");
+                    throw new WebServiceException(BundleUtils.getMessage(bundle, "RPC_LITERAL_OPERATION_PARAMS_IS_NULL"));
                  }
               }
            }
@@ -354,7 +356,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
 
             // The endpoint address must be known beyond this point
             if (targetAddress == null)
-               throw new WSException("Target endpoint address not set");
+               throw new WSException(BundleUtils.getMessage(bundle, "TARGET_ENDPOINT_ADDRESS_NOT_SET"));
 
             Map<String, Object> callProps = new HashMap<String, Object>(requestCtx);
             EndpointInfo epInfo = new EndpointInfo(epMetaData, targetAddress, callProps);
@@ -432,7 +434,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
          }
          else
          {
-            log.error("Exception caught while (preparing for) performing the invocation: ", ex);
+            log.error(BundleUtils.getMessage(bundle, "EXCEPTION_CAUGHT_WHILE_(PREPARING_FOR)_PERFORMING_THE_INVOCATION"),  ex);
             // Reverse the message direction
             processPivotInternal(msgContext, direction);
             if (faultType[2] != null)
@@ -581,8 +583,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
          if (opMetaData.isDocumentWrapped() && retMetaData.isMessageType() == false)
             retValue = ParameterWrapping.unwrapResponseParameters(retMetaData, retValue, inParams);
          if (opMetaData.getEndpointMetaData().getType() != Type.JAXRPC && opMetaData.isRPCLiteral() && retValue == null)
-             throw new WebServiceException("The RPC/Literal Operation [" + opMetaData.getQName()
-                   + "] return value can not be null, it's WS-BP:2211 violation)");
+            throw new WebServiceException(BundleUtils.getMessage(bundle, "RPC_LITERAL_OPERATION_RETURN_IS_NULL", opMetaData.getQName()));
       }
 
       // Set the holder values for INOUT parameters
@@ -600,8 +601,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
             {
             	if (value == null) 
             	{
-                    throw new WebServiceException("The RPC/Literal Operation [" + opMetaData.getQName()
-                            + "] response parameter value can not be null, it's WS-BP:2211 violation)");
+                    throw new WebServiceException(BundleUtils.getMessage(bundle, "RPC_LITERAL_OPERATION_RETURN_IS_NULL", 
+                          opMetaData.getQName()));
             	}
             }
             // document/literal wrapped return value header
@@ -657,7 +658,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
    {
       UnboundHeader unboundHeader = unboundHeaders.get(xmlName);
       if (unboundHeader == null)
-         throw new IllegalArgumentException("Cannot find unbound header: " + xmlName);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_FIND_UNBOUND_HEADER",  xmlName));
 
       unboundHeader.setHeaderValue(value);
    }
@@ -718,7 +719,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
       }
       catch (SOAPException ex)
       {
-         throw new JAXRPCException("Cannot create attachment part");
+         throw new JAXRPCException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_ATTACHMENT_PART"));
       }
    }
 

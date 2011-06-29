@@ -23,13 +23,15 @@ package org.jboss.ws.core.jaxws.binding;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
-import javax.xml.ws.WebServiceException;
 import javax.xml.ws.Service.Mode;
+import javax.xml.ws.WebServiceException;
 import javax.xml.ws.http.HTTPBinding;
 
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
@@ -43,6 +45,7 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
  */
 public class BindingProviderImpl extends CommonBindingProvider implements BindingProvider
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(BindingProviderImpl.class);
    private Map<String, Object> requestContext = new HashMap<String, Object>();
    private Map<String, Object> responseContext = new HashMap<String, Object>();
 
@@ -75,7 +78,7 @@ public class BindingProviderImpl extends CommonBindingProvider implements Bindin
       }
       
       if (binding == null)
-         throw new WebServiceException("Unsupported binding: " + bindingId);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "UNSUPPORTED_BINDING",  bindingId));
    }
 
    public Map<String, Object> getRequestContext()

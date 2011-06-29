@@ -26,6 +26,7 @@ import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.ws.addressing.AddressingBuilder;
 import javax.xml.ws.addressing.AddressingProperties;
@@ -37,6 +38,7 @@ import org.jboss.ws.api.addressing.MAP;
 import org.jboss.ws.api.addressing.MAPBuilder;
 import org.jboss.ws.api.addressing.MAPEndpoint;
 import org.jboss.ws.api.addressing.MAPRelatesTo;
+import org.jboss.ws.api.util.BundleUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -48,6 +50,7 @@ import org.w3c.dom.Element;
  */
 public class NativeMAP implements MAP
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(NativeMAP.class);
    /**
     * the wrapped instance which this class delegates to
     */
@@ -144,7 +147,7 @@ public class NativeMAP implements MAP
          }
          else
          {
-            throw new IllegalArgumentException("Unsupported MAPEndpoint: " + epref);
+            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_MAPENDPOINT",  epref));
          }
       }
       else
@@ -205,7 +208,7 @@ public class NativeMAP implements MAP
          }
          else
          {
-            throw new IllegalArgumentException("Unsupported MAPEndpoint: " + epref);
+            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_MAPENDPOINT",  epref));
          }
       }
       else
@@ -224,7 +227,7 @@ public class NativeMAP implements MAP
          }
          else
          {
-            throw new IllegalArgumentException("Unsupported MAPEndpoint: " + epref);
+            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_MAPENDPOINT",  epref));
          }
       }
       else
@@ -282,7 +285,7 @@ public class NativeMAP implements MAP
       }
       else
       {
-         throw new IllegalArgumentException("Unsupported MAPEndpoint: " + epref);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_MAPENDPOINT",  epref));
       }
    }
 
@@ -290,7 +293,7 @@ public class NativeMAP implements MAP
    {
       if (!(map instanceof NativeMAP))
       {
-         throw new IllegalArgumentException("Unsupported MAP: " + map);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_MAP",  map));
       }
       AddressingProperties addressingProperties = ((NativeMAP)map).implementation;
 
@@ -302,7 +305,7 @@ public class NativeMAP implements MAP
    {
       if (!(map instanceof NativeMAP))
       {
-         throw new IllegalArgumentException("Unsupported MAP: " + map);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_MAP",  map));
       }
       AddressingProperties addressingProperties = ((NativeMAP)map).implementation;
 

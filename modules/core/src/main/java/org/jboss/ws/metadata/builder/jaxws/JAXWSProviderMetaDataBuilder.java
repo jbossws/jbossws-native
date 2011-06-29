@@ -23,6 +23,7 @@ package org.jboss.ws.metadata.builder.jaxws;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding.ParameterStyle;
@@ -30,23 +31,24 @@ import javax.management.ObjectName;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.ws.Provider;
+import javax.xml.ws.Service.Mode;
 import javax.xml.ws.ServiceMode;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceProvider;
-import javax.xml.ws.Service.Mode;
 
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
+import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
-import org.jboss.ws.common.JavaUtils;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
 
@@ -59,23 +61,24 @@ import org.jboss.wsf.spi.deployment.Endpoint;
  */
 public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JAXWSProviderMetaDataBuilder.class);
    public ServerEndpointMetaData buildProviderMetaData(ArchiveDeployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass, String linkName) throws IOException
    {
       // 5.3 Conformance (Provider implementation): A Provider based service endpoint implementation MUST
       // implement a typed Provider interface.
       if (JavaUtils.isAssignableFrom(Provider.class, sepClass) == false)
-         throw new WebServiceException("Endpoint implementation does not implement javax.xml.ws.Provider: " + sepClass.getName());
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "NOT_IMPLEMENT_PROVIDER",  sepClass.getName()));
 
       // 5.4 Conformance (WebServiceProvider annotation): A Provider based service endpoint implementation
       // MUST carry a WebServiceProvider annotation
       WebServiceProvider anWebServiceProvider = (WebServiceProvider)sepClass.getAnnotation(WebServiceProvider.class);
       if (anWebServiceProvider == null)
-         throw new WebServiceException("Cannot obtain @WebServiceProvider annotation from: " + sepClass.getName());
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_PROVIDER",  sepClass.getName()));
 
       // 7.3 Conformance (WebServiceProvider and WebService): A class annotated with the WebServiceProvider
       // annotation MUST NOT carry a WebService annotation
       if (sepClass.isAnnotationPresent(WebService.class))
-         throw new WebServiceException("Provider cannot carry @WebService annotation: " + sepClass.getName());
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_CARRY_WEBSERVICE_ANNOTATION",  sepClass.getName()));
 
       WSDLUtils wsdlUtils = WSDLUtils.getInstance();
 

@@ -21,6 +21,10 @@
  */
 package org.jboss.ws.core.soap;
 
+import java.util.ResourceBundle;
+
+import org.jboss.ws.api.util.BundleUtils;
+
 /** A type-safe enumeration for encoding style.
  *  
  * @author Thomas.Diesler@jboss.org
@@ -28,6 +32,7 @@ package org.jboss.ws.core.soap;
  */
 public class Style
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(Style.class);
    private String style;
 
    public static final Style RPC = new Style("rpc");
@@ -50,7 +55,7 @@ public class Style
       if (DOCUMENT.style.equals(style))
          return DOCUMENT;
       
-      throw new IllegalArgumentException("Unsupported style: " + style);
+      throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_STYLE",  style));
    }
 
    public String toString()

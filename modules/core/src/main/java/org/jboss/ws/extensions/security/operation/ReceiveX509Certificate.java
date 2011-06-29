@@ -23,10 +23,12 @@ package org.jboss.ws.extensions.security.operation;
 
 import java.security.Principal;
 import java.security.cert.X509Certificate;
+import java.util.ResourceBundle;
 
 import org.jboss.logging.Logger;
 import org.jboss.security.CertificatePrincipal;
 import org.jboss.security.auth.certs.SubjectDNMapping;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.X509Token;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
@@ -44,6 +46,7 @@ import org.w3c.dom.Document;
  */
 public class ReceiveX509Certificate implements TokenOperation
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ReceiveX509Certificate.class);
    private static Logger log = Logger.getLogger(ReceiveX509Certificate.class);
    private SecurityAdaptorFactory secAdapterfactory;
    private CertificatePrincipal certMapping;
@@ -62,7 +65,7 @@ public class ReceiveX509Certificate implements TokenOperation
          }
          catch (Exception e)
          {
-            log.error("Failed to load CertificatePrincipal '" + certificatePrincipal + "', using default SubjectDNMapping.", e);
+            log.error(BundleUtils.getMessage(bundle, "FAILED_TO_LOAD_CERTIFICATEPRINCIPAL", certificatePrincipal), e);
          }
       }
       if (certMapping == null)
@@ -73,7 +76,7 @@ public class ReceiveX509Certificate implements TokenOperation
    {
       if (token == null || !(token instanceof X509Token))
       {
-         throw new IllegalArgumentException("Token " + token + " is not a X509Token!");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "TOKEN_IS_NOT_A_X509TOKEN",  token ));
       }
       X509Certificate cert = ((X509Token)token).getCert();
       Principal principal = certMapping.toPrinicipal(new X509Certificate[] { cert });

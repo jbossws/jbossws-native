@@ -22,6 +22,8 @@
 package org.jboss.ws.tools.wsdl;
 
 import java.net.URL;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
@@ -41,6 +43,7 @@ import org.xml.sax.EntityResolver;
  */
 public class WSDL11DefinitionFactory
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDL11DefinitionFactory.class);
    // provide logging
    private static Logger log = Logger.getLogger(WSDL11DefinitionFactory.class);
 
@@ -80,7 +83,7 @@ public class WSDL11DefinitionFactory
    public Definition parse(URL wsdlLocation) throws WSDLException
    {
       if (wsdlLocation == null)
-         throw new IllegalArgumentException("URL cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "URL_CANNOT_BE_NULL"));
 
       log.trace("parse: " + wsdlLocation.toExternalForm());
       

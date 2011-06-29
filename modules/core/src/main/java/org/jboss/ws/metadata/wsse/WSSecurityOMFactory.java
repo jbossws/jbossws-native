@@ -26,8 +26,10 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.utils.ResourceURL;
 import org.jboss.xb.binding.JBossXBException;
 import org.jboss.xb.binding.ObjectModelFactory;
@@ -45,6 +47,7 @@ import org.xml.sax.Attributes;
  */
 public class WSSecurityOMFactory implements ObjectModelFactory
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSSecurityOMFactory.class);
 
    public static final String SERVER_RESOURCE_NAME = "jboss-wsse-server.xml";
 
@@ -83,7 +86,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
    public WSSecurityConfiguration parse(URL configURL) throws IOException
    {
       if (configURL == null)
-         throw new IllegalArgumentException("Security config URL cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SECURITY_CONFIG_URL_CANNOT_BE_NULL"));
 
       InputStream is = new ResourceURL(configURL).openStream();
       try
@@ -94,8 +97,8 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       }
       catch (JBossXBException e)
       {
-         log.error("Could not parse " + configURL + ":", e);
-         IOException ioex = new IOException("Cannot parse: " + configURL);
+         log.error(BundleUtils.getMessage(bundle, "CANNOT_PARSE",  configURL ),  e);
+         IOException ioex = new IOException(BundleUtils.getMessage(bundle, "CANNOT_PARSE",  configURL));
          Throwable cause = e.getCause();
          if (cause != null)
             ioex.initCause(cause);
@@ -110,7 +113,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
    public WSSecurityConfiguration parse(String xmlString) throws JBossXBException
    {
       if (xmlString == null)
-         throw new IllegalArgumentException("Security config xml String cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SECURITY_CONFIG_XML_STRING_CANNOT_BE_NULL"));
 
       Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
       WSSecurityConfiguration configuration = (WSSecurityConfiguration)unmarshaller.unmarshal(xmlString, this, null);
@@ -121,7 +124,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
    public WSSecurityConfiguration parse(StringReader strReader) throws JBossXBException
    {
       if (strReader == null)
-         throw new IllegalArgumentException("Security InputStream cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SECURITY_INPUTSTREAM_CANNOT_BE_NULL"));
 
       Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
       WSSecurityConfiguration configuration = (WSSecurityConfiguration)unmarshaller.unmarshal(strReader, this, null);
@@ -156,7 +159,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
       }
       catch (Exception e)
       {
-         log.error("Could not set option: " + method + " to: " + value, e);
+         log.error(BundleUtils.getMessage(bundle, "COULD_NOT_SET_OPTION", new Object[]{ method ,  value}),  e);
       }
    }
 

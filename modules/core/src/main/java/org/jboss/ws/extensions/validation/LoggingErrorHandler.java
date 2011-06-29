@@ -21,7 +21,10 @@
  */
 package org.jboss.ws.extensions.validation;
 
+import java.util.ResourceBundle;
+
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -34,6 +37,7 @@ import org.xml.sax.SAXParseException;
  */
 public class LoggingErrorHandler implements ErrorHandler
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(LoggingErrorHandler.class);
    // provide logging
    private static Logger log = Logger.getLogger(LoggingErrorHandler.class);
    

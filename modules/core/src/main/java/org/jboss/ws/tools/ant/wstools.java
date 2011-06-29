@@ -25,11 +25,13 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
+import java.util.ResourceBundle;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.taskdefs.MatchingTask;
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.Reference;
+import org.jboss.ws.api.util.BundleUtils;
 
 /**
  *  Ant task for jbossws tools
@@ -38,6 +40,7 @@ import org.apache.tools.ant.types.Reference;
  */
 public class wstools extends MatchingTask
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(wstools.class);
    protected Path compileClasspath;
    private boolean verbose;
    private String dest;
@@ -116,7 +119,7 @@ public class wstools extends MatchingTask
          }
          else
          {
-            throw new BuildException("Error running jbossws: ", ex, getLocation());
+            throw new BuildException(BundleUtils.getMessage(bundle, "ERROR_RUNNING_JBOSSWS"),  ex, getLocation());
          }
       }
       finally
@@ -183,14 +186,14 @@ public class wstools extends MatchingTask
                   }
                   catch (Throwable e)
                   {
-                     throw new RuntimeException("Error setting context classloader", e);
+                     throw new RuntimeException(BundleUtils.getMessage(bundle, "ERROR_SETTING_CONTEXT_CLASSLOADER"),  e);
                   }
                }
             });
          }
          catch (PrivilegedActionException e)
          {
-            throw new RuntimeException("Error running privileged action", e.getCause());
+            throw new RuntimeException(BundleUtils.getMessage(bundle, "ERROR_RUNNING_PRIVILEGED_ACTION"),  e.getCause());
          }
       }
    }

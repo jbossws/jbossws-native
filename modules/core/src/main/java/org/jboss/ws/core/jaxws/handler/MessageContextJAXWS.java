@@ -21,16 +21,14 @@
  */
 package org.jboss.ws.core.jaxws.handler;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.jaxws.SerializationContextJAXWS;
@@ -38,9 +36,7 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.ws.common.IOUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
-import org.xml.sax.InputSource;
 
 /**
  * The interface MessageContext abstracts the message context that is processed by a handler in the handle  method.
@@ -53,6 +49,7 @@ import org.xml.sax.InputSource;
  */
 public abstract class MessageContextJAXWS extends CommonMessageContext implements MessageContext
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(MessageContextJAXWS.class);
    private static Logger log = Logger.getLogger(MessageContextJAXWS.class);
 
    public MessageContextJAXWS()
@@ -87,7 +84,7 @@ public abstract class MessageContextJAXWS extends CommonMessageContext implement
    {
       ScopedProperty prop = scopedProps.get(key);
       if (prop == null)
-         throw new IllegalArgumentException("Cannot find scoped property: " + key);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_FIND_SCOPED_PROPERTY",  key));
 
       scopedProps.put(key, new ScopedProperty(key, prop.getValue(), scope));
    }
@@ -97,7 +94,7 @@ public abstract class MessageContextJAXWS extends CommonMessageContext implement
    {
       ScopedProperty prop = scopedProps.get(key);
       if (prop == null)
-         throw new IllegalArgumentException("Cannot find scoped property: " + key);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_FIND_SCOPED_PROPERTY",  key));
 
       return prop.getScope();
    }
@@ -108,7 +105,7 @@ public abstract class MessageContextJAXWS extends CommonMessageContext implement
 
       Boolean outbound = (Boolean)reqContext.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
       if (outbound == null)
-         throw new IllegalStateException("Cannot find property: " + MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_FIND_PROPERTY",  MessageContext.MESSAGE_OUTBOUND_PROPERTY));
 
       MessageContextAssociation.popMessageContext(false);
       SOAPMessageContextJAXWS resContext = new SOAPMessageContextJAXWS(reqContext);

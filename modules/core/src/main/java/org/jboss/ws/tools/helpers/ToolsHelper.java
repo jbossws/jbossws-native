@@ -22,6 +22,8 @@
 package org.jboss.ws.tools.helpers;
 
 import java.io.File;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.MalformedURLException;
@@ -76,6 +78,7 @@ import org.jboss.ws.common.JavaUtils;
  */
 public class ToolsHelper
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ToolsHelper.class);
    private static Logger log = Logger.getLogger(ToolsHelper.class);
 
    /**
@@ -98,18 +101,18 @@ public class ToolsHelper
          jwsdl.setStyle(Style.DOCUMENT);
       else if ("rpc".equals(j2wc.wsdlStyle))
          jwsdl.setStyle(Style.RPC);
-      else throw new WSException("Unrecognized Style:" + j2wc.wsdlStyle);
+      else throw new WSException(BundleUtils.getMessage(bundle, "UNRECOGNIZED_STYLE",  j2wc.wsdlStyle));
 
       if ("wrapped".equals(j2wc.parameterStyle))
          jwsdl.setParameterStyle(ParameterStyle.WRAPPED);
       else if ("bare".equals(j2wc.parameterStyle))
          jwsdl.setParameterStyle(ParameterStyle.BARE);
-      else throw new WSException("Unrecognized Parameter Style:" + j2wc.parameterStyle);
+      else throw new WSException(BundleUtils.getMessage(bundle, "UNRECOGNIZED_PARAMETER_STYLE",  j2wc.parameterStyle));
 
       Class endpointClass = loadClass(j2wc.endpointName);
 
       if (endpointClass == null)
-         throw new WSException("Endpoint " + j2wc.endpointName + " cannot be loaded");
+         throw new WSException(BundleUtils.getMessage(bundle, "ENDPOINT_CANNOT_BE_LOADED",  j2wc.endpointName ));
 
       //Take care of passing global config details
       GlobalConfig gcfg = config.getGlobalConfig(false);
@@ -184,7 +187,7 @@ public class ToolsHelper
       }
 
       if (epMetaData == null)
-         throw new WSException("Could not find endpoint in metadata: " + j2wc.endpointName);
+         throw new WSException(BundleUtils.getMessage(bundle, "COULD_NOT_FIND_ENDPOINT_IN_METADATA",  j2wc.endpointName));
 
       String packageName = endpointClass.getPackage().getName();
       ClassLoader classLoader = wsMetaData.getClassLoader();
@@ -229,7 +232,7 @@ public class ToolsHelper
 
       JavaXmlTypeMapping type = mappingIndex.get(parameter.getXmlType());
       if (type == null)
-         throw new WSException("JAX-RPC mapping metadata is missing a wrapper type: " + parameter.getXmlType());
+         throw new WSException(BundleUtils.getMessage(bundle, "MISSING_A_WRAPPER_TYPE",  parameter.getXmlType()));
 
       type.setJavaType(packageName + "." + name);
    }
@@ -293,7 +296,7 @@ public class ToolsHelper
          }
 
          if (wsdlURL == null)
-            throw new IllegalArgumentException("Cannot load wsdl: " + w2jc.wsdlLocation);
+            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_WSDL",  w2jc.wsdlLocation));
 
          wsdl = wsdlToJava.convertWSDL2Java(wsdlURL);
          if (glc != null)
@@ -382,7 +385,7 @@ public class ToolsHelper
       }
       catch (Exception e)
       {
-         log.error("Cannot load endpoint:" + e.getLocalizedMessage());
+         log.error(BundleUtils.getMessage(bundle, "CANNOT_LOAD_ENDPOINT",  e.getLocalizedMessage()));
       }
       return clazz;
    }

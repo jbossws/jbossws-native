@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -36,8 +37,11 @@ import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.DOMUtils;
+import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.binding.AbstractDeserializerFactory;
 import org.jboss.ws.core.binding.BindingException;
@@ -50,8 +54,6 @@ import org.jboss.ws.core.utils.MimeUtils;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.ws.common.DOMUtils;
-import org.jboss.ws.common.JavaUtils;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -67,6 +69,7 @@ import org.w3c.dom.NodeList;
  */
 class XMLContent extends SOAPContent
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(XMLContent.class);
    private static final Logger log = Logger.getLogger(XMLContent.class);
 
    // The well formed XML content of this element.
@@ -106,13 +109,13 @@ class XMLContent extends SOAPContent
          }
          catch (SOAPException ex)
          {
-            throw new WSException("Cannot expand container children", ex);
+            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_EXPAND_CONTAINER_CHILDREN"),  ex);
          }
          next = new DOMContent(container);
       }
       else
       {
-         throw new IllegalArgumentException("Illegal state requested: " + nextState);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_STATE_REQUESTED",  nextState));
       }
 
       return next;
@@ -140,12 +143,12 @@ class XMLContent extends SOAPContent
 
    public Object getObjectValue()
    {
-      throw new IllegalStateException("Object value not available");
+      throw new IllegalStateException(BundleUtils.getMessage(bundle, "OBJECT_VALUE_NOT_AVAILABLE"));
    }
 
    public void setObjectValue(Object objValue)
    {
-      throw new IllegalStateException("Object value not available");
+      throw new IllegalStateException(BundleUtils.getMessage(bundle, "OBJECT_VALUE_NOT_AVAILABLE"));
    }
 
    private Object unmarshallObjectContents()
@@ -161,7 +164,7 @@ class XMLContent extends SOAPContent
 
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext == null)
-         throw new WSException("MessageContext not available");
+         throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
 
       SerializationContext serContext = msgContext.getSerializationContext();
       ParameterMetaData pmd = container.getParamMetaData();
@@ -237,12 +240,12 @@ class XMLContent extends SOAPContent
                }
                catch (IOException e)
                {
-                  throw new WSException("Failed to adopt XOP content type", e);
+                  throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_ADOPT_XOP_CONTENT_TYPE"),  e);
                }
 
                if (!JavaUtils.isAssignableFrom(javaType, obj.getClass()))
                {
-                  throw new WSException("Java type '" + javaType + "' is not assignable from: " + objType.getName());
+                  throw new WSException(BundleUtils.getMessage(bundle, "JAVA_TYPE_NOT_ASSIGNABLE", new Object[]{ javaType ,  objType.getName()}));
                }
             }
          }
@@ -286,7 +289,7 @@ class XMLContent extends SOAPContent
       }
 
       if (deserializerFactory == null)
-         throw new WSException("Cannot obtain deserializer factory for: [xmlType=" + xmlType + ",javaType=" + javaType + "]");
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_DESERIALIZER_FACTORY", new Object[]{ xmlType ,  javaType}));
 
       return deserializerFactory;
    }
@@ -308,7 +311,7 @@ class XMLContent extends SOAPContent
       boolean artificalElement = (SOAPContentElement.GENERIC_PARAM_NAME.equals(qname) || SOAPContentElement.GENERIC_RETURN_NAME.equals(qname));
 
       if (!artificalElement && !contentRootName.equals(qname))
-         throw new WSException("Content root name does not match element name: " + contentRootName + " != " + qname);
+         throw new WSException(BundleUtils.getMessage(bundle, "DOES_NOT_MATCH_ELEMENT_NAME", new Object[]{ contentRootName ,  qname}));
 
       // Remove all child nodes
       container.removeContents();

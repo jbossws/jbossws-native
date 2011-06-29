@@ -26,6 +26,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
@@ -42,16 +43,18 @@ import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.http.HTTPBinding;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPBinding;
 import org.jboss.ws.core.CommonSOAPFaultException;
 import org.jboss.ws.core.DirectionHolder;
+import org.jboss.ws.core.DirectionHolder.Direction;
 import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.DirectionHolder.Direction;
 import org.jboss.ws.core.jaxrpc.ServletEndpointContextImpl;
 import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
@@ -68,15 +71,13 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.ws.common.JavaUtils;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
+import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.invocation.Invocation;
 import org.jboss.wsf.spi.invocation.InvocationContext;
 import org.jboss.wsf.spi.invocation.InvocationHandler;
-import org.jboss.wsf.spi.invocation.InvocationType;
 import org.jboss.wsf.spi.invocation.WebServiceContextFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
@@ -87,6 +88,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public class ServiceEndpointInvoker
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ServiceEndpointInvoker.class);
    // provide logging
    private static final Logger log = Logger.getLogger(ServiceEndpointInvoker.class);
 
@@ -109,7 +111,7 @@ public class ServiceEndpointInvoker
 
       ServerEndpointMetaData sepMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
       if (sepMetaData == null)
-         throw new IllegalStateException("Cannot obtain endpoint meta data");
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINT_META_DATA"));
 
       if (sepMetaData.getType() == EndpointMetaData.Type.JAXRPC)
       {
@@ -225,8 +227,7 @@ public class ServiceEndpointInvoker
                      ParameterMetaData paramMetaData = opMetaData.getParameter(qname);
                      if ((paramMetaData.getMode().equals(ParameterMode.IN) || paramMetaData.getMode().equals(ParameterMode.INOUT)) && sepInv.getRequestParamValue(qname) == null)
                      {
-                        throw new WebServiceException("The RPC/Literal Operation [" + opMetaData.getQName()
-                              + "] parameters can not be null");
+                        throw new WebServiceException(BundleUtils.getMessage(bundle, "RPC/LITERAL_PAPAMETERS_IS_NULL",  opMetaData.getQName()));
                      }
                   }
                }
@@ -304,7 +305,7 @@ public class ServiceEndpointInvoker
          }
          catch (RuntimeException subEx)
          {
-            log.warn("Exception while processing handleFault: ", ex);
+            log.warn(BundleUtils.getMessage(bundle, "EXCEPTION_PROCESSING_HANDLEFAULT"),  ex);
             binding.bindFaultMessage(subEx);
             ex = subEx;
          }
@@ -333,7 +334,7 @@ public class ServiceEndpointInvoker
             }
             else
             {
-               log.warn("Cannot provide WebServiceContext, since the current MessageContext does not provide a ServletRequest");
+               log.warn(BundleUtils.getMessage(bundle, "CANNOT_PROVIDE_WEBSERVICECONTEXT"));
             }
          }
          invContext.addAttachment(javax.xml.ws.handler.MessageContext.class, msgContext);
@@ -375,7 +376,7 @@ public class ServiceEndpointInvoker
             }
             catch (Exception ex)
             {
-               throw new IllegalStateException("Cannot create endpoint instance: ", ex);
+               throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_ENDPOINT_INSTANCE"),  ex);
             }
          }
 
@@ -410,8 +411,8 @@ public class ServiceEndpointInvoker
          }
          catch (NoSuchMethodException ex)
          {
-            log.error("CodeSource: " + implClass.getProtectionDomain().getCodeSource());
-            log.error("ClassLoader: " + implClass.getClassLoader());
+            log.error(BundleUtils.getMessage(bundle, "CODESOURCE",  implClass.getProtectionDomain().getCodeSource()));
+            log.error(BundleUtils.getMessage(bundle, "CLASSLOADER",  implClass.getClassLoader()));
             throw ex;
          }
       }
@@ -480,7 +481,7 @@ public class ServiceEndpointInvoker
       if (HTTPBinding.HTTP_BINDING.equals(bindingID))
       {
          if (epMetaData.getOperations().size() != 1)
-            throw new IllegalStateException("Multiple operations not supported for HTTP binding");
+            throw new IllegalStateException(BundleUtils.getMessage(bundle, "MULTIPLE_OPERATIONS_NOT_SUPPORTED"));
 
          opMetaData = epMetaData.getOperations().get(0);
       }

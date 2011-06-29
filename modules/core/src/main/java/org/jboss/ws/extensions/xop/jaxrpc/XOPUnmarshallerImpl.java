@@ -23,6 +23,7 @@ package org.jboss.ws.extensions.xop.jaxrpc;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ResourceBundle;
 
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
@@ -30,8 +31,9 @@ import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.SOAPException;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.soap.attachment.ContentHandlerRegistry;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.xb.binding.sunday.xop.XOPObject;
@@ -47,6 +49,7 @@ import org.jboss.xb.binding.sunday.xop.XOPUnmarshaller;
  * @since May 9, 2006
  */
 public class XOPUnmarshallerImpl implements XOPUnmarshaller {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(XOPUnmarshallerImpl.class);
 
    private static final Logger log = Logger.getLogger(XOPUnmarshallerImpl.class);
    private static final QName XOP_INCLUDE = new QName(Constants.NS_XOP, "Include");
@@ -78,7 +81,7 @@ public class XOPUnmarshallerImpl implements XOPUnmarshaller {
       }
       catch(SOAPException e)
       {
-         throw new WSException("Failed to access attachment part", e);
+         throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_ACCESS_ATTACHMENT_PART"),  e);
       }
    }
 

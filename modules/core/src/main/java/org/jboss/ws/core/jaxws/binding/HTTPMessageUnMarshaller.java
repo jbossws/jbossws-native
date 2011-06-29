@@ -26,12 +26,14 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.soap.MimeHeaders;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.HTTPMessageImpl;
 import org.jboss.ws.core.client.UnMarshaller;
 import org.jboss.ws.core.client.transport.NettyClient;
@@ -42,6 +44,7 @@ import org.jboss.ws.core.client.transport.NettyClient;
  */
 public class HTTPMessageUnMarshaller implements UnMarshaller
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(HTTPMessageUnMarshaller.class);
    // Provide logging
    private static Logger log = Logger.getLogger(HTTPMessageUnMarshaller.class);
 
@@ -63,7 +66,7 @@ public class HTTPMessageUnMarshaller implements UnMarshaller
       Integer resCode = (Integer)metadata.get(NettyClient.RESPONSE_CODE);
       String resMessage = (String)metadata.get(NettyClient.RESPONSE_CODE_MESSAGE);
       if (resCode != null && validResponseCodes.contains(resCode) == false)
-         throw new WSException("Invalid HTTP server response [" + resCode + "] - " + resMessage);
+         throw new WSException(BundleUtils.getMessage(bundle, "INVALID_HTTP_SERVER_RESPONSE", new Object[]{ resCode ,  resMessage}));
 
       MimeHeaders mimeHeaders = getMimeHeaders(headers);
       HTTPMessageImpl soapMsg = new HTTPMessageImpl(mimeHeaders, inputStream);

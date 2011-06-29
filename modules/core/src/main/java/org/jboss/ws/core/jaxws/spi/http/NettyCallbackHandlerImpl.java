@@ -26,14 +26,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.core.server.netty.NettyCallbackHandler;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.injection.InjectionHelper;
 import org.jboss.ws.common.injection.PreDestroyHolder;
+import org.jboss.ws.core.server.netty.NettyCallbackHandler;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Endpoint;
@@ -52,6 +54,7 @@ import org.jboss.wsf.stack.jbws.WebAppResolver;
  */
 final class NettyCallbackHandlerImpl implements NettyCallbackHandler
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(NettyCallbackHandlerImpl.class);
 
    /** Logger. */
    private static final Logger LOGGER = Logger.getLogger(NettyCallbackHandlerImpl.class);
@@ -99,7 +102,7 @@ final class NettyCallbackHandlerImpl implements NettyCallbackHandler
 
       if (this.endpoint == null)
       {
-         throw new WebServiceException("Cannot obtain endpoint for: " + endpointRegistryPath);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINT",  endpointRegistryPath));
       }
    }
 
@@ -130,12 +133,12 @@ final class NettyCallbackHandlerImpl implements NettyCallbackHandler
          }
          else
          {
-            throw new WSException("Unsupported HTTP method: " + method);
+            throw new WSException(BundleUtils.getMessage(bundle, "UNSUPPORTED_HTTP_METHOD",  method));
          }
       }
       catch (final Exception e)
       {
-         NettyCallbackHandlerImpl.LOGGER.error(e.getMessage(), e);
+         NettyCallbackHandlerImpl.LOGGER.error(e.getMessage(),  e);
       }
       finally
       {
@@ -145,7 +148,7 @@ final class NettyCallbackHandlerImpl implements NettyCallbackHandler
          }
          catch (IOException e)
          {
-            NettyCallbackHandlerImpl.LOGGER.error(e.getMessage(), e);
+            NettyCallbackHandlerImpl.LOGGER.error(e.getMessage(),  e);
          }
          try
          {
@@ -153,7 +156,7 @@ final class NettyCallbackHandlerImpl implements NettyCallbackHandler
          }
          catch (IOException e)
          {
-            NettyCallbackHandlerImpl.LOGGER.error(e.getMessage(), e);
+            NettyCallbackHandlerImpl.LOGGER.error(e.getMessage(),  e);
          }
          this.registerForPreDestroy(this.endpoint);
          EndpointAssociation.removeEndpoint();
@@ -215,7 +218,7 @@ final class NettyCallbackHandlerImpl implements NettyCallbackHandler
             }
             catch (Exception exception)
             {
-               NettyCallbackHandlerImpl.LOGGER.error(exception.getMessage(), exception);
+               NettyCallbackHandlerImpl.LOGGER.error(exception.getMessage(),  exception);
             }
          }
          this.preDestroyRegistry.clear();

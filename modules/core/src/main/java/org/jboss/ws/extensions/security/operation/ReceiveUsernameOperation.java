@@ -22,11 +22,12 @@
 package org.jboss.ws.extensions.security.operation;
 
 import java.util.Calendar;
+import java.util.ResourceBundle;
 
 import javax.security.auth.callback.CallbackHandler;
 
-import org.jboss.logging.Logger;
 import org.jboss.security.auth.callback.CallbackHandlerPolicyContextHandler;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.extensions.security.SecurityStore;
 import org.jboss.ws.extensions.security.SimplePrincipal;
 import org.jboss.ws.extensions.security.auth.callback.UsernameTokenCallbackHandler;
@@ -45,6 +46,7 @@ import org.w3c.dom.Document;
 
 public class ReceiveUsernameOperation implements TokenOperation
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ReceiveUsernameOperation.class);
    private SecurityHeader header;
    private SecurityStore store;
    private NonceStore nonceStore;
@@ -85,13 +87,13 @@ public class ReceiveUsernameOperation implements TokenOperation
          Calendar ref = Calendar.getInstance();
          ref.add(Calendar.SECOND, -TIMESTAMP_FRESHNESS_THRESHOLD);
          if (ref.after(cal))
-            throw new WSSecurityException("Request rejected since a stale timestamp has been provided: " + token.getCreated());
+            throw new WSSecurityException(BundleUtils.getMessage(bundle, "REQUEST_REJECTED_SINCE_PROVIDED",  token.getCreated()));
       }
       String nonce = token.getNonce();
       if (nonce != null)
       {
          if (nonceStore.hasNonce(nonce))
-            throw new WSSecurityException("Request rejected since a message with the same nonce has been recently received; nonce = " + nonce);
+            throw new WSSecurityException(BundleUtils.getMessage(bundle, "REQUEST_REJECTED_SINCE_RECEIVED",  nonce));
          nonceStore.putNonce(nonce);
       }
    }

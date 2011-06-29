@@ -21,26 +21,26 @@
  */
 package org.jboss.ws.extensions.validation;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.net.URL;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
-import org.jboss.ws.common.IOUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -51,6 +51,7 @@ import org.w3c.dom.Element;
  */
 public class SchemaExtractor
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SchemaExtractor.class);
    // provide logging
    private static Logger log = Logger.getLogger(SchemaExtractor.class);
 
@@ -72,7 +73,7 @@ public class SchemaExtractor
       Element typesEl = DOMUtils.getFirstChildElement(root, typesQName);
       if (typesEl == null)
       {
-         log.warn("Cannot find element: " + typesQName);
+         log.warn(BundleUtils.getMessage(bundle, "CANNOT_FIND_ELEMENT",  typesQName));
          return null;
       }
 
@@ -81,12 +82,12 @@ public class SchemaExtractor
       List<Element> schemaElements = DOMUtils.getChildElementsAsList(typesEl, schemaQName);
       if (schemaElements.size() == 0)
       {
-         log.warn("Cannot find element: " + schemaQName);
+         log.warn(BundleUtils.getMessage(bundle, "CANNOT_FIND_ELEMENT",  schemaQName));
          return null;
       }
       if (schemaElements.size() > 1)
       {
-         log.warn("Multiple schema elements not supported.");
+         log.warn(BundleUtils.getMessage(bundle, "MULTIPLE_SCHEMA_ELEMENTS_NOT_SUPPORTED"));
       }
       Element schemaElement = schemaElements.get(0);
 
@@ -146,7 +147,7 @@ public class SchemaExtractor
          }
          catch(IOException ioe)
          {
-            log.warn("Error obtaining schema: " + path + schemaLocation);
+            log.warn(BundleUtils.getMessage(bundle, "ERROR_OBTAINING_SCHEMA",  path ));
          }
       }
    }

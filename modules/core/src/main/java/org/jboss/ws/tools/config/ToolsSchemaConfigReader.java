@@ -28,9 +28,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.tools.Configuration;
 import org.jboss.ws.tools.Configuration.GlobalConfig;
 import org.jboss.ws.tools.Configuration.JavaToWSDLConfig;
@@ -52,6 +54,7 @@ import org.xml.sax.Attributes;
  */
 public class ToolsSchemaConfigReader implements ObjectModelFactory
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ToolsSchemaConfigReader.class);
    // Tags
    private static final String PARAMETER_TAG = "parameter";
    private static final String WEBSERVICES_TAG = "webservices";
@@ -97,7 +100,7 @@ public class ToolsSchemaConfigReader implements ObjectModelFactory
    {
       log.trace("Inside readConfig: " + configLocation);
       if (configLocation == null)
-         throw new IllegalArgumentException("Config URL passed is null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CONFIG_URL_PASSED_IS_NULL"));
 
       URL configURL = null;
       try
@@ -123,7 +126,7 @@ public class ToolsSchemaConfigReader implements ObjectModelFactory
       }
 
       if (configURL == null)
-         throw new IllegalArgumentException("Cannot load config from: " + configLocation);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_CONFIG",  configLocation));
 
       Configuration config = new Configuration();
       InputStream is = configURL.openStream();
@@ -137,7 +140,7 @@ public class ToolsSchemaConfigReader implements ObjectModelFactory
       }
       catch (JBossXBException ex)
       {
-         IOException ioex = new IOException("Cannot parse config: " + ex.getMessage());
+         IOException ioex = new IOException(BundleUtils.getMessage(bundle, "CANNOT_PARSE_CONFIG",  ex.getMessage()));
          ioex.initCause(ex);
          throw ioex;
       }
@@ -147,7 +150,7 @@ public class ToolsSchemaConfigReader implements ObjectModelFactory
       }
 
       if (config.getJavaToWSDLConfig(false) == null && config.getWSDLToJavaConfig(false) == null)
-         throw new WSException("Invalid configuration file, either " + JAVA_WSDL_TAG + ", or " + WSDL_JAVA_TAG + " must be present");
+         throw new WSException(BundleUtils.getMessage(bundle, "INVALID_CONFIGURATION_FILE", new Object[]{ JAVA_WSDL_TAG, WSDL_JAVA_TAG }));
 
       log.trace("Exit readConfig");
       return config;
@@ -237,7 +240,7 @@ public class ToolsSchemaConfigReader implements ObjectModelFactory
          j2wsdlc.servletLink = getOptionalAttribute(attrs, SERVLET_LINK_ATTRIBUTE, null);
          j2wsdlc.ejbLink = getOptionalAttribute(attrs, EJB_LINK_ATTRIBUTE, null);
          if (j2wsdlc.ejbLink == null && j2wsdlc.servletLink == null)
-            throw new WSException("Either servletLink or ejbLink should be specified");
+            throw new WSException(BundleUtils.getMessage(bundle, "SERVLETLINK_OR_EJBLINK_SHOULD_BE_SPECIFIED"));
          String wsxmlFileAppend = attrs.getValue(APPEND_ATTRIBUTE);
          j2wsdlc.wsxmlFileAppend = "true".equals(wsxmlFileAppend) || "1".equals(wsxmlFileAppend);
       }
@@ -274,7 +277,7 @@ public class ToolsSchemaConfigReader implements ObjectModelFactory
          wsdl2jc.servletLink = getOptionalAttribute(attrs, SERVLET_LINK_ATTRIBUTE, null);
          wsdl2jc.ejbLink = getOptionalAttribute(attrs, EJB_LINK_ATTRIBUTE, null);
          if (wsdl2jc.ejbLink == null && wsdl2jc.servletLink == null)
-            throw new WSException("Either servletLink or ejbLink should be specified");
+            throw new WSException(BundleUtils.getMessage(bundle, "SERVLETLINK_OR_EJBLINK_SHOULD_BE_SPECIFIED"));
       }
       return wsdl2jc;
    }

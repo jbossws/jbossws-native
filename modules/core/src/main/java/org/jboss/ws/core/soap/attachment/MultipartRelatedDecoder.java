@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.LinkedList;
+import java.util.ResourceBundle;
 
 import javax.activation.DataHandler;
 import javax.mail.Header;
@@ -38,6 +39,7 @@ import javax.mail.internet.ParseException;
 import javax.xml.soap.AttachmentPart;
 
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 
 /**
  * Abstract MutilPartRelatedDecoder decodes a mime multipart/related stream.
@@ -48,6 +50,7 @@ import org.jboss.ws.WSException;
  */
 public class MultipartRelatedDecoder
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(MultipartRelatedDecoder.class);
    private ContentType contentType;
 
    private String rootType;
@@ -67,11 +70,11 @@ public class MultipartRelatedDecoder
    {
       this.contentType = contentType;
       if (MimeConstants.TYPE_MULTIPART_RELATED.equalsIgnoreCase(contentType.getBaseType()) == false)
-         throw new IllegalArgumentException("Multipart related decoder called with a non-multipart/related type");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NON_MULTIPART_RELATED_TYPE"));
 
       rootType = contentType.getParameter("type");
       if (rootType == null)
-         throw new IllegalArgumentException("multipart/related type is invalid, it is missing the root type parameter");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "MISSING_THE_ROOT_TYPE_PARAMETER"));
    }
 
    private boolean isValidRootType(String type) throws ParseException
@@ -91,7 +94,7 @@ public class MultipartRelatedDecoder
       byte[] crlf;
 
       if (boundaryParameter == null)
-         throw new IllegalArgumentException("multipart/related content type did not contain a boundary");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NOT_CONTAIN_A_BOUNDARY"));
 
       try
       {         
@@ -105,7 +108,7 @@ public class MultipartRelatedDecoder
       }
       catch (UnsupportedEncodingException e)
       {
-         throw new WSException("US-ASCII not supported, this should never happen");
+         throw new WSException(BundleUtils.getMessage(bundle, "US_ASCII_NOT_SUPPORTED"));
       }
       
       // [JBWS-1620] - Incorrect handling of MIME boundaries in MultipartRelatedDecoder
@@ -131,7 +134,7 @@ public class MultipartRelatedDecoder
          String typeHeader[] = headers.getHeader(MimeConstants.CONTENT_TYPE);
 
          if (typeHeader == null)
-            throw new IllegalArgumentException("multipart/related stream invalid, component Content-type missing.");
+            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CONTENT_TYPE_MISSING"));
 
          SwapableMemoryDataSource source = new SwapableMemoryDataSource(delimitedStream, typeHeader[0]);
          AttachmentPartImpl part = new AttachmentPartImpl(new DataHandler(source));
@@ -158,7 +161,7 @@ public class MultipartRelatedDecoder
          if (rootPart == null && (start == null || start.equals(part.getContentId())))
          {
             if (isValidRootType(part.getContentType()) == false)
-               throw new IllegalArgumentException("multipart/related type specified a root type other than the one" + " that was found.");
+               throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "OTHER_THAN_THE_ONE_FOUND"));
 
             rootPart = part;
          }
@@ -168,7 +171,7 @@ public class MultipartRelatedDecoder
          }
       }
       if (rootPart == null)
-         throw new IllegalArgumentException("multipart/related stream invalid, no root part was found");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NO_ROOT_PART_WAS_FOUND"));
    }
 
    private boolean advanceToHeaders(InputStream stream) throws IOException

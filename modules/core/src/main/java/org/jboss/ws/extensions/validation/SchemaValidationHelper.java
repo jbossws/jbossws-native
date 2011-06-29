@@ -22,8 +22,8 @@
 package org.jboss.ws.extensions.validation;
 
 import java.io.InputStream;
-import java.net.URL;
 import java.io.StringReader;
+import java.net.URL;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;

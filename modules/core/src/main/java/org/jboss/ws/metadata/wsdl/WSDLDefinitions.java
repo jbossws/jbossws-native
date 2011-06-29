@@ -27,11 +27,13 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.wsdl.Definition;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.w3c.dom.Document;
@@ -47,6 +49,7 @@ import org.w3c.dom.Document;
  */
 public class WSDLDefinitions extends Extendable implements Serializable
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLDefinitions.class);
    private static final long serialVersionUID = 1643422922694990226L;
 
    // provide logging
@@ -120,9 +123,8 @@ public class WSDLDefinitions extends Extendable implements Serializable
       }
       else if (Constants.PREFIX_XML.equalsIgnoreCase(prefix))
       {
-         throw new IllegalArgumentException("The prefix " + Constants.PREFIX_XML +
-               " cannot be bound to any namespace other than its usual namespace (trying to bind to "
-               + nsURI + " )");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CAN_NOT_BE_BPOUND",  
+               new Object[]{Constants.PREFIX_XML, nsURI}));
       }
       
       String pre = namespaces.getPrefix(nsURI);
@@ -178,7 +180,7 @@ public class WSDLDefinitions extends Extendable implements Serializable
    public void setTargetNamespace(String namespaceURI)
    {
       if(namespaceURI == null)
-         throw new IllegalArgumentException("Illegal Null Argument:namespaceURI");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "namespaceURI"));
 
       log.trace("setTargetNamespace: " + namespaceURI);
       this.targetNamespace = namespaceURI;
@@ -192,7 +194,7 @@ public class WSDLDefinitions extends Extendable implements Serializable
    public void setWsdlNamespace(String namespaceURI)
    {
       if (Constants.NS_WSDL11.equals(namespaceURI) == false)
-         throw new IllegalArgumentException("Invalid default namespace: " + namespaceURI);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_DEFAULT_NAMESPACE",  namespaceURI));
 
       this.wsdlNamespace = namespaceURI;
    }
@@ -269,7 +271,7 @@ public class WSDLDefinitions extends Extendable implements Serializable
          if (aux.getInterfaceName().equals(qname))
          {
             if (wsdlBinding != null)
-               log.warn("Multiple WSDL bindings referrence the same interface: " + qname);
+               log.warn(BundleUtils.getMessage(bundle, "MULTIPLE_BINDINGS_REF",  qname));
 
             wsdlBinding = aux;
          }

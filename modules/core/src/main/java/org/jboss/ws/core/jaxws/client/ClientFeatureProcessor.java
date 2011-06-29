@@ -23,6 +23,7 @@ package org.jboss.ws.core.jaxws.client;
 
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.RespectBindingFeature;
@@ -34,6 +35,8 @@ import javax.xml.ws.soap.MTOMFeature;
 import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxws.binding.BindingExt;
 import org.jboss.ws.extensions.addressing.jaxws.WSAddressingClientHandler;
@@ -51,7 +54,6 @@ import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLService;
-import org.jboss.ws.common.DOMWriter;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
@@ -63,6 +65,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public class ClientFeatureProcessor
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ClientFeatureProcessor.class);
    private static Logger log = Logger.getLogger(ClientFeatureProcessor.class);
    
    private static FeatureSet supportedFeatures = new FeatureSet();
@@ -81,7 +84,7 @@ public class ClientFeatureProcessor
    {
       if (!supportedFeatures.hasFeature(feature.getClass()))
       {
-         throw new IllegalArgumentException("Unsupported feature: " + feature);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_FEATURE",  feature));
       }
       processAddressingFeature(feature, epMetaData, stub);
       processMTOMFeature(feature, epMetaData, stub);
@@ -211,7 +214,7 @@ public class ClientFeatureProcessor
             }
             else
             {
-               log.warn("Cannot find port " + epMetaData.getPortName());
+               log.warn(BundleUtils.getMessage(bundle, "CANNOT_FIND_PORT",  epMetaData.getPortName()));
             }
          }
       }
@@ -226,7 +229,7 @@ public class ClientFeatureProcessor
          if (el.isRequired() && !disabledByFeature)
          {
             String s = DOMWriter.printNode(el.getElement(), true);
-            throw new WebServiceException("RespectBindingFeature enabled and a required not understood element was found: " + s);
+            throw new WebServiceException(BundleUtils.getMessage(bundle, "NOT_UNDERSTOOD_ELEMENT_WAS_FOUND",  s));
          }
       }
    }

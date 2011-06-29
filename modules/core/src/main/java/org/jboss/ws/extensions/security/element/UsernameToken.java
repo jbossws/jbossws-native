@@ -22,14 +22,16 @@
 package org.jboss.ws.extensions.security.element;
 
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
 import org.apache.xml.security.utils.XMLUtils;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.extensions.security.Constants;
 import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
-import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -38,6 +40,7 @@ import org.w3c.dom.Element;
  */
 public class UsernameToken implements Token
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(UsernameToken.class);
    private String username;
 
    private String password;
@@ -74,13 +77,13 @@ public class UsernameToken implements Token
 
       Element child = Util.getFirstChildElement(element);
       if (child == null || ! Constants.WSSE_NS.equals(child.getNamespaceURI()) || ! "Username".equals(child.getLocalName()))
-         throw new WSSecurityException("Username child expected in UsernameToken element");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "USERNAME_CHILD_EXPECTED"));
 
       this.username = XMLUtils.getFullTextChildrenFromElement(child);
 
       child = Util.getNextSiblingElement(child);
       if (child == null || ! Constants.WSSE_NS.equals(child.getNamespaceURI()) || ! "Password".equals(child.getLocalName()))
-         throw new WSSecurityException("Password child expected in UsernameToken element");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PASSWORD_CHILD_EXPECTED"));
 
       this.password = XMLUtils.getFullTextChildrenFromElement(child);
       String passwordType = child.getAttribute("Type");
@@ -92,7 +95,7 @@ public class UsernameToken implements Token
          Element elem = itNonce.next();
          String encodingType = elem.getAttribute("EncodingType");
          if (encodingType != null && encodingType.length() > 0 && !Constants.BASE64_ENCODING_TYPE.equalsIgnoreCase(encodingType))
-            throw new WSSecurityException("Unsupported nonce encoding type: " + encodingType);
+            throw new WSSecurityException(BundleUtils.getMessage(bundle, "UNSUPPORTED_NONCE_ENCODING_TYPE",  encodingType));
          this.nonce = XMLUtils.getFullTextChildrenFromElement(elem);
       }
       

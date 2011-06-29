@@ -23,6 +23,7 @@ package org.jboss.ws.core.jaxws.binding;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.soap.SOAPConstants;
@@ -31,6 +32,7 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.soap.SOAPBinding;
 
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.CommonSOAP12Binding;
 import org.jboss.ws.core.jaxws.SOAPFaultHelperJAXWS;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
@@ -45,6 +47,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public class SOAP12BindingJAXWS extends CommonSOAP12Binding implements BindingExt, SOAPBinding
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAP12BindingJAXWS.class);
    // Delegate to JAXWS SOAP binding
    private SOAPBindingJAXWS delegate = new SOAPBindingJAXWS();
 
@@ -80,7 +83,7 @@ public class SOAP12BindingJAXWS extends CommonSOAP12Binding implements BindingEx
       for (String role : roles)
       {
          if (role.equals(SOAPConstants.URI_SOAP_1_2_ROLE_NONE))
-            throw new WebServiceException("Attempt to configure the binding to play the none role");
+            throw new WebServiceException(BundleUtils.getMessage(bundle, "NONE_ROLE"));
       }
       delegate.setRoles(roles);
    }

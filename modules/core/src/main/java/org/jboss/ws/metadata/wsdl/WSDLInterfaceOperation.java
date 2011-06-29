@@ -25,11 +25,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
 
 /**
@@ -45,6 +47,7 @@ import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
  */
 public class WSDLInterfaceOperation extends Extendable implements Comparable
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLInterfaceOperation.class);
    private static final long serialVersionUID = -5014918078197942626L;
 
    // The parent interface
@@ -142,7 +145,7 @@ public class WSDLInterfaceOperation extends Extendable implements Comparable
    {
       QName xmlName = input.getElement();
       if (inputs.get(xmlName) != null)
-         throw new WSException("Attempt to map multiple operation inputs to: " + xmlName);
+         throw new WSException(BundleUtils.getMessage(bundle, "MAP_MULTIPLE_INPUTS",  xmlName));
       inputs.put(xmlName, input);
    }
 
@@ -180,7 +183,7 @@ public class WSDLInterfaceOperation extends Extendable implements Comparable
    {
       QName xmlName = output.getElement();
       if (outputs.get(xmlName) != null)
-         throw new WSException("Attempt to map multiple operation outputs to: " + xmlName);
+         throw new WSException(BundleUtils.getMessage(bundle, "MAP_MULTIPLE_OUTPUTS",  xmlName));
       outputs.put(xmlName, output);
    }
 

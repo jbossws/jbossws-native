@@ -21,16 +21,13 @@
  */
 package org.jboss.ws.extensions.addressing.jaxws;
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.extensions.addressing.AddressingClientUtil;
-import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
-import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
-import org.jboss.ws.extensions.addressing.soap.SOAPAddressingPropertiesImpl;
-import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
-import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.api.handler.GenericSOAPHandler;
-import org.w3c.dom.Element;
+import java.net.URISyntaxException;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ResourceBundle;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
@@ -49,12 +46,17 @@ import javax.xml.ws.handler.MessageContext.Scope;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 import javax.xml.ws.soap.AddressingFeature;
 
-import java.net.URISyntaxException;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import org.jboss.logging.Logger;
+import org.jboss.ws.api.handler.GenericSOAPHandler;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.CommonMessageContext;
+import org.jboss.ws.extensions.addressing.AddressingClientUtil;
+import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
+import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
+import org.jboss.ws.extensions.addressing.soap.SOAPAddressingPropertiesImpl;
+import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
+import org.jboss.ws.metadata.umdm.OperationMetaData;
+import org.w3c.dom.Element;
 
 /**
  * A client side handler that reads/writes the addressing properties
@@ -67,6 +69,7 @@ import java.util.Set;
 @SuppressWarnings("unchecked")
 public class WSAddressingClientHandler extends GenericSOAPHandler
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSAddressingClientHandler.class);
    // Provide logging
    private static Logger log = Logger.getLogger(WSAddressingClientHandler.class);
 
@@ -176,7 +179,7 @@ public class WSAddressingClientHandler extends GenericSOAPHandler
       }
       catch (SOAPException ex)
       {
-         throw new AddressingException("Cannot handle response", ex);
+         throw new AddressingException(BundleUtils.getMessage(bundle, "CANNOT_HANDLE_RESPONSE"),  ex);
       }
 
       return true;

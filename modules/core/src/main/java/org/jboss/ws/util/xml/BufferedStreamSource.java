@@ -30,11 +30,13 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.IOUtils;
 
 /**
@@ -45,6 +47,7 @@ import org.jboss.ws.common.IOUtils;
  */
 public final class BufferedStreamSource extends StreamSource
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(BufferedStreamSource.class);
    private static final Logger log = Logger.getLogger(BufferedStreamSource.class);
    private byte[] bytes;
    private char[] chars;
@@ -87,7 +90,7 @@ public final class BufferedStreamSource extends StreamSource
             }
             catch (Exception e)
             {
-               log.warn("Failed to create inputstream from systemId of StreamSource");
+               log.warn(BundleUtils.getMessage(bundle, "FAILED_TO_CREATE_INPUTSTREAM"));
             }
          }
       }

@@ -25,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.URL;
+import java.util.ResourceBundle;
 
 import javax.naming.BinaryRefAddr;
 import javax.naming.NamingException;
@@ -32,6 +33,7 @@ import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
 
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
@@ -54,6 +56,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
  */
 public class NativeServiceReferenceableJAXRPC implements Referenceable
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(NativeServiceReferenceableJAXRPC.class);
    public static final String SERVICE_REF_META_DATA = "SERVICE_REF_META_DATA";
    public static final String SECURITY_CONFIG = "SECURITY_CONFIG";
    public static final String PORT_COMPONENT_LINK = "PORT_COMPONENT_LINK";
@@ -108,7 +111,7 @@ public class NativeServiceReferenceableJAXRPC implements Referenceable
             }
             catch (Exception ex)
             {
-               throw new NamingException("Cannot obtain path to PortComponentLinkServlet: " + ex);
+               throw new NamingException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_PATH",  ex));
             }
          }
       }
@@ -129,7 +132,7 @@ public class NativeServiceReferenceableJAXRPC implements Referenceable
       }
       catch (IOException e)
       {
-         throw new NamingException("Cannot marshall service ref meta data, cause: " + e.toString());
+         throw new NamingException(BundleUtils.getMessage(bundle, "CANNOT_MARSHALL_SERVICE_REF_META_DATA",  e.toString()));
       }
       return baos.toByteArray();
    }
@@ -151,7 +154,7 @@ public class NativeServiceReferenceableJAXRPC implements Referenceable
       }
       catch (IOException e)
       {
-         throw new NamingException("Cannot marshall security config, cause: " + e.toString());
+         throw new NamingException(BundleUtils.getMessage(bundle, "CANNOT_MARSHALL_SECURITY_CONFIG",  e.toString()));
       }
       return baos.toByteArray();
    }

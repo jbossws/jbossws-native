@@ -48,9 +48,11 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.api.util.ServiceLoader;
 import org.jboss.ws.extensions.security.exception.FailedAuthenticationException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
@@ -68,6 +70,7 @@ import org.jboss.wsf.spi.security.JAASSecurityDomainAdaptorResolver;
  */
 public class SecurityStore
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SecurityStore.class);
    private static Logger log = Logger.getLogger(SecurityStore.class);
 
    private KeyStore keyStore;
@@ -115,7 +118,7 @@ public class SecurityStore
          }
          catch (Exception e)
          {
-            throw new WSSecurityException("JNDI failure handling " + securityDomainConf.getJndi(), e);
+            throw new WSSecurityException(BundleUtils.getMessage(bundle, "JNDI_FAILURE_HANDLING",  securityDomainConf.getJndi()),  e);
          }
          // if we reached this point, means we have a JNDI name pointing to a valid JAAS Security Domain
          keyStore = sd.getKeyStore();
@@ -172,7 +175,7 @@ public class SecurityStore
          }
          catch (MalformedURLException e)
          {
-            throw new WSSecurityException("Problems loading " + type + ": " + e.getMessage(), e);
+            throw new WSSecurityException(BundleUtils.getMessage(bundle, "PROBLEMS_LOADING", new Object[]{ type ,  e.getMessage()}),  e);
          }
       }
 
@@ -189,15 +192,15 @@ public class SecurityStore
             log.debug("loadStore: " + storeURL);
          stream = storeURL.openStream();
          if (stream == null)
-            throw new WSSecurityException("Cannot load store from: " + storeURL);
+            throw new WSSecurityException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_STORE",  storeURL));
 
          keyStore = KeyStore.getInstance(storeType);
          if (keyStore == null)
-            throw new WSSecurityException("Cannot get keystore for type: " + storeType);
+            throw new WSSecurityException(BundleUtils.getMessage(bundle, "CANNOT_GET_KEYSTORE",  storeType));
 
          String decryptedPassword = decryptPassword(storePassword);
          if (decryptedPassword == null)
-            throw new WSSecurityException("Cannot decrypt store password");
+            throw new WSSecurityException(BundleUtils.getMessage(bundle, "CANNOT_DECRYPT_STORE_PASSWORD"));
 
          keyStore.load(stream, decryptedPassword.toCharArray());
       }
@@ -211,7 +214,7 @@ public class SecurityStore
       }
       catch (Exception ex)
       {
-         throw new WSSecurityException("Problems loading " + type + ": " + ex.getMessage(), ex);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PROBLEMS_LOADING", new Object[]{ type ,  ex.getMessage()}),  ex);
       }
       finally
       {
@@ -223,7 +226,7 @@ public class SecurityStore
             }
             catch (IOException ioe)
             {
-               log.warn(ioe.getMessage(), ioe);
+               log.warn(ioe.getMessage(),  ioe);
             }
          }
       }
@@ -240,7 +243,7 @@ public class SecurityStore
       log.trace("decrypt password: " + password);
 
       if (password == null)
-         throw new WSSecurityException("Invalid null password for security store");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "INVALID_NULL_PASSWORD"));
 
       if (password.charAt(0) == '{')
       {
@@ -257,11 +260,11 @@ public class SecurityStore
          }
          else
          {
-            throw new WSSecurityException("Unknown keyStorePasswordCmdType: " + keyStorePasswordCmdType);
+            throw new WSSecurityException(BundleUtils.getMessage(bundle, "UNKNOWN_KEYSTOREPASSWORDCMDTYPE",  keyStorePasswordCmdType));
          }
       }
       if (password == null)
-         throw new WSSecurityException("Cannot decrypt password, result is null");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "CANNOT_DECRYPT_PASSWORD"));
 
       log.trace("decrypted password: " + password);
       return password;
@@ -292,7 +295,7 @@ public class SecurityStore
             String line = reader.readLine();
             while (line != null)
             {
-               log.error(line);
+               log.error(BundleUtils.getMessage(bundle, ""));
                line = reader.readLine();
             }
             reader.close();
@@ -304,7 +307,7 @@ public class SecurityStore
       }
       catch (Exception e)
       {
-         throw new WSSecurityException("Problems executing password cmd: " + keyStorePasswordCmd, e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PROBLEMS_EXECUTING_PASSWORD_CMD",  keyStorePasswordCmd),  e);
       }
    }
 
@@ -354,7 +357,7 @@ public class SecurityStore
       }
       catch (Exception e)
       {
-         throw new WSSecurityException("Problems loading or invoking Password class : " + classname, e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PROBLEMS_LOADING_OR_INVOKING_PASSWORD_CLASS",  classname),  e);
       }
       return password;
    }
@@ -379,7 +382,7 @@ public class SecurityStore
    {
       if (keyStore == null)
       {
-         throw new WSSecurityException("KeyStore not set.");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "KEYSTORE_NOT_SET"));
       }
 
       X509Certificate cert;
@@ -389,11 +392,11 @@ public class SecurityStore
       }
       catch (Exception e)
       {
-         throw new WSSecurityException("Problems retrieving cert: " + e.getMessage(), e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PROBLEMS_RETRIEVING_CERT",  e.getMessage()),  e);
       }
 
       if (cert == null)
-         throw new WSSecurityException("Certificate (" + alias + ") not in keystore");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "CERTIFICATE_NOT_IN_KEYSTORE",  alias ));
 
       return cert;
    }
@@ -415,7 +418,7 @@ public class SecurityStore
       
       if (keyStore == null)
       {
-         throw new WSSecurityException("KeyStore not set.");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "KEYSTORE_NOT_SET"));
       }
       
       try
@@ -435,7 +438,7 @@ public class SecurityStore
       }
       catch (KeyStoreException e)
       {
-         throw new WSSecurityException("Problems retrieving cert: " + e.getMessage(), e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PROBLEMS_RETRIEVING_CERT",  e.getMessage()),  e);
       }
    }
 
@@ -446,7 +449,7 @@ public class SecurityStore
 
       if (keyStore == null)
       {
-         throw new WSSecurityException("KeyStore not set.");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "KEYSTORE_NOT_SET"));
       }
 
       try
@@ -470,7 +473,7 @@ public class SecurityStore
       }
       catch (KeyStoreException e)
       {
-         throw new WSSecurityException("Problems retrieving cert: " + e.getMessage(), e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PROBLEMS_RETRIEVING_CERT",  e.getMessage()),  e);
       }
 
       return null;
@@ -480,7 +483,7 @@ public class SecurityStore
    {
       if (keyStore == null)
       {
-         throw new WSSecurityException("KeyStore not set.");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "KEYSTORE_NOT_SET"));
       }
 
       try
@@ -501,7 +504,7 @@ public class SecurityStore
       }
       catch (KeyStoreException e)
       {
-         throw new WSSecurityException("Problems retrieving cert: " + e.getMessage(), e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PROBLEMS_RETRIEVING_CERT",  e.getMessage()),  e);
       }
 
       return null;
@@ -511,7 +514,7 @@ public class SecurityStore
    {
       if (keyStore == null)
       {
-         throw new WSSecurityException("KeyStore not set.");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "KEYSTORE_NOT_SET"));
       }
       
       PrivateKey key;
@@ -531,11 +534,11 @@ public class SecurityStore
       }
       catch (Exception e)
       {
-         throw new WSSecurityException("Problems retrieving private key: " + e.getMessage(), e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PROBLEMS_RETRIEVING_PRIVATE_KEY",  e.getMessage()),  e);
       }
 
       if (key == null)
-         throw new WSSecurityException("Private key (" + alias + ") not in keystore");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PRIVATE_KEY_NOT_IN_KEYSTORE",  alias ));
 
       return key;
    }
@@ -544,7 +547,7 @@ public class SecurityStore
    {
       if (keyStore == null)
       {
-         throw new WSSecurityException("KeyStore not set.");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "KEYSTORE_NOT_SET"));
       }
 
       try
@@ -554,7 +557,7 @@ public class SecurityStore
       }
       catch (Exception e)
       {
-         throw new WSSecurityException("Problems retrieving private key: " + e.getMessage(), e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PROBLEMS_RETRIEVING_PRIVATE_KEY",  e.getMessage()),  e);
       }
    }
 
@@ -572,7 +575,7 @@ public class SecurityStore
 
       if (keyStore == null)
       {
-         throw new WSSecurityException("TrustStore not set.");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "TRUSTSTORE_NOT_SET"));
       }
 
       // Check for the exact entry in the truststore first, then fallback to a CA check
@@ -585,7 +588,7 @@ public class SecurityStore
       }
       catch (KeyStoreException e)
       {
-         throw new WSSecurityException("Problems searching truststore", e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PROBLEMS_SEARCHING_TRUSTSTORE"),  e);
       }
 
       List list = new ArrayList(1);
@@ -606,7 +609,7 @@ public class SecurityStore
       }
       catch (Exception e)
       {
-         throw new WSSecurityException("Problems setting up certificate validation", e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PROBLEMS_SETTING_UP_CERTIFICATE_VALIDATION"),  e);
       }
 
       try
@@ -620,7 +623,7 @@ public class SecurityStore
       }
       catch (InvalidAlgorithmParameterException e)
       {
-         throw new WSSecurityException("Problems setting up certificate validation", e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PROBLEMS_SETTING_UP_CERTIFICATE_VALIDATION"),  e);
       }
    }
 }

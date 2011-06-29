@@ -23,6 +23,7 @@ package org.jboss.ws.core.jaxrpc.binding.jbossxb;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
@@ -33,8 +34,9 @@ import javax.xml.soap.SOAPFactory;
 import org.apache.xerces.xs.XSModel;
 import org.jboss.logging.Logger;
 import org.jboss.util.xml.JBossEntityResolver;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.utils.JBossWSEntityResolver;
 import org.jboss.ws.extensions.xop.jaxrpc.JBossXBContentAdapter;
 import org.jboss.ws.metadata.jaxrpcmapping.ExceptionMapping;
@@ -75,6 +77,7 @@ import org.xml.sax.Attributes;
  */
 public class SchemaBindingBuilder
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SchemaBindingBuilder.class);
    // provide logging
    private static final Logger log = Logger.getLogger(SchemaBindingBuilder.class);
 
@@ -236,7 +239,7 @@ public class SchemaBindingBuilder
       }
       else
       {
-         log.warn("Cannot obtain type binding for: " + xmlType);
+         log.warn(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_TYPE_BINDING",  xmlType));
       }
    }
 
@@ -256,7 +259,7 @@ public class SchemaBindingBuilder
             if (auxBinding.getQName().getLocalPart().equals(xmlAttrName))
             {
                if (attrBinding != null)
-                  log.warn("Ambiguous binding for attribute: " + xmlAttrName);
+                  log.warn(BundleUtils.getMessage(bundle, "AMBIGUOUS_BINDING",  xmlAttrName));
 
                attrBinding = auxBinding;
             }
@@ -279,7 +282,7 @@ public class SchemaBindingBuilder
       if (attrBinding == null)
       {
          QName typeQName = typeBinding.getQName();
-         throw new WSException("Attribute " + xmlName + " found in jaxrpc-mapping but not in the schema: " + typeQName);
+         throw new WSException(BundleUtils.getMessage(bundle, "ATTRIBUTE_NOT_IN_SCHEMA", new Object[]{ xmlName ,  typeQName}));
       }
 
       String javaVariableName = varMapping.getJavaVariableName();
@@ -322,7 +325,7 @@ public class SchemaBindingBuilder
       }
 
       if (element == null)
-         throw new WSException("Element " + xmlName + " found in jaxrpc-mapping but not in the schema: " + typeQName);
+         throw new WSException(BundleUtils.getMessage(bundle, "ELEMENT_NOT_IN_SCHEMA", new Object[]{ xmlName ,  typeQName}));
 
       String javaVariableName = varMapping.getJavaVariableName();
       if (javaVariableName != null)
@@ -380,7 +383,7 @@ public class SchemaBindingBuilder
          typeBinding = schemaBinding.getType(xmlType);
          if (typeBinding == null)
          {
-            log.warn("Type definition not found in schema: " + xmlType);
+            log.warn(BundleUtils.getMessage(bundle, "TYPE_DEFINITION_NOT_FOUND_IN_SCHEMA",  xmlType));
          }
       }
       else if ("element".equals(qnameScope))
@@ -392,12 +395,12 @@ public class SchemaBindingBuilder
          }
          else
          {
-            log.warn("Global element not found in schema: " + xmlType);
+            log.warn(BundleUtils.getMessage(bundle, "GLOBAL_ELEMENT_NOT_FOUND_IN_SCHEMA",  xmlType));
          }
       }
       else
       {
-         throw new WSException("Unexpected qname-scope for " + typeMapping.getJavaType() + ": " + qnameScope);
+         throw new WSException(BundleUtils.getMessage(bundle, "UNEXPECTED_QNAME_SCOPE", new Object[]{ typeMapping.getJavaType() ,  qnameScope}));
       }
       return typeBinding;
    }
@@ -462,7 +465,7 @@ public class SchemaBindingBuilder
       }
       else if (xmlType.equals(Constants.TYPE_LITERAL_ANYTYPE) == false)
       {
-         throw new WSException("Root type " + xmlType + " not found in the schema.");
+         throw new WSException(BundleUtils.getMessage(bundle, "ROOT_TYPE_NOT_FOUND_IN_SCHEMA",  xmlType ));
       }
    }
 
@@ -605,7 +608,7 @@ public class SchemaBindingBuilder
          }
          catch (SOAPException e)
          {
-            throw new IllegalStateException("Failed to create SOAPElement", e);
+            throw new IllegalStateException(BundleUtils.getMessage(bundle, "FAILED_TO_CREATE_SOAPELEMENT"),  e);
          }
 
          if (attrs != null)
@@ -646,7 +649,7 @@ public class SchemaBindingBuilder
             }
             catch (SOAPException e)
             {
-               throw new IllegalStateException("Failed to create soap element factory", e);
+               throw new IllegalStateException(BundleUtils.getMessage(bundle, "FAILED_TO_CREATE_SOAPELEMENT_FACTORY"),  e);
             }
          }
          return factory;

@@ -22,6 +22,8 @@
 package org.jboss.ws.extensions.xop;
 
 import java.io.ByteArrayInputStream;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.io.ByteArrayOutputStream;
 import java.util.Iterator;
 
@@ -67,6 +69,7 @@ import org.jboss.xb.binding.sunday.xop.XOPObject;
  */
 public class XOPContext
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(XOPContext.class);
    // provide logging
    private static final Logger log = Logger.getLogger(XOPContext.class);
 
@@ -226,7 +229,7 @@ public class XOPContext
       }
       catch (SOAPException e)
       {
-         throw new WSException("Failed to eagerly create XOP attachments", e);
+         throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_EAGERLY_CREATE_XOP_ATTACHMENTS"),  e);
       }
    }
 
@@ -247,7 +250,7 @@ public class XOPContext
       }
       catch (SOAPException e)
       {
-         throw new WSException("Failed to restore XOP data", e);
+         throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_RESTORE_XOP_DATA"),  e);
       }
    }
 
@@ -310,7 +313,7 @@ public class XOPContext
       }
       catch (SOAPException e)
       {
-         throw new WSException("Failed to create XOP include element", e);
+         throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_CREATE_XOP_INCLUDE_ELEMENT"),  e);
       }
 
    }
@@ -339,7 +342,7 @@ public class XOPContext
       }
       catch (Exception e)
       {
-         throw new WSException("Failed to inline XOP data", e);
+         throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_INLINE_XOP_DATA"),  e);
       }
 
       // create base64 contents
@@ -361,7 +364,7 @@ public class XOPContext
 
       AttachmentPart removedPart = soapMessage.removeAttachmentByContentId(cid);
       if (null == removedPart)
-         throw new WSException("Unable to remove attachment part " + cid);
+         throw new WSException(BundleUtils.getMessage(bundle, "UNABLE_TO_REMOVE_ATTACHMENT_PART",  cid));
 
       if (log.isDebugEnabled())
          log.debug("Removed attachment part " + cid);
@@ -386,7 +389,7 @@ public class XOPContext
 
       AttachmentPart part = soapMessage.getAttachmentByContentId(cid);
       if (part == null)
-         throw new WSException("Cannot find attachment part for: " + cid);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_ATTACHMENT_PART",  cid));
 
       return part;
    }

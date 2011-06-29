@@ -25,6 +25,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -32,8 +33,10 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.core.utils.HolderUtils;
@@ -43,7 +46,6 @@ import org.jboss.ws.metadata.accessor.AccessorFactoryCreator;
 import org.jboss.ws.metadata.accessor.ReflectiveMethodAccessorFactoryCreator;
 import org.jboss.ws.metadata.config.EndpointFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.ws.common.JavaUtils;
 
 /**
  * A request/response parameter that a given operation supports.
@@ -54,6 +56,7 @@ import org.jboss.ws.common.JavaUtils;
  */
 public class ParameterMetaData implements InitalizableMetaData
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ParameterMetaData.class);
    // provide logging
    private final Logger log = Logger.getLogger(ParameterMetaData.class);
 
@@ -95,7 +98,7 @@ public class ParameterMetaData implements InitalizableMetaData
    public ParameterMetaData(OperationMetaData opMetaData, QName xmlName, String javaTypeName)
    {
       if (xmlName == null)
-         throw new IllegalArgumentException("Invalid null xmlName argument");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_NULL_XMLNAME_ARGUMENT"));
 
       // Remove the prefixes
       if (xmlName.getNamespaceURI().length() > 0)
@@ -203,7 +206,7 @@ public class ParameterMetaData implements InitalizableMetaData
    public void setXmlType(QName xmlType)
    {
       if (xmlType == null)
-         throw new IllegalArgumentException("Invalid null xmlType");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_NULL_XMLTYPE"));
 
       // Remove potential prefix
       if (xmlType.getNamespaceURI().length() > 0)
@@ -230,8 +233,7 @@ public class ParameterMetaData implements InitalizableMetaData
       // Warn if this is called after eager initialization
       UnifiedMetaData wsMetaData = opMetaData.getEndpointMetaData().getServiceMetaData().getUnifiedMetaData();
       if (wsMetaData.isEagerInitialized() && UnifiedMetaData.isFinalRelease() == false)
-         log.warn("Set java type name after eager initialization", new IllegalStateException());
-
+         log.warn(BundleUtils.getMessage(bundle, "SET_JAVA_TYPE_NAME_AFTER_EAGER_INIT"),  new IllegalStateException());
       javaTypeName = typeName;
       javaType = null;
    }
@@ -273,7 +275,7 @@ public class ParameterMetaData implements InitalizableMetaData
          }
          catch (ClassNotFoundException ex)
          {
-            throw new WSException("Cannot load java type: " + javaTypeName, ex);
+            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_JAVA_TYPE",  javaTypeName),  ex);
          }
       }
       return tmpJavaType;
@@ -293,7 +295,7 @@ public class ParameterMetaData implements InitalizableMetaData
       else if ("OUT".equals(mode))
          setMode(ParameterMode.OUT);
       else
-         throw new IllegalArgumentException("Invalid mode: " + mode);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_MODE",  mode));
    }
 
    public void setMode(ParameterMode mode)
@@ -400,7 +402,7 @@ public class ParameterMetaData implements InitalizableMetaData
       StringBuilder mimeName = new StringBuilder(xmlType.getLocalPart());
       int pos = mimeName.indexOf("_");
       if (pos == -1)
-         throw new IllegalArgumentException("Invalid mime type: " + xmlType);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_MIME_TYPE",  xmlType));
 
       mimeName.setCharAt(pos, '/');
       return mimeName.toString();
@@ -469,7 +471,7 @@ public class ParameterMetaData implements InitalizableMetaData
          if (loadWrapperBean() == null)
          {
             if (epType == EndpointMetaData.Type.JAXRPC)
-               throw new WSException("Autogeneration of wrapper beans not supported with JAXRPC");
+               throw new WSException(BundleUtils.getMessage(bundle, "WRAPPER_BEANS_AUTOGEN_NOT_SUPPORTED"));
 
             new DynamicWrapperGenerator(getClassLoader()).generate(this);
          }
@@ -477,7 +479,7 @@ public class ParameterMetaData implements InitalizableMetaData
 
       javaType = getJavaType();
       if (javaType == null)
-         throw new WSException("Cannot load java type: " + javaTypeName);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_JAVA_TYPE",  javaTypeName));
 
       initializeAttachmentParameter(epType);
    }
@@ -511,7 +513,7 @@ public class ParameterMetaData implements InitalizableMetaData
    {
       ClassLoader loader = opMetaData.getEndpointMetaData().getClassLoader();
       if (loader == null)
-         throw new WSException("ClassLoader not available");
+         throw new WSException(BundleUtils.getMessage(bundle, "CLASSLOADER_NOT_AVAILABLE"));
       return loader;
    }
 

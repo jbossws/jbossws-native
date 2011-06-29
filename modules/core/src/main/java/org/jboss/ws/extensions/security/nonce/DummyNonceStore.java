@@ -21,7 +21,10 @@
  */
 package org.jboss.ws.extensions.security.nonce;
 
+import java.util.ResourceBundle;
+
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 
 /**
  * A dummy nonce store providing no actual
@@ -31,6 +34,7 @@ import org.jboss.logging.Logger;
  */
 public class DummyNonceStore implements NonceStore
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(DummyNonceStore.class);
 
    public boolean hasNonce(String nonce)
    {
@@ -39,7 +43,7 @@ public class DummyNonceStore implements NonceStore
 
    public void putNonce(String nonce)
    {
-      Logger.getLogger(this.getClass()).warn("Please consider using a real nonce store to increase security against replay attacks.");
+      Logger.getLogger(this.getClass()).warn(BundleUtils.getMessage(bundle, "INCREASE_SECURITY"));
    }
 
 }

@@ -26,11 +26,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
 import org.w3c.dom.DOMException;
@@ -57,6 +59,7 @@ import org.w3c.dom.UserDataHandler;
  */
 public class NodeImpl implements javax.xml.soap.Node
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(NodeImpl.class);
    // The parent of this Node
    protected SOAPElementImpl soapParent;
    // This org.w3c.dom.Node
@@ -78,13 +81,13 @@ public class NodeImpl implements javax.xml.soap.Node
       // Method selection in Java is done at compile time
       // Late binding does not work in this case
       if (node instanceof NodeImpl)
-         throw new IllegalArgumentException("Copy constructor should be used");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "COPY_CONSTRUCTOR_SHOULD_BE_USED"));
 
       domNode = node;
 
       // SOAP child elements should be constructed externally
       if (DOMUtils.hasChildElements(node))
-         throw new IllegalArgumentException("Node cannot have child elements");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NODE_CANNOT_HAVE_CHILD_ELEMENTS"));
    }
 
    /** The copy constructor  used when converting types (i.e. SOAPElement -> SOAPHeaderElement)
@@ -159,7 +162,7 @@ public class NodeImpl implements javax.xml.soap.Node
    {
       // The Text node should overwrite getValue
       if (this instanceof javax.xml.soap.Text)
-         throw new WSException("javax.xml.soap.Text should take care of this");
+         throw new WSException(BundleUtils.getMessage(bundle, "IS_NOT_TEXT"));
 
       String nodeValue = null;
       org.w3c.dom.Node child = (org.w3c.dom.Node)getFirstChild();
@@ -182,7 +185,7 @@ public class NodeImpl implements javax.xml.soap.Node
    {
       // The Text node should overwrite setValue
       if (this instanceof javax.xml.soap.Text)
-         throw new WSException("javax.xml.soap.Text should take care of this");
+         throw new WSException(BundleUtils.getMessage(bundle, "IS_NOT_TEXT"));
 
       org.w3c.dom.Node child = (org.w3c.dom.Node)getFirstChild();
 
@@ -287,7 +290,7 @@ public class NodeImpl implements javax.xml.soap.Node
          {
             child = (NodeImpl)soapChildren.get(0);
             if (domChild != child.domNode)
-               throw new WSException("Inconsistent node, child lists not synchronized");
+               throw new WSException(BundleUtils.getMessage(bundle, "INCONSISTENT_NODE"));
          }
       }
       return child;
@@ -301,7 +304,7 @@ public class NodeImpl implements javax.xml.soap.Node
       {
          child = (NodeImpl)soapChildren.get(soapChildren.size() - 1);
          if (domChild != child.domNode)
-            throw new WSException("Inconsistent node, child lists not synchronized");
+            throw new WSException(BundleUtils.getMessage(bundle, "INCONSISTENT_NODE"));
       }
       return child;
    }
@@ -326,7 +329,7 @@ public class NodeImpl implements javax.xml.soap.Node
          }
 
          if (sibling != null && sibling.domNode != domNode.getPreviousSibling())
-            throw new WSException("Inconsistent node, child lists not synchronized");
+            throw new WSException(BundleUtils.getMessage(bundle, "INCONSISTENT_NODE"));
       }
 
       return sibling;
@@ -352,7 +355,7 @@ public class NodeImpl implements javax.xml.soap.Node
          }
 
          if (sibling != null && sibling.domNode != domNode.getNextSibling())
-            throw new WSException("Inconsistent node, child lists not synchronized");
+            throw new WSException(BundleUtils.getMessage(bundle, "INCONSISTENT_NODE"));
       }
 
       return sibling;
@@ -394,7 +397,7 @@ public class NodeImpl implements javax.xml.soap.Node
 
       int index = soapChildren.indexOf(refChild);
       if (index < 0)
-         throw new IllegalArgumentException("Cannot find refChild in list of javax.xml.soap.Node children");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_FIND_REFCHILD"));
 
       NodeImpl soapNewNode = (NodeImpl)newChild;
       soapNewNode.detachNode();
@@ -582,9 +585,9 @@ public class NodeImpl implements javax.xml.soap.Node
    {
       org.w3c.dom.Node domParent = domNode.getParentNode();
       if (domParent != null && soapParent == null)
-         throw new WSException("Inconsistent node, has a DOM parent but no SOAP parent [" + this + "] " + DOMWriter.printNode(this, false));
+         throw new WSException(BundleUtils.getMessage(bundle, "NO_SOAP_PARENT", new Object[]{ this ,  DOMWriter.printNode(this, false)}));
       if (domParent != null && soapParent != null && domParent != soapParent.domNode)
-         throw new WSException("Inconsistent node, SOAP parent is not identical with DOM parent [" + this + "] " + DOMWriter.printNode(this, false));
+         throw new WSException(BundleUtils.getMessage(bundle, "NOT_IDENTICAL_WITH_DOM_PARENT", new Object[]{ this ,  DOMWriter.printNode(this, false)}));
    }
 
    // END org.w3c.dom.Node *******************************************************************************************

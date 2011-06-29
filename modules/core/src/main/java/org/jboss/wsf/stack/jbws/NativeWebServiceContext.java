@@ -22,6 +22,7 @@
 package org.jboss.wsf.stack.jbws;
 
 import java.security.Principal;
+import java.util.ResourceBundle;
 
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
@@ -30,6 +31,7 @@ import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
 import javax.xml.ws.wsaddressing.W3CEndpointReferenceBuilder;
 
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.jaxws.wsaddressing.EndpointReferenceUtil;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -44,6 +46,7 @@ import org.w3c.dom.Element;
  */
 public final class NativeWebServiceContext extends ExtensibleWebServiceContext
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(NativeWebServiceContext.class);
    public NativeWebServiceContext(final MessageContext messageContext)
    {
       super(messageContext);
@@ -59,11 +62,11 @@ public final class NativeWebServiceContext extends ExtensibleWebServiceContext
       EndpointMetaData endpointMD = ((CommonMessageContext)getMessageContext()).getEndpointMetaData();
       if (endpointMD == null)
       {
-         throw new WebServiceException("Cannot get EndpointMetaData!");
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINTMD"));
       }
       if (HTTPBinding.HTTP_BINDING.equals(endpointMD.getBindingId()))
       {
-         throw new UnsupportedOperationException("Cannot get epr when using the XML/HTTP binding");
+         throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "CANNOT_GET_EPR"));
       }
       W3CEndpointReferenceBuilder builder = new W3CEndpointReferenceBuilder();
       String address = endpointMD.getEndpointAddress();

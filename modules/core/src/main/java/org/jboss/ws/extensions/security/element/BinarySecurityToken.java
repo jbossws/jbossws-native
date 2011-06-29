@@ -21,6 +21,9 @@
  */
 package org.jboss.ws.extensions.security.element;
 
+import java.util.ResourceBundle;
+
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.extensions.security.Constants;
 import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
@@ -32,6 +35,7 @@ import org.w3c.dom.Element;
  */
 abstract public class BinarySecurityToken implements Token
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(BinarySecurityToken.class);
    private Document doc;
 
    private String id;
@@ -44,7 +48,7 @@ abstract public class BinarySecurityToken implements Token
       if (X509Token.TYPE.equals(valueType))
          return new X509Token(element);
       else
-         throw new WSSecurityException("Unkown Binary Security Token!!!");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "UNKOWN_SECURITY_TOKEN"));
    }
 
    public BinarySecurityToken(Document doc)

@@ -23,10 +23,12 @@ package org.jboss.ws.tools;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 
 /**
@@ -37,6 +39,7 @@ import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
  */
 public class JavaToWSDL20
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JavaToWSDL20.class);
    // provide logging
    private static final Logger log = Logger.getLogger(JavaToWSDL20.class);
 
@@ -107,7 +110,7 @@ public class JavaToWSDL20
    {
       Boolean val = features.get(name);
       if(val != null) return val.booleanValue();
-       throw new WSException("Feature unrecognized");
+       throw new WSException(BundleUtils.getMessage(bundle, "FEATURE_UNRECOGNIZED"));
    }
 
    /**

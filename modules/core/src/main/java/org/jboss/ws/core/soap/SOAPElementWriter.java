@@ -28,10 +28,12 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.ResourceBundle;
 
 import javax.xml.soap.SOAPEnvelope;
 
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
 
@@ -44,6 +46,7 @@ import org.jboss.ws.common.DOMWriter;
  */
 public class SOAPElementWriter
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPElementWriter.class);
 
    // Print writer
    private PrintWriter out;
@@ -78,7 +81,7 @@ public class SOAPElementWriter
       }
       catch (UnsupportedEncodingException e)
       {
-         throw new IllegalArgumentException("Unsupported encoding: " + charsetName);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_ENCODING",  charsetName));
       }
    }
 
@@ -150,7 +153,7 @@ public class SOAPElementWriter
          }
          catch (IOException ex)
          {
-            throw new WSException("Cannot write SOAP element", ex);
+            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_WRITE_SOAP_ELEMENT"),  ex);
          }
       }
    }

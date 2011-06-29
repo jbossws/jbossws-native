@@ -35,6 +35,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -67,12 +68,13 @@ import javax.xml.rpc.holders.StringHolder;
 
 import org.apache.xerces.xs.XSComplexTypeDefinition;
 import org.apache.xerces.xs.XSTypeDefinition;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
-import org.jboss.ws.common.JavaUtils;
 import org.jboss.xb.binding.Util;
 
 /**
@@ -84,6 +86,7 @@ import org.jboss.xb.binding.Util;
 
 public class WSDLUtils
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLUtils.class);
    private String newline = "\n";
    private static WSDLUtils instance = new WSDLUtils();
 
@@ -239,7 +242,7 @@ public class WSDLUtils
    public boolean checkIgnoreClass(Class cls)
    {
       if (cls == null)
-         throw new IllegalArgumentException("Illegal null argument:cls");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "cls"));
       //if (cls.isArray()) cls = cls.getComponentType();
       if (!cls.isArray())
       {
@@ -354,9 +357,9 @@ public class WSDLUtils
    public File createPackage(String path, String packageName)
    {
       if (packageName == null)
-         throw new IllegalArgumentException("Illegal Null Argument: packageName");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "packageName"));
       if (path == null)
-         throw new IllegalArgumentException("Illegal Null Argument: path");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "path"));
       String pac = packageName.replace('.', '/');
       File dir = new File(path + "/" + pac);
       dir.mkdirs();
@@ -373,9 +376,9 @@ public class WSDLUtils
    public File createPhysicalFile(File loc, String fname) throws IOException
    {
       if (loc == null)
-         throw new IllegalArgumentException("Illegal Null Argument: loc");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "loc"));
       if (fname == null)
-         throw new IllegalArgumentException("Illegal Null Argument: fname");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "fname"));
       File javaFile = new File(loc.getAbsolutePath() + "/" + fname + ".java");
       //Delete the javaFile if already exists
       if (javaFile.exists())
@@ -477,7 +480,7 @@ public class WSDLUtils
    public String firstLetterUpperCase(String fname)
    {
       if (fname == null || fname.length() == 0)
-         throw new WSException("String passed is null");
+         throw new WSException(BundleUtils.getMessage(bundle, "STRING_PASSED_IS_NULL"));
       //Ensure that the first character is uppercase
       final char firstChar = fname.charAt(0);
       if (Character.isLowerCase(firstChar))
@@ -497,7 +500,7 @@ public class WSDLUtils
    public int getArrayDimension(Class arr)
    {
       if (arr == null || arr.isArray() == false)
-         throw new IllegalArgumentException("Illegal null or array arg:arr");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_OR_ARRAY_ARG", arr));
       int counter = 0;
       while (arr.isArray())
       {
@@ -658,7 +661,7 @@ public class WSDLUtils
    public String getMixedCase(String str)
    {
       if (str == null || str.length() == 0)
-         throw new IllegalArgumentException("String passed to WSDLUtils.getMixedCase is null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "STRING_PASSED_IS_NULL"));
 
       if (str.length() == 1)
          return str.toUpperCase();
@@ -675,7 +678,7 @@ public class WSDLUtils
    public String getFormattedString(QName qn)
    {
       if (qn == null)
-         throw new IllegalArgumentException(" QName passed is null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "QNAME_PASSED_IS_NULL"));
       StringBuilder sb = new StringBuilder();
       String prefix = qn.getPrefix();
       String localpart = qn.getLocalPart();
@@ -697,7 +700,7 @@ public class WSDLUtils
       QName qn = null;
       int ind = formattedStr.lastIndexOf(':');
       if (ind < 0)
-         throw new IllegalArgumentException("Formatted String is not of format prefix:localpart");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_FORMATTED_STRING"));
       String prefix = formattedStr.substring(0, ind);
       String nsuri = null;
       if (Constants.PREFIX_XSD.equals(prefix))
@@ -787,13 +790,13 @@ public class WSDLUtils
       if (types instanceof XSModelTypes)
          return ((XSModelTypes)types).getSchemaModel();
 
-      throw new WSException("WSDLTypes is not an XSModelTypes");
+      throw new WSException(BundleUtils.getMessage(bundle, "NOT_AN_XSMODELTYPES"));
    }
 
    public static void addSchemaModel(WSDLTypes types, String namespace, JBossXSModel model)
    {
       if (!(types instanceof XSModelTypes))
-         throw new WSException("WSDLTypes is not an XSModelTypes");
+         throw new WSException(BundleUtils.getMessage(bundle, "NOT_AN_XSMODELTYPESs"));
 
       XSModelTypes modelTypes = (XSModelTypes)types;
       modelTypes.addSchemaModel(namespace, model);
@@ -892,7 +895,7 @@ public class WSDLUtils
             return outputs[0];
       }
 
-      throw new WSException("Only Request-Only and Request-Response MEPs are allowed");
+      throw new WSException(BundleUtils.getMessage(bundle, "ONLY_MEPS_ARE_ALLOWED"));
    }
 
    public static WSDLInterfaceOperationInput getWsdl11Input(WSDLInterfaceOperation operation)
@@ -909,6 +912,6 @@ public class WSDLUtils
             return inputs[0];
       }
 
-      throw new WSException("Only Request-Only and Request-Response MEPs are allowed");
+      throw new WSException(BundleUtils.getMessage(bundle, "ONLY_MEPS_ARE_ALLOWED"));
    }
 }

@@ -26,6 +26,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 import java.util.concurrent.Executor;
 
@@ -41,14 +42,15 @@ import javax.xml.ws.wsaddressing.W3CEndpointReference;
 import javax.xml.ws.wsaddressing.W3CEndpointReferenceBuilder;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
+import org.jboss.ws.core.jaxws.spi.http.HttpContext;
+import org.jboss.ws.core.jaxws.spi.http.HttpServer;
+import org.jboss.ws.core.jaxws.spi.http.NettyHttpServerFactory;
 import org.jboss.ws.core.jaxws.wsaddressing.EndpointReferenceUtil;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.ws.core.jaxws.spi.http.HttpContext;
-import org.jboss.ws.core.jaxws.spi.http.HttpServer;
-import org.jboss.ws.core.jaxws.spi.http.NettyHttpServerFactory;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.w3c.dom.Element;
@@ -61,6 +63,7 @@ import org.w3c.dom.Element;
  */
 public class EndpointImpl extends Endpoint
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(EndpointImpl.class);
 
    private static final Logger log = Logger.getLogger(EndpointImpl.class);
    private static final WebServicePermission ENDPOINT_PUBLISH_PERMISSION = new WebServicePermission("publishEndpoint");
@@ -81,7 +84,7 @@ public class EndpointImpl extends Endpoint
    {
       if (implementor == null)
       {
-         throw new IllegalArgumentException("Implementor cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "IMPLEMENTOR_CANNOT_BE_NULL"));
       }
 
       this.implementor = implementor;
@@ -119,7 +122,7 @@ public class EndpointImpl extends Endpoint
       }
       catch (URISyntaxException e)
       {
-         throw new IllegalArgumentException("Invalid address: " + addr);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_ADDRESS",  addr));
       }
 
       // Check with the security manger
@@ -143,13 +146,13 @@ public class EndpointImpl extends Endpoint
    public void publish(Object context)
    {
       if (context == null)
-         throw new IllegalArgumentException("Null context");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NULL_CONTEXT"));
       
       if (log.isDebugEnabled())
          log.debug("publishing endpoint " + this + " to " + context);
 
       if (isDestroyed)
-         throw new IllegalStateException("Endpoint already destroyed");
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "ENDPOINT_ALREADY_DESTROYED"));
 
       // Check with the security manger
       checkPublishEndpointPermission();
@@ -167,7 +170,7 @@ public class EndpointImpl extends Endpoint
       }
       else
       {
-         throw new UnsupportedOperationException("Cannot handle contexts of type: " + context);
+         throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "CANNOT_HANDLE_CONTEXTS",  context));
       }
    }
    
@@ -185,7 +188,7 @@ public class EndpointImpl extends Endpoint
       }
       catch (URISyntaxException e)
       {
-         throw new WebServiceException("Error while getting endpoint address from context!", e);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "ERROR_GETTING_ENDPOINT_ADDRESS"),  e);
       }
    }
 
@@ -195,7 +198,7 @@ public class EndpointImpl extends Endpoint
       log.debug("stop");
 
       if (serverContext == null || isPublished == false)
-         log.error("Endpoint not published");
+         log.error(BundleUtils.getMessage(bundle, "ENDPOINT_NOT_PUBLISHED"));
 
       try
       {
@@ -207,7 +210,7 @@ public class EndpointImpl extends Endpoint
       }
       catch (Exception ex)
       {
-         log.error("Cannot stop endpoint", ex);
+         log.error(BundleUtils.getMessage(bundle, "CANNOT_STOP_ENDPOINT"),  ex);
       }
 
       isPublished = false;
@@ -283,11 +286,11 @@ public class EndpointImpl extends Endpoint
    public <T extends EndpointReference> T getEndpointReference(Class<T> clazz, Element... referenceParameters)
    {
       if (isDestroyed || !isPublished)
-         throw new WebServiceException("Cannot get EPR for an unpubblished or already destroyed endpoint!");
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_GET_EPR_FOR_ENDPOINT"));
 
       if (getBinding() instanceof HTTPBinding)
       {
-         throw new UnsupportedOperationException("Cannot get epr when using the XML/HTTP binding");
+         throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "CANNOT_GET_EPR_WITH_XML_BINDING"));
       }
       W3CEndpointReferenceBuilder builder = new W3CEndpointReferenceBuilder();
       builder.address(address.toString());
@@ -367,14 +370,14 @@ public class EndpointImpl extends Endpoint
    {
       // JAX-WS Endpoint API is broken by design and reveals many implementation details 
       // of JAX-WS RI that are not portable cross different application servers :(
-      log.warn("publish(javax.xml.ws.spi.http.HttpContext) not implemented"); // TODO implement?
+      log.warn(BundleUtils.getMessage(bundle, "PUBLISH_NOT_IMPLEMENT"));
    }
 
    public void setEndpointContext(final javax.xml.ws.EndpointContext endpointContext)
    {
       // JAX-WS Endpoint API is broken by design and reveals many implementation details 
       // of JAX-WS RI that are not portable cross different application servers :(
-      log.warn("setEndpointContext(javax.xml.ws.EndpointContext) not implemented"); // TODO implement?
+      log.warn(BundleUtils.getMessage(bundle, "SETENDPOINTCONTEXT_NOT_IMPLEMENT"));
    }
 
 }

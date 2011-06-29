@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -45,6 +46,10 @@ import javax.xml.ws.soap.AddressingFeature;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.xml.DOMUtils;
+import org.jboss.ws.api.addressing.AddressingConstants;
+import org.jboss.ws.api.handler.GenericSOAPHandler;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.utils.UUIDGenerator;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.addressing.DetailedAddressingException;
@@ -52,9 +57,6 @@ import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.ws.api.addressing.AddressingConstants;
-import org.jboss.ws.api.handler.GenericSOAPHandler;
-import org.jboss.ws.common.utils.UUIDGenerator;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -69,6 +71,7 @@ import org.w3c.dom.Node;
 @SuppressWarnings("unchecked")
 public class WSAddressingServerHandler extends GenericSOAPHandler
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSAddressingServerHandler.class);
    // Provide logging
    private static Logger log = Logger.getLogger(WSAddressingServerHandler.class);
 
@@ -237,7 +240,7 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
          }
          catch (URISyntaxException e)
          {
-            log.error("Error setting response messageId", e);
+            log.error(BundleUtils.getMessage(bundle, "ERROR_SETTING_RESPONSE_MESSAGEID"),  e);
          }   
       }
 
@@ -273,7 +276,7 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
          addressingMD = (AddressingOpMetaExt) operationMD.getExtension(ADDR_CONSTANTS.getNamespaceURI());
 
          if (addressingMD == null)
-            throw new IllegalStateException("Addressing meta data not available");
+            throw new IllegalStateException(BundleUtils.getMessage(bundle, "ADDRESSING_META_DATA_NOT_AVAILABLE"));
       }
 
       return addressingMD;

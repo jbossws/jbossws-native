@@ -37,6 +37,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.TreeMap;
 
 import javax.ejb.SessionBean;
@@ -51,8 +52,9 @@ import org.apache.xerces.xs.XSParticle;
 import org.apache.xerces.xs.XSTerm;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
@@ -80,6 +82,7 @@ import org.jboss.xb.binding.SimpleTypeBindings;
  */
 public class SchemaTypeCreator implements SchemaCreatorIntf
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SchemaTypeCreator.class);
    protected Logger log = Logger.getLogger(SchemaTypeCreator.class);
    protected WSDLUtils utils = WSDLUtils.getInstance();
 
@@ -116,9 +119,9 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
    public void addPackageNamespaceMapping(String pkgname, String ns)
    {
       if (pkgname == null)
-         throw new IllegalArgumentException("Illegal Null Argument:pkgname");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "pkgname"));
       if (ns == null)
-         throw new IllegalArgumentException("Illegal Null Argument:ns");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "ns"));
       packageNamespaceMap.put(pkgname, ns);
 
    }
@@ -201,7 +204,7 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
    {
       Class retType = typeMapping.getJavaType(xmlType);
       if (retType == null)
-         throw new IllegalArgumentException("Unsupported type: " + xmlType);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_TYPE",  xmlType));
       return retType;
    }
 
@@ -334,7 +337,7 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
       }
       catch (IntrospectionException e)
       {
-         log.error("Problem in introspection of the Java Type during type generation", e);
+         log.error(BundleUtils.getMessage(bundle, "PROBLEM_IN_INTROSPECTION"),  e);
          throw new WSException(e);
       }
 
@@ -374,7 +377,7 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
       }
       catch (Exception e)
       {
-         throw new WSException("JAX-RPC Enumeration type did not conform to expectations");
+         throw new WSException(BundleUtils.getMessage(bundle, "NOT_CONFORM_TO_EXPECTATIONS"));
       }
 
       xsModel.addXSTypeDefinition(simpleType);
@@ -542,7 +545,7 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
          // Skip collections
          if (Collection.class.isAssignableFrom(field.getType()))
          {
-            log.warn("JAX-RPC does not allow collection types skipping field: " + javaType.getName() + "." + field.getName());
+            log.warn(BundleUtils.getMessage(bundle, "JAX_RPC_NOT_ALLOW_SKIPPING_FIELD", new Object[]{ javaType.getName(),  field.getName()}));
             continue;
          }
 
@@ -613,7 +616,7 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
 
          if (prop instanceof IndexedPropertyDescriptor && fieldType == null)
          {
-            log.warn("Indexed Properties without non-indexed accessors are not supported skipping: " + javaType.getName() + "." + fieldname);
+            log.warn(BundleUtils.getMessage(bundle, "NOT_SUPPORTED_SKIPPING", new Object[]{ javaType.getName(), fieldname}));
             continue;
          }
 
@@ -624,13 +627,13 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
          // Skip collections
          if (Collection.class.isAssignableFrom(fieldType))
          {
-            log.warn("JAX-RPC does not allow collection types skipping: " + javaType.getName() + "." + fieldname);
+            log.warn(BundleUtils.getMessage(bundle, "JAX-RPC_NOT_ALLOW_TYPES_SKIPPING", new Object[]{ javaType.getName(),  fieldname}));
             continue;
          }
 
          //Check if the property conflicts with a public member variable
          if (utils.doesPublicFieldExist(javaType, fieldname))
-            throw new WSException("Class " + javaType.getName() + " has a public field & property :" + fieldname);
+            throw new WSException(BundleUtils.getMessage(bundle, "CLASS_HAS_PUBLIC_FIELD_PROPERTY", new Object[]{javaType.getName(),  fieldname}));
 
          JBossXSParticle particle = createFieldParticle(typeNamespace, fieldname, fieldType, elementNames);
          xsparts.add(particle);
@@ -683,7 +686,7 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
    private void addBaseTypeParts(XSTypeDefinition baseType, List xsparts)
    {
       if (baseType == null)
-         throw new IllegalArgumentException("Illegal Null Argument:baseType");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "baseType"));
       if (XSTypeDefinition.COMPLEX_TYPE == baseType.getTypeCategory())
       {
          XSTypeDefinition btype = baseType.getBaseType();
@@ -733,7 +736,7 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
          }
          else if (retNS == null)
          {
-            throw new WSException("Cannot determine namespace, Class had no package");
+            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_DETERMINE_NAMESPACE"));
          }
       }
       return retNS;
@@ -742,9 +745,9 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
    private JBossXSComplexTypeDefinition getComplexTypeForJavaException(QName xmlType, Class javaType)
    {
       if (!Exception.class.isAssignableFrom(javaType))
-         throw new IllegalArgumentException("Type is not an excpetion");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "TYPE_IS_NOT_AN_EXCPETION"));
       if (RuntimeException.class.isAssignableFrom(javaType))
-         throw new IllegalArgumentException("JAX-RPC violation, the following exception extends RuntimeException: " + javaType.getName());
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "JAX_RPC_VIOLATION",  javaType.getName()));
 
       String name;
       String namespace;
@@ -798,7 +801,7 @@ public class SchemaTypeCreator implements SchemaCreatorIntf
          {
             // If we have a default (0 argument) constructor, fall back to it
             if (!noarg)
-               throw new IllegalArgumentException("Could not locate a constructor with the following types: " + javaType + ' ' + types);
+               throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "COULD_NOT_LOCATE_CONSTRUCTOR",  javaType));
          }
       }
 

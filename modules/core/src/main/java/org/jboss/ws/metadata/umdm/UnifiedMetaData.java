@@ -25,9 +25,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
@@ -48,6 +50,7 @@ import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
  */
 public class UnifiedMetaData implements InitalizableMetaData
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(UnifiedMetaData.class);
    // provide logging
    private static Logger log = Logger.getLogger(UnifiedMetaData.class);
 
@@ -84,7 +87,7 @@ public class UnifiedMetaData implements InitalizableMetaData
    public UnifiedMetaData(UnifiedVirtualFile vfsRoot, ClassLoader classLoader)
    {
       if (vfsRoot == null)
-         throw new IllegalArgumentException("VFS root cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "VFS_ROOT_CANNOT_BE_NULL"));
 
       this.vfsRoot = vfsRoot;
       this.classLoader = classLoader;
@@ -93,7 +96,7 @@ public class UnifiedMetaData implements InitalizableMetaData
    public ClassLoader getClassLoader()
    {
       if (classLoader == null)
-         throw new IllegalStateException("Class loader not available");
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CLASS_LOADER_NOT_AVAILABLE"));
 
       return classLoader;
    }

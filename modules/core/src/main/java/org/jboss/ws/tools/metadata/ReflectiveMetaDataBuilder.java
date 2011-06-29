@@ -28,13 +28,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.holders.Holder;
 
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
@@ -42,9 +45,8 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
-import org.jboss.ws.tools.ToolsUtils;
 import org.jboss.ws.tools.Configuration.OperationConfig;
-import org.jboss.ws.common.JavaUtils;
+import org.jboss.ws.tools.ToolsUtils;
 
 /**
  * Builds the Tools Endpoint Meta Data using Java Reflection
@@ -54,6 +56,7 @@ import org.jboss.ws.common.JavaUtils;
  */
 public class ReflectiveMetaDataBuilder
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(ReflectiveMetaDataBuilder.class);
    private Class seiClass = null;
 
    private ToolsEndpointMetaData tmd = null;
@@ -87,11 +90,11 @@ public class ReflectiveMetaDataBuilder
    private void checkServiceEndpointInterface()
    {
       if (seiClass == null)
-         throw new IllegalArgumentException("Illegal Null Argument: seiClass");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "seiClass"));    
       if (seiClass.isInterface() == false)
-         throw new IllegalArgumentException("Illegal seiClass : not an interface");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_SEICLASS"));
       if (! Remote.class.isAssignableFrom(seiClass))
-         throw new WSException("A service endpoint interface MUST extend java.rmi.Remote: " + seiClass.getName());
+         throw new WSException(BundleUtils.getMessage(bundle, "SEI_MUST_EXTEND_REMOTE",  seiClass.getName()));
    }
 
    private FaultMetaData getFaultMetaData(Class exType, OperationMetaData om)
@@ -135,7 +138,7 @@ public class ReflectiveMetaDataBuilder
    private void generateOperationMetaData(Method[] marr)
    {
       if (marr == null)
-         throw new WSException("Number of methods in the seiClass is zero");
+         throw new WSException(BundleUtils.getMessage(bundle, "NUMBER_OF_METHODS_IS_ZERO"));
 
       for (Method m : marr)
       {
@@ -178,7 +181,7 @@ public class ReflectiveMetaDataBuilder
              * Test if method param extends java.rmi.Remote
              */
             if (Remote.class.isAssignableFrom(paramType))
-               throw new WSException("Param Type " + paramType.getName() + " should not extend java.rmi.Remote");
+               throw new WSException(BundleUtils.getMessage(bundle, "PARAM_TYPE_SHOULD_NOT_EXTEND_REMOTE",  paramType.getName() ));
 
             if (om.isDocumentWrapped() && !isHeaderParameter(opc, i))
             {
@@ -196,7 +199,7 @@ public class ReflectiveMetaDataBuilder
          if (void.class != returnType)
          {
             if (Remote.class.isAssignableFrom(returnType))
-               throw new WSException("Return Type " + returnType.getName() + " should not extend java.rmi.Remote");
+               throw new WSException(BundleUtils.getMessage(bundle, "RETURN_TYPE_SHOULD_NOT_EXTEND_REMOTE",  returnType.getName() ));
 
             if (om.isDocumentWrapped())
             {

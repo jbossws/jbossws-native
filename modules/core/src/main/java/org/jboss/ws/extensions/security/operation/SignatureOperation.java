@@ -24,6 +24,7 @@ package org.jboss.ws.extensions.security.operation;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
@@ -34,6 +35,7 @@ import org.apache.xml.security.signature.XMLSignatureException;
 import org.apache.xml.security.transforms.TransformationException;
 import org.apache.xml.security.transforms.Transforms;
 import org.jboss.util.NotImplementedException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.extensions.security.QNameTarget;
 import org.jboss.ws.extensions.security.SecurityStore;
 import org.jboss.ws.extensions.security.Target;
@@ -52,6 +54,7 @@ import org.w3c.dom.Element;
 
 public class SignatureOperation implements EncodingOperation
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SignatureOperation.class);
    private List<Target> targets;
    private String alias;
    private String tokenRefType;
@@ -92,7 +95,7 @@ public class SignatureOperation implements EncodingOperation
 
       Element element = Util.findElement(message.getDocumentElement(), name);
       if (element == null)
-         throw new RuntimeException("Could not find element");
+         throw new RuntimeException(BundleUtils.getMessage(bundle, "COULD_NOT_FIND_ELEMENT"));
 
       String id = Util.assignWsuId(element);
 
@@ -140,7 +143,7 @@ public class SignatureOperation implements EncodingOperation
       }
       catch (XMLSecurityException e)
       {
-         throw new WSSecurityException("Error building signature", e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "ERROR_BUILDING_SIGNATURE"),  e);
       }
 
       // For now we pass our resolver the root document because the signature element isn't attached
@@ -168,7 +171,7 @@ public class SignatureOperation implements EncodingOperation
       }
       catch (XMLSignatureException e)
       {
-         throw new WSSecurityException("Error signing message: " + e.getMessage(), e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "ERROR_SIGNING_MESSAGE",  e.getMessage()),  e);
       }
 
       X509Certificate cert = store.getCertificate(alias, securityDomainAliasLabel);

@@ -23,7 +23,9 @@ package org.jboss.ws.core.soap;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.ResourceBundle;
 
+import org.jboss.ws.api.util.BundleUtils;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Text;
 
@@ -35,6 +37,7 @@ import org.w3c.dom.Text;
  */
 public class TextImpl extends NodeImpl implements javax.xml.soap.Text
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(TextImpl.class);
 
    public TextImpl(org.w3c.dom.Node node)
    {
@@ -85,7 +88,7 @@ public class TextImpl extends NodeImpl implements javax.xml.soap.Text
    {
 
       if (offset < 0 || offset > getNodeValue().length())
-         throw new IllegalArgumentException("Invalid offset [" + offset + "] for '" + getNodeValue() + "'");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_OFFSET", new Object[]{offset, getNodeValue()}));
 
       String before = getNodeValue().substring(0, offset + 1);
       setNodeValue(before);

@@ -23,12 +23,14 @@ package org.jboss.ws.extensions.security.element;
 
 import java.security.PrivateKey;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 import javax.crypto.SecretKey;
 
 import org.apache.xml.security.encryption.XMLCipher;
 import org.apache.xml.security.exceptions.XMLSecurityException;
 import org.apache.xml.security.keys.KeyInfo;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.extensions.security.Constants;
 import org.jboss.ws.extensions.security.KeyResolver;
 import org.jboss.ws.extensions.security.Util;
@@ -44,6 +46,7 @@ import org.w3c.dom.Element;
  */
 public class EncryptedKey implements SecurityProcess
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(EncryptedKey.class);
    private Document document;
 
    private SecretKey secretKey;
@@ -97,13 +100,13 @@ public class EncryptedKey implements SecurityProcess
       }
       catch (XMLSecurityException e)
       {
-         throw new WSSecurityException("Could not parse encrypted key: " + e.getMessage(), e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "COULD_NOT_PARSE_ENCRYPTED_KEY",  e.getMessage()),  e);
       }
 
       KeyInfo info = key.getKeyInfo();
 
       if (info == null)
-         throw new WSSecurityException("EncryptedKey element did not contain KeyInfo");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "NOT_CONTAIN_KEYINFO"));
 
       PrivateKey privateKey = resolver.resolvePrivateKey(info);
 
@@ -112,14 +115,14 @@ public class EncryptedKey implements SecurityProcess
 
       Element referenceList = Util.findElement(element, Constants.XENC_REFERENCELIST, Constants.XML_ENCRYPTION_NS);
       if (referenceList == null)
-         throw new WSSecurityException("Encrypted key did not contain a reference list");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "NOT_CONTAIN_A_REFERENCE_LIST"));
 
       this.list = new ReferenceList(referenceList);
 
       // Now use the element list to determine the encryption alg
       String alg = getKeyAlgorithm(element);
       if (alg == null)
-         throw new WSSecurityException("Could not determine encrypted key algorithm!");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "COULD_NOT_DETERMINE_ALGORITHM"));
 
       try
       {
@@ -128,7 +131,7 @@ public class EncryptedKey implements SecurityProcess
       }
       catch (XMLSecurityException e)
       {
-         throw new WSSecurityException("Could not parse encrypted key: " + e.getMessage(), e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "COULD_NOT_PARSE_ENCRYPTED_KEY",  e.getMessage()),  e);
       }
 
       this.document = element.getOwnerDocument();
@@ -153,11 +156,11 @@ public class EncryptedKey implements SecurityProcess
    {
       element = Util.findElement(element, "EncryptionMethod", Constants.XML_ENCRYPTION_NS);
       if (element == null)
-         throw new InvalidSecurityHeaderException("Encrypted element corrupted, no encryption method");
+         throw new InvalidSecurityHeaderException(BundleUtils.getMessage(bundle, "NO_ENCRYPTION_METHOD"));
 
       String alg = element.getAttribute("Algorithm");
       if (alg == null || alg.length() == 0)
-         throw new InvalidSecurityHeaderException("Encrypted element corrupted, no algorithm specified");
+         throw new InvalidSecurityHeaderException(BundleUtils.getMessage(bundle, "NO_ALGORITHM_SPECIFIED"));
 
       return alg;
    }
@@ -178,7 +181,7 @@ public class EncryptedKey implements SecurityProcess
       }
       catch (XMLSecurityException e)
       {
-         throw new WSSecurityException("Error encrypting key: " + e.getMessage(), e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "ERROR_ENCRYPTING_KEY",  e.getMessage()),  e);
       }
 
       SecurityTokenReference reference = new SecurityTokenReference(Reference.getReference(tokenRefType, document, token));

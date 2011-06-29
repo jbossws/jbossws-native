@@ -22,6 +22,8 @@
 package org.jboss.ws.core.jaxws.binding;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.io.OutputStream;
 
 import javax.xml.soap.SOAPBodyElement;
@@ -40,6 +42,7 @@ import org.jboss.ws.extensions.json.BadgerFishDOMDocumentSerializer;
  */
 public class JsonMessageMarshaller implements Marshaller
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JsonMessageMarshaller.class);
    /**
     * Marshaller will need to take the dataObject and convert
     * into primitive java data types and write to the
@@ -53,7 +56,7 @@ public class JsonMessageMarshaller implements Marshaller
    {
       // TODO: this should not be a SOAP message
       if ((dataObject instanceof SOAPMessageImpl) == false)
-         throw new IllegalArgumentException("Not a SOAPMessageImpl: " + dataObject);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NOT_A_SOAPMESSAGEIMPL",  dataObject));
 
       try
       {
@@ -64,7 +67,7 @@ public class JsonMessageMarshaller implements Marshaller
       }
       catch (SOAPException ex)
       {
-         IOException ioex = new IOException("Cannot serialize: " + dataObject);
+         IOException ioex = new IOException(BundleUtils.getMessage(bundle, "CANNOT_SERIALIZE",  dataObject));
          ioex.initCause(ex);
          throw ioex;
       }

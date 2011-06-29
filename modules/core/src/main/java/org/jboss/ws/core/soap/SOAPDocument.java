@@ -21,7 +21,10 @@
  */
 package org.jboss.ws.core.soap;
 
+import java.util.ResourceBundle;
+
 import org.apache.xerces.dom.DocumentImpl;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
@@ -52,6 +55,7 @@ import org.w3c.dom.UserDataHandler;
 @SuppressWarnings("serial")
 public class SOAPDocument extends DocumentImpl implements Document
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPDocument.class);
 
    private Document doc = DOMUtils.getOwnerDocument();
 
@@ -110,7 +114,7 @@ public class SOAPDocument extends DocumentImpl implements Document
 
    public EntityReference createEntityReference(String name) throws DOMException
    {
-      throw new UnsupportedOperationException("Entity References are not allowed in SOAP documents");
+      throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "ENTITY_REFERENCES_ARE_NOT_ALLOWED"));
    }
 
    public NodeList getElementsByTagName(String tagname)
@@ -131,7 +135,7 @@ public class SOAPDocument extends DocumentImpl implements Document
          return new SOAPElementImpl(qualifiedName, null, namespaceURI);
 
       if (loc == qualifiedName.length() - 1)
-         throw new IllegalArgumentException("Invalid qualified name");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_QUALIFIED_NAME"));
 
       return new SOAPElementImpl(qualifiedName.substring(loc + 1), qualifiedName.substring(0, loc), namespaceURI);
    }

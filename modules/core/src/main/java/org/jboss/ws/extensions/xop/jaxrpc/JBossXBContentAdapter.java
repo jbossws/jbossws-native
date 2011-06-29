@@ -25,19 +25,21 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ResourceBundle;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.IOUtils;
 import org.jboss.ws.core.soap.attachment.ContentHandlerRegistry;
 import org.jboss.ws.core.soap.attachment.SwapableMemoryDataSource;
 import org.jboss.ws.core.utils.MimeUtils;
 import org.jboss.ws.extensions.xop.XOPContext;
-import org.jboss.ws.common.IOUtils;
 import org.jboss.xb.binding.sunday.marshalling.MarshallingContext;
 import org.jboss.xb.binding.sunday.marshalling.TermBeforeMarshallingCallback;
 import org.jboss.xb.binding.sunday.unmarshalling.SchemaBinding;
@@ -57,6 +59,7 @@ import org.jboss.xb.binding.sunday.unmarshalling.UnmarshallingContext;
  * @since Oct 19, 2006
  */
 public class JBossXBContentAdapter implements TermBeforeMarshallingCallback, TermBeforeSetParentCallback {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JBossXBContentAdapter.class);
 
    private static final Logger log = Logger.getLogger(JBossXBContentAdapter.class);
    private static final QName XMIME_BASE_64 = new QName(Constants.NS_XML_MIME, "base64Binary");
@@ -91,7 +94,7 @@ public class JBossXBContentAdapter implements TermBeforeMarshallingCallback, Ter
          }
          catch (IOException e)
          {
-            throw new WSException("Failed to adopt XOP content type", e);
+            throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_ADOPT_XOP_CONTENT_TYPE"),  e);
          }
       }
 
@@ -111,7 +114,7 @@ public class JBossXBContentAdapter implements TermBeforeMarshallingCallback, Ter
       Class targetClass = ctx.resolvePropertyType();
 
       if(null==targetClass) {
-         throw new WSException("Failed to resolve target property type on "+ ctx.getParticle());
+         throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_RESOLVE_TARGET_PROPERTY",  ctx.getParticle()));
       }
 
       boolean isRegularMessage = !XOPContext.isXOPMessage();
@@ -139,7 +142,7 @@ public class JBossXBContentAdapter implements TermBeforeMarshallingCallback, Ter
          }
          catch (IOException e)
          {
-            throw new WSException("Failed to adopt XOP content type", e);
+            throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_ADOPT_XOP_CONTENT_TYPE"),  e);
          }
       }
 
@@ -170,7 +173,7 @@ public class JBossXBContentAdapter implements TermBeforeMarshallingCallback, Ter
          }
          catch (IOException e)
          {
-            throw new WSException("Failed to adopt XOP content type", e);
+            throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_ADOPT_XOP_CONTENT_TYPE"),  e);
          }
       }
 
@@ -191,7 +194,7 @@ public class JBossXBContentAdapter implements TermBeforeMarshallingCallback, Ter
       }
       else
       {
-         throw new IllegalArgumentException("Failed to wrap as data source: "+object.getClass());
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "FAILED_TO_WRAP_AS_DATA_SOURCE", object.getClass()));
       }
 
       return ds;
@@ -224,7 +227,7 @@ public class JBossXBContentAdapter implements TermBeforeMarshallingCallback, Ter
          ElementBinding xopInclude = (ElementBinding)particle.getTerm();
 
          if(! xopInclude.getQName().equals(XOP_INCLUDE))
-            throw new WSException("Looks like the JBossXB XOP implementation has changed, please open a JIRA issue");
+            throw new WSException(BundleUtils.getMessage(bundle, "XOP_IMPLEMENTATION_HAS_CHANGED"),  please open a JIRA issue");
 
          xopInclude.setBeforeMarshallingCallback(contentAdapter);
          xopInclude.setBeforeSetParentCallback(contentAdapter);

@@ -23,6 +23,7 @@ package org.jboss.ws.extensions.json;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ResourceBundle;
 
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
@@ -33,6 +34,7 @@ import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.dom.DOMSource;
 
 import org.codehaus.jettison.badgerfish.BadgerFishXMLOutputFactory;
+import org.jboss.ws.api.util.BundleUtils;
 import org.w3c.dom.Element;
 
 /**
@@ -43,6 +45,7 @@ import org.w3c.dom.Element;
  */
 public class BadgerFishDOMDocumentSerializer
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(BadgerFishDOMDocumentSerializer.class);
    private OutputStream output;
 
    public BadgerFishDOMDocumentSerializer(OutputStream output)
@@ -53,7 +56,7 @@ public class BadgerFishDOMDocumentSerializer
    public void serialize(Element el) throws IOException
    {
       if (output == null)
-         throw new IllegalStateException("OutputStream cannot be null");
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "OUTPUTSTREAM_CANNOT_BE_NULL"));
       
       try
       {
@@ -72,7 +75,7 @@ public class BadgerFishDOMDocumentSerializer
       }
       catch (XMLStreamException ex)
       {
-         IOException ioex = new IOException("Cannot serialize: " + el);
+         IOException ioex = new IOException(BundleUtils.getMessage(bundle, "CANNOT_SERIALIZE",  el));
          ioex.initCause(ex);
          throw ioex;
       }

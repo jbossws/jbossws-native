@@ -22,6 +22,7 @@
 package org.jboss.ws.core.jaxws;
 
 import java.util.Iterator;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.TypeMapping;
@@ -43,6 +44,7 @@ import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPFaultException;
@@ -73,6 +75,7 @@ import org.w3c.dom.Node;
  */
 public class SOAPFaultHelperJAXWS
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPFaultHelperJAXWS.class);
    // provide logging
    private static Logger log = Logger.getLogger(SOAPFaultHelperJAXWS.class);
 
@@ -80,7 +83,7 @@ public class SOAPFaultHelperJAXWS
    public static SOAPFaultException getSOAPFaultException(SOAPFault soapFault)
    {
       if (soapFault == null)
-         throw new IllegalArgumentException("SOAPFault cannot be null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SOAPFAULT_CANNOT_BE_NULL"));
 
       SOAPFaultException faultEx = new SOAPFaultException(soapFault);
 
@@ -113,7 +116,7 @@ public class SOAPFaultHelperJAXWS
                // Get the deserializer from the type mapping
                AbstractDeserializerFactory desFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(faultBeanClass, xmlType);
                if (desFactory == null)
-                  throw new WebServiceException("Cannot obtain deserializer factory: xmlType=" + xmlType + ", javaType=" + faultBeanClass);
+                  throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_DESERIALIZER_FACTORY", new Object[]{ xmlType ,  faultBeanClass}));
 
                // http://jira.jboss.org/jira/browse/JBWS-955
                // Cannot deserialize fault detail
@@ -129,7 +132,7 @@ public class SOAPFaultHelperJAXWS
                      }
                      catch (SOAPException e)
                      {
-                        log.warn("Declaration of detail entry namespace failed", e);
+                        log.warn(BundleUtils.getMessage(bundle, "DECLARATION_OF_DETAIL_ENTRY_NAMESPACE_FAILED"),  e);
                      }
                   }
                }
@@ -166,7 +169,7 @@ public class SOAPFaultHelperJAXWS
    /** Translate the request exception into a SOAPFault message. */
    public static SOAPMessageImpl exceptionToFaultMessage(Exception reqEx)
    {
-      log.error("SOAP request exception", reqEx);
+      log.error(BundleUtils.getMessage(bundle, "SOAP_REQUEST_EXCEPTION"),  reqEx);
 
       try
       {
@@ -198,8 +201,8 @@ public class SOAPFaultHelperJAXWS
       }
       catch (SOAPException ex)
       {
-         log.error("Error creating SOAPFault message", ex);
-         throw new WebServiceException("Cannot create SOAPFault message for: " + reqEx);
+         log.error(BundleUtils.getMessage(bundle, "ERROR_CREATING_SOAPFAULT_MESSAGE"),  ex);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_SOAPFAULT_MESSAGE",  reqEx));
       }
    }
 
@@ -289,7 +292,7 @@ public class SOAPFaultHelperJAXWS
          }
          catch (SOAPException e)
          {
-            log.warn(e);
+            log.warn(BundleUtils.getMessage(bundle, ""));
          }
       }
       else 
@@ -391,7 +394,7 @@ public class SOAPFaultHelperJAXWS
       serContext.setJavaType(javaType);
       AbstractSerializerFactory serFactory = (AbstractSerializerFactory)serContext.getTypeMapping().getSerializer(javaType, xmlType);
       if (serFactory == null)
-         throw new WebServiceException("Cannot obtain serializer factory: xmlType=" + xmlType + ", javaType=" + javaType);
+         throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SERIALIZER_FACTORY", new Object[]{ xmlType ,  javaType}));
 
       try
       {

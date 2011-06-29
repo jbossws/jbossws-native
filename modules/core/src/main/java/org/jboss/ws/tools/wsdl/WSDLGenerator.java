@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -37,8 +38,12 @@ import javax.xml.ws.soap.SOAPBinding;
 import org.apache.ws.policy.Policy;
 import org.apache.ws.policy.util.PolicyFactory;
 import org.apache.ws.policy.util.PolicyWriter;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.addressing.AddressingConstants;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.DOMUtils;
+import org.jboss.ws.common.utils.UUIDGenerator;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
@@ -70,12 +75,9 @@ import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutput;
 import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLRPCPart;
 import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem;
+import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
 import org.jboss.ws.metadata.wsdl.WSDLSOAPHeader;
 import org.jboss.ws.metadata.wsdl.WSDLService;
-import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
-import org.jboss.ws.common.DOMUtils;
-import org.jboss.ws.api.addressing.AddressingConstants;
-import org.jboss.ws.common.utils.UUIDGenerator;
 import org.w3c.dom.Element;
 
 /**
@@ -85,6 +87,7 @@ import org.w3c.dom.Element;
  */
 public abstract class WSDLGenerator
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLGenerator.class);
    private static final AddressingProperties WSA_PROPERTIES = new AddressingPropertiesImpl();
    public static final String WSU_NS = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
    public static final String WSAM_NS = AddressingConstants.Metadata.NS;
@@ -213,7 +216,7 @@ public abstract class WSDLGenerator
       }
       catch (IOException ioe)
       {
-         throw new WSException("Error while converting policy to element!");
+         throw new WSException(BundleUtils.getMessage(bundle, "ERROR_WHILE_CONVERTING_POLICY_TO_ELEMENT"));
       }
    }
    
@@ -595,7 +598,7 @@ public abstract class WSDLGenerator
       }
 
       if (endpoint == null)
-         throw new IllegalStateException("A service must have an endpoint");
+         throw new IllegalStateException(BundleUtils.getMessage(bundle, "A_SERVICE_MUST_HAVE_AN_ENDPOINT"));
 
       wsdlService.setInterfaceName(endpoint.getPortName());
    }

@@ -26,6 +26,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.soap.MimeHeaders;
@@ -34,6 +35,7 @@ import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.client.UnMarshaller;
 import org.jboss.ws.core.client.transport.NettyClient;
 
@@ -44,6 +46,7 @@ import org.jboss.ws.core.client.transport.NettyClient;
  */
 public class SOAPMessageUnMarshallerHTTP implements UnMarshaller
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPMessageUnMarshallerHTTP.class);
    // Provide logging
    private static Logger log = Logger.getLogger(SOAPMessageUnMarshallerHTTP.class);
 
@@ -66,13 +69,13 @@ public class SOAPMessageUnMarshallerHTTP implements UnMarshaller
          Integer resCode = (Integer)metadata.get(NettyClient.RESPONSE_CODE);
          if (resCode == null)
          {
-            log.warn("No HTTP resonse code, assuming: SC_OK");
+            log.warn(BundleUtils.getMessage(bundle, "NO_HTTP_RESONSE_CODE"));
             resCode = HttpServletResponse.SC_OK;
          }
          
          String resMessage = (String)metadata.get(NettyClient.RESPONSE_CODE_MESSAGE);
          if (validResponseCodes.contains(resCode) == false)
-            throw new WSException("Invalid HTTP server response [" + resCode + "] - " + resMessage);
+            throw new WSException(BundleUtils.getMessage(bundle, "INVALID_HTTP_SERVER_RESPONSE", new Object[]{ resCode ,  resMessage}));
 
          // [JBWS-859] SOAPMessageUnMarshaller doesn't support HTTP server response [204] - No Content
          SOAPMessage soapMsg = null;
@@ -87,7 +90,7 @@ public class SOAPMessageUnMarshallerHTTP implements UnMarshaller
       }
       catch (SOAPException e)
       {
-         log.error("Cannot unmarshall SOAPMessage", e);
+         log.error(BundleUtils.getMessage(bundle, "CANNOT_UNMARSHALL_SOAPMESSAGE"),  e);
          IOException e2 = new IOException(e.toString());
          e2.initCause(e);
          throw e2;

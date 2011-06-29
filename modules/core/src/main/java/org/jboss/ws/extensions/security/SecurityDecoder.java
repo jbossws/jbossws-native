@@ -25,8 +25,10 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import org.apache.xml.security.Init;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.extensions.security.element.EncryptedKey;
 import org.jboss.ws.extensions.security.element.SecurityHeader;
 import org.jboss.ws.extensions.security.element.SecurityProcess;
@@ -54,6 +56,7 @@ import org.w3c.dom.Element;
  */
 public class SecurityDecoder
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SecurityDecoder.class);
    private Element headerElement;
 
    private Calendar now =  null;
@@ -109,7 +112,7 @@ public class SecurityDecoder
    {
       Element header = Util.findElement(message.getDocumentElement(), "Security", Constants.WSSE_NS);
       if (header == null)
-         throw new WSSecurityException("Expected security header was not found");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "EXPECTED_SECURITY_HEADER"));
 
       return header;
    }

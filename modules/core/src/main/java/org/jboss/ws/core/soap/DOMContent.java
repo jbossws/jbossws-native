@@ -21,10 +21,13 @@
  */
 package org.jboss.ws.core.soap;
 
+import java.util.ResourceBundle;
+
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 
 /**
  * Represents the DOM_VALID state of an {@link SOAPContentElement}.<br>
@@ -34,6 +37,7 @@ import org.jboss.logging.Logger;
  */
 public class DOMContent extends SOAPContent
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(DOMContent.class);
    private static Logger log = Logger.getLogger(DOMContent.class);
 
    private Source payload;
@@ -81,7 +85,7 @@ public class DOMContent extends SOAPContent
       }
       else
       {
-         throw new IllegalArgumentException("Illegal state requested: " + nextState);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_STATE_REQUESTED",  nextState));
       }
 
       return next;
@@ -95,28 +99,28 @@ public class DOMContent extends SOAPContent
    public void setPayload(Source source)
    {
       if (!(source instanceof DOMSource))
-         throw new IllegalArgumentException("DOMSource expected, but got: " + source);
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "DOMSOURCE_EXPECTED",  source));
       
       this.payload = source;
    }
 
    public XMLFragment getXMLFragment()
    {
-      throw new IllegalStateException("XMLFragment not available");
+      throw new IllegalStateException(BundleUtils.getMessage(bundle, "XMLFRAGMENT_NOT_AVAILABLE"));
    }
 
    public void setXMLFragment(XMLFragment xmlFragment)
    {
-      throw new IllegalStateException("XMLFragment not available");
+      throw new IllegalStateException(BundleUtils.getMessage(bundle, "XMLFRAGMENT_NOT_AVAILABLE"));
    }
 
    public Object getObjectValue()
    {
-      throw new IllegalStateException("Object value not available");
+      throw new IllegalStateException(BundleUtils.getMessage(bundle, "OBJECT_VALUE_NOT_AVAILABLE"));
    }
 
    public void setObjectValue(Object objValue)
    {
-      throw new IllegalStateException("Object value not available");
+      throw new IllegalStateException(BundleUtils.getMessage(bundle, "OBJECT_VALUE_NOT_AVAILABLE"));
    }
 }

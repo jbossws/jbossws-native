@@ -22,6 +22,8 @@
 package org.jboss.ws.metadata.wsdl;
 
 import java.util.Collection;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.util.LinkedHashMap;
 
 import javax.xml.namespace.QName;
@@ -41,6 +43,7 @@ import org.jboss.ws.WSException;
  */
 public abstract class WSDLInterfaceMessageReference extends Extendable implements Comparable
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLInterfaceMessageReference.class);
    // provide logging
    protected Logger log = Logger.getLogger(getClass());
 
@@ -142,7 +145,7 @@ public abstract class WSDLInterfaceMessageReference extends Extendable implement
       }
 
       if (xmlType == null)
-         throw new WSException("Cannot obtain xmlType for element: " + element);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_XMLTYPE",  element));
 
       return xmlType;
    }

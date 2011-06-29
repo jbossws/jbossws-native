@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import org.apache.ws.policy.AndCompositeAssertion;
 import org.apache.ws.policy.Assertion;
@@ -33,6 +34,8 @@ import org.apache.ws.policy.PrimitiveAssertion;
 import org.apache.ws.policy.XorCompositeAssertion;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.addressing.AddressingConstants;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.extensions.addressing.policy.AddressingPolicyAssertionDeployer;
 import org.jboss.ws.extensions.policy.deployer.domainAssertion.AssertionDeployer;
 import org.jboss.ws.extensions.policy.deployer.domainAssertion.NopAssertionDeployer;
@@ -41,7 +44,6 @@ import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedAlternative
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedAssertion;
 import org.jboss.ws.extensions.policy.deployer.exceptions.UnsupportedPolicy;
 import org.jboss.ws.metadata.umdm.ExtensibleMetaData;
-import org.jboss.ws.api.addressing.AddressingConstants;
 
 /**
  * @author Stefano Maestri <mailto:stefano.maestri@javalinux.it>
@@ -50,6 +52,7 @@ import org.jboss.ws.api.addressing.AddressingConstants;
  */
 public class PolicyDeployer
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(PolicyDeployer.class);
    private final static Logger log = Logger.getLogger(PolicyDeployer.class);
    private static PolicyDeployer me;
    private Map<String, Class> domainDeployerMap = new HashMap<String, Class>();
@@ -97,7 +100,7 @@ public class PolicyDeployer
    public Policy deployServerside(Policy policy, ExtensibleMetaData extMetaData) throws UnsupportedPolicy
    {
       if (policy == null)
-         throw new WSException("Cannot deploy null policy!");
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_DEPLOY_NULL_POLICY"));
 
       List<Assertion> returnedPolicyTerms = new LinkedList<Assertion>();
 
@@ -150,7 +153,7 @@ public class PolicyDeployer
    public void deployClientSide(Policy policy, ExtensibleMetaData extMetaData) throws UnsupportedPolicy
    {
       if (policy == null)
-         throw new WSException("Cannot deploy null policy!");
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_DEPLOY_NULL_POLICY"));
 
       if (!policy.isNormalized())
       {
@@ -170,7 +173,7 @@ public class PolicyDeployer
                }
                catch (UnsupportedAssertion e)
                {
-                  log.error("Unsupported assertion!");
+                  log.error(BundleUtils.getMessage(bundle, "UNSUPPORTED_ASSERTION"));
                   throw new UnsupportedPolicy();
                }
             }

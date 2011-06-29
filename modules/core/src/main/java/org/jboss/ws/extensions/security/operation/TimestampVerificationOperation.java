@@ -22,8 +22,10 @@
 package org.jboss.ws.extensions.security.operation;
 
 import java.util.Calendar;
+import java.util.ResourceBundle;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.extensions.security.element.Timestamp;
 import org.jboss.ws.extensions.security.exception.FailedCheckException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
@@ -32,6 +34,7 @@ import org.w3c.dom.Document;
 
 public class TimestampVerificationOperation
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(TimestampVerificationOperation.class);
    private static final Logger log = Logger.getLogger(TimestampVerificationOperation.class);
 
    private TimestampVerification timestampVerification;
@@ -71,13 +74,13 @@ public class TimestampVerificationOperation
 
          if (rejectCreated == false && timestampVerification.isWarnCreated())
          {
-            log.warn("Accepting Timestamp with 'Created' after now but within configured tolerance.");
+            log.warn(BundleUtils.getMessage(bundle, "CREATED_WITHIN_CONFIGURED_TOLERANCE"));
          }
       }
 
       if (rejectCreated)
       {
-         throw new WSSecurityException("Invalid timestamp, message claimed to be created after now");
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "INVALID_TIMESTAMP"));
       }
 
       boolean rejectExpires = expires != null && !now.before(expires);
@@ -90,13 +93,13 @@ public class TimestampVerificationOperation
 
          if (rejectExpires == false && timestampVerification.isWarnExpires())
          {
-            log.warn("Accepting Timestamp with 'Expires' in past but within configured tolerance.");
+            log.warn(BundleUtils.getMessage(bundle, "EXPIRES_CONFIGURED_TOLERANCE"));
          }
       }
 
       if (rejectExpires)
       {
-         throw new FailedCheckException("Expired message.");
+         throw new FailedCheckException(BundleUtils.getMessage(bundle, "EXPIRED_MESSAGE"));
       }
 
    }

@@ -29,6 +29,7 @@ import java.net.URL;
 import java.nio.channels.ClosedChannelException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -53,6 +54,7 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.handler.ssl.SslHandler;
 import org.jboss.security.Base64Encoder;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.WSTimeoutException;
@@ -75,6 +77,7 @@ import org.jboss.wsf.spi.metadata.config.CommonConfig;
  */
 public class NettyClient
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(NettyClient.class);
    public static final String RESPONSE_CODE = "org.jboss.ws.core.client.transport.NettyClient#ResponseCode";
    public static final String RESPONSE_CODE_MESSAGE = "org.jboss.ws.core.client.transport.NettyClient#ResponseCodeMessage";
    public static final String PROTOCOL = "org.jboss.ws.core.client.transport.NettyClient#Protocol";
@@ -145,7 +148,7 @@ public class NettyClient
       }
       catch (MalformedURLException e)
       {
-         throw new RuntimeException("Invalid address: " + targetAddress, e);
+         throw new RuntimeException(BundleUtils.getMessage(bundle, "INVALID_ADDRESS",  targetAddress),  e);
       }
       
       NettyTransportHandler transport = NettyTransportHandler.getInstance(target, NettyHelper.getChannelPipelineFactory(getSSLHandler(target, callProps)));
@@ -219,7 +222,7 @@ public class NettyClient
          }
 	 catch (TimeoutException te) 
 	 {
-	    throw new WSTimeoutException("Receive timeout", receiveTimeout == null ? -1 : receiveTimeout);
+	    throw new WSTimeoutException(BundleUtils.getMessage(bundle, "RECEIVE_TIMEOUT"),  receiveTimeout == null ? -1 : receiveTimeout);
 	 }
          resHeaders = result.getResponseHeaders();
          resMetadata = result.getMetadata();
@@ -236,7 +239,7 @@ public class NettyClient
       }
       catch (ClosedChannelException cce)
       {
-         log.error("Channel closed by remote peer while sending message");
+         log.error(BundleUtils.getMessage(bundle, "CHANNEL_CLOSED"));
          transport.end();
          throw cce;
       }
@@ -247,7 +250,7 @@ public class NettyClient
       }
       catch (TimeoutException te) 
       {
-	 throw new WSTimeoutException("Connection timeout", connectionTimeout == null ? -1 : connectionTimeout);
+	 throw new WSTimeoutException(BundleUtils.getMessage(bundle, "CONNECTION_TIMEOUT"),  connectionTimeout == null ? -1 : connectionTimeout);
       }
       catch (IOException ioe)
       {
@@ -259,7 +262,7 @@ public class NettyClient
       }
       catch (Throwable t)
       {
-         IOException io = new IOException("Could not transmit message");
+         IOException io = new IOException(BundleUtils.getMessage(bundle, "COULD_NOT_TRANSMIT_MESSAGE"));
          io.initCause(t);
          transport.end();
          throw io;
@@ -367,7 +370,7 @@ public class NettyClient
          }
          catch (Exception e)
          {
-            log.warn("Can't set chunk size from call properties, illegal value provided!");
+            log.warn(BundleUtils.getMessage(bundle, "CAN_NOT_SET_CHUNK_SIZE"));
          }
       }
    }

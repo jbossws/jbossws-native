@@ -23,8 +23,10 @@ package org.jboss.ws.core.jaxrpc.binding.jbossxb;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.extensions.xop.jaxrpc.XOPUnmarshallerImpl;
 import org.jboss.xb.binding.JBossXBException;
 import org.jboss.xb.binding.UnmarshallerFactory;
@@ -39,6 +41,7 @@ import org.jboss.xb.binding.sunday.unmarshalling.SchemaBinding;
  */
 public class JBossXBUnmarshallerImpl implements JBossXBUnmarshaller
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JBossXBUnmarshallerImpl.class);
    // The marshaller properties
    private HashMap<String, Object> properties = new HashMap<String, Object>();
 
@@ -70,7 +73,7 @@ public class JBossXBUnmarshallerImpl implements JBossXBUnmarshaller
    public Object getProperty(String name)
    {
       if (name == null)
-         throw new IllegalArgumentException("name parameter is null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NAME_PARAMETER_IS_NULL"));
 
       return properties.get(name);
    }
@@ -81,7 +84,7 @@ public class JBossXBUnmarshallerImpl implements JBossXBUnmarshaller
    public void setProperty(String name, Object value)
    {
       if (name == null)
-         throw new IllegalArgumentException("name parameter is null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NAME_PARAMETER_IS_NULL"));
 
       properties.put(name, value);
    }
@@ -93,12 +96,12 @@ public class JBossXBUnmarshallerImpl implements JBossXBUnmarshaller
    {
       if (getProperty(JBossXBConstants.JBXB_XS_MODEL) == null)
       {
-         throw new WSException("Cannot find required property: " + JBossXBConstants.JBXB_XS_MODEL);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_REQUIRED_PROPERTY",  JBossXBConstants.JBXB_XS_MODEL));
       }
 
       if (getProperty(JBossXBConstants.JBXB_JAVA_MAPPING) == null)
       {
-         throw new WSException("Cannot find required property: " + JBossXBConstants.JBXB_JAVA_MAPPING);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_REQUIRED_PROPERTY",  JBossXBConstants.JBXB_JAVA_MAPPING));
       }
    }
 }

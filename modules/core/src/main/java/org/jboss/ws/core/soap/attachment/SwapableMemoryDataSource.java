@@ -28,11 +28,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ResourceBundle;
 
 import javax.activation.DataSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.IOUtils;
 
 /**
@@ -43,6 +45,7 @@ import org.jboss.ws.common.IOUtils;
  */
 public class SwapableMemoryDataSource implements DataSource
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SwapableMemoryDataSource.class);
    private static Logger log = Logger.getLogger(SwapableMemoryDataSource.class);
 
    private static final int BLOCK_SIZE = 32 * 1024;
@@ -173,7 +176,7 @@ public class SwapableMemoryDataSource implements DataSource
       if (swapFile != null)
          return new FileInputStream(swapFile);
 
-      throw new WSException("No content available");
+      throw new WSException(BundleUtils.getMessage(bundle, "NO_CONTENT_AVAILABLE"));
    }
 
    /**

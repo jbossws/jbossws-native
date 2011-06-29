@@ -25,11 +25,14 @@ import java.beans.Introspector;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.xml.bind.annotation.XmlTransient;
+
+import org.jboss.ws.api.util.BundleUtils;
 
 /**
  * Base class for JAX-WS wrapper generation.
@@ -38,6 +41,7 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 public abstract class AbstractWrapperGenerator implements WrapperGenerator
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(AbstractWrapperGenerator.class);
    private static Set<String> excludedGetters;
    protected ClassLoader loader;
 
@@ -63,7 +67,7 @@ public abstract class AbstractWrapperGenerator implements WrapperGenerator
    protected SortedMap<String, ExceptionProperty> getExceptionProperties(Class<?> exception)
    {
       if (! Exception.class.isAssignableFrom(exception))
-         throw new IllegalArgumentException("Not an exception");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NOT_AN_EXCEPTION"));
 
       TreeMap<String, ExceptionProperty> sortedGetters = new TreeMap<String, ExceptionProperty>();
       

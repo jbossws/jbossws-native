@@ -22,6 +22,8 @@
 package org.jboss.ws.tools.wsdl;
 
 import com.ibm.wsdl.Constants;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import com.ibm.wsdl.extensions.schema.SchemaConstants;
 import com.ibm.wsdl.util.StringUtils;
 import com.ibm.wsdl.util.xml.DOMUtils;
@@ -61,6 +63,7 @@ import java.util.*;
  */
 public class JBossWSDLReaderImpl implements WSDLReader
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JBossWSDLReaderImpl.class);
 	// Used for determining the style of operations.
 	private static final List STYLE_ONE_WAY =
 			Arrays.asList(new String[]{Constants.ELEM_INPUT});
@@ -123,7 +126,7 @@ public class JBossWSDLReaderImpl implements WSDLReader
 	{
 		if (name == null)
 		{
-			throw new IllegalArgumentException("Feature name must not be null.");
+			throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "FEATURE_NAME_MUST_NOT_BE_NULL"));
 		}
 
 		if (name.equals(Constants.FEATURE_VERBOSE))
@@ -136,8 +139,7 @@ public class JBossWSDLReaderImpl implements WSDLReader
 		}
 		else
 		{
-			throw new IllegalArgumentException("Feature name '" + name +
-					"' not recognized.");
+			throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "FEATURE_NAME_NOT_RECOGNIZED",  name ));
 		}
 	}
 
@@ -153,7 +155,7 @@ public class JBossWSDLReaderImpl implements WSDLReader
 	{
 		if (name == null)
 		{
-			throw new IllegalArgumentException("Feature name must not be null.");
+			throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "FEATURE_NAME_MUST_NOT_BE_NULL"));
 		}
 
 		if (name.equals(Constants.FEATURE_VERBOSE))
@@ -166,8 +168,7 @@ public class JBossWSDLReaderImpl implements WSDLReader
 		}
 		else
 		{
-			throw new IllegalArgumentException("Feature name '" + name +
-					"' not recognized.");
+			throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "FEATURE_NAME_NOT_RECOGNIZED",  name ));
 		}
 	}
 

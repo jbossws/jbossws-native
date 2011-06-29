@@ -23,6 +23,7 @@ package org.jboss.ws.core.jaxws.binding;
 
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPMessage;
@@ -32,8 +33,9 @@ import javax.xml.ws.handler.Handler;
 
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.EndpointInvocation;
@@ -52,7 +54,6 @@ import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /** A BindingProvider for a JAXWS payload 
@@ -62,6 +63,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public class PayloadBinding implements CommonBinding, BindingExt
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(PayloadBinding.class);
    // provide logging
    private static final Logger log = Logger.getLogger(PayloadBinding.class);
 
@@ -86,7 +88,7 @@ public class PayloadBinding implements CommonBinding, BindingExt
 
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          if (msgContext == null)
-            throw new WSException("MessageContext not available");
+            throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
 
          ParameterMetaData paramMetaData = opMetaData.getParameters().get(0);
          QName xmlName = paramMetaData.getXmlName();
@@ -125,7 +127,7 @@ public class PayloadBinding implements CommonBinding, BindingExt
       {
          SOAPMessageContextJAXWS msgContext = (SOAPMessageContextJAXWS)MessageContextAssociation.peekMessageContext();
          if (msgContext == null)
-            throw new WSException("MessageContext not available");
+            throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
 
          // Associate current message with message context
          MessageFactoryImpl factory = new MessageFactoryImpl();
@@ -168,7 +170,7 @@ public class PayloadBinding implements CommonBinding, BindingExt
       }
       else
       {
-         log.warn("Cannot set fault message in message context");
+         log.warn(BundleUtils.getMessage(bundle, "CANNOT_SET_FAULT_MESSAGE_IN_MESSAGE_CONTEXT"));
       }
       return faultMessage;
    }

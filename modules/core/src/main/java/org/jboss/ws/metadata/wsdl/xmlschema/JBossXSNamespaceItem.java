@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.TreeSet;
 
 import org.apache.xerces.xs.StringList;
@@ -45,6 +46,7 @@ import org.apache.xerces.xs.XSObjectList;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.xb.binding.NamespaceRegistry;
 
@@ -55,6 +57,7 @@ import org.jboss.xb.binding.NamespaceRegistry;
  */
 public class JBossXSNamespaceItem implements XSNamespaceItem
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(JBossXSNamespaceItem.class);
    // provide logging
    private static final Logger log = Logger.getLogger(JBossXSNamespaceItem.class);
 
@@ -255,7 +258,7 @@ public class JBossXSNamespaceItem implements XSNamespaceItem
    public void addXSAnnotation(XSAnnotation xa)
    {
       if(xa == null)
-         throw new IllegalArgumentException("Illegal Null Argument:xa");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "xa"));
       anns.put(xa.getName(),xa);
    }
 
@@ -265,7 +268,7 @@ public class JBossXSNamespaceItem implements XSNamespaceItem
    public void addXSAttributeDeclaration(XSAttributeDeclaration att)
    {
       if(att == null)
-         throw new IllegalArgumentException("att is null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "att"));
       attrs.put(att.getName(),att);
    }
 
@@ -276,7 +279,7 @@ public class JBossXSNamespaceItem implements XSNamespaceItem
    public void addXSElementDeclaration(XSElementDeclaration el)
    {
       if(el == null)
-         throw new IllegalArgumentException("Element is null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "el"));
       elements.put(el.getName(),el);
    }
 
@@ -287,7 +290,7 @@ public class JBossXSNamespaceItem implements XSNamespaceItem
    public void addXSTypeDefinition(XSTypeDefinition xsType)
    {
       if(xsType == null)
-         throw new IllegalArgumentException("type is null");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "xsType"));
 
       String xsTypeName = xsType.getName();
       log.trace("addXSTypeDefinition: " + xsTypeName);
@@ -455,7 +458,7 @@ public class JBossXSNamespaceItem implements XSNamespaceItem
    private Collection getTypes(Collection col, short objectType)
    {
       if(objectType != XSTypeDefinition.SIMPLE_TYPE && objectType != XSTypeDefinition.COMPLEX_TYPE)
-         throw new IllegalArgumentException("objectType should be simple type or complex type");
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "OBJECTTYPE_SHOULD_BE_SIMPLE_TYPE_OR_COMPLEX_TYPE"));
       Collection values = new ArrayList();
       for(Object  obj : col)
       {

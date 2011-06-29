@@ -22,6 +22,8 @@
 package org.jboss.ws.extensions.security.operation;
 
 import java.util.ArrayList;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.util.Collection;
 
 import org.apache.xml.security.exceptions.XMLSecurityException;
@@ -41,6 +43,7 @@ import org.w3c.dom.Document;
 
 public class SignatureVerificationOperation implements DecodingOperation
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(SignatureVerificationOperation.class);
    private SecurityHeader header;
 
    private SecurityStore store;
@@ -62,13 +65,13 @@ public class SignatureVerificationOperation implements DecodingOperation
       try
       {
          if (! xmlSig.checkSignatureValue(signature.getPublicKey()))
-            throw new FailedCheckException("Signature is invalid.");
+            throw new FailedCheckException(BundleUtils.getMessage(bundle, "SIGNATURE_IS_INVALID"));
          
          SignatureKeysAssociation.saveKey(signature.getPublicKey());
       }
       catch (XMLSignatureException e)
       {
-         throw new WSSecurityException("An unexpected error occured while verifying signature", e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "UNEXPECTED_ERROR"),  e);
       }
       finally
       {
@@ -89,7 +92,7 @@ public class SignatureVerificationOperation implements DecodingOperation
       }
       catch (XMLSecurityException e)
       {
-         throw new WSSecurityException("Could not extract references", e);
+         throw new WSSecurityException(BundleUtils.getMessage(bundle, "COULD_NOT_EXTRACT_REFERENCES"),  e);
       }
 
       return processed;

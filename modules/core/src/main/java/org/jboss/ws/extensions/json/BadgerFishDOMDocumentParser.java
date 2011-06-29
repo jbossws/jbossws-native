@@ -25,10 +25,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ResourceBundle;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLEventWriter;
 import javax.xml.stream.XMLInputFactory;
@@ -37,6 +35,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.codehaus.jettison.badgerfish.BadgerFishXMLInputFactory;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -49,6 +48,7 @@ import org.xml.sax.SAXException;
  */
 public class BadgerFishDOMDocumentParser
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(BadgerFishDOMDocumentParser.class);
    public Document parse(InputStream input) throws IOException
    {
       try
@@ -74,13 +74,13 @@ public class BadgerFishDOMDocumentParser
       }
       catch (XMLStreamException ex)
       {
-         IOException ioex = new IOException("Cannot parse input stream");
+         IOException ioex = new IOException(BundleUtils.getMessage(bundle, "CANNOT_PARSE_INPUT_STREAM"));
          ioex.initCause(ex);
          throw ioex;
       }
       catch (SAXException ex)
       {
-         IOException ioex = new IOException("Cannot import in target document");
+         IOException ioex = new IOException(BundleUtils.getMessage(bundle, "CANNOT_IMPORT"));
          ioex.initCause(ex);
          throw ioex;
       }

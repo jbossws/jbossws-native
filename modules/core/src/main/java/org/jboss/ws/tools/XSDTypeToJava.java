@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -47,12 +48,13 @@ import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTerm;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.apache.xerces.xs.XSWildcard;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
-import org.jboss.ws.common.JavaUtils;
 
 /** Class that converts a XSD Type into Java class
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
@@ -61,6 +63,7 @@ import org.jboss.ws.common.JavaUtils;
  */
 public class XSDTypeToJava
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(XSDTypeToJava.class);
    protected LiteralTypeMapping typeMapping = null;
    protected WSDLUtils utils = WSDLUtils.getInstance();
    protected SchemaUtils schemautils = SchemaUtils.getInstance();
@@ -95,10 +98,10 @@ public class XSDTypeToJava
    public void createJavaFile(XSComplexTypeDefinition type, String loc, String pkgname, XSModel schema) throws IOException
    {
       if (typeMapping == null)
-         throw new WSException("TypeMapping has not been set");
+         throw new WSException(BundleUtils.getMessage(bundle, "TYPEMAPPING_HAS_NOT_BEEN_SET"));
       this.fname = type.getName();
       if (fname == null)
-         throw new WSException("File Name is null");
+         throw new WSException(BundleUtils.getMessage(bundle, "FILE_NAME_IS_NULL"));
       this.loc = loc;
       this.pkgname = pkgname;
 
@@ -109,7 +112,7 @@ public class XSDTypeToJava
          throws IOException
    {
       if (typeMapping == null)
-         throw new WSException("TypeMapping has not been set");
+         throw new WSException(BundleUtils.getMessage(bundle, "TYPEMAPPING_HAS_NOT_BEEN_SET"));
       this.fname = type.getName();
       this.containingElement = containingElement;
       if (fname == null)
@@ -123,7 +126,7 @@ public class XSDTypeToJava
    public void createJavaFile(XSSimpleTypeDefinition type, String loc, String pkgname, XSModel schema) throws IOException
    {
       if (typeMapping == null)
-         throw new WSException("TypeMapping has not been set");
+         throw new WSException(BundleUtils.getMessage(bundle, "TYPEMAPPING_HAS_NOT_BEEN_SET"));
       this.fname = type.getName();
       this.loc = loc;
       this.pkgname = pkgname;
@@ -134,7 +137,7 @@ public class XSDTypeToJava
    public void createJavaFile(XSComplexTypeDefinition type, XSModel schema, boolean isExceptionType) throws IOException
    {
       if (typeMapping == null)
-         throw new WSException("TypeMapping has not been set");
+         throw new WSException(BundleUtils.getMessage(bundle, "TYPEMAPPING_HAS_NOT_BEEN_SET"));
       XSTypeDefinition baseType = type.getBaseType();
       // Ensure the characters in the name are valid
       fname = ToolsUtils.convertInvalidCharacters(fname);
@@ -173,7 +176,7 @@ public class XSDTypeToJava
    public void createJavaFile(XSSimpleTypeDefinition xsSimple, XSModel schema) throws IOException
    {
       if (typeMapping == null)
-         throw new WSException("TypeMapping has not been set");
+         throw new WSException(BundleUtils.getMessage(bundle, "TYPEMAPPING_HAS_NOT_BEEN_SET"));
       XSTypeDefinition baseType = xsSimple.getBaseType();
 
       short variety = xsSimple.getVariety();
@@ -200,7 +203,7 @@ public class XSDTypeToJava
    public List<VAR> getVARList(XSComplexTypeDefinition type, XSModel schema, boolean isExceptionType) throws IOException
    {
       if (typeMapping == null)
-         throw new WSException("TypeMapping has not been set");
+         throw new WSException(BundleUtils.getMessage(bundle, "TYPEMAPPING_HAS_NOT_BEEN_SET"));
       XSTypeDefinition baseType = type.getBaseType();
       List vars = new ArrayList();
 
@@ -431,7 +434,7 @@ public class XSDTypeToJava
          {
             vars.addAll(createVARforXSElementDeclaration(xsterm, schemautils.isArrayType(xsparticle), schema, type));
          }
-         else throw new WSException("Unhandled Type");
+         else throw new WSException(BundleUtils.getMessage(bundle, "UNHANDLED_TYPE"));
       }
 
    }

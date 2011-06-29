@@ -22,6 +22,8 @@
 package org.jboss.ws.core.jaxrpc;
 
 import java.util.HashMap;
+import java.util.ResourceBundle;
+import org.jboss.ws.api.util.BundleUtils;
 import java.util.Map;
 
 import javax.xml.rpc.JAXRPCException;
@@ -40,6 +42,7 @@ import org.jboss.ws.core.binding.TypeMappingImpl;
  */
 public class TypeMappingRegistryImpl implements TypeMappingRegistry
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(TypeMappingRegistryImpl.class);
    // The registered typeMapping for the literal encoding style
    private Map<String, TypeMappingImpl> typeMappings = new HashMap<String, TypeMappingImpl>();
 
@@ -158,6 +161,6 @@ public class TypeMappingRegistryImpl implements TypeMappingRegistry
    private void assertEncodingStyle(String encURI)
    {
       if (Constants.URI_LITERAL_ENC.equals(encURI) == false && Constants.URI_SOAP11_ENC.equals(encURI) == false)
-         throw new JAXRPCException("Unsupported encoding style: " + encURI);
+         throw new JAXRPCException(BundleUtils.getMessage(bundle, "UNSUPPORTED_ENCODING_STYLE",  encURI));
    }
 }

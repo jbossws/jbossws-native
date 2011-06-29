@@ -23,6 +23,7 @@ package org.jboss.ws.extensions.security;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
@@ -31,6 +32,8 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPFaultException;
 import org.jboss.ws.core.soap.MessageContextAssociation;
@@ -65,7 +68,6 @@ import org.jboss.ws.metadata.wsse.Sign;
 import org.jboss.ws.metadata.wsse.Timestamp;
 import org.jboss.ws.metadata.wsse.Username;
 import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
-import org.jboss.ws.common.DOMWriter;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.invocation.SecurityAdaptor;
@@ -74,6 +76,7 @@ import org.w3c.dom.Element;
 
 public class WSSecurityDispatcher implements WSSecurityAPI
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(WSSecurityDispatcher.class);
    // provide logging
    private static Logger log = Logger.getLogger(WSSecurityDispatcher.class);
 
@@ -88,7 +91,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       if (secHeaderElement == null)
       {
          if (hasRequirements(config, fault))
-            throw convertToFault(new InvalidSecurityHeaderException("This service requires <wsse:Security>, which is missing."));
+            throw convertToFault(new InvalidSecurityHeaderException(BundleUtils.getMessage(bundle, "WSSE_SECURITYIS_MISSING")));
       }
 
       try
@@ -103,7 +106,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       catch (WSSecurityException e)
       {
          if (e.isInternalError())
-            log.error("Internal error occured handling inbound message:", e);
+            log.error(BundleUtils.getMessage(bundle, "INTERNAL_ERROR_OCCURED_HANDLING_INBOUND_MESSAGE"),  e);
          else if (log.isDebugEnabled())
             log.debug("Returning error to sender: " + e.getMessage());
 
@@ -222,7 +225,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       catch (WSSecurityException e)
       {
          if (e.isInternalError())
-            log.error("Internal error occured handling outbound message:", e);
+            log.error(BundleUtils.getMessage(bundle, "INTERNAL_ERROR_OCCURED_HANDLING_OUTBOUND_MESSAGE"),  e);
          else if (log.isDebugEnabled())
             log.debug("Returning error to sender: " + e.getMessage());
 
@@ -322,7 +325,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
                }
                catch (SOAPException e)
                {
-                  throw new WebServiceException("Error while looking for the operation meta data: " + e);
+                  throw new WebServiceException(BundleUtils.getMessage(bundle, "ERROR_LOOKING_FOR_OPMD",  e));
                }
             }
             if (opMetaData != null)
