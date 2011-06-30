@@ -776,6 +776,7 @@
 
                  <!-- # [JBAS-9188] Implement support for nested EJBs & WARs in .sar archives -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1854/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/jmstransport/**</exclude>
 
                  <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
@@ -785,27 +786,12 @@
                  <!-- AS7 integration exclusions -->
                  <!-- ////////////////////////// -->
 
-                 <!-- TODO: Classpath visibility issues - investigate -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude>
-
                  <!-- TODO: Injections support for WS components -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2634/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2074/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude>
 
-                 <!-- TODO: EJB3 DD driven deployments -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1309/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1841/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude>
-
-                 <!-- TODO: investigate failures -->
-                 <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
-                 <exclude>org/jboss/test/ws/management/recording/**</exclude>
-
-                 <!-- TODO: will we support wars bundled in jars on AS7? -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
-
-                 <!-- # Fix webserviceref stuff -->
+                 <!-- TODO: Native webserviceref stuff -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2307/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2527/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/advanced/retail/**</exclude>
@@ -814,6 +800,18 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
+
+                 <!-- TODO: EJB3 DD driven deployments -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws1309/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1841/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude>
+
+                 <!-- TODO: JMX client to AS7 server -->
+                 <exclude>org/jboss/test/ws/management/recording/**</exclude>
+
+                 <!-- TODO: will we support wars bundled in jars on AS7? -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
 
                  <!-- [AS7-1101][AS7-1125] waiting for metadata upgrade in AS7 -->
                  <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
@@ -827,6 +825,9 @@
                  <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/**</exclude>
 
+                 <!-- JAXR not available -->
+                 <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
+
                  <!-- # [JBWS-3234] JNDI over RMI not available on AS7 -->
                  <exclude>org/jboss/test/ws/jaxrpc/**</exclude>
                  <exclude>org/jboss/test/ws/benchmark/jaxrpc/**</exclude>
@@ -834,9 +835,6 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/serviceref/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude>
-
-                 <!-- JAXR not available -->
-                 <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
               </excludes>
             </configuration>
           </plugin>
