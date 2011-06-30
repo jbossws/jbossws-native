@@ -36,12 +36,7 @@
         <module name="org.jboss.ws.spi" />
         <module name="org.jboss.ws.common" />
         <module name="org.jboss.ws.native.jbossws-native-factories" services="import"/>
-        <module name="org.jboss.ws.native.jbossws-native-core" services="import">
-          <imports>
-            <include path="META-INF/jbossws-entities.properties"/>
-            <include path="META-INF/standard-*-config.xml"/>
-          </imports>
-        </module>
+        <module name="org.jboss.ws.native.jbossws-native-core" services="import"/>
         <module name="org.jboss.logging" />
     </dependencies>
 </module>
