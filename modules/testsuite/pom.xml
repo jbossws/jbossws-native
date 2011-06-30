@@ -797,17 +797,20 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws1309/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1841/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2074/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
+
+                 <!-- TODO: investigate failures -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2074/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/exception/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/advanced/retail/**</exclude>
                  <exclude>org/jboss/test/ws/management/recording/**</exclude>
+
+                 <!-- TODO: will we support wars bundled in jars on AS7? -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
 
                  <!-- # Fix webserviceref stuff -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2307/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2527/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/advanced/retail/**</exclude>
 
                  <!-- [AS7-1101][AS7-1125] waiting for metadata upgrade in AS7 -->
                  <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
