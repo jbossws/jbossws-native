@@ -785,13 +785,12 @@
                  <!-- AS7 integration exclusions -->
                  <!-- ////////////////////////// -->
 
-                 <!-- TODO: tests using org.jboss.ejb3.client.ClientLauncher -->
-                 <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/**</exclude>
-
                  <!-- TODO: Classpath visibility issues - investigate -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2634/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude>
+
+                 <!-- TODO: Injections support for WS components -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2634/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2074/**</exclude>
 
                  <!-- TODO: EJB3 DD driven deployments -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1309/**</exclude>
@@ -800,7 +799,6 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude>
 
                  <!-- TODO: investigate failures -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2074/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
                  <exclude>org/jboss/test/ws/management/recording/**</exclude>
 
@@ -812,6 +810,11 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws2527/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/advanced/retail/**</exclude>
 
+                 <!-- # [JBWS-3308] Extends AS7 RemoteDeployer for supporting deployment of different security domains -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
+
                  <!-- [AS7-1101][AS7-1125] waiting for metadata upgrade in AS7 -->
                  <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2957/**</exclude>
@@ -819,6 +822,10 @@
 
                  <!-- # [JBWS-3232] javax.naming.NameNotFoundException: Name 'service' not found in context 'env' -->
                  <exclude>org/jboss/test/ws/jaxws/jbws3140/**</exclude>
+
+                 <!-- TODO: tests using org.jboss.ejb3.client.ClientLauncher -->
+                 <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/**</exclude>
 
                  <!-- # [JBWS-3234] JNDI over RMI not available on AS7 -->
                  <exclude>org/jboss/test/ws/jaxrpc/**</exclude>
@@ -830,11 +837,6 @@
 
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
-
-                 <!-- # [JBWS-3308] Extends AS7 RemoteDeployer for supporting deployment of different security domains -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
               </excludes>
             </configuration>
           </plugin>
