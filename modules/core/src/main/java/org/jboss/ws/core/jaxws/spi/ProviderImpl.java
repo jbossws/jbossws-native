@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
+import javax.xml.ws.BindingType;
 import javax.xml.ws.Endpoint;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Service;
@@ -75,7 +76,8 @@ public class ProviderImpl extends Provider
    @Override
    public Endpoint createEndpoint(String bindingId, Object implementor)
    {
-      EndpointImpl endpoint = new EndpointImpl(bindingId, implementor);
+      final String nonNullBindingId = this.getBindingId(bindingId, implementor.getClass());
+      EndpointImpl endpoint = new EndpointImpl(nonNullBindingId, implementor);
       return endpoint;
    }
 
@@ -161,6 +163,19 @@ public class ProviderImpl extends Provider
       catch (Exception e)
       {
          throw new WebServiceException(e);
+      }
+   }
+
+   private String getBindingId(final String bindingId, final Class<?> implementorClass)
+   {
+      if (bindingId != null)
+      {
+         return bindingId;
+      }
+      else
+      {
+         final BindingType bindingType = implementorClass.getAnnotation(BindingType.class);
+         return (bindingType != null) ? bindingType.value() : SOAPBinding.SOAP11HTTP_BINDING;
       }
    }
 }
