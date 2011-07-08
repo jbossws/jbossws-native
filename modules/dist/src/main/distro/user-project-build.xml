@@ -7,7 +7,12 @@
 	<!-- set global properties for this build -->
 	<property name="project.name" value="@projectName@" />
 	<property name="dist.dir" value="dist" />
-	<property name="deploy.dir" value="${project.jboss.home}/server/${project.jboss.conf}/deploy" />
+	<condition property="deploy.dir" value="${project.jboss.home}/server/${project.jboss.conf}/deploy">
+		<available file="${project.jboss.home}/server" type="dir"/>
+	</condition>
+	<condition property="deploy.dir" value="${project.jboss.home}/${project.jboss.conf}/deployments">
+		<available file="${project.jboss.home}/${project.jboss.conf}" type="dir"/>
+	</condition>
 	<property name="output.dir" value="output" />
 	<property name="src.main.dir" value="src/main/java" />
 	<property name="resources.main.dir" value="src/main/resources" />
