@@ -24,7 +24,7 @@ No other rights are granted by implication, estoppel or otherwise.
            elementFormDefault="qualified"
            blockDefault="#all">
 
-  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+  <!--xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="http://www.w3.org/2001/xml.xsd"/-->
 
   <xs:import namespace="http://www.w3.org/2005/08/addressing" schemaLocation="ws-addr.xsd"/>
 

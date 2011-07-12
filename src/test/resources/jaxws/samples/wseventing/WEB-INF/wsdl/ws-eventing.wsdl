@@ -10,7 +10,7 @@
 
    <wsdl:types>
       <xs:import namespace="http://schemas.xmlsoap.org/ws/2004/08/eventing"
-                 schemaLocation="http://schemas.xmlsoap.org/ws/2004/08/eventing/eventing.xsd"/>
+                 schemaLocation="ws-eventing.xsd"/>
    </wsdl:types>
 
    <wsdl:message name='SubscribeMsg'>

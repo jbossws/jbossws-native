@@ -9,7 +9,7 @@
       xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
 
    <wsdl:types>
-      <xs:import namespace="http://schemas.xmlsoap.org/ws/2004/08/eventing" schemaLocation="http://schemas.xmlsoap.org/ws/2004/08/eventing/eventing.xsd"/>
+      <xs:import namespace="http://schemas.xmlsoap.org/ws/2004/08/eventing" schemaLocation="ws-eventing.xsd"/>
    </wsdl:types>
 
    <wsdl:message name='SubscribeMsg'>

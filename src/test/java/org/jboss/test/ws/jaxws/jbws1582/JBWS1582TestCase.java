@@ -74,14 +74,20 @@ public class JBWS1582TestCase extends JBossWSTest
       assertTrue(response.contains("<return>Hello</return>"));
    }
 
-   public void testSOAPMessageAttack() throws Exception
+   public void testSOAPMessageAttack1() throws Exception
    {
-      String response = getResponse("jaxws/jbws1582/attack-message.xml");
+      String response = getResponse("jaxws/jbws1582/attack-message-1.xml");
       assertTrue(response.contains("HTTP/1.1 500"));
-      // There's a bug in xerces that is shipped with EAP 4.3.
-      // NPE thrown from xerces can be solved with xerces upgrade.
-      //assertTrue(response.contains("The parser has encountered more than"));
-      //assertTrue(response.contains("entity expansions in this document"));
+      assertTrue(response.contains("DOCTYPE is disallowed when the feature"));
+      assertTrue(response.contains("http://apache.org/xml/features/disallow-doctype-decl"));
+   }
+   
+   public void testSOAPMessageAttack2() throws Exception
+   {
+      String response = getResponse("jaxws/jbws1582/attack-message-2.xml");
+      assertTrue(response.contains("HTTP/1.1 500"));
+      assertTrue(response.contains("DOCTYPE is disallowed when the feature"));
+      assertTrue(response.contains("http://apache.org/xml/features/disallow-doctype-decl"));
    }
    
    private String getResponse(String requestFile) throws Exception
