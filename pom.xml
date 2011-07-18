@@ -56,7 +56,7 @@
     <jbossws.jboss601.version>3.2.1.GA</jbossws.jboss601.version>
     -->
     <!-- END -->
-    <jboss700.version>7.0.0.Beta4-SNAPSHOT</jboss700.version>
+    <jboss700.version>7.0.0.Final</jboss700.version>
     <ant.version>1.7.1</ant.version>
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
     <commons.logging.version>1.1.1</commons.logging.version>
@@ -568,6 +568,19 @@
         <jboss.home>${jboss700.home}</jboss.home>
       </properties>
     </profile>
+
+    <!--
+    Name:  jboss710
+    Descr: JBoss-7.1.0 specific options
+    -->
+    <profile>
+      <id>jboss710</id>
+      <properties>
+        <jbossws.integration.target>jboss710</jbossws.integration.target>
+        <jboss.home>${jboss710.home}</jboss.home>
+      </properties>
+    </profile>
+
 
     <!--
     Name:  smoketest
