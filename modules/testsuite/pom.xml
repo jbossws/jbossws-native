@@ -828,7 +828,7 @@
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
 
-                 <!-- # [JBWS-3234] JNDI over RMI not available on AS7 -->
+                 <!-- # [AS7-1338] Remote JNDI support for AS7 -->
                  <exclude>org/jboss/test/ws/jaxrpc/**</exclude>
                  <exclude>org/jboss/test/ws/benchmark/jaxrpc/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws944/**</exclude>
