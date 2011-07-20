@@ -549,6 +549,10 @@
 
                 <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
                 <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
+
+                <!-- # [AS7-1322] Implemented on AS 7.0.1 or greater only -->
+                <exclude>org/jboss/test/ws/publish/EndpointPublishTestCase*</exclude>
+
               </excludes>
             </configuration>
           </plugin>
@@ -669,6 +673,10 @@
 
                 <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
                 <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
+
+                <!-- # [AS7-1322] Implemented on AS 7.0.1 or greater only -->
+                <exclude>org/jboss/test/ws/publish/EndpointPublishTestCase*</exclude>
+
               </excludes>
             </configuration>
           </plugin>
@@ -835,6 +843,10 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/serviceref/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude>
+
+                 <!-- # [AS7-1322] Implemented on AS 7.0.1 or greater only -->
+                 <exclude>org/jboss/test/ws/publish/EndpointPublishTestCase*</exclude>
+
               </excludes>
             </configuration>
           </plugin>
