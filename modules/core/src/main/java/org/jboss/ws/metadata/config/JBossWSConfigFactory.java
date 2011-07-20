@@ -37,8 +37,12 @@ import org.jboss.ws.common.utils.DelegateClassLoader;
 import org.jboss.ws.common.utils.JBossWSEntityResolver;
 import org.jboss.ws.metadata.config.binding.OMFactoryJAXRPC;
 import org.jboss.ws.metadata.config.jaxrpc.ConfigRootJAXRPC;
+import org.jboss.wsf.spi.SPIProvider;
+import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.classloading.ClassLoaderProvider;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
+import org.jboss.wsf.spi.management.ServerConfig;
+import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.jboss.wsf.spi.metadata.config.CommonConfig;
 import org.jboss.wsf.spi.metadata.config.ConfigMetaDataParser;
 import org.jboss.wsf.spi.metadata.config.ConfigRoot;
@@ -165,6 +169,25 @@ public class JBossWSConfigFactory
       if (configFile == null)
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CONFIG_FILE_CANNOT_BE_NULL"));
 
+      //First check if AS7 domain model is available and comes with the required endpoint config
+      if (ConfigurationProvider.DEFAULT_JAXWS_ENDPOINT_CONFIG_FILE.equals(configFile)) {
+         try {
+            final ClassLoader cl = ClassLoaderProvider.getDefaultProvider().getServerIntegrationClassLoader();
+            SPIProvider spiProvider = SPIProviderResolver.getInstance(cl).getProvider();
+            ServerConfig sc = spiProvider.getSPI(ServerConfigFactory.class, cl).getServerConfig();
+            for (org.jboss.wsf.spi.metadata.config.EndpointConfig config : sc.getEndpointConfigs())
+            {
+               if (config.getConfigName().equals(configName))
+               {
+                  return config;
+               }
+            }
+         } catch (Exception e) {
+            log.debug("Could not get server config");
+         }
+      }
+      //otherwise (AS6 or not mached) try looking for the specified conf file...
+      
       // Get the config root
       URL configURL = filenameToURL(vfsRoot, configFile);
       Object configRoot = parse(configURL);
