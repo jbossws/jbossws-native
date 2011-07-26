@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,26 +19,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.jaxws.client;
+package org.jboss.ws.core.jaxws.client.serviceref;
 
-import org.jboss.ws.common.serviceref.AbstractServiceReferenceableJAXWS;
+import javax.naming.Referenceable;
+
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsf.spi.serviceref.ServiceRefBinder;
 
 /**
- * {@inheritDoc}
+ * Binds a JAXWS Service object to the client's ENC.
  *
  * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public class NativeServiceReferenceableJAXWS extends AbstractServiceReferenceableJAXWS<NativeServiceObjectFactoryJAXWS>
+public final class NativeServiceRefBinderJAXWS implements ServiceRefBinder
 {
-   public NativeServiceReferenceableJAXWS(final UnifiedServiceRefMetaData serviceRefMD)
-   {
-      super(serviceRefMD);
-   }
-
    @Override
-   protected Class<NativeServiceObjectFactoryJAXWS> getObjectFactory()
+   public Referenceable createReferenceable(final UnifiedServiceRefMetaData serviceRefMD)
    {
-      return NativeServiceObjectFactoryJAXWS.class;
+      return new NativeServiceReferenceableJAXWS(serviceRefMD);
    }
 }

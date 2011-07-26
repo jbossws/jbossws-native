@@ -64,7 +64,7 @@ import org.jboss.ws.core.jaxws.client.ClientFeatureProcessor;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.core.jaxws.client.ClientProxy;
 import org.jboss.ws.core.jaxws.client.DispatchImpl;
-import org.jboss.ws.core.jaxws.client.NativeServiceObjectFactoryJAXWS;
+import org.jboss.ws.core.jaxws.client.serviceref.NativeServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.core.jaxws.wsaddressing.EndpointReferenceUtil;
 import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;

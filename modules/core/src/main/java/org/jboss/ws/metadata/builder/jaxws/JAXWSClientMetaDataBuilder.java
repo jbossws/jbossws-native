@@ -41,7 +41,7 @@ import org.jboss.ws.api.annotation.EndpointConfig;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.ResourceLoaderAdapter;
-import org.jboss.ws.core.jaxws.client.NativeServiceObjectFactoryJAXWS;
+import org.jboss.ws.core.jaxws.client.serviceref.NativeServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
 import org.jboss.ws.extensions.policy.metadata.PolicyMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
