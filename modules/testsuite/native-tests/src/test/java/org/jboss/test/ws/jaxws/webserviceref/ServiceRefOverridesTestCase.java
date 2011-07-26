@@ -43,7 +43,7 @@ public class ServiceRefOverridesTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(ServiceRefOverridesTestCase.class, "jaxws-webserviceref.war, jaxws-webserviceref-override-client.jar");
+      return new JBossWSTestSetup(ServiceRefOverridesTestCase.class, "jaxws-webserviceref.war, jaxws-override-webserviceref-client.jar");
    }
 
    public void testService1() throws Throwable

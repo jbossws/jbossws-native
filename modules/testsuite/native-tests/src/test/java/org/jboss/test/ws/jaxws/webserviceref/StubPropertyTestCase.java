@@ -48,7 +48,7 @@ public class StubPropertyTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(StubPropertyTestCase.class, "jaxws-webserviceref-secure.jar, jaxws-webserviceref-secure-client.jar");
+      return new JBossWSTestSetup(StubPropertyTestCase.class, "jaxws-webserviceref-secure.jar, jaxws-secure-webserviceref-client.jar");
    }
 
    public void testWSDLAccess() throws Exception

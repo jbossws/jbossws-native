@@ -795,7 +795,7 @@
 				<attribute name="main-class" value="org.jboss.test.ws.jaxws.samples.webserviceref.SecureEndpointClient" />
 			</manifest>
 		</jar>
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-webserviceref-override-client.jar">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-override-webserviceref-client.jar">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpointClientTwo.class" />
 				<include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpointService.class" />
@@ -810,7 +810,7 @@
 				<include name="wsdl/**" />
 			</metainf>
 			<manifest>
-				<attribute name="main-class" value="org.jboss.test.ws.jaxws.samples.webserviceref.TestEndpointClientTwo" />
+				<attribute name="main-class" value="org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo" />
 			</manifest>
 		</jar>
 
@@ -820,7 +820,7 @@
 				<include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointImpl.class" />
 			</fileset>
 		</jar>
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-webserviceref-secure-client.jar">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-secure-webserviceref-client.jar">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointClient.class" />
 				<include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointService.class" />
@@ -832,22 +832,6 @@
 			</metainf>
 			<manifest>
 				<attribute name="main-class" value="org.jboss.test.ws.jaxws.webserviceref.SecureEndpointClient" />
-			</manifest>
-		</jar>
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-webserviceref-override-client.jar">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpointClientTwo.class" />
-				<include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpointService.class" />
-				<include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpoint.class" />
-			</fileset>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/webserviceref/META-INF-override">
-				<include name="jbossws-client-config.xml" />
-				<include name="application-client.xml" />
-				<include name="jboss-client.xml" />
-				<include name="wsdl/**" />
-			</metainf>
-			<manifest>
-				<attribute name="main-class" value="org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo" />
 			</manifest>
 		</jar>
 
@@ -878,7 +862,7 @@
 				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/InitialEndpoint_*_ResponseStruct.class" />
 			</classes>
 		</war>
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-wsaddressing-initial-client.jar">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-wsaddressing-initial-cl.jar">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/InitialEndpoint.class" />
 				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/InitialEndpoint_*_RequestStruct.class" />
@@ -899,7 +883,7 @@
 				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/ReplyToEndpoint_*_ResponseStruct.class" />
 			</classes>
 		</war>
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-wsaddressing-replyto-client.jar">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-wsaddressing-replyto-cl.jar">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/ReplyToEndpoint.class" />
 				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/ReplyToEndpoint_*_RequestStruct.class" />
