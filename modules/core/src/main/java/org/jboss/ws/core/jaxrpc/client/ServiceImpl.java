@@ -92,7 +92,7 @@ public class ServiceImpl implements ServiceExt
    /**
     * Construct a Service without WSDL meta data
     */
-   ServiceImpl(QName serviceName)
+   public ServiceImpl(QName serviceName)
    {
       UnifiedMetaData wsMetaData = new UnifiedMetaData(new ResourceLoaderAdapter());
       serviceMetaData = new ServiceMetaData(wsMetaData, serviceName);
@@ -102,7 +102,7 @@ public class ServiceImpl implements ServiceExt
    /**
     * Construct a Service that has access to some WSDL meta data
     */
-   ServiceImpl(QName serviceName, URL wsdlURL, URL mappingURL, URL securityURL)
+   public ServiceImpl(QName serviceName, URL wsdlURL, URL mappingURL, URL securityURL)
    {
       this.wsdlLocation = wsdlURL;
       JAXRPCClientMetaDataBuilder builder = new JAXRPCClientMetaDataBuilder();
@@ -116,7 +116,7 @@ public class ServiceImpl implements ServiceExt
    /**
     * Construct a Service that has access to some WSDL meta data
     */
-   ServiceImpl(QName serviceName, URL wsdlURL, JavaWsdlMapping mappingURL, WSSecurityConfiguration securityConfig, UnifiedServiceRefMetaData usrMetaData)
+   public ServiceImpl(QName serviceName, URL wsdlURL, JavaWsdlMapping mappingURL, WSSecurityConfiguration securityConfig, UnifiedServiceRefMetaData usrMetaData)
    {
       this.wsdlLocation = wsdlURL;
       this.usrMetaData = usrMetaData;
@@ -494,7 +494,7 @@ public class ServiceImpl implements ServiceExt
       handlerRegistry.registerClientHandlerChain(portName, infos, roles);
    }
 
-   void setupHandlerChain(EndpointMetaData epMetaData)
+   public void setupHandlerChain(EndpointMetaData epMetaData)
    {
       if (epMetaData.isHandlersInitialized() == false)
       {

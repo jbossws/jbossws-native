@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.jaxrpc.client;
+package org.jboss.ws.core.jaxrpc.client.serviceref;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -32,8 +32,11 @@ import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.rmi.Remote;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
@@ -42,6 +45,7 @@ import javax.naming.Name;
 import javax.naming.NamingException;
 import javax.naming.RefAddr;
 import javax.naming.Reference;
+import javax.naming.spi.ObjectFactory;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.Service;
@@ -50,7 +54,9 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
-import org.jboss.ws.core.client.ServiceObjectFactory;
+import org.jboss.ws.core.jaxrpc.client.ServiceExt;
+import org.jboss.ws.core.jaxrpc.client.ServiceImpl;
+import org.jboss.ws.core.jaxrpc.client.ServiceProxy;
 import org.jboss.ws.core.server.PortComponentResolver;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
@@ -76,11 +82,11 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
  * @author Thomas.Diesler@jboss.org
  * @since 15-April-2004
  */
-public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
+public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(ServiceObjectFactoryJAXRPC.class);
+   private static final ResourceBundle bundle = BundleUtils.getBundle(NativeServiceObjectFactoryJAXRPC.class);
    // provide logging
-   private static final Logger log = Logger.getLogger(ServiceObjectFactoryJAXRPC.class);
+   private static final Logger log = Logger.getLogger(NativeServiceObjectFactoryJAXRPC.class);
 
    /**
     * Creates an object using the location or reference information specified.
@@ -242,7 +248,7 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
             String seiName = pcr.getServiceEndpointInterface();
             if (seiName != null)
             {
-               Class seiClass = contextCL.loadClass(seiName);
+               Class<?> seiClass = contextCL.loadClass(seiName);
                if (Remote.class.isAssignableFrom(seiClass) == false)
                   throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NOT_IMPLEMENT_REMOTE",  seiClass.getName()));
             }
@@ -258,6 +264,73 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
       {
          log.error(BundleUtils.getMessage(bundle, "CANNOT_CREATE_SERVICE"),  ex);
          throw ex;
+      }
+   }
+
+   /**
+    * Narrow available endpoints by <port-component-ref> declarations. 
+    * Service.getPort(SEI) must be able to retrieve a distinct port definition.
+    */
+   protected void narrowPortSelection(UnifiedServiceRefMetaData serviceRef, ServiceMetaData serviceMetaData)
+   {
+      if (serviceMetaData.getEndpoints().size() > 1)
+      {
+         Map<String, UnifiedPortComponentRefMetaData> pcrefs = new HashMap<String, UnifiedPortComponentRefMetaData>();
+         for (UnifiedPortComponentRefMetaData pcref : serviceRef.getPortComponentRefs())
+         {
+            String seiName = pcref.getServiceEndpointInterface();
+
+            // Constraint#1: within a service-ref it's not allowed to use a SEI across different pcref's
+            if (pcrefs.get(seiName) != null)
+               throw new WSException(BundleUtils.getMessage(bundle, "NOT_ALLOWED_TO_USE",  seiName));
+            
+            pcrefs.put(seiName, pcref);
+         }
+
+         // Constraint#2: A pcref may only match one EndpointMetaData
+         for (String sei : pcrefs.keySet())
+         {
+            // Narrow available endpoints by port-component-ref declaration
+            List<QName> narrowedEndpoints = new ArrayList<QName>();
+
+            UnifiedPortComponentRefMetaData pcref = pcrefs.get(sei);
+
+            // Constraint#3: Port selection only applies when both SEI and QName are given
+            if (pcref.getServiceEndpointInterface() != null && pcref.getPortQName() != null)
+            {
+               List<QName> pcRef2EndpointMapping = new ArrayList<QName>();
+               for (EndpointMetaData epMetaData : serviceMetaData.getEndpoints())
+               {
+                  if (pcref.getServiceEndpointInterface().equals(epMetaData.getServiceEndpointInterfaceName()))
+                  {
+                     pcRef2EndpointMapping.add(epMetaData.getPortName());
+                  }
+               }
+
+               for (QName q : pcRef2EndpointMapping)
+               {
+                  EndpointMetaData mappedEndpoint = serviceMetaData.getEndpoint(q);
+                  if (!pcref.getPortQName().equals(mappedEndpoint.getPortName()))
+                     narrowedEndpoints.add(q);
+               }
+
+               // Constraint: Dont exclude all of them ;)
+               if (pcRef2EndpointMapping.size() > 0 && (pcRef2EndpointMapping.size() == narrowedEndpoints.size()))
+                  throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_NARROW_ENDPOINTS"));
+
+               for (QName q : narrowedEndpoints)
+               {
+                  EndpointMetaData removed = serviceMetaData.removeEndpoint(q);
+                  if (log.isDebugEnabled())
+                     log.debug("Narrowed endpoint " + q + "(" + removed + ")");
+               }
+            }
+            else
+            {
+               // TODO: In case there is more then one EMPD this should cause an exception
+               log.warn(BundleUtils.getMessage(bundle, "UNABLE_TO_NARROW_PORT_SELECTION",  pcref));
+            }
+         }
       }
    }
 
@@ -287,7 +360,7 @@ public class ServiceObjectFactoryJAXRPC extends ServiceObjectFactory
          }
          catch (Exception e)
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_UNMARSHAL_JAXRPC_MAPPING_FILE",  mappingFile),  e);
+            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_UNMARSHALL_JAXRPC_MAPPING_FILE",  mappingFile),  e);
          }
       }
       return javaWsdlMapping;

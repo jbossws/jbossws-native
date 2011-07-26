@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.jaxrpc.client;
+package org.jboss.ws.core.jaxrpc.client.serviceref;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -54,7 +54,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
  * @author Thomas.Diesler@jboss.org
  * @since 15-April-2004
  */
-public class NativeServiceReferenceableJAXRPC implements Referenceable
+public final class NativeServiceReferenceableJAXRPC implements Referenceable
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(NativeServiceReferenceableJAXRPC.class);
    public static final String SERVICE_REF_META_DATA = "SERVICE_REF_META_DATA";
@@ -82,7 +82,7 @@ public class NativeServiceReferenceableJAXRPC implements Referenceable
     */
    public Reference getReference() throws NamingException
    {
-      Reference myRef = new Reference(NativeServiceReferenceableJAXRPC.class.getName(), ServiceObjectFactoryJAXRPC.class.getName(), null);
+      Reference myRef = new Reference(NativeServiceReferenceableJAXRPC.class.getName(), NativeServiceObjectFactoryJAXRPC.class.getName(), null);
 
       // Add a reference to the ServiceRefMetaData and WSDLDefinitions
       myRef.add(new BinaryRefAddr(SERVICE_REF_META_DATA, marshallServiceRef()));
