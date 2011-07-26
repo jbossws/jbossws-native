@@ -815,7 +815,7 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws1841/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude>
 
-                 <!-- TODO: JMX client to AS7 server -->
+                 <!-- [JBWS-3330] Restore RecordProcessor functionalities, solved in AS 7.0.1 or greater -->
                  <exclude>org/jboss/test/ws/management/recording/**</exclude>
 
                  <!-- TODO: will we support wars bundled in jars on AS7? -->
@@ -986,7 +986,7 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude>
 
                  <!-- TODO: JMX client to AS7 server -->
-                 <exclude>org/jboss/test/ws/management/recording/**</exclude>
+                 <exclude>org/jboss/test/ws/management/recording/CustomRecordProcessorTestCase*</exclude>
 
                  <!-- TODO: will we support wars bundled in jars on AS7? -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
