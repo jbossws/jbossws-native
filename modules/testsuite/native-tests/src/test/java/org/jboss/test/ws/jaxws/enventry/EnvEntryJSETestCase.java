@@ -39,7 +39,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class EnvEntryJSETestCase extends JBossWSTest
 {
-
    public static Test suite()
    {
       return new JBossWSTestSetup(EnvEntryJSETestCase.class, "jaxws-enventry-jse.war");

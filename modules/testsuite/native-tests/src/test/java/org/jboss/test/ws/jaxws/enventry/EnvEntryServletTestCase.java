@@ -38,7 +38,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class EnvEntryServletTestCase extends JBossWSTest
 {
-
    public static Test suite()
    {
       return new JBossWSTestSetup(EnvEntryServletTestCase.class, "jaxws-enventry-servlet.war");
@@ -49,7 +48,7 @@ public class EnvEntryServletTestCase extends JBossWSTest
       URL url = new URL("http://" + getServerHost() + ":8080/jaxws-enventry-servlet");
       BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
       String line = br.readLine();
-      
+
       assertEquals("web:8", line);
    }
 }
