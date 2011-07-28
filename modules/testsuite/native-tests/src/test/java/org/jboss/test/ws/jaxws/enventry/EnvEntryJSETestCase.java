@@ -53,6 +53,6 @@ public class EnvEntryJSETestCase extends JBossWSTest
 
       EnvEntryEndpoint port = service.getPort(EnvEntryEndpoint.class);
       String res = port.helloEnvEntry("InitalMessage");
-      //assertEquals("InitalMessage:endpoint:web:8", res);
+      assertEquals("InitalMessage:endpoint:web:8", res);
    }
 }
