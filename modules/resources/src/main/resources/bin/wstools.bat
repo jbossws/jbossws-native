@@ -42,6 +42,9 @@ set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;%JBOSS_HOME%/client/jbossws-native-cor
 set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;%JBOSS_HOME%/client/jaxrpc-api.jar
 set WSTOOLS_CLASSPATH=%WSTOOLS_CLASSPATH%;%JBOSS_HOME%/client/saaj-api.jar
 
+rem Force use of IPv4 stack
+set JAVA_OPTS=%JAVA_OPTS% -Djava.net.preferIPv4Stack=true
+
 rem Display our environment
 echo ========================================================================="
 echo . 
