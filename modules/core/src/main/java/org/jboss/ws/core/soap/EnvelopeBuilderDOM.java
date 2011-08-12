@@ -91,7 +91,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
             return null;
          }
          QName faultCode = Constants.SOAP11_FAULT_CODE_CLIENT;
-         throw new CommonSOAPFaultException(faultCode, ex.getMessage());
+         throw new CommonSOAPFaultException(faultCode, ex);
       }
 
       return build(soapMessage, domEnv);
