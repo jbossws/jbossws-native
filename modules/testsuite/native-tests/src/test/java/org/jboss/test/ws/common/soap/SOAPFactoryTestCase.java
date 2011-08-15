@@ -21,12 +21,21 @@
  */
 package org.jboss.test.ws.common.soap;
 
+import java.io.StringReader;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.Detail;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPFactory;
 
 import org.jboss.wsf.test.JBossWSTest;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 /**
  * Test the SOAPFactory
@@ -83,6 +92,29 @@ public class SOAPFactoryTestCase extends JBossWSTest
       assertEquals("pre:localName", name.getQualifiedName());
       assertEquals("pre", name.getPrefix());
       assertEquals("http://someURI", name.getURI());
+   }
+   
+   
+   public void testNSDeclaration() throws Exception
+   {
+      String CONTENTS =
+         "<say:sayHiResponse xmlns:say='http://www.jboss.org/sayHi' xmlns:say2='http://www.jboss.org/sayHi2'>" +
+             "<say2:arg0><say2:arg2>Response</say2:arg2></say2:arg0>" +
+         "</say:sayHiResponse>" ;
+      
+      DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance() ;
+      builderFactory.setNamespaceAware(true);
+      DocumentBuilder builder = builderFactory.newDocumentBuilder() ;
+      
+      Document doc = builder.parse(new InputSource(new StringReader(CONTENTS))) ;
+      Element root = doc.getDocumentElement() ;
+         
+      SOAPFactory factory = SOAPFactory.newInstance();
+      SOAPElement soapElement = factory.createElement(root) ;
+      NodeList elementList = soapElement.getElementsByTagName("say2:arg2");
+      Element element = (Element)elementList.item(0);
+      Attr attr =  element.getAttributeNode("xmlns:say2");
+      assertNull(attr);
    }
 
 }
