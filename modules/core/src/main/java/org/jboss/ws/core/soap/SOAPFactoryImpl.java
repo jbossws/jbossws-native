@@ -21,6 +21,9 @@
  */
 package org.jboss.ws.core.soap;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
@@ -37,6 +40,7 @@ import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.extensions.xop.XOPContext;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -157,10 +161,39 @@ public class SOAPFactoryImpl extends SOAPFactory
             }
          }
       }
-
+      Iterator ite = soapElement.getNamespacePrefixes();
+      List<String> prefixs = new ArrayList<String>();
+      while (ite != null && ite.hasNext())
+      {
+         prefixs.add((String) ite.next());
+      }
+      removeNSAttribute(soapElement, prefixs);
       return soapElement;
    }
 
+   private void removeNSAttribute(SOAPElement soapElement, List<String> prefixes)
+   {
+      Iterator ite2 = soapElement.getChildElements();
+      while (ite2 != null && ite2.hasNext())
+      {
+         Object obj = ite2.next();
+         if (obj instanceof SOAPElement)
+         {
+            SOAPElement ele = (SOAPElement) obj;
+            removeNSAttribute(ele, prefixes);
+            for (String str : prefixes)
+            {
+               Attr attr = ele.getAttributeNode("xmlns:" + str);
+               if (attr != null)
+                  ele.removeAttribute("xmlns:" + str);
+
+            }
+         }
+
+      }
+
+   }
+   
    @Override
    public Detail createDetail() throws SOAPException
    {
