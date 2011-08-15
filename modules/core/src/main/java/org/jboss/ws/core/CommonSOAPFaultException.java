@@ -32,7 +32,6 @@ public class CommonSOAPFaultException extends RuntimeException
 {
    private QName faultCode;
    private String faultString;
-   private Throwable throwable;
 
    public CommonSOAPFaultException(QName faultCode, String faultString)
    {
@@ -40,15 +39,6 @@ public class CommonSOAPFaultException extends RuntimeException
 
       this.faultCode = faultCode;
       this.faultString = faultString;
-   }
-
-   public CommonSOAPFaultException(QName faultCode, Throwable throwable) {
-      
-      super(throwable.getMessage(), throwable);
-      
-      this.faultCode = faultCode;
-      this.throwable = throwable;
-      
    }
 
    public QName getFaultCode()

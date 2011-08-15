@@ -47,7 +47,7 @@ public class SOAPMessageUnMarshaller implements UnMarshaller
 
       try
       {
-         SOAPMessage soapMsg = getMessageFactory().createMessage(null, inputStream, false);
+         SOAPMessage soapMsg = getMessageFactory().createMessage(null, inputStream, true);
 
          return soapMsg;
       }

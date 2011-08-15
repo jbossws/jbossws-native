@@ -288,15 +288,6 @@ public class MessageFactoryImpl extends MessageFactory
          {
             envBuilder = (EnvelopeBuilder)ServiceLoader.loadService(EnvelopeBuilder.class.getName(), null);
          }
-         //if inputstream is empty, no need to build
-         if (inputStream.markSupported()) {
-        	 inputStream.mark(1);
-    		 final int bytesRead = inputStream.read(new byte[1]);
-    		 inputStream.reset();
-    		 if (bytesRead == -1) {
-    			return soapMessage;
-    		 }
-         }
 
          // Build the payload
          envBuilder.setStyle(getStyle());

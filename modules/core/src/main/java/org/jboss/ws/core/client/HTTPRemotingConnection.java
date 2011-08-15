@@ -264,14 +264,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
             throw new WSTimeoutException("Timeout after: " + timeout + "ms", new Long(timeout.toString()));
          }
 
-         IOException io = null;
-
-         if(th.getCause().getMessage() != null) {
-            io = new IOException(th.getCause().getMessage());
-         }else {
-            io = new IOException("Could not transmit message");
-         }
-
+         IOException io = new IOException("Could not transmit message");
          io.initCause(th);
          throw io;
       }

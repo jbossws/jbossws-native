@@ -287,10 +287,6 @@ public class EnvelopeBuilderStax implements EnvelopeBuilder
 
          SOAPBody soapBody = soapEnv.getBody();
 
-         if (soapBody == null)  {
-            soapBody = soapEnv.addBody();
-         }
-
          if (atPartMargin())
          {
             // the env:Body element
