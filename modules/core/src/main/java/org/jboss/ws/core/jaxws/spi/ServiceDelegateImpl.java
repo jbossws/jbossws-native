@@ -526,6 +526,12 @@ public class ServiceDelegateImpl extends ServiceDelegate
       NativeEndpointReference nepr = EndpointReferenceUtil.transform(NativeEndpointReference.class, epr);
       portName = nepr.getEndpointName();
       
+      //From the JAXWS dispacth api, EPR's address MUST be used for invocations on the endpoint
+      if (getEndpointMetaData(portName) != null && nepr.getAddress() != null  && nepr.getAddress().length() > 0)
+      {
+          getEndpointMetaData(portName).setEndpointAddress(nepr.getAddress());
+      }
+      
       Dispatch<T> dispatch = createDispatch(portName, type, mode);
       initAddressingProperties(dispatch, epr);
       initWebserviceFeatures(dispatch, features);
@@ -546,7 +552,11 @@ public class ServiceDelegateImpl extends ServiceDelegate
       QName portName = null;
       NativeEndpointReference nepr = EndpointReferenceUtil.transform(NativeEndpointReference.class, epr);
       portName = nepr.getEndpointName();
-
+      //From the JAXWS dispacth api, EPR's address MUST be used for invocations on the endpoint
+		if (getEndpointMetaData(portName) != null && nepr.getAddress() != null
+				&& nepr.getAddress().length() > 0) {
+			getEndpointMetaData(portName).setEndpointAddress(nepr.getAddress());
+		}
       Dispatch<Object> dispatch = createDispatch(portName, context, mode);
       initAddressingProperties(dispatch, epr);
       initWebserviceFeatures(dispatch, features);
