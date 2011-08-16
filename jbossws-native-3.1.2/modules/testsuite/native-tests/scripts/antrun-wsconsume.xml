@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ============================================================ -->
+<!--  JBoss, the OpenSource J2EE webOS                            -->
+<!--  Distributable under LGPL license.                           -->
+<!--  See terms of license at http://www.gnu.org.                 -->
+<!-- ============================================================ -->
+
+<project>
+
+  <!-- ================================================================== -->
+  <!-- Generating sources                                                 -->
+  <!-- ================================================================== -->
+
+  <target name="wsconsume" depends="prepend-jars" description="Consume JAX-WS contracts">
+
+    <taskdef name="wsconsume" classname="org.jboss.wsf.spi.tools.ant.WSConsumeTask">
+      <classpath>
+        <pathelement path="${wsconsume.classpath}"/>
+      </classpath>
+    </taskdef>
+
+    <wsconsume wsdl="${tests.resources.dir}/benchmark/jaxws/doclit/WEB-INF/wsdl/BenchmarkWebService.wsdl" package="org.jboss.test.ws.benchmark.jaxws.doclit" sourcedestdir="${tests.output.dir}/wsconsume/java" destdir="${tests.output.dir}" nocompile="true" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitB/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.basedoclitb" sourcedestdir="${tests.output.dir}/wsconsume/java" destdir="${tests.output.dir}" nocompile="true" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.basedoclitw" sourcedestdir="${tests.output.dir}/wsconsume/java" destdir="${tests.output.dir}" nocompile="true" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl" package="org.jboss.test.ws.interop.soapwsdl.baserpclit" sourcedestdir="${tests.output.dir}/wsconsume/java" destdir="${tests.output.dir}" nocompile="true" keep="true" verbose="false"/>
+    <wsconsume wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl" package="org.jboss.test.ws.jaxws.samples.wssecurity" sourcedestdir="${tests.output.dir}/wsconsume/java" destdir="${tests.output.dir}" nocompile="true" keep="true" verbose="false"/>
+  </target>
+
+  <target name="prepend-jars">
+    <property name="wsconsume.classpath" value="${maven.test.classpath}"/>
+  </target>
+
+</project>

@@ -1,0 +1,23 @@
+#
+# A sample ant properties file
+#
+
+# Optional JBoss Home
+jboss510.home=@jboss510.home@
+
+# The JBoss server under test. This can be [jboss510]
+jbossws.integration.target=jboss510
+
+# The JBoss settings
+jboss.server.instance=default
+jboss.bind.address=localhost
+
+# JBoss JMX invoker authentication
+#jmx.authentication.username=admin
+#jmx.authentication.password=admin
+
+# Java Compiler options
+javac.debug=yes
+javac.deprecation=no
+javac.fail.onerror=yes
+javac.verbose=no
