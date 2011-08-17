@@ -513,7 +513,6 @@
               <groupId>org.slf4j</groupId>
               <artifactId>slf4j-log4j12</artifactId>
             </exclusion>
-            
             <!-- Exclude Sun's stax implementation : com.sun.xml.stream:sjsxp:jar:1.0.1 --> 
             <exclusion>
               <groupId>org.jboss.resteasy</groupId>
@@ -561,15 +560,15 @@
     </profile>
 
     <!--
-    Name:  jboss601
-    Descr: JBoss-6.0.1 specific options
+    Name:  jboss610
+    Descr: JBoss-6.1.0 specific options
     -->
     <profile>
-      <id>jboss601</id>
+      <id>jboss610</id>
       <properties>
-        <jboss.version>6.0.1-SNAPSHOT</jboss.version>
-        <jbossws.integration.target>jboss601</jbossws.integration.target>
-        <endorsed.dirs>${jboss601.home}/lib/endorsed</endorsed.dirs>
+        <jboss.version>6.1.0.Final</jboss.version>
+        <jbossws.integration.target>jboss610</jbossws.integration.target>
+        <endorsed.dirs>${jboss610.home}/lib/endorsed</endorsed.dirs>
       </properties>
       <dependencies>
         <dependency>
@@ -584,7 +583,7 @@
               <groupId>org.jboss.jbossas</groupId>
               <artifactId>jboss-as-webservices</artifactId>
             </exclusion>
-            <!-- Exclusions for preventing cyclic dependency on JBossWS-CXF (AS 6.0.0) -->
+            <!-- Exclusions for preventing cyclic dependency on JBossWS-CXF -->
             <exclusion>
               <groupId>org.jboss.ws.cxf</groupId>
               <artifactId>jbossws-cxf-client</artifactId>
@@ -605,10 +604,7 @@
               <groupId>org.jboss.ws.cxf</groupId>
               <artifactId>jbossws-cxf-resources</artifactId>
             </exclusion>
-            <exclusion>
-              <groupId>org.jboss.ws.native</groupId>
-              <artifactId>jbossws-native-factories</artifactId>
-            </exclusion>
+            <!-- Exclusions for preventing cyclic dependency on JBossWS-Native -->
             <exclusion>
               <groupId>org.jboss.ws.native</groupId>
               <artifactId>jbossws-native-client</artifactId>
@@ -616,6 +612,26 @@
             <exclusion>
               <groupId>org.jboss.ws.native</groupId>
               <artifactId>jbossws-native-core</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.jboss.ws.native</groupId>
+              <artifactId>jbossws-native-factories</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.jboss.ws.native</groupId>
+              <artifactId>jbossws-native-jaxrpc</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.jboss.ws.native</groupId>
+              <artifactId>jbossws-native-saaj</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.jboss.ws.native</groupId>
+              <artifactId>jbossws-native-management</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.jboss.ws.native</groupId>
+              <artifactId>jbossws-native-resources</artifactId>
             </exclusion>
             <exclusion>
               <groupId>org.jboss.ws.native</groupId>
@@ -657,7 +673,7 @@
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
+              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${endorsed.dirs} -Dorg.jboss.wsf.spi.deployer.Deployer=org.jboss.wsf.test.DeployerJBoss6</argLine>
               <excludes>
                 <!--# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
                 <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>

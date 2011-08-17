@@ -23,7 +23,7 @@
 
     <copy
       file="${src.dir}/jbossws-native-config-as6.xml"
-      tofile="${dest.dir}/jbossws-jboss601/jbossws.beans/META-INF/stack-specific-jboss-beans.xml"
+      tofile="${dest.dir}/jbossws-jboss610/jbossws.beans/META-INF/stack-specific-jboss-beans.xml"
     />
 
     <copy

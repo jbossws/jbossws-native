@@ -50,12 +50,7 @@
     <jbossws.common.tools.version>1.0.0-SNAPSHOT</jbossws.common.tools.version>
     <jbossws.shared.testsuite.version>4.0.0-SNAPSHOT</jbossws.shared.testsuite.version>
     <jbossws.jboss600.version>4.0.0-SNAPSHOT</jbossws.jboss600.version>
-    <!-- [JBWS-2505] -->
-    <!-- START -->
-    <!--
-    <jbossws.jboss601.version>3.2.1.GA</jbossws.jboss601.version>
-    -->
-    <!-- END -->
+    <jbossws.jboss610.version>4.0.0-SNAPSHOT</jbossws.jboss610.version>
     <jboss700.version>7.0.0.Final</jboss700.version>
     <ant.version>1.7.1</ant.version>
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
@@ -118,27 +113,22 @@
         <type>zip</type>
       </dependency>
       <dependency>
+        <groupId>org.jboss.ws</groupId>
+        <artifactId>jbossws-jboss610</artifactId>
+        <version>${jbossws.jboss610.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.ws</groupId>
+        <artifactId>jbossws-jboss610</artifactId>
+        <version>${jbossws.jboss610.version}</version>
+        <classifier>resources</classifier>
+        <type>zip</type>
+      </dependency>
+      <dependency>
         <groupId>org.jboss.as</groupId>
         <artifactId>jboss-as-webservices-tests-integration</artifactId>
         <version>${jboss700.version}</version>
       </dependency>
-      <!-- [JBWS-2505] -->
-      <!-- START -->
-      <!--
-      <dependency>
-        <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss600x</artifactId>
-        <version>${jbossws.jboss601.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss600x</artifactId>
-        <version>${jbossws.jboss601.version}</version>
-        <classifier>resources</classifier>
-        <type>zip</type>
-      </dependency>
-      -->
-      <!-- END -->
       <!-- provided apis -->
       <dependency>
         <groupId>org.apache.ant</groupId>
@@ -546,14 +536,14 @@
     </profile>
 
     <!--
-    Name:  jboss601
-    Descr: JBoss-6.0.1 specific options
+    Name:  jboss610
+    Descr: JBoss-6.1.0 specific options
     -->
     <profile>
-      <id>jboss601</id>
+      <id>jboss610</id>
       <properties>
-        <jbossws.integration.target>jboss601</jbossws.integration.target>
-        <jboss.home>${jboss601.home}</jboss.home>
+        <jbossws.integration.target>jboss610</jbossws.integration.target>
+        <jboss.home>${jboss610.home}</jboss.home>
       </properties>
     </profile>
 

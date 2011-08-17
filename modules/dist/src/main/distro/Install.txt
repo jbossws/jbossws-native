@@ -14,14 +14,14 @@ In order to install JBossWS the following steps are necessary:
 3.) Execute one of the following
 
 	ant deploy-jboss600
-	ant deploy-jboss601
+	ant deploy-jboss610
 
     By default the SOAP stack will be installed to 'default' configuration.
 If users want to install SOAP stack to different JBossAS configuration then
 they have to specify -Djboss.server.instance=foo JVM property.
 Supported configurations of the installer are 'default', 'all' and 'standard'.
 
-	ant -Djboss.server.instance=standard deploy-jboss600
+	ant -Djboss.server.instance=standard deploy-jboss610
 
 4.) Execute the samples to verify your installation
 
