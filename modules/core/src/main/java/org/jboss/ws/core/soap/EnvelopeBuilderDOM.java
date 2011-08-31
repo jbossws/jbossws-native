@@ -60,6 +60,8 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 {
    // provide logging
    private static Logger log = Logger.getLogger(EnvelopeBuilderDOM.class);
+   
+   private static final String IGNORE_PARSE_ERROR_PROPERTY = System.getProperty("org.jboss.ws.IgnoreParseError", "true");
 
    private SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
    private Style style;
@@ -86,12 +88,16 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
       }
       catch (IOException ex)
       {
-         if (ignoreParseError)
-         {
+         if(IGNORE_PARSE_ERROR_PROPERTY.equalsIgnoreCase("false")) { 
+            QName faultCode = Constants.SOAP11_FAULT_CODE_CLIENT;
+            throw new CommonSOAPFaultException(faultCode, ex);
+         }else if (ignoreParseError) { //kept for backward compatibility
             return null;
          }
+         
          QName faultCode = Constants.SOAP11_FAULT_CODE_CLIENT;
          throw new CommonSOAPFaultException(faultCode, ex.getMessage());
+         
       }
 
       return build(soapMessage, domEnv);
@@ -109,10 +115,13 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
       }
       catch (IOException ex)
       {
-         if (ignoreParseError)
-         {
+         if(IGNORE_PARSE_ERROR_PROPERTY.equalsIgnoreCase("false")) { 
+            QName faultCode = Constants.SOAP11_FAULT_CODE_CLIENT;
+            throw new CommonSOAPFaultException(faultCode, ex);
+         }else if (ignoreParseError) { //kept for backward compatibility
             return null;
          }
+         
          QName faultCode = Constants.SOAP11_FAULT_CODE_CLIENT;
          throw new CommonSOAPFaultException(faultCode, ex.getMessage());
       }
