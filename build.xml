@@ -117,12 +117,12 @@
     <property name="maven.opts" value=""/>
 
     <echo/>
-    <echo message="${mvn} ${maven.opts} -Pdist install"/>
+    <echo message="${mvn} ${maven.opts} -Pdist -Dno-testsuite install"/>
     <echo/>
 
     <delete dir="${deploy.artifacts.dir}"/>
     <exec dir="${basedir}" executable="${mvn}" failonerror="true">
-      <arg line="${maven.opts} -Pdist install"/>
+      <arg line="${maven.opts} -Pdist -Dno-testsuite install"/>
     </exec>
   </target>
 
@@ -131,12 +131,12 @@
     <property name="maven.opts" value=""/>
 
     <echo/>
-    <echo message="${mvn} ${maven.opts} -Pdist -Dbindist install"/>
+    <echo message="${mvn} ${maven.opts} -Pdist -Dbindist -Dno-testsuite install"/>
     <echo/>
 
     <delete dir="${dist.output.dir}/jbossws-native-bin-dist"/>
     <exec dir="${basedir}" executable="${mvn}" failonerror="true">
-      <arg line="${maven.opts} -Pdist -Dbindist install"/>
+      <arg line="${maven.opts} -Pdist -Dbindist -Dno-testsuite install"/>
     </exec>
 
     <zip destfile="${stack.output.dir}/jbossws-native-bin-dist.zip">
@@ -152,12 +152,12 @@
     <property name="maven.opts" value=""/>
 
     <echo/>
-    <echo message="${mvn} ${maven.opts} -Pdist -Dsrcdist install"/>
+    <echo message="${mvn} ${maven.opts} -Pdist -Dsrcdist -Dno-testsuite install"/>
     <echo/>
 
     <delete dir="${stack.output.dir}/jbossws-native-src-dist"/>
     <exec dir="${basedir}" executable="${mvn}" failonerror="true">
-      <arg line="${maven.opts} -Pdist -Dsrcdist install"/>
+      <arg line="${maven.opts} -Pdist -Dsrcdist -Dno-testsuite install"/>
     </exec>
 
     <zip destfile="${stack.output.dir}/jbossws-native-src-dist.zip">
