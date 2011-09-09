@@ -29,11 +29,11 @@ import javax.xml.ws.WebServiceProvider;
 import org.jboss.ws.api.annotation.EndpointConfig;
 import org.jboss.ws.api.annotation.WebContext;
 import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.integration.WSHelper;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 import org.jboss.wsf.spi.metadata.j2ee.EJBArchiveMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.JSEArchiveMetaData;
 
@@ -104,7 +104,7 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
       if (anWebContext == null)
          return;
 
-      boolean isJSEEndpoint = (dep.getType() == DeploymentType.JAXWS_JSE);
+      boolean isJSEEndpoint = WSHelper.isJaxwsJseDeployment(dep);
 
       // context-root
       if (anWebContext.contextRoot().length() > 0)

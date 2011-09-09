@@ -46,6 +46,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.ObjectNameFactory;
+import org.jboss.ws.common.integration.WSHelper;
 import org.jboss.ws.core.jaxrpc.UnqualifiedFaultException;
 import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
@@ -72,6 +73,7 @@ import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.HttpEndpoint;
+import org.jboss.wsf.spi.deployment.Endpoint.EndpointType;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.jboss.wsf.spi.metadata.j2ee.EJBArchiveMetaData;
@@ -202,7 +204,8 @@ public abstract class MetaDataBuilder
 
       // Add JMS destination JNDI name for MDB endpoints
       EJBArchiveMetaData apMetaData = dep.getAttachment(EJBArchiveMetaData.class);
-      if (apMetaData != null)
+      if (apMetaData != null 
+            && (EndpointType.JAXWS_EJB3 == sepMetaData.getEndpoint().getType() || EndpointType.JAXRPC_EJB21 == sepMetaData.getEndpoint().getType()))
       {
          String ejbName = sepMetaData.getLinkName();
          if (ejbName == null)
@@ -289,7 +292,8 @@ public abstract class MetaDataBuilder
    {
       String transportGuarantee = null;
       JSEArchiveMetaData webMetaData = dep.getAttachment(JSEArchiveMetaData.class);
-      if (webMetaData != null)
+      if (webMetaData != null 
+            && (EndpointType.JAXWS_JSE == sepMetaData.getEndpoint().getType() || EndpointType.JAXRPC_JSE == sepMetaData.getEndpoint().getType()))
       {
          Map<String, String> servletMappings = webMetaData.getServletMappings();
          String urlPattern = servletMappings.get(servletLink);

@@ -60,14 +60,18 @@ public class JAXWSMetaDataBuilderEJB3
          log.debug("START buildMetaData: [name=" + dep.getCanonicalName() + "]");
       try
       {
-         UnifiedMetaData wsMetaData = new UnifiedMetaData(dep.getRootFile());
-         wsMetaData.setDeploymentName(dep.getCanonicalName());
+         UnifiedMetaData wsMetaData = dep.getAttachment(UnifiedMetaData.class);
+         if (wsMetaData == null)
+         {
+            wsMetaData = new UnifiedMetaData(dep.getRootFile());
+            wsMetaData.setDeploymentName(dep.getCanonicalName());
 
-         ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
-         if(null == runtimeClassLoader)
-            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "RUNTIME_LOADER_CANNOT_BE_NULL"));
-         wsMetaData.setClassLoader(new DelegateClassLoader(runtimeClassLoader, SecurityActions.getContextClassLoader()));
-
+            ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
+            if (null == runtimeClassLoader)
+               throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "RUNTIME_LOADER_CANNOT_BE_NULL"));
+            wsMetaData.setClassLoader(new DelegateClassLoader(runtimeClassLoader, SecurityActions
+                  .getContextClassLoader()));
+         } 
          // The container objects below provide access to all of the ejb metadata
          EJBArchiveMetaData apMetaData = dep.getAttachment(EJBArchiveMetaData.class);
          Iterator<EJBMetaData> it = apMetaData.getEnterpriseBeans();

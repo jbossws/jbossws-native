@@ -73,8 +73,8 @@ import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.deployment.Endpoint.EndpointType;
 import org.jboss.wsf.spi.invocation.Invocation;
 import org.jboss.wsf.spi.invocation.InvocationContext;
 import org.jboss.wsf.spi.invocation.InvocationHandler;
@@ -324,8 +324,7 @@ public class ServiceEndpointInvoker
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext instanceof SOAPMessageContextJAXWS)
       {
-         final DeploymentType deploymentType = ep.getService().getDeployment().getType(); 
-         if ((DeploymentType.JAXWS_JSE == deploymentType) || (DeploymentType.JAXWS_EJB3 == deploymentType))
+         if ((EndpointType.JAXWS_JSE == ep.getType()) || (EndpointType.JAXWS_EJB3 == ep.getType()))
          {
             if (msgContext.get(MessageContext.SERVLET_REQUEST) != null)
             {

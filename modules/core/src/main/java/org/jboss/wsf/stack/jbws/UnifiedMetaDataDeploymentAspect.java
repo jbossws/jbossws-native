@@ -25,6 +25,7 @@ import java.util.ResourceBundle;
 
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.integration.AbstractDeploymentAspect;
+import org.jboss.ws.common.integration.WSHelper;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderEJB3;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderJSE;
@@ -34,7 +35,6 @@ import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 import org.jboss.wsf.spi.deployment.Endpoint;
 
 /**
@@ -52,31 +52,27 @@ public class UnifiedMetaDataDeploymentAspect extends AbstractDeploymentAspect
       UnifiedMetaData umd = dep.getAttachment(UnifiedMetaData.class);
       if (umd == null)
       {
-         if (dep.getType() == DeploymentType.JAXRPC_JSE)
-         {
-            JAXRPCServerMetaDataBuilder builder = new JAXRPCServerMetaDataBuilder();
-            umd = builder.buildMetaData((ArchiveDeployment)dep);
-         }
-         else if (dep.getType() == DeploymentType.JAXRPC_EJB21)
-         {
-            JAXRPCServerMetaDataBuilder builder = new JAXRPCServerMetaDataBuilder();
-            umd = builder.buildMetaData((ArchiveDeployment)dep);
-         }
-         else if (dep.getType() == DeploymentType.JAXWS_JSE)
+         if (WSHelper.isJaxwsJseDeployment(dep))
          {
             JAXWSMetaDataBuilderJSE builder = new JAXWSMetaDataBuilderJSE();
             umd = builder.buildMetaData((ArchiveDeployment)dep);
+            dep.addAttachment(UnifiedMetaData.class, umd);
          }
-         else if (dep.getType() == DeploymentType.JAXWS_EJB3)
+         if (WSHelper.isJaxwsEjbDeployment(dep))
          {
             JAXWSMetaDataBuilderEJB3 builder = new JAXWSMetaDataBuilderEJB3();
             umd = builder.buildMetaData((ArchiveDeployment)dep);
          }
-         else
+         if (WSHelper.isJaxrpcJseDeployment(dep) && !WSHelper.isJaxwsJseDeployment(dep) && !WSHelper.isJaxwsEjbDeployment(dep))
          {
-            throw new IllegalStateException(BundleUtils.getMessage(bundle, "INVALID_DEPLOYMENT_TYPE",  dep.getType()));
+            JAXRPCServerMetaDataBuilder builder = new JAXRPCServerMetaDataBuilder();
+            umd = builder.buildMetaData((ArchiveDeployment)dep);
          }
-
+         else if (WSHelper.isJaxrpcEjbDeployment(dep) && !WSHelper.isJaxwsJseDeployment(dep) && !WSHelper.isJaxwsEjbDeployment(dep))
+         {
+            JAXRPCServerMetaDataBuilder builder = new JAXRPCServerMetaDataBuilder();
+            umd = builder.buildMetaData((ArchiveDeployment)dep);
+         }
          dep.addAttachment(UnifiedMetaData.class, umd);
       }
 

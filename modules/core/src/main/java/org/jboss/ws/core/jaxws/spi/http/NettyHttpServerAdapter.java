@@ -44,9 +44,9 @@ import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.classloading.ClassLoaderProvider;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.deployment.Deployment.DeploymentType;
 import org.jboss.wsf.spi.deployment.DeploymentAspect;
 import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
+import org.jboss.wsf.spi.deployment.Endpoint.EndpointType;
 import org.jboss.wsf.spi.deployment.HttpEndpoint;
 import org.jboss.wsf.stack.jbws.EagerInitializeDeploymentAspect;
 import org.jboss.wsf.stack.jbws.PublishContractDeploymentAspect;
@@ -185,9 +185,9 @@ final class NettyHttpServerAdapter implements HttpServer
       endpoint.setShortName(this.getEndpointRegistryPath(epImpl));
       ((HttpEndpoint)endpoint).setURLPattern(epImpl.getPathWithoutContext());
       dep.getService().addEndpoint(endpoint);
+      endpoint.setType(EndpointType.JAXWS_JSE);
       dep.setRootFile(new ResourceLoaderAdapter(loader));
-      dep.setRuntimeClassLoader(loader);
-      dep.setType(DeploymentType.JAXWS_JSE);
+      dep.setRuntimeClassLoader(loader);    
       dep.getService().setContextRoot(contextRoot);
 
       // TODO: remove this properties hack
