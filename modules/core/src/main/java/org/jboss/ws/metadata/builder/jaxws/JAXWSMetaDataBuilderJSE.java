@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.metadata.builder.jaxws;
 
+import static org.jboss.ws.common.integration.WSHelper.isJaxwsJseEndpoint;
+
 import java.util.ResourceBundle;
 
 import org.jboss.logging.Logger;
@@ -30,8 +32,6 @@ import org.jboss.ws.common.utils.DelegateClassLoader;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.deployment.Endpoint.EndpointType;
-import org.jboss.wsf.spi.deployment.EndpointTypeFilter;
 
 /**
  * A server side meta data builder that is based on JSR-181 annotations
@@ -64,10 +64,10 @@ public class JAXWSMetaDataBuilderJSE
          // For every bean
          for (Endpoint ep : dep.getService().getEndpoints())
          {
-            if (EndpointType.JAXWS_JSE == ep.getType())
+            if (isJaxwsJseEndpoint(ep))
             {
                String shortName = ep.getShortName();
-               Class beanClass = ep.getTargetBeanClass();
+               Class<?> beanClass = ep.getTargetBeanClass();
                JAXWSServerMetaDataBuilder.setupProviderOrWebService(dep, wsMetaData, beanClass, shortName);
             }
          }

@@ -50,7 +50,7 @@ public class JAXWSMetaDataBuilderEJB3
    // provide logging
    private final Logger log = Logger.getLogger(JAXWSMetaDataBuilderEJB3.class);
 
-   protected Class annotatedClass;
+   protected Class<?> annotatedClass;
 
    /** Build from webservices.xml
     */
@@ -69,9 +69,9 @@ public class JAXWSMetaDataBuilderEJB3
             ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
             if (null == runtimeClassLoader)
                throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "RUNTIME_LOADER_CANNOT_BE_NULL"));
-            wsMetaData.setClassLoader(new DelegateClassLoader(runtimeClassLoader, SecurityActions
-                  .getContextClassLoader()));
+            wsMetaData.setClassLoader(new DelegateClassLoader(runtimeClassLoader, SecurityActions.getContextClassLoader()));
          } 
+
          // The container objects below provide access to all of the ejb metadata
          EJBArchiveMetaData apMetaData = dep.getAttachment(EJBArchiveMetaData.class);
          Iterator<EJBMetaData> it = apMetaData.getEnterpriseBeans();

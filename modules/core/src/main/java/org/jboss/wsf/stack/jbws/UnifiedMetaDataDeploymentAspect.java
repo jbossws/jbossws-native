@@ -21,11 +21,16 @@
  */
 package org.jboss.wsf.stack.jbws;
 
+import static org.jboss.ws.common.integration.WSHelper.isJaxrpcEjbDeployment;
+import static org.jboss.ws.common.integration.WSHelper.isJaxrpcJseDeployment;
+import static org.jboss.ws.common.integration.WSHelper.isJaxwsEjbDeployment;
+import static org.jboss.ws.common.integration.WSHelper.isJaxwsDeployment;
+import static org.jboss.ws.common.integration.WSHelper.isJaxwsJseDeployment;
+
 import java.util.ResourceBundle;
 
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.integration.AbstractDeploymentAspect;
-import org.jboss.ws.common.integration.WSHelper;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderEJB3;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilderJSE;
@@ -52,27 +57,28 @@ public class UnifiedMetaDataDeploymentAspect extends AbstractDeploymentAspect
       UnifiedMetaData umd = dep.getAttachment(UnifiedMetaData.class);
       if (umd == null)
       {
-         if (WSHelper.isJaxwsJseDeployment(dep))
+         if (isJaxwsJseDeployment(dep))
          {
             JAXWSMetaDataBuilderJSE builder = new JAXWSMetaDataBuilderJSE();
             umd = builder.buildMetaData((ArchiveDeployment)dep);
             dep.addAttachment(UnifiedMetaData.class, umd);
          }
-         if (WSHelper.isJaxwsEjbDeployment(dep))
+         if (isJaxwsEjbDeployment(dep))
          {
             JAXWSMetaDataBuilderEJB3 builder = new JAXWSMetaDataBuilderEJB3();
             umd = builder.buildMetaData((ArchiveDeployment)dep);
          }
-         if (WSHelper.isJaxrpcJseDeployment(dep) && !WSHelper.isJaxwsJseDeployment(dep) && !WSHelper.isJaxwsEjbDeployment(dep))
+         if (isJaxrpcJseDeployment(dep) && !isJaxwsDeployment(dep))
          {
             JAXRPCServerMetaDataBuilder builder = new JAXRPCServerMetaDataBuilder();
             umd = builder.buildMetaData((ArchiveDeployment)dep);
          }
-         else if (WSHelper.isJaxrpcEjbDeployment(dep) && !WSHelper.isJaxwsJseDeployment(dep) && !WSHelper.isJaxwsEjbDeployment(dep))
+         else if (isJaxrpcEjbDeployment(dep) && !isJaxwsDeployment(dep))
          {
             JAXRPCServerMetaDataBuilder builder = new JAXRPCServerMetaDataBuilder();
             umd = builder.buildMetaData((ArchiveDeployment)dep);
          }
+
          dep.addAttachment(UnifiedMetaData.class, umd);
       }
 

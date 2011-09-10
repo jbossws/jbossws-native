@@ -21,6 +21,9 @@
  */
 package org.jboss.ws.core.jaxws.spi.http;
 
+import static org.jboss.wsf.spi.deployment.DeploymentType.JAXWS;
+import static org.jboss.wsf.spi.deployment.EndpointType.JAXWS_JSE;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,7 +49,6 @@ import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.DeploymentAspect;
 import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
-import org.jboss.wsf.spi.deployment.Endpoint.EndpointType;
 import org.jboss.wsf.spi.deployment.HttpEndpoint;
 import org.jboss.wsf.stack.jbws.EagerInitializeDeploymentAspect;
 import org.jboss.wsf.stack.jbws.PublishContractDeploymentAspect;
@@ -183,11 +185,12 @@ final class NettyHttpServerAdapter implements HttpServer
       final ArchiveDeployment dep = (ArchiveDeployment) NettyHttpServerAdapter.DEPLOYMENT_FACTORY.newDeployment(contextRoot, loader);
       final org.jboss.wsf.spi.deployment.Endpoint endpoint = NettyHttpServerAdapter.DEPLOYMENT_FACTORY.newHttpEndpoint(endpointClass.getName());
       endpoint.setShortName(this.getEndpointRegistryPath(epImpl));
+      endpoint.setType(JAXWS_JSE);
       ((HttpEndpoint)endpoint).setURLPattern(epImpl.getPathWithoutContext());
       dep.getService().addEndpoint(endpoint);
-      endpoint.setType(EndpointType.JAXWS_JSE);
       dep.setRootFile(new ResourceLoaderAdapter(loader));
-      dep.setRuntimeClassLoader(loader);    
+      dep.setRuntimeClassLoader(loader);
+      dep.setType(JAXWS);
       dep.getService().setContextRoot(contextRoot);
 
       // TODO: remove this properties hack

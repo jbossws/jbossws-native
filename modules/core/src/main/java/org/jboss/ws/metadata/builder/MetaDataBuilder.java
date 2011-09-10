@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.metadata.builder;
 
+import static org.jboss.ws.common.integration.WSHelper.isJseEndpoint;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -46,7 +48,6 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.ObjectNameFactory;
-import org.jboss.ws.common.integration.WSHelper;
 import org.jboss.ws.core.jaxrpc.UnqualifiedFaultException;
 import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
@@ -73,15 +74,11 @@ import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.HttpEndpoint;
-import org.jboss.wsf.spi.deployment.Endpoint.EndpointType;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
-import org.jboss.wsf.spi.metadata.j2ee.EJBArchiveMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.EJBMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.JSEArchiveMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.JSESecurityMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.JSESecurityMetaData.JSEResourceCollection;
-import org.jboss.wsf.spi.metadata.j2ee.MDBMetaData;
 
 /** An abstract meta data builder.
  *
@@ -202,27 +199,6 @@ public abstract class MetaDataBuilder
       idstr.append(ServerEndpointMetaData.SEPID_PROPERTY_CONTEXT + "=" + context);
       idstr.append("," + ServerEndpointMetaData.SEPID_PROPERTY_ENDPOINT + "=" + linkName);
 
-      // Add JMS destination JNDI name for MDB endpoints
-      EJBArchiveMetaData apMetaData = dep.getAttachment(EJBArchiveMetaData.class);
-      if (apMetaData != null 
-            && (EndpointType.JAXWS_EJB3 == sepMetaData.getEndpoint().getType() || EndpointType.JAXRPC_EJB21 == sepMetaData.getEndpoint().getType()))
-      {
-         String ejbName = sepMetaData.getLinkName();
-         if (ejbName == null)
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_GET_EJB_LINK"));
-
-         EJBMetaData beanMetaData = (EJBMetaData)apMetaData.getBeanByEjbName(ejbName);
-         if (beanMetaData == null)
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_GET_EJB_META_DATA",  ejbName));
-
-         if (beanMetaData instanceof MDBMetaData)
-         {
-            MDBMetaData mdMetaData = (MDBMetaData)beanMetaData;
-            String jndiName = mdMetaData.getDestinationJndiName();
-            idstr.append(",jms=" + jndiName);
-         }
-      }
-
       return ObjectNameFactory.create(idstr.toString());
    }
 
@@ -292,8 +268,7 @@ public abstract class MetaDataBuilder
    {
       String transportGuarantee = null;
       JSEArchiveMetaData webMetaData = dep.getAttachment(JSEArchiveMetaData.class);
-      if (webMetaData != null 
-            && (EndpointType.JAXWS_JSE == sepMetaData.getEndpoint().getType() || EndpointType.JAXRPC_JSE == sepMetaData.getEndpoint().getType()))
+      if (webMetaData != null && isJseEndpoint(sepMetaData.getEndpoint()))
       {
          Map<String, String> servletMappings = webMetaData.getServletMappings();
          String urlPattern = servletMappings.get(servletLink);

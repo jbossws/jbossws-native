@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.core.server;
 
+import static org.jboss.ws.common.integration.WSHelper.isJaxwsEndpoint;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
@@ -74,7 +76,6 @@ import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.deployment.Endpoint.EndpointType;
 import org.jboss.wsf.spi.invocation.Invocation;
 import org.jboss.wsf.spi.invocation.InvocationContext;
 import org.jboss.wsf.spi.invocation.InvocationHandler;
@@ -324,7 +325,7 @@ public class ServiceEndpointInvoker
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext instanceof SOAPMessageContextJAXWS)
       {
-         if ((EndpointType.JAXWS_JSE == ep.getType()) || (EndpointType.JAXWS_EJB3 == ep.getType()))
+         if (isJaxwsEndpoint(ep))
          {
             if (msgContext.get(MessageContext.SERVLET_REQUEST) != null)
             {

@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.metadata.builder.jaxws;
 
+import static org.jboss.ws.common.integration.WSHelper.isJaxwsJseDeployment;
+
 import java.util.ResourceBundle;
 
 import javax.jws.WebService;
@@ -29,7 +31,6 @@ import javax.xml.ws.WebServiceProvider;
 import org.jboss.ws.api.annotation.EndpointConfig;
 import org.jboss.ws.api.annotation.WebContext;
 import org.jboss.ws.api.util.BundleUtils;
-import org.jboss.ws.common.integration.WSHelper;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
@@ -104,7 +105,7 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
       if (anWebContext == null)
          return;
 
-      boolean isJSEEndpoint = WSHelper.isJaxwsJseDeployment(dep);
+      boolean isJSEEndpoint = isJaxwsJseDeployment(dep);
 
       // context-root
       if (anWebContext.contextRoot().length() > 0)

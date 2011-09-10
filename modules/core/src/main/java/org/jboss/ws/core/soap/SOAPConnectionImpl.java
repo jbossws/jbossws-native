@@ -34,7 +34,6 @@ import org.jboss.ws.core.client.EndpointInfo;
 import org.jboss.ws.core.client.HTTPRemotingConnection;
 import org.jboss.ws.core.client.RemoteConnection;
 import org.jboss.ws.core.client.SOAPProtocolConnectionHTTP;
-import org.jboss.ws.core.client.SOAPProtocolConnectionJMS;
 
 /**
  * SOAPConnection implementation
@@ -110,14 +109,6 @@ public class SOAPConnectionImpl extends SOAPConnection
       else
       {
          targetAddress = endpoint.toString();
-      }
-
-      if (targetAddress.startsWith("jms"))
-      {
-         if (false == (remotingConnection instanceof SOAPProtocolConnectionJMS))
-         {
-            remotingConnection = new SOAPProtocolConnectionJMS();
-         }
       }
 
       return remotingConnection;

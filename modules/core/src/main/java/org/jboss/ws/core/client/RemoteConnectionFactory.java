@@ -47,8 +47,6 @@ public class RemoteConnectionFactory
       targetAddress = targetAddress.toLowerCase();
       if (targetAddress.startsWith("http"))
          key = RemoteConnection.class.getName() + ".http";
-      else if (targetAddress.startsWith("jms"))
-         key = RemoteConnection.class.getName() + ".jms";
       
       if (key == null)
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_REMOTE_CONNETION",  targetAddress));

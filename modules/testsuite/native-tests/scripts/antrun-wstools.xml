@@ -33,7 +33,6 @@
     <macro-wstools dest="jaxrpc/samples/exception/WEB-INF" config="jaxrpc/samples/exception/wstools-config.xml"/>
     <macro-wstools dest="jaxrpc/samples/handler/WEB-INF" config="jaxrpc/samples/handler/wstools-config.xml"/>
     <macro-wstools dest="jaxrpc/samples/holder/WEB-INF" config="jaxrpc/samples/holder/wstools-config.xml"/>
-    <macro-wstools dest="jaxrpc/samples/jmstransport/META-INF" config="jaxrpc/samples/jmstransport/wstools-config.xml"/>
     <macro-wstools dest="jaxrpc/samples/jsr109ejb/doclit/META-INF" config="jaxrpc/samples/jsr109ejb/doclit/wstools-config.xml"/>
     <macro-wstools dest="jaxrpc/samples/jsr109ejb/rpclit/META-INF" config="jaxrpc/samples/jsr109ejb/rpclit/wstools-config.xml"/>
     <macro-wstools dest="jaxrpc/samples/jsr109pojo/doclit/WEB-INF" config="jaxrpc/samples/jsr109pojo/doclit/wstools-config.xml"/>

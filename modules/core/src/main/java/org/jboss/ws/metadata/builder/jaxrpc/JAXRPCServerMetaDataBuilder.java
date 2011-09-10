@@ -139,7 +139,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                serviceMetaData.setServiceName(wsdlEndpoint.getWsdlService().getName());
                QName interfaceQName = wsdlEndpoint.getInterface().getName();
 
-               Endpoint ep = dep.getService().getEndpointByName(linkName); 
+               Endpoint ep = dep.getService().getEndpointByName(linkName);
                ServerEndpointMetaData sepMetaData = new ServerEndpointMetaData(serviceMetaData, ep, portName, interfaceQName, Type.JAXRPC);
                sepMetaData.setPortComponentName(pcMetaData.getPortComponentName());
                sepMetaData.setLinkName(linkName);
