@@ -51,6 +51,7 @@
     <jbossws.shared.testsuite.version>4.0.0-SNAPSHOT</jbossws.shared.testsuite.version>
     <jbossws.jboss600.version>4.0.0-SNAPSHOT</jbossws.jboss600.version>
     <jbossws.jboss610.version>4.0.0-SNAPSHOT</jbossws.jboss610.version>
+    <jbossws.jboss700.version>4.0.0-SNAPSHOT</jbossws.jboss700.version>
     <jboss700.version>7.0.0.Final</jboss700.version>
     <ant.version>1.7.1</ant.version>
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
@@ -123,6 +124,11 @@
         <version>${jbossws.jboss610.version}</version>
         <classifier>resources</classifier>
         <type>zip</type>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.ws</groupId>
+        <artifactId>jbossws-jboss700</artifactId>
+        <version>${jbossws.jboss700.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.as</groupId>
