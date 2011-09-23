@@ -1027,12 +1027,141 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
 
                  <!-- # [JBWS-3234] JNDI over RMI not available on AS7 -->
-                 <exclude>org/jboss/test/ws/jaxrpc/**</exclude>
-                 <exclude>org/jboss/test/ws/benchmark/jaxrpc/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws944/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/serviceref/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude>
+                 
+                 <!-- # appclient & jaxrpc client issues -->
+                 <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkDocEJBTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkDocJSETestCase*</exclude>
+                 <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkRpcEJBTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkRpcJSETestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/anonymous/AnonymousTypesTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/encoded/href/MarshallTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/encoded/marshalltest/MarshallTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/encoded/parametermode/ParameterModeTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/enventry/EnvEntryEJBTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/enventry/EnvEntryJSETestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbas897/JBAS897TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1010/JBWS1010TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1011/JBWS1011TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1093/JBWS1093TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1107/JBWS1107TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1121/JBWS1121TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1125/JBWS1125TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1148/JBWS1148TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1179/JBWS1179TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1190/JBWS1190TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1205/JBWS1205TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws124/JBWS124TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws128/JBWS128TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1303/JBWS1303TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1316/JBWS1316CallTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1427/JBWS1427TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws153/JBWS153TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1619/JBWS1619TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws163/JBWS163TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws165/JBWS165TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1653/JBWS1653TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws168/JBWS168TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1792/JBWS1792TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws217/JBWS217TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws2234/JBWS2234TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws231/JBWS231TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws251/JBWS251TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws316/JBWS316TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws331/JBWS331TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws349/JBWS349TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws377/JBWS377TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws381/JBWS381TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws383/JBWS383TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws413/JBWS413TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws414/JBWS414TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws423/JBWS423TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws424/JBWS424TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws425/JBWS425TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws434/JBWS434TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws456/JBWS456TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws463/JBWS463TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws464/JBWS464TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws484/JBWS484TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws626/JBWS626TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws632/JBWS632TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws637/JBWS637TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws643/JBWS643TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws663/JBWS663BareBoundTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws663/JBWS663BareUnboundTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws663/JBWS663WrappedBoundTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws663/JBWS663WrappedUnboundTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws68/JBWS68TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws70/JBWS70TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws706/JBWS706TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws707/JBWS707TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws71/JBWS71TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws710/JBWS710TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws720/JBWS720TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws723/JBWS723TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws732/JBWS732TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws772/JBWS772TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws775/JBWS775TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws79/JBWS79TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws807/JBWS807TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws812/JBWS812TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws82/JBWS82TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws83/JBWS83TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws84/JBWS84TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallDocLitTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallRpcLitTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/overloaded/OverloadedTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/docstyle/bare/TrivialServiceDocBareTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/docstyle/wrapped/TrivialServiceDocWrappedTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/dynamichandler/DynamicHandlerTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/dynamichandler/StaticHandlerTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/exception/ExceptionTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/handler/HeaderClientTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/message/MessageTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/mtom/MTOMTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/oneway/OneWayTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/rpcstyle/TrivialServiceRpcTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/secureejb/SecureEJBTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/serviceref/ServiceRefClientTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/serviceref/ServiceRefEJBTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/serviceref/ServiceRefServletTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/wsaddr/replyto/AddressingReplyToTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleEncryptTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleSignTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/utf16/UTF16TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/wsdlpublish/WsdlPublishTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/wsse/RoundTripTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/wsse/UsernameTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/xop/doclit/XOPHandlerTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/xop/doclit/XOPTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/xop/rpclit/XOPHandlerTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/xop/rpclit/XOPTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/AddressingReplyToTestCase*</exclude>
+                 
+                 <!-- # webservices-description in jboss-web.xml / jboss.xml -->
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/jsr109pojo/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/jsr109ejb/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/wsse/SignEncryptFaultTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/wsse/RpcTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/wsse/WebClientTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/wsse/NotEncodedTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/wsse/SignFaultTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/wsse/SimpleSignEncryptTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/wsse/signup/AccountSignupTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1124/JBWS1124TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/wsdlpublish/WsdlPublishTestCase*</exclude>
+                 
+                 <!-- # unpackaged EAR deployment failure -->
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase*</exclude>
+                 
+                 <!-- # javaType [javax.xml.transform.Source] is not assignable from attachment content: java.lang.String -->
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/swa/AttachmentSAAJTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/swa/AttachmentProxyTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/swa/AttachmentDIITestCase*</exclude>
+                 
               </excludes>
             </configuration>
           </plugin>

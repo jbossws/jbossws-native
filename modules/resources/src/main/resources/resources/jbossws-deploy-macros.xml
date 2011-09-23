@@ -311,11 +311,6 @@
           <include name="**/jbossws-api.jar"/>
         </fileset>
       </copy>
-      <copy todir="@{targetdir}/javax/xml/rpc/api/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/jaxrpc-api.jar"/>
-        </fileset>
-      </copy>
       <copy todir="@{targetdir}/org/jboss/xb/main" flatten="false" overwrite="true">
         <fileset dir="@{thirdpartydir}/lib">
           <include name="**/jbossxb.jar"/>

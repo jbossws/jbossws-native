@@ -321,6 +321,9 @@
         <include name="webservices.xml"/>
         <include name="wsdl/**"/>
       </webinf>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.common"/>
+      </manifest>
     </war>
     <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-message-client.jar">
       <fileset dir="${tests.output.dir}/test-classes">

@@ -1945,6 +1945,9 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </webinf>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.common"/>
+      </manifest>
     </war>
     <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws812-client.jar">
       <fileset dir="${tests.output.dir}/test-classes">
@@ -2308,6 +2311,9 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </webinf>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
     </war>
     
     <!-- jaxrpc-jbws1188 -->
@@ -2564,6 +2570,9 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </webinf>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.common"/>
+      </manifest>
     </war>
     <war warfile="${tests.output.dir}/test-libs/jaxrpc-jbws1647-doclit.war" webxml="${tests.output.dir}/test-resources/jaxrpc/jbws1647/doclit/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">
@@ -2579,6 +2588,9 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </webinf>
+      <manifest>
+        <attribute name="Dependencies" value="org.jboss.ws.common"/>
+      </manifest>
     </war>
     
     <!-- jbossws-jbws1653 -->
