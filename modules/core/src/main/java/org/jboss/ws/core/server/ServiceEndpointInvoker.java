@@ -371,7 +371,7 @@ public class ServiceEndpointInvoker
             {
                // create endpoint instance
                final Class<?> endpointImplClass = endpoint.getTargetBeanClass();
-               endpointImpl = endpointImplClass.newInstance();
+               endpointImpl = endpoint.getInstanceProvider().getInstance(endpointImplClass.getName());
                endpoint.addAttachment(Object.class, endpointImpl);
             }
             catch (Exception ex)

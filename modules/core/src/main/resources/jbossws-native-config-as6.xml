@@ -43,6 +43,11 @@
     <property name="provides">StackEndpointHandler</property>
   </bean>
 
+  <bean name="WSNativeInstanceProviderDeploymentAspect" class="org.jboss.wsf.stack.jbws.NativeInstanceProviderDeploymentAspect">
+    <property name="requires">ContainerMetaData</property>
+    <property name="provides">StackInstanceProvider</property>
+  </bean>
+
   <bean name="WSNativeEndpointRecordProcessorDeploymentAspect" class="org.jboss.ws.common.deployment.EndpointRecordProcessorDeploymentAspect">
     <property name="mbeanServer"><inject bean="WSMBeanServerLocator" property="mbeanServer"/></property>
     <property name="requires">RegisteredEndpoint</property>

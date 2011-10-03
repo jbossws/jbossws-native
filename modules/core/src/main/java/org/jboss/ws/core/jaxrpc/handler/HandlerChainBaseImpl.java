@@ -48,6 +48,8 @@ import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.SOAPElementImpl;
 import org.jboss.ws.core.soap.SOAPElementWriter;
 import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.invocation.EndpointAssociation;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
@@ -128,7 +130,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
          {
             for (HandlerInfo info : infos)
             {
-               HandlerWrapper handler = new HandlerWrapper((Handler)info.getHandlerClass().newInstance());
+               HandlerWrapper handler = new HandlerWrapper(getInstance(info));
                HandlerType type = (HandlerType)info.getHandlerConfig().get(HandlerType.class.getName());
                handlers.add(new HandlerEntry(handler, info, type));
             }
@@ -149,6 +151,21 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
       // set state to created
       state = STATE_CREATED;
+   }
+
+   private Handler getInstance(final HandlerInfo info) throws Exception
+   {
+       final Endpoint ep = EndpointAssociation.getEndpoint();
+       final Handler handler;
+       if (ep != null)
+       {
+           handler = (Handler)ep.getInstanceProvider().getInstance(info.getHandlerClass().getName());
+       }
+       else
+       {
+           handler = (Handler)info.getHandlerClass().newInstance();
+       }
+       return handler;
    }
 
    /**

@@ -51,6 +51,7 @@ import org.jboss.wsf.spi.deployment.DeploymentAspect;
 import org.jboss.wsf.spi.deployment.DeploymentModelFactory;
 import org.jboss.wsf.spi.deployment.HttpEndpoint;
 import org.jboss.wsf.stack.jbws.EagerInitializeDeploymentAspect;
+import org.jboss.wsf.stack.jbws.NativeInstanceProviderDeploymentAspect;
 import org.jboss.wsf.stack.jbws.PublishContractDeploymentAspect;
 import org.jboss.wsf.stack.jbws.ServiceEndpointInvokerDeploymentAspect;
 import org.jboss.wsf.stack.jbws.UnifiedMetaDataDeploymentAspect;
@@ -221,6 +222,7 @@ final class NettyHttpServerAdapter implements HttpServer
          retVal.add(new EndpointAddressDeploymentAspect());
          retVal.add(new EndpointNameDeploymentAspect());
          retVal.add(new UnifiedMetaDataDeploymentAspect());
+         retVal.add(new NativeInstanceProviderDeploymentAspect());
          retVal.add(new ServiceEndpointInvokerDeploymentAspect());
          retVal.add(new PublishContractDeploymentAspect());
          retVal.add(new EagerInitializeDeploymentAspect());

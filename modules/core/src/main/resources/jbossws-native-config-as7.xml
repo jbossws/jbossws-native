@@ -46,6 +46,11 @@
     <property name="provides" class="java.lang.String">StackEndpointHandler</property>
   </deploymentAspect>
 
+  <deploymentAspect class="org.jboss.wsf.stack.jbws.NativeInstanceProviderDeploymentAspect">
+    <property name="requires" class="java.lang.String">ContainerMetaData</property>
+    <property name="provides" class="java.lang.String">StackInstanceProvider</property>
+  </deploymentAspect>
+
   <deploymentAspect class="org.jboss.wsf.stack.jbws.PublishContractDeploymentAspect">
     <property name="requires" class="java.lang.String">UnifiedMetaDataModel, JAXBIntros</property>
     <property name="provides" class="java.lang.String">PublishedContract</property>

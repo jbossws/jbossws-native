@@ -168,14 +168,13 @@ public class HandlerResolverImpl implements HandlerResolver
       try
       {
          // Load the handler class using the deployments top level CL
-         Class hClass = classLoader.loadClass(className);
-         Handler handler = (Handler)hClass.newInstance();
+         Handler<?> handler = getInstance(classLoader, className);
 
          if (handler instanceof GenericHandler)
             ((GenericHandler)handler).setHandlerName(handlerName);
 
          if (handler instanceof GenericSOAPHandler)
-            ((GenericSOAPHandler)handler).setHeaders(soapHeaders);
+            ((GenericSOAPHandler<?>)handler).setHeaders(soapHeaders);
 
          if (injections != null)
          {
@@ -195,6 +194,22 @@ public class HandlerResolverImpl implements HandlerResolver
       {
          throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_HANDLER",  className),  ex);
       }
+   }
+
+   private Handler<?> getInstance(final ClassLoader fallbackLoader, final String className) throws Exception
+   {
+       final Endpoint ep = EndpointAssociation.getEndpoint();
+       final Handler<?> handler;
+       if (ep != null)
+       {
+           handler = (Handler<?>)ep.getInstanceProvider().getInstance(className);
+       }
+       else
+       {
+           final Class<?> hClass = fallbackLoader.loadClass(className);
+           handler = (Handler<?>)hClass.newInstance();
+       }
+       return handler;
    }
 
    private boolean addHandler(HandlerMetaDataJAXWS hmd, Handler handler, HandlerType type)
