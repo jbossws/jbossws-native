@@ -993,12 +993,6 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/enventry/*JSETestCase*</exclude> <!-- [AS7-1407] affects this test -->
 
-                 <!-- TODO: Native webserviceref stuff -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2307/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2527/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/advanced/retail/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
-
                  <!-- # [JBWS-3308] Extends AS7 RemoteDeployer for supporting deployment of different security domains -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
