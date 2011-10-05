@@ -15,7 +15,7 @@
    [1] http://www.w3.org/Consortium/Legal/2002/copyright-software-20021231
 -->
 
-<!--DOCTYPE xs:schema PUBLIC "-//W3C//DTD XMLSCHEMA 200102//EN" "http://www.w3.org/2001/XMLSchema.dtd"-->
+<!DOCTYPE xs:schema PUBLIC "-//W3C//DTD XMLSCHEMA 200102//EN" "http://www.w3.org/2001/XMLSchema.dtd">
 
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://www.w3.org/2003/11/wsdl" targetNamespace="http://www.w3.org/2003/11/wsdl" elementFormDefault="qualified" finalDefault="" blockDefault="" attributeFormDefault="unqualified">
 
