@@ -29,9 +29,9 @@
     </resources>
 
     <dependencies>
-        <module name="com.sun.tools.ws" services="import"/>
+        <module name="com.sun.tools.ws" services="import" optional="true"/>
         <module name="com.sun.xml.bind" services="import"/>
-        <module name="com.sun.xml.fastinfoset"/>
+        <module name="com.sun.xml.fastinfoset" optional="true"/>
         <module name="javax.api" />
         <module name="javax.servlet.api" />
         <module name="javax.jws.api" />
@@ -43,16 +43,15 @@
         <module name="javax.xml.ws.api" />
         <module name="org.picketbox"/>
         <module name="org.apache.xerces" services="import"/>
-        <module name="org.apache.xmlsec"/>
-        <module name="org.apache.ws.commons.policy"/>
+        <module name="org.apache.xmlsec" optional="true"/>
+        <module name="org.apache.ws.commons.policy" optional="true"/>
         <module name="org.javassist" />
-        <module name="org.codehaus.jettison"/>
+        <module name="org.codehaus.jettison" optional="true"/>
         <module name="org.jboss.netty" />
         <module name="org.jboss.xb" />
         <module name="org.jboss.ws.api" />
         <module name="org.jboss.ws.spi" />
         <module name="org.jboss.ws.common" />
-        <module name="org.jboss.ws.jaxws-client" services="import"/>
         <module name="org.jboss.ws.native.jbossws-native-factories" services="import"/>
         <module name="org.jboss.ws.native.jbossws-native-services" services="import"/>
         <module name="org.jboss.common-core" />
