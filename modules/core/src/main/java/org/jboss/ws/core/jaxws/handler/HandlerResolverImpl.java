@@ -50,6 +50,7 @@ import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.deployment.Reference;
 import org.jboss.wsf.spi.invocation.EndpointAssociation;
 import org.jboss.wsf.spi.metadata.injection.InjectionsMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
@@ -168,21 +169,13 @@ public class HandlerResolverImpl implements HandlerResolver
       try
       {
          // Load the handler class using the deployments top level CL
-         Handler<?> handler = getInstance(classLoader, className);
+         Handler<?> handler = getInstance(classLoader, className, injections);
 
          if (handler instanceof GenericHandler)
             ((GenericHandler)handler).setHandlerName(handlerName);
 
          if (handler instanceof GenericSOAPHandler)
             ((GenericSOAPHandler<?>)handler).setHeaders(soapHeaders);
-
-         if (injections != null)
-         {
-            Endpoint ep = EndpointAssociation.getEndpoint();
-            Context ctx = ep == null ? null : ep.getJNDIContext();
-            InjectionHelper.injectResources(handler, injections, ctx);
-         }
-         InjectionHelper.callPostConstructMethod(handler);
 
          addHandler(jaxwsMetaData, handler, type);
       }
@@ -196,18 +189,26 @@ public class HandlerResolverImpl implements HandlerResolver
       }
    }
 
-   private Handler<?> getInstance(final ClassLoader fallbackLoader, final String className) throws Exception
+   private Handler<?> getInstance(final ClassLoader fallbackLoader, final String className, InjectionsMetaData injections) throws Exception
    {
        final Endpoint ep = EndpointAssociation.getEndpoint();
        final Handler<?> handler;
        if (ep != null)
        {
-           handler = (Handler<?>)ep.getInstanceProvider().getInstance(className);
+           final Reference handlerReference = ep.getInstanceProvider().getInstance(className); 
+           handler = (Handler<?>)handlerReference.getValue();
+           if (!handlerReference.isInitialized() && injections != null)
+           {
+              Context ctx = ep == null ? null : ep.getJNDIContext();
+              InjectionHelper.injectResources(handler, injections, ctx);
+              InjectionHelper.callPostConstructMethod(handler);
+           }
        }
        else
        {
            final Class<?> hClass = fallbackLoader.loadClass(className);
            handler = (Handler<?>)hClass.newInstance();
+           InjectionHelper.callPostConstructMethod(handler);
        }
        return handler;
    }

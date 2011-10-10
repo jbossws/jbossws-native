@@ -159,7 +159,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
        final Handler handler;
        if (ep != null)
        {
-           handler = (Handler)ep.getInstanceProvider().getInstance(info.getHandlerClass().getName());
+           handler = (Handler)ep.getInstanceProvider().getInstance(info.getHandlerClass().getName()).getValue();
        }
        else
        {

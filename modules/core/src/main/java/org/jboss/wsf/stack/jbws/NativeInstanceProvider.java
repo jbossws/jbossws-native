@@ -28,7 +28,9 @@ import java.util.ResourceBundle;
 
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.deployment.ReferenceFactory;
 import org.jboss.wsf.spi.deployment.InstanceProvider;
+import org.jboss.wsf.spi.deployment.Reference;
 
 /**
  * Native instance provider.
@@ -39,18 +41,18 @@ final class NativeInstanceProvider implements InstanceProvider {
 
     private static final ResourceBundle bundle = BundleUtils.getBundle(NativeInstanceProvider.class);
     private final ClassLoader loader;
-    private final Map<String, Object> cache = new HashMap<String, Object>();
+    private final Map<String, Reference> cache = new HashMap<String, Reference>();
 
     NativeInstanceProvider(final ClassLoader loader)
     {
         this.loader = loader;
     }
 
-    public synchronized Object getInstance(final String className) {
-        Object instance = cache.get(className);
+    public synchronized Reference getInstance(final String className) {
+        Reference instance = cache.get(className);
         if (instance == null) {
             try {
-                instance = loader.loadClass(className).newInstance();
+                instance = ReferenceFactory.newUninitializedReference(loader.loadClass(className).newInstance());
                 cache.put(className, instance);
             } catch (Exception e) {
                 throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_CLASS",  className),  e);
