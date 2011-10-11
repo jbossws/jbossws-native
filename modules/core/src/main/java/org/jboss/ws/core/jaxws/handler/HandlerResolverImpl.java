@@ -197,11 +197,12 @@ public class HandlerResolverImpl implements HandlerResolver
        {
            final Reference handlerReference = ep.getInstanceProvider().getInstance(className); 
            handler = (Handler<?>)handlerReference.getValue();
-           if (!handlerReference.isInitialized() && injections != null)
+           if (!handlerReference.isInitialized())
            {
-              Context ctx = ep == null ? null : ep.getJNDIContext();
+              Context ctx = ep.getJNDIContext();
               InjectionHelper.injectResources(handler, injections, ctx);
               InjectionHelper.callPostConstructMethod(handler);
+              handlerReference.setInitialized();
            }
        }
        else
