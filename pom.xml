@@ -53,6 +53,7 @@
     <jbossws.jboss610.version>4.0.0-SNAPSHOT</jbossws.jboss610.version>
     <jbossws.jboss700.version>4.0.0-SNAPSHOT</jbossws.jboss700.version>
     <jboss700.version>7.0.0.Final</jboss700.version>
+    <ejb.api.version>1.0.1.Final</ejb.api.version>
     <ant.version>1.7.1</ant.version>
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
     <commons.logging.version>1.1.1</commons.logging.version>
@@ -151,11 +152,6 @@
         <groupId>javax.annotation</groupId>
         <artifactId>jsr250-api</artifactId>
         <version>1.0</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.ejb</groupId>
-        <artifactId>ejb-api</artifactId>
-        <version>3.0</version>
       </dependency>
       <dependency>
         <groupId>javax.jms</groupId>
@@ -287,6 +283,11 @@
         <groupId>org.jboss.spec.javax.xml.ws</groupId>
         <artifactId>jboss-jaxws-api_2.2_spec</artifactId>
         <version>${jaxws.api.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.spec.javax.ejb</groupId>
+        <artifactId>jboss-ejb-api_3.1_spec</artifactId>
+        <version>${ejb.api.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.spec.javax.xml.rpc</groupId>

@@ -69,10 +69,6 @@
       <systemPath>${java.home}/../lib/tools.jar</systemPath>
     </dependency>
     <dependency>
-      <groupId>javax.ejb</groupId>
-      <artifactId>ejb-api</artifactId>
-    </dependency>
-    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
     </dependency>
@@ -117,6 +113,11 @@
       <groupId>org.jboss.javaee</groupId>
       <artifactId>jboss-javaee</artifactId>
       <version>${jboss.javaee.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.spec.javax.ejb</groupId>
+      <artifactId>jboss-ejb-api_3.1_spec</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -177,6 +178,13 @@
                 <artifactItem>
                   <groupId>org.jboss.spec.javax.xml.bind</groupId>
                   <artifactId>jboss-jaxb-api_2.2_spec</artifactId>
+                  <type>jar</type>
+                  <overWrite>true</overWrite>
+                  <outputDirectory>${project.build.directory}/endorsed</outputDirectory>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>org.jboss.spec.javax.ejb</groupId>
+                  <artifactId>jboss-ejb-api_3.1_spec</artifactId>
                   <type>jar</type>
                   <overWrite>true</overWrite>
                   <outputDirectory>${project.build.directory}/endorsed</outputDirectory>
@@ -427,7 +435,7 @@
       <properties>
         <jboss.version>6.0.0.Final</jboss.version>
         <jbossws.integration.target>jboss600</jbossws.integration.target>
-        <endorsed.dirs>${jboss600.home}/lib/endorsed</endorsed.dirs>
+        <endorsed.dirs>${project.build.directory}/endorsed</endorsed.dirs>
       </properties>
       <dependencies>
         <dependency>
@@ -438,6 +446,10 @@
           <version>${jboss.version}</version>
           <exclusions>
             <!-- Exclusion for not depending on the container integration -->
+            <exclusion>
+              <groupId>org.jboss.javaee</groupId>
+              <artifactId>jboss-ejb-api</artifactId>
+            </exclusion>
             <exclusion>
               <groupId>org.jboss.jbossas</groupId>
               <artifactId>jboss-as-webservices</artifactId>
@@ -551,6 +563,9 @@
 
                 <!-- # [AS7-1322] Implemented on AS 7.0.1 or greater only -->
                 <exclude>org/jboss/test/ws/publish/EndpointPublishTestCase*</exclude>
+
+                <!-- # [JBWS-3026] fixed since AS 7.1 -->
+                <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude>
 
                 <!-- # [JBWS-3367][AS7-1605] fixed since AS 7.1 -->
                 <exclude>org/jboss/test/ws/jaxws/jbws3367/**</exclude>
@@ -570,7 +585,7 @@
       <properties>
         <jboss.version>6.1.0.Final</jboss.version>
         <jbossws.integration.target>jboss610</jbossws.integration.target>
-        <endorsed.dirs>${jboss610.home}/lib/endorsed</endorsed.dirs>
+        <endorsed.dirs>${project.build.directory}/endorsed</endorsed.dirs>
       </properties>
       <dependencies>
         <dependency>
@@ -580,6 +595,10 @@
           <type>pom</type>
           <version>${jboss.version}</version>
           <exclusions>
+            <exclusion>
+              <groupId>org.jboss.javaee</groupId>
+              <artifactId>jboss-ejb-api</artifactId>
+            </exclusion>
             <!-- Exclusion for not depending on the container integration -->
             <exclusion>
               <groupId>org.jboss.jbossas</groupId>
@@ -694,6 +713,9 @@
 
                 <!-- # [AS7-1322] Implemented on AS 7.0.1 or greater only -->
                 <exclude>org/jboss/test/ws/publish/EndpointPublishTestCase*</exclude>
+
+                <!-- # [JBWS-3026] fixed since AS 7.1 -->
+                <exclude>org/jboss/test/ws/jaxws/jbws3026/**</exclude>
 
                 <!-- # [JBWS-3367][AS7-1605] fixed since AS 7.1 -->
                 <exclude>org/jboss/test/ws/jaxws/jbws3367/**</exclude>
