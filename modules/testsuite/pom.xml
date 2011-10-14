@@ -1016,6 +1016,9 @@
                  <!-- AS7 integration exclusions -->
                  <!-- ////////////////////////// -->
 
+                 <!-- # [JBWS-3232][JBMETA-339] waiting for metadata beta14 release -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws3140/**</exclude>
+
                  <!-- # [JBWS-3308] Extends AS7 RemoteDeployer for supporting deployment of different security domains -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
@@ -1032,9 +1035,6 @@
 
                  <!-- TODO: will we support wars bundled in jars on AS7? -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
-
-                 <!-- # [JBWS-3232] javax.naming.NameNotFoundException: Name 'service' not found in context 'env' -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws3140/**</exclude>
 
                  <!-- TODO: tests using org.jboss.ejb3.client.ClientLauncher -->
                  <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
@@ -1157,7 +1157,7 @@
                  <exclude>org/jboss/test/ws/jaxrpc/xop/rpclit/XOPHandlerTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/xop/rpclit/XOPTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/AddressingReplyToTestCase*</exclude>
-                 
+
                  <!-- # webservices-description in jboss-web.xml / jboss.xml -->
                  <exclude>org/jboss/test/ws/jaxrpc/samples/jsr109pojo/**</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/jsr109ejb/**</exclude>
@@ -1170,15 +1170,15 @@
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/signup/AccountSignupTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1124/JBWS1124TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsdlpublish/WsdlPublishTestCase*</exclude>
-                 
+
                  <!-- # unpackaged EAR deployment failure -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase*</exclude>
-                 
+
                  <!-- # javaType [javax.xml.transform.Source] is not assignable from attachment content: java.lang.String -->
                  <exclude>org/jboss/test/ws/jaxrpc/samples/swa/AttachmentSAAJTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/swa/AttachmentProxyTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/swa/AttachmentDIITestCase*</exclude>
-                 
+
               </excludes>
             </configuration>
           </plugin>
