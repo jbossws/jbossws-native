@@ -1016,9 +1016,6 @@
                  <!-- AS7 integration exclusions -->
                  <!-- ////////////////////////// -->
 
-                 <!-- # [JBWS-3232][JBMETA-339] waiting for metadata beta14 release -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws3140/**</exclude>
-
                  <!-- # [JBWS-3308] Extends AS7 RemoteDeployer for supporting deployment of different security domains -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
