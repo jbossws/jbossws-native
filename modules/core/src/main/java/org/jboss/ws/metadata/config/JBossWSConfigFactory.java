@@ -72,9 +72,8 @@ public class JBossWSConfigFactory
    private JBossWSConfigFactory(ClassLoader loader)
    {
       //use a delegate classloader: first try lookup using the provided classloader,
-      //otherwise use server integration classloader which has the default configuration
-      final ClassLoader cl = ClassLoaderProvider.getDefaultProvider().getServerIntegrationClassLoader();
-      this.loader = new DelegateClassLoader(cl, loader);
+      //otherwise use the native core module classloader (the default confs are there)
+      this.loader = new DelegateClassLoader(JBossWSConfigFactory.class.getClassLoader(), loader);
    }
 
    /** Create a new instance of the factory
