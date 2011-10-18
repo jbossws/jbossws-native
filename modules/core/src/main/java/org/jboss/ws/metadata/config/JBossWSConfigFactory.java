@@ -99,7 +99,7 @@ public class JBossWSConfigFactory
          Unmarshaller unmarshaller = UnmarshallerFactory.newInstance().newUnmarshaller();
          unmarshaller.setValidation(true);
          unmarshaller.setSchemaValidation(true);
-         unmarshaller.setEntityResolver(new JBossWSEntityResolver());
+         unmarshaller.setEntityResolver(new JBossWSEntityResolver(loader));
 
          String nsURI = getNamespaceURI(configURL);
          is = configURL.openStream();
