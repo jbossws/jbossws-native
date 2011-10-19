@@ -23,11 +23,13 @@ package org.jboss.test.ws.jaxrpc.samples.holder;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URL;
 import java.util.GregorianCalendar;
 
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
+import javax.xml.rpc.ServiceFactory;
 import javax.xml.rpc.holders.BigDecimalHolder;
 import javax.xml.rpc.holders.BigIntegerHolder;
 import javax.xml.rpc.holders.BooleanHolder;
@@ -62,6 +64,9 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class HolderTestCase extends JBossWSTest
 {
+   private static final String TARGET_ENDPOINT_URL = "http://" + getServerHost() + ":8080/jaxrpc-samples-holder";
+   private static final String TARGET_NAMESPACE = "http://org.jboss.ws/samples/holder";
+   
    private static HolderTestService port;
 
    public static Test suite()
@@ -75,10 +80,14 @@ public class HolderTestCase extends JBossWSTest
 
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
-         port = (HolderTestService)service.getPort(HolderTestService.class);
+         port = getService(HolderTestService.class, "TestService", "HolderTestServicePort");
       }
+   }
+   
+   protected <T> T getService(final Class<T> clazz, final String serviceName, final String portName) throws Exception {
+      ServiceFactory serviceFactory = ServiceFactory.newInstance();
+      Service service = serviceFactory.createService(new URL(TARGET_ENDPOINT_URL + "?wsdl"), new QName(TARGET_NAMESPACE, serviceName));
+      return (T) service.getPort(new QName(TARGET_NAMESPACE, portName), clazz);
    }
 
    public void testEchoBigDecimal() throws Exception

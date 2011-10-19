@@ -21,14 +21,18 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.handler;
 
+import java.net.URL;
+
 import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.Service;
+import javax.xml.rpc.ServiceFactory;
 import javax.xml.rpc.holders.StringHolder;
 
 import junit.framework.Test;
 
+import org.jboss.test.ws.jaxrpc.samples.handler.HeaderTestService;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.StubExt;
 import org.jboss.wsf.test.JBossWSTest;
@@ -43,6 +47,7 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 public class HeaderClientTestCase extends JBossWSTest
 {
    public final String TARGET_ENDPOINT_ADDRESS = "http://" + getServerHost() + ":8080/jaxrpc-samples-handler";
+   private static final String TARGET_NAMESPACE = "http://org.jboss.ws/samples/handler";
 
    private static HeaderTestService port;
 
@@ -57,10 +62,14 @@ public class HeaderClientTestCase extends JBossWSTest
 
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
-         port = (HeaderTestService)service.getPort(HeaderTestService.class);
+         port = getService(HeaderTestService.class, "TestService", "HeaderTestServicePort");
       }
+   }
+   
+   protected <T> T getService(final Class<T> clazz, final String serviceName, final String portName) throws Exception {
+      ServiceFactory serviceFactory = ServiceFactory.newInstance();
+      Service service = serviceFactory.createService(new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl"), new QName(TARGET_NAMESPACE, serviceName));
+      return (T) service.getPort(new QName(TARGET_NAMESPACE, portName), clazz);
    }
 
    public void testBoundInHeader() throws Exception

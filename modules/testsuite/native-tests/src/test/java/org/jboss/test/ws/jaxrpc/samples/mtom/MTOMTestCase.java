@@ -24,16 +24,18 @@ package org.jboss.test.ws.jaxrpc.samples.mtom;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 
 import javax.activation.DataHandler;
 import javax.naming.InitialContext;
+import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
+import javax.xml.rpc.ServiceFactory;
 import javax.xml.rpc.Stub;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.Test;
 
-import org.jboss.ws.core.StubExt;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -46,6 +48,9 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class MTOMTestCase extends JBossWSTest
 {
+   private static final String TARGET_NAMESPACE = "http://org.jboss.ws/samples/mtom";
+   private static final String TARGET_ENDPOINT_URL = "http://" + getServerHost() + ":8080/jaxrpc-samples-mtom";
+   
    private static EmployeeRecords port;
 
    /** Deploy the test ear */
@@ -60,10 +65,14 @@ public class MTOMTestCase extends JBossWSTest
 
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/XOPTestService");
-         port = (EmployeeRecords)service.getPort(EmployeeRecords.class);
+         port = getService(EmployeeRecords.class, "EmployeeService", "EmployeeRecordsPort");
       }
+   }
+   
+   protected <T> T getService(final Class<T> clazz, final String serviceName, final String portName) throws Exception {
+      ServiceFactory serviceFactory = ServiceFactory.newInstance();
+      Service service = serviceFactory.createService(new URL(TARGET_ENDPOINT_URL + "?wsdl"), new QName(TARGET_NAMESPACE, serviceName));
+      return (T) service.getPort(new QName(TARGET_NAMESPACE, portName), clazz);
    }
 
    public void testUpdate() throws Exception
@@ -92,7 +101,7 @@ public class MTOMTestCase extends JBossWSTest
 
       StreamSource xmlStream = (StreamSource)employee.getLegacyData().getContent();
       String content = new BufferedReader(new InputStreamReader(xmlStream.getInputStream())).readLine();
-      assertEquals("<Payroll><Data/></Payroll>", content);
+      assertTrue(content.contains("<Payroll><Data/></Payroll>"));
    }
 
    private DataHandler getLegacyData()
@@ -102,6 +111,6 @@ public class MTOMTestCase extends JBossWSTest
 
    private void setMTOMEnabled(Boolean b)
    {
-      ((Stub)port)._setProperty(StubExt.PROPERTY_MTOM_ENABLED, b);
+      ((Stub)port)._setProperty("org.jboss.ws.mtom.enabled", b);
    }
 }

@@ -1044,7 +1044,7 @@
                  <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude>
 
-                 <!-- # appclient & jaxrpc client issues -->
+                 <!-- # Remote JNDI lookup & jaxrpc client issues -->
                  <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkDocEJBTestCase*</exclude>
                  <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkDocJSETestCase*</exclude>
                  <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkRpcEJBTestCase*</exclude>
@@ -1067,7 +1067,6 @@
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1190/JBWS1190TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1205/JBWS1205TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws124/JBWS124TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws128/JBWS128TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1303/JBWS1303TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1316/JBWS1316CallTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1427/JBWS1427TestCase*</exclude>
@@ -1126,26 +1125,17 @@
                  <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallDocLitTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallRpcLitTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/overloaded/OverloadedTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/docstyle/bare/TrivialServiceDocBareTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/docstyle/wrapped/TrivialServiceDocWrappedTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/dynamichandler/DynamicHandlerTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/dynamichandler/StaticHandlerTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/exception/ExceptionTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/handler/HeaderClientTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/message/MessageTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/mtom/MTOMTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/oneway/OneWayTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/rpcstyle/TrivialServiceRpcTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/secureejb/SecureEJBTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/serviceref/ServiceRefClientTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/serviceref/ServiceRefEJBTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/serviceref/ServiceRefServletTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/wsaddr/replyto/AddressingReplyToTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleEncryptTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleSignTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/utf16/UTF16TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsdlpublish/WsdlPublishTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/RoundTripTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/UsernameTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/xop/doclit/XOPHandlerTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/xop/doclit/XOPTestCase*</exclude>

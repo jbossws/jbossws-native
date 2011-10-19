@@ -21,8 +21,12 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.rpcstyle;
 
+import java.net.URL;
+
 import javax.naming.InitialContext;
+import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
+import javax.xml.rpc.ServiceFactory;
 
 import junit.framework.Test;
 
@@ -37,6 +41,9 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class TrivialServiceRpcTestCase extends JBossWSTest
 {
+   private static final String TARGET_ENDPOINT_URL = "http://" + getServerHost() + ":8080/jaxrpc-samples-rpcstyle";
+   private static final String TARGET_NAMESPACE = "http://org.jboss.ws/samples/rpcstyle";
+   
    private static TrivialService port;
 
    public static Test suite()
@@ -50,10 +57,14 @@ public class TrivialServiceRpcTestCase extends JBossWSTest
 
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TrivialService");
-         port = (TrivialService)service.getPort(TrivialService.class);
+         port = getService(TrivialService.class, "SampleService", "TrivialServicePort");
       }
+   }
+   
+   protected <T> T getService(final Class<T> clazz, final String serviceName, final String portName) throws Exception {
+      ServiceFactory serviceFactory = ServiceFactory.newInstance();
+      Service service = serviceFactory.createService(new URL(TARGET_ENDPOINT_URL + "?wsdl"), new QName(TARGET_NAMESPACE, serviceName));
+      return (T) service.getPort(new QName(TARGET_NAMESPACE, portName), clazz);
    }
 
    public void testTrivialAccess() throws Exception

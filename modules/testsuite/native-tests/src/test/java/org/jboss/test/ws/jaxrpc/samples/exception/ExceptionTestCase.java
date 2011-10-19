@@ -22,6 +22,7 @@
 package org.jboss.test.ws.jaxrpc.samples.exception;
 
 import java.io.ByteArrayInputStream;
+import java.net.URL;
 import java.rmi.RemoteException;
 
 import javax.naming.InitialContext;
@@ -55,6 +56,7 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 public class ExceptionTestCase extends JBossWSTest
 {
    private static final String TARGET_NAMESPACE = "http://org.jboss.ws/samples/exception";
+   private static final String TARGET_ENDPOINT_URL = "http://" + getServerHost() + ":8080/jaxrpc-samples-exception";
 
    public static Test suite() throws Exception
    {
@@ -63,10 +65,9 @@ public class ExceptionTestCase extends JBossWSTest
 
    private ExceptionServiceInterface getPort() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      ExceptionService service = (ExceptionService)iniCtx.lookup("java:comp/env/service/ExceptionService");
-      ExceptionServiceInterface port = service.getPort();
-      return port;
+      ServiceFactory serviceFactory = ServiceFactory.newInstance();
+      Service service = serviceFactory.createService(new URL(TARGET_ENDPOINT_URL + "?wsdl"), new QName(TARGET_NAMESPACE, "ExceptionService"));
+      return (ExceptionServiceInterface)service.getPort(new QName(TARGET_NAMESPACE, "ExceptionServiceInterfacePort"), ExceptionServiceInterface.class);
    }
 
    /** Test creation of a SOAPFault */
