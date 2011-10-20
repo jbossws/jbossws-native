@@ -998,9 +998,6 @@
                  <!-- # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored-->
                  <exclude>org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*</exclude>
 
-                 <!-- # [JBAS-8363] Virtual host issue in JBossWeb -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws981/JBWS981TestCase.*</exclude>
-
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
