@@ -181,6 +181,9 @@
       webxml="${tests.output.dir}/test-resources/interop/nov2007/wsse/encrypt/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/interop/nov2007/wsse/**/*.class"/>
+        <exclude name="org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestService.class"/>
+        <exclude name="org/jboss/test/ws/interop/nov2007/wsse/Encrypt3DESTestService.class"/>
+        <exclude name="org/jboss/test/ws/interop/nov2007/wsse/*TestCase.class"/>
         <include name="org/jboss/test/ws/interop/*.class"/>
       </classes>
       
@@ -213,6 +216,9 @@
       webxml="${tests.output.dir}/test-resources/interop/nov2007/wsse/encrypt3DES/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/interop/nov2007/wsse/**/*.class"/>
+        <exclude name="org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestService.class"/>
+        <exclude name="org/jboss/test/ws/interop/nov2007/wsse/EncryptTestService.class"/>
+        <exclude name="org/jboss/test/ws/interop/nov2007/wsse/*TestCase.class"/>
         <include name="org/jboss/test/ws/interop/*.class"/>
       </classes>
       
@@ -245,6 +251,9 @@
       webxml="${tests.output.dir}/test-resources/interop/nov2007/wsse/usernameTokenHTTPS/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/interop/nov2007/wsse/**/*.class"/>
+        <exclude name="org/jboss/test/ws/interop/nov2007/wsse/Encrypt3DESTestService.class"/>
+        <exclude name="org/jboss/test/ws/interop/nov2007/wsse/EncryptTestService.class"/>
+        <exclude name="org/jboss/test/ws/interop/nov2007/wsse/*TestCase.class"/>
         <include name="org/jboss/test/ws/interop/*.class"/>
       </classes>
       <webinf dir="${tests.output.dir}/test-resources/interop/nov2007/wsse/usernameTokenHTTPS/WEB-INF">
