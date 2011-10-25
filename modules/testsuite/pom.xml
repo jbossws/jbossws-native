@@ -569,6 +569,9 @@
 
                 <!-- # [JBWS-3367][AS7-1605] fixed since AS 7.1 -->
                 <exclude>org/jboss/test/ws/jaxws/jbws3367/**</exclude>
+
+                <!-- # [JBWS-3276] fixed since AS 7.1 -->
+                <exclude>org/jboss/test/ws/jaxws/jbws3276/**</exclude>
               </excludes>
             </configuration>
           </plugin>
@@ -719,6 +722,9 @@
 
                 <!-- # [JBWS-3367][AS7-1605] fixed since AS 7.1 -->
                 <exclude>org/jboss/test/ws/jaxws/jbws3367/**</exclude>
+
+                <!-- # [JBWS-3276] fixed since AS 7.1 -->
+                <exclude>org/jboss/test/ws/jaxws/jbws3276/**</exclude>
               </excludes>
             </configuration>
           </plugin>
@@ -838,6 +844,9 @@
 
                  <!-- [JBWS-3367][AS7-1605] fixed since AS 7.1 -->
                  <exclude>org/jboss/test/ws/jaxws/jbws3367/**</exclude>
+
+                 <!-- [JBWS-3276] fixed since AS 7.1 -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws3276/**</exclude>
 
                  <!-- TODO: Injections support for WS components -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2634/**</exclude>
@@ -1013,6 +1022,9 @@
                  <!-- ////////////////////////// -->
                  <!-- AS7 integration exclusions -->
                  <!-- ////////////////////////// -->
+
+                 <!-- waiting for AS7 upstream -->
+                 <exclude>org/jboss/test/ws/jaxws/jbws3276/**</exclude>
 
                  <!-- # [JBWS-3308] Extends AS7 RemoteDeployer for supporting deployment of different security domains -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
