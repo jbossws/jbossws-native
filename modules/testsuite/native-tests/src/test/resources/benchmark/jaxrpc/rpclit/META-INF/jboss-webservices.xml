@@ -1,0 +1,19 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<webservices
+  xmlns="http://www.jboss.com/xml/ns/javaee"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  version="1.0"
+  xsi:schemaLocation="http://www.jboss.com/xml/ns/javaee http://www.jboss.org/j2ee/schema/jboss_webservices_1_0.xsd">
+
+  <webservice-description>
+    <webservice-description-name>BenchmarkDocLitEJBWS</webservice-description-name>
+    <port-component>
+      <port-component-name>BenchmarkRpcLitEJBWS</port-component-name>
+      <port-component-uri>/jaxrpc-benchmark-rpc-ejb/*</port-component-uri>
+      <service-impl-bean>
+        <ejb-link>BenchmarkRpcLit</ejb-link>
+      </service-impl-bean>
+    </port-component>
+  </webservice-description>
+
+</webservices>
