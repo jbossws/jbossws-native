@@ -394,13 +394,13 @@
       </copy>
       <!-- module.xml files -->
       <installModules targetDir="@{targetdir}">
-        <fileset dir="@{thirdpartydir}/modules">
+        <fileset dir="@{thirdpartydir}/modules/@{jbossid}">
           <include name="**/module.xml"/>
           <exclude name="**/jboss/as/webservices/**/module.xml"/>
         </fileset>
       </installModules>
       <copy toDir="@{targetdir}">
-        <fileset dir="@{thirdpartydir}/modules">
+        <fileset dir="@{thirdpartydir}/modules/@{jbossid}">
           <include name="**/jboss/as/webservices/**/module.xml"/>
         </fileset>
       </copy>
