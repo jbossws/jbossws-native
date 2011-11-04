@@ -92,7 +92,7 @@ public class SOAPHeaderImpl extends SOAPElementImpl implements SOAPHeader
       if (name == null)
          throw new SOAPException(BundleUtils.getMessage(bundle, "INVALID_SOAPHEADERELEMENT_NAME",  name));
 
-      return addHeaderElement(((NameImpl)name).toQName());
+      return addHeaderElement(new NameImpl(name.getLocalName(), name.getPrefix(), name.getURI()).toQName());
    }
 
    public SOAPHeaderElement addHeaderElement(QName qname) throws SOAPException
