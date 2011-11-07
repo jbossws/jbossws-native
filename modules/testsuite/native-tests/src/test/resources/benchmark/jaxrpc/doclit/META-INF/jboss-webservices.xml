@@ -5,15 +5,10 @@
   version="1.0"
   xsi:schemaLocation="http://www.jboss.com/xml/ns/javaee http://www.jboss.org/j2ee/schema/jboss_webservices_1_0.xsd">
 
-  <webservice-description>
-    <webservice-description-name>BenchmarkDocLitEJBWS</webservice-description-name>
-    <port-component>
-      <port-component-name>BenchmarkDocLitEJBWS</port-component-name>
-      <port-component-uri>/jaxrpc-benchmark-doc-ejb/*</port-component-uri>
-      <service-impl-bean>
-        <ejb-link>BenchmarkDocLit</ejb-link>
-      </service-impl-bean>
-    </port-component>
-  </webservice-description>
+  <port-component>
+    <ejb-name>BenchmarkDocLit</ejb-name>
+    <port-component-name>BenchmarkDocLitEJBWS</port-component-name>
+    <port-component-uri>/jaxrpc-benchmark-doc-ejb/*</port-component-uri>
+  </port-component>
 
 </webservices>

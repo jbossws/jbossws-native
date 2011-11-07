@@ -7,16 +7,15 @@
 
   <context-root>/jaxrpc-samples-jsr109ejb-rpc</context-root>
 
+  <port-component>
+    <ejb-name>TestService</ejb-name>
+    <port-component-name>TestServicePort</port-component-name>
+    <port-component-uri>/*</port-component-uri>
+  </port-component>
+
   <webservice-description>
     <webservice-description-name>TestService</webservice-description-name>
     <wsdl-publish-location>file:@wsdl.publish.location@/jsr109ejb</wsdl-publish-location>
-    <port-component>
-      <port-component-name>TestServicePort</port-component-name>
-      <port-component-uri>/*</port-component-uri>
-      <service-impl-bean>
-        <ejb-link>TestService</ejb-link>
-      </service-impl-bean>
-    </port-component>
   </webservice-description>
 
 </webservices>

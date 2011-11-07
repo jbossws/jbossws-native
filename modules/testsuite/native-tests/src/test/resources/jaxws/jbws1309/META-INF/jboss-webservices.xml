@@ -8,15 +8,10 @@
   <context-root>/jaxws-jbws1309</context-root>
   <config-name>Standard WSSecurity Endpoint</config-name>
 
-  <webservice-description>
-    <webservice-description-name>jbws1309-ws-description</webservice-description-name>
-    <port-component>
-      <port-component-name>TestPortComponent</port-component-name>
-      <port-component-uri>/*</port-component-uri>
-      <service-impl-bean>
-        <ejb-link>HelloBean</ejb-link>
-      </service-impl-bean>
-    </port-component>
-  </webservice-description>
+  <port-component>
+    <ejb-name>HelloBean</ejb-name>
+    <port-component-name>TestPortComponent</port-component-name>
+    <port-component-uri>/*</port-component-uri>
+  </port-component>
 
 </webservices>

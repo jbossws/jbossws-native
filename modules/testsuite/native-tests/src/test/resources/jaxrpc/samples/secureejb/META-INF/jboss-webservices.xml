@@ -7,34 +7,27 @@
 
   <context-root>/jaxrpc-samples-ejb</context-root>
 
-  <webservice-description>
-    <webservice-description-name>OrganizationServiceEJB</webservice-description-name>
-    <port-component>
-      <port-component-name>RoleSecured</port-component-name>
-      <port-component-uri>/RoleSecured</port-component-uri>
-      <auth-method>BASIC</auth-method>
-      <transport-guarantee>NONE</transport-guarantee>
-      <service-impl-bean>
-        <ejb-link>RoleSecuredSLSB</ejb-link>
-      </service-impl-bean>
-    </port-component>
-    <port-component>
-      <port-component-name>BasicSecured</port-component-name>
-      <port-component-uri>/BasicSecured</port-component-uri>
-      <auth-method>BASIC</auth-method>
-      <transport-guarantee>NONE</transport-guarantee>
-      <service-impl-bean>
-        <ejb-link>BasicSecuredSLSB</ejb-link>
-      </service-impl-bean>
-    </port-component>
-    <port-component>
-      <port-component-name>ConfidentialSecured</port-component-name>
-      <port-component-uri>/ConfidentialSecured</port-component-uri>
-      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-      <service-impl-bean>
-        <ejb-link>ConfidentialSLSB</ejb-link>
-      </service-impl-bean>
-    </port-component>
-  </webservice-description>
+  <port-component>
+    <ejb-name>RoleSecuredSLSB</ejb-name>
+    <port-component-name>RoleSecured</port-component-name>
+    <port-component-uri>/RoleSecured</port-component-uri>
+    <auth-method>BASIC</auth-method>
+    <transport-guarantee>NONE</transport-guarantee>
+  </port-component>
+
+  <port-component>
+    <ejb-name>BasicSecuredSLSB</ejb-name>
+    <port-component-name>BasicSecured</port-component-name>
+    <port-component-uri>/BasicSecured</port-component-uri>
+    <auth-method>BASIC</auth-method>
+    <transport-guarantee>NONE</transport-guarantee>
+  </port-component>
+
+  <port-component>
+    <ejb-name>ConfidentialSLSB</ejb-name>
+    <port-component-name>ConfidentialSecured</port-component-name>
+    <port-component-uri>/ConfidentialSecured</port-component-uri>
+    <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+  </port-component>
 
 </webservices>

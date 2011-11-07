@@ -8,15 +8,10 @@
   <!-- contains both <context-root> and <port-component-uri> --> 
   <context-root>/Explicit/Both</context-root>
 
-  <webservice-description>
-    <webservice-description-name>HelloServiceBoth</webservice-description-name>
-    <port-component>
-      <port-component-name>HelloBoth</port-component-name>
-      <port-component-uri>/Explicit/Path</port-component-uri>
-      <service-impl-bean>
-        <ejb-link>HelloBoth</ejb-link>
-      </service-impl-bean>
-    </port-component>
-  </webservice-description>
+  <port-component>
+    <ejb-name>HelloBoth</ejb-name>
+    <port-component-name>HelloBoth</port-component-name>
+    <port-component-uri>/Explicit/Path</port-component-uri>
+  </port-component>
 
 </webservices>

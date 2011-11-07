@@ -6,37 +6,30 @@
   version="1.0"
   xsi:schemaLocation="http://www.jboss.com/xml/ns/javaee http://www.jboss.org/j2ee/schema/jboss_webservices_1_0.xsd">
 
-  <webservice-description>
-    <webservice-description-name>OrganizationServiceEJB</webservice-description-name>
-    <port-component>
-      <port-component-name>RoleSecured</port-component-name>
-      <port-component-uri>/jaxrpc-jbws723/RoleSecured</port-component-uri>
-      <auth-method>BASIC</auth-method>
-      <transport-guarantee>NONE</transport-guarantee>
-      <!-- default secure-wsdl-access (false for jaxrpc) -->
-      <service-impl-bean>
-        <ejb-link>JBWS723RoleSecuredSLSB</ejb-link>
-      </service-impl-bean>
-    </port-component>
-    <port-component>
-      <port-component-name>BasicSecured</port-component-name>
-      <port-component-uri>/jaxrpc-jbws723/BasicSecured</port-component-uri>
-      <auth-method>BASIC</auth-method>
-      <transport-guarantee>NONE</transport-guarantee>
-      <secure-wsdl-access>true</secure-wsdl-access>
-      <service-impl-bean>
-        <ejb-link>JBWS723BasicSecuredSLSB</ejb-link>
-      </service-impl-bean>
-    </port-component>
-    <port-component>
-      <port-component-name>ConfidentialSecured</port-component-name>
-      <port-component-uri>/jaxrpc-jbws723/ConfidentialSecured</port-component-uri>
-      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-      <secure-wsdl-access>false</secure-wsdl-access>
-      <service-impl-bean>
-        <ejb-link>JBWS723ConfidentialSLSB</ejb-link>
-      </service-impl-bean>
-    </port-component>
-  </webservice-description>
+  <port-component>
+    <ejb-name>JBWS723RoleSecuredSLSB</ejb-name>
+    <port-component-name>RoleSecured</port-component-name>
+    <port-component-uri>/jaxrpc-jbws723/RoleSecured</port-component-uri>
+    <auth-method>BASIC</auth-method>
+    <transport-guarantee>NONE</transport-guarantee>
+    <!-- default secure-wsdl-access (false for jaxrpc) -->
+  </port-component>
+
+  <port-component>
+    <ejb-name>JBWS723BasicSecuredSLSB</ejb-name>
+    <port-component-name>BasicSecured</port-component-name>
+    <port-component-uri>/jaxrpc-jbws723/BasicSecured</port-component-uri>
+    <auth-method>BASIC</auth-method>
+    <transport-guarantee>NONE</transport-guarantee>
+    <secure-wsdl-access>true</secure-wsdl-access>
+  </port-component>
+
+  <port-component>
+    <ejb-name>JBWS723ConfidentialSLSB</ejb-name>
+    <port-component-name>ConfidentialSecured</port-component-name>
+    <port-component-uri>/jaxrpc-jbws723/ConfidentialSecured</port-component-uri>
+    <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    <secure-wsdl-access>false</secure-wsdl-access>
+  </port-component>
 
 </webservices>
