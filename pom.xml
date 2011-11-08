@@ -58,7 +58,7 @@
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
     <commons.logging.version>1.1.1</commons.logging.version>
     <javassist.version>3.12.1.GA</javassist.version>
-    <jaxws.api.version>1.0.0.Final</jaxws.api.version>
+    <jaxws.api.version>2.0.0.Final</jaxws.api.version>
     <jaxrpc.api.version>1.0.0.Final</jaxrpc.api.version>
     <saaj.api.version>1.0.0.Final</saaj.api.version>
     <jsr181.api.version>1.0-MR1</jsr181.api.version>
