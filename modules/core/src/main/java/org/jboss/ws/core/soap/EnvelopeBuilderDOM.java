@@ -194,7 +194,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
       DOMUtils.copyAttributes(soapHeader, domHeader);
       
-      if (!soapHeader.getPrefix().equals(domHeader.getPrefix()))
+      if (!checkEquals(soapHeader.getPrefix(), domHeader.getPrefix()))
       {
          soapHeader.setPrefix(domHeader.getPrefix());
       }
@@ -235,7 +235,7 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
 
       DOMUtils.copyAttributes(soapBody, domBody);
 
-      if (!soapBody.getPrefix().equals(domBody.getPrefix()))
+      if (!checkEquals(soapBody.getPrefix(), domBody.getPrefix()))
       {
          soapBody.setPrefix(domBody.getPrefix());
       }
@@ -443,5 +443,17 @@ public class EnvelopeBuilderDOM implements EnvelopeBuilder
    {
       String nodeValue = child.getNodeValue();
       soapElement.addTextNode(nodeValue);
+   }
+   
+   private boolean checkEquals(final String lhs, final String rhs)
+   {
+      if (lhs == null)
+      {
+         return (rhs == null);
+      }
+      else
+      {
+         return (lhs.equals(rhs));
+      }
    }
 }
