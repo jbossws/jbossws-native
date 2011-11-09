@@ -1029,8 +1029,6 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
 
                  <!-- TODO: EJB3 DD driven deployments -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1309/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1841/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude>
 
@@ -1149,8 +1147,6 @@
                  <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/AddressingReplyToTestCase*</exclude>
 
                  <!-- # webservices-description in jboss-web.xml / jboss.xml -->
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/jsr109pojo/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/jsr109ejb/**</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/SignEncryptFaultTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/RpcTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/WebClientTestCase*</exclude>

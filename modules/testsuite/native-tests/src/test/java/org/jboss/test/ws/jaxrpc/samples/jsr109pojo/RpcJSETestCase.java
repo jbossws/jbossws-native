@@ -21,17 +21,14 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.jsr109pojo;
 
-import java.io.File;
 import java.net.URL;
 
-import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
-import javax.xml.rpc.Stub;
+import javax.xml.rpc.ServiceFactory;
 
 import junit.framework.Test;
 
-import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -43,6 +40,8 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class RpcJSETestCase extends JBossWSTest
 {
+   private static final String TARGET_NAMESPACE = "http://org.jboss.ws/samples/jsr109pojo";
+   private static final String TARGET_ENDPOINT_URL = "http://" + getServerHost() + ":8080/jaxrpc-samples-jsr109pojo-rpc";
    private static JaxRpcTestService port;
 
    public static Test suite()
@@ -56,10 +55,14 @@ public class RpcJSETestCase extends JBossWSTest
 
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestServiceJSE");
-         port = (JaxRpcTestService)service.getPort(JaxRpcTestService.class);
+         port = getService(JaxRpcTestService.class, "TestService", "JaxRpcTestServicePort");
       }
+   }
+
+   protected <T> T getService(final Class<T> clazz, final String serviceName, final String portName) throws Exception {
+      ServiceFactory serviceFactory = ServiceFactory.newInstance();
+      Service service = serviceFactory.createService(new URL(TARGET_ENDPOINT_URL + "?wsdl"), new QName(TARGET_NAMESPACE, serviceName));
+      return (T) service.getPort(new QName(TARGET_NAMESPACE, portName), clazz);
    }
 
    public void testEchoString() throws Exception

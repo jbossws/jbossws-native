@@ -21,8 +21,11 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.jsr109ejb;
 
-import javax.naming.InitialContext;
+import java.net.URL;
+
+import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
+import javax.xml.rpc.ServiceFactory;
 
 import junit.framework.Test;
 
@@ -37,6 +40,8 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class DocEJBTestCase extends JBossWSTest
 {
+   private static final String TARGET_NAMESPACE = "http://org.jboss.ws/samples/jsr109ejb";
+   private static final String TARGET_ENDPOINT_URL = "http://" + getServerHost() + ":8080/jaxrpc-samples-jsr109ejb-doc";
    private static JaxRpcTestService endpoint;
 
    public static Test suite()
@@ -50,10 +55,14 @@ public class DocEJBTestCase extends JBossWSTest
 
       if (endpoint == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestServiceEJB");
-         endpoint = (JaxRpcTestService)service.getPort(JaxRpcTestService.class);
+         endpoint = getService(JaxRpcTestService.class, "TestService", "JaxRpcTestServicePort");
       }
+   }
+
+   protected <T> T getService(final Class<T> clazz, final String serviceName, final String portName) throws Exception {
+      ServiceFactory serviceFactory = ServiceFactory.newInstance();
+      Service service = serviceFactory.createService(new URL(TARGET_ENDPOINT_URL + "?wsdl"), new QName(TARGET_NAMESPACE, serviceName));
+      return (T) service.getPort(new QName(TARGET_NAMESPACE, portName), clazz);
    }
 
    public void testEchoString() throws Exception
@@ -72,4 +81,5 @@ public class DocEJBTestCase extends JBossWSTest
       Object retObj = endpoint.echoSimpleUserType(hello, userType);
       assertEquals(userType, retObj);
    }
+
 }

@@ -21,8 +21,11 @@
  */
 package org.jboss.test.ws.jaxrpc.samples.jsr109ejb;
 
-import javax.naming.InitialContext;
+import java.net.URL;
+
+import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
+import javax.xml.rpc.ServiceFactory;
 
 import junit.framework.Test;
 
@@ -37,6 +40,8 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class RpcEJBTestCase extends JBossWSTest
 {
+   private static final String TARGET_NAMESPACE = "http://org.jboss.ws/samples/jsr109ejb";
+   private static final String TARGET_ENDPOINT_URL = "http://" + getServerHost() + ":8080/jaxrpc-samples-jsr109ejb-rpc";
    private static JaxRpcTestService port;
 
    public static Test suite()
@@ -50,10 +55,14 @@ public class RpcEJBTestCase extends JBossWSTest
 
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestServiceEJB");
-         port = (JaxRpcTestService)service.getPort(JaxRpcTestService.class);
+         port = getService(JaxRpcTestService.class, "TestService", "JaxRpcTestServicePort");
       }
+   }
+
+   protected <T> T getService(final Class<T> clazz, final String serviceName, final String portName) throws Exception {
+      ServiceFactory serviceFactory = ServiceFactory.newInstance();
+      Service service = serviceFactory.createService(new URL(TARGET_ENDPOINT_URL + "?wsdl"), new QName(TARGET_NAMESPACE, serviceName));
+      return (T) service.getPort(new QName(TARGET_NAMESPACE, portName), clazz);
    }
 
    public void testEchoString() throws Exception
