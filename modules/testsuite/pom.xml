@@ -1164,12 +1164,6 @@
                  <!-- # unpackaged EAR deployment failure -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase*</exclude>
 
-                 <!-- # [AS7-2550] javax.activation.api module needs access to jbossws-native data content handlers -->
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/mtom/MTOMTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/swa/AttachmentSAAJTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/swa/AttachmentProxyTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/swa/AttachmentDIITestCase*</exclude>
-
               </excludes>
             </configuration>
           </plugin>
