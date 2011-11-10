@@ -916,7 +916,7 @@
     <profile>
       <id>jboss710</id>
       <properties>
-        <jboss.version>7.1.0.Alpha2-SNAPSHOT</jboss.version>
+        <jboss.version>${jboss710.version}</jboss.version>
         <jbossws.integration.target>jboss710</jbossws.integration.target>
         <endorsed.dirs>${project.build.directory}/endorsed</endorsed.dirs>
       </properties>

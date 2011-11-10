@@ -52,7 +52,7 @@
     <jbossws.jboss600.version>4.0.0-SNAPSHOT</jbossws.jboss600.version>
     <jbossws.jboss610.version>4.0.0-SNAPSHOT</jbossws.jboss610.version>
     <jbossws.jboss700.version>4.0.0-SNAPSHOT</jbossws.jboss700.version>
-    <jboss700.version>7.0.0.Final</jboss700.version>
+    <jboss710.version>7.1.0.Alpha2-SNAPSHOT</jboss710.version>
     <ejb.api.version>1.0.1.Final</ejb.api.version>
     <ant.version>1.7.1</ant.version>
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
@@ -134,7 +134,7 @@
       <dependency>
         <groupId>org.jboss.as</groupId>
         <artifactId>jboss-as-webservices-tests-integration</artifactId>
-        <version>${jboss700.version}</version>
+        <version>${jboss710.version}</version>
       </dependency>
       <!-- provided apis -->
       <dependency>
