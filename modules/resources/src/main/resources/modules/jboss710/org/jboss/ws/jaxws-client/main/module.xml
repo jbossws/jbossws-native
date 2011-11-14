@@ -38,5 +38,6 @@
         <module name="org.jboss.ws.native.jbossws-native-factories" services="import"/>
         <module name="org.jboss.ws.native.jbossws-native-core" services="import"/>
         <module name="org.jboss.logging" />
+        <module name="javax.wsdl4j.api" />
     </dependencies>
 </module>
