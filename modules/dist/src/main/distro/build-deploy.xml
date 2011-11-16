@@ -141,7 +141,7 @@
 
   <target name="undeploy-jboss700" depends="target-jboss700,init" description="Remove jbossws from jboss700">
     <fail message="Not available: ${jboss700.available.file}" unless="jboss700.available"/>
-    <macro-undeploy-jbossws-modules targetdir="${jboss700.home}" defaultmodulesconf="${jbossws.default.modules.conf}"/>
+    <macro-undeploy-jbossws-modules targetdir="${jboss700.home}" defaultmodulesconf="${jbossws.default.modules.conf}" modifyjbossintegration="true"/>
   </target>
 
    <!-- ================================================================== -->
@@ -170,7 +170,7 @@
 
    <target name="undeploy-jboss701" depends="target-jboss701,init" description="Remove jbossws from jboss701">
      <fail message="Not available: ${jboss701.available.file}" unless="jboss701.available"/>
-     <macro-undeploy-jbossws-modules targetdir="${jboss701.home}" defaultmodulesconf="${jbossws.default.modules.conf}"/>
+     <macro-undeploy-jbossws-modules targetdir="${jboss701.home}" defaultmodulesconf="${jbossws.default.modules.conf}" modifyjbossintegration="true"/>
    </target>
 
    <!-- ================================================================== -->
@@ -199,7 +199,7 @@
 
    <target name="undeploy-jboss702" depends="target-jboss702,init" description="Remove jbossws from jboss702">
      <fail message="Not available: ${jboss702.available.file}" unless="jboss702.available"/>
-     <macro-undeploy-jbossws-modules targetdir="${jboss702.home}" defaultmodulesconf="${jbossws.default.modules.conf}"/>
+     <macro-undeploy-jbossws-modules targetdir="${jboss702.home}" defaultmodulesconf="${jbossws.default.modules.conf}" modifyjbossintegration="true"/>
    </target>
 
    <!-- ================================================================== -->
@@ -250,7 +250,7 @@
 
    <target name="undeploy-jboss710" depends="target-jboss710,init" description="Remove jbossws from jboss710">
      <fail message="Not available: ${jboss710.available.file}" unless="jboss710.available"/>
-     <macro-undeploy-jbossws-modules targetdir="${jboss710.home}" defaultmodulesconf="${jbossws.default.modules.conf}"/>
+     <macro-undeploy-jbossws-modules targetdir="${jboss710.home}" defaultmodulesconf="${jbossws.default.modules.conf}"  modifyjbossintegration="false"/>
    </target>
 
   <!-- ================================================================== -->
