@@ -48,6 +48,126 @@ The JBossWS Team
 
 Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+------------------------
+jbossws-native-4.0.0.CR1
+------------------------
+
+Feature Request
+
+    * [JBWS-1119] - Add support for fault signing and encryption
+    * [JBWS-2235] - Support for multiple schemas validation
+    * [JBWS-3115] - Clean dependencies on jbossws-spi
+    * [JBWS-3182] - Allow for centralized ws-security configuration from jaas security domain
+    * [JBWS-3265] - Isolate deployment classloader from ws server integration
+    * [JBWS-3282] - Extend jbossws jaxws endpoint configuration (@EndpointConfig) to jbossws-cxf stack
+    * [JBWS-3286] - Add jaxws-endpoint-configuration to AS7 domain
+    * [JBWS-3296] - Provide abstraction for picketbox/jboss-security AuthenticationManager and AuthorizationManager
+    * [JBWS-3343] - Support for both EJB3 and POJO WS endpoints in war archive
+    * [JBWS-3276] - Implement support for POJO endpoints with no web.xml in archive
+
+Enhancement
+
+    * [JBWS-3318] - InvocationHandlerEJB3 cannot rely on EJB3 security impl. details
+
+Bug
+
+    * [JBWS-3170] - SAAJ Where an Element is added to the SOAPBody this should be converted to a SOAPElement
+    * [JBWS-3175] - After calling StubExt.setConfigName a call to StubExt.getConfigName still returns original name
+    * [JBWS-3190] - CommonSOAPFaultException: org.xml.sax.SAXParseException: Invalid encoding name "UTF8" - Messages rejected
+    * [JBWS-3192] - content-type header is not properly set for FastInfoset response messages
+    * [JBWS-3194] - jbossws-entities.properties contains incorrect URI for policy xsd
+    * [JBWS-3198] - EPR's address is NOT used  for invocations on the endpoint when the dispatchImpl is created with EPR
+    * [JBWS-3212] - Incomplete CONFIDENTIAL transport-guarantee detection for POJO endpoint.
+    * [JBWS-3250] - Swap file is deleted before response is completely handled 
+    * [JBWS-3251] - org.w3c.dom.DOMException when create dispatch with EPR 
+    * [JBWS-3270] - AS7 org.jboss.as.webservices:main module should not have any stack specific dependencies
+    * [JBWS-3277] - Unexpected bytes are serialized in MTOM attachment when the mime type is text/xml
+    * [JBWS-3199] - AbstractServerConfig.toIPv6URLFormat throws java.net.UnknownHostException
+    * [JBWS-3306] - No XPathFactory implementation found by a JAXWS client on AS7
+    * [JBWS-3321] - Enhance ModelDeploymentAspect to generate compatible PathElements
+    * [JBWS-3322] - Ensure proper creation of WebMD for EJBs present in web archive.
+    * [JBWS-3332] - wsdl-port modification in subsystem webservices throws error and prevent AS 7 from stat. wsdl-secure-port does not break the startup
+    * [JBWS-3336] - Errata files not properly created by hudson jobs
+    * [JBWS-3337] - Fix ThreadLocalAwareWebServiceContext singleton de/serialization
+    * [JBWS-3338] - Distinguish between @Addressing(enabled=false) and no @Addressing annotation also for port component refs
+    * [JBWS-3355] - Launch of *.sh scripts from path with space does not work
+    * [JBWS-3360] - Fix WS ref deserialization process - consider TCCL when instantiating classes.
+    * [JBWS-3205] - java.lang.StackOverflowError on binary distro due to org.jboss.wsf.common.logging.JDKLogManager
+    * [JBWS-3356] - Fix PostConstruct & PreDestroy implementation for JAXWS endpoints & handlers
+    * [JBWS-3357] - Implement support for lookup mechanism for JAXWS endpoints & handlers
+    * [JBWS-3367] - EJB3 endpoints in war archive should follow context root override rules
+    * [JBWS-3368] - jbossws-cxf-4.0.0.Beta6 : jaxws-benchmark-datatypes-pojo.war deployment on AS7 fails
+    * [JBWS-3371] - Implement better SEI -> EJB View translation algorithm
+    * [JBWS-3380] - NPE when dealing with default namespace on SOAP Envelope
+    * [JBWS-3384] - Missing dependency in module "org.jboss.ws.jaxws-client"
+
+Task
+
+    * [JBWS-3080] - Update build for supporting Maven 3
+    * [JBWS-3183] - Reduce Logging Level for MessageContextJAXWS when WSDL URL fails conversion to URI
+    * [JBWS-3206] - Modify deployment scripts for supporting AS 7
+    * [JBWS-3207] - Remote deployment support for testsuite against AS 7
+    * [JBWS-3208] - Add AS7 jobs to Hudson
+    * [JBWS-3210] - Configure testsuite against JBoss AS7
+    * [JBWS-3223] - Runtime ws client classloader setup on AS7
+    * [JBWS-3224] - Review the jbossws-spi ServiceLoader to allow for passing a classloader in
+    * [JBWS-3238] - Rewrite jaxws tools tests to run in fork mode
+    * [JBWS-3266] - Update stax-api dependency
+    * [JBWS-3273] - Move ANT & command line tools abstraction from jbossws-common.jar to jbossws-common-tools.jar
+    * [JBWS-3285] - Remove ws-reliable messaging implementation from native
+    * [JBWS-3169] - Remove spi dependency on JBossXB
+    * [JBWS-3217] - JBossWS SPI - NoClassDefFoundError: org/jboss/logging/Logger
+    * [JBWS-3220] - Test failures after update to maven3
+    * [JBWS-3221] - Enable JMX tests
+    * [JBWS-3222] - Resuscitate JBossWS command line tools on AS7
+    * [JBWS-3226] - AS7 jboss-service.xml parsing problem
+    * [JBWS-3239] - Fix SPI TCCL issue for servlet deployments trying to do Endpoint.publish()
+    * [JBWS-3241] - NPE in ServerHandler.handleInbound()
+    * [JBWS-3242] - Servlet base test throws IllegalArgumentException: Resource META-INF/jbossws-entities.properties not found
+    * [JBWS-3243] - Apache WSSecurity relies on TCCL when lookuping its providers
+    * [JBWS-3245] - AS7 RemoteDeployer have to always undeploy deployed archives
+    * [JBWS-3274] - Restore jaxbintros functionalities on AS7
+    * [JBWS-3283] - Provide a stax based parser of jaxws endpoint config descriptors
+    * [JBWS-3289] - Refactor packages to be in sync. with new abstractions
+    * [JBWS-2709] - Review JBossWS public api and provide javadoc
+    * [JBWS-3105] - Review and fix JBossWS maven dependencies
+    * [JBWS-3215] - Review the way testsuite is run using Maven
+    * [JBWS-3271] - Allow both Native & CXF stacks to use their own SAAJ implementation on AS7
+    * [JBWS-3294] - Remove ws-eventing implementation from native
+    * [JBWS-3310] - Avoid deployment of useless client archives when running JBossWS testsuite
+    * [JBWS-3312] - Cleanup previously deprecated spi methods
+    * [JBWS-3316] - i18n logging message
+    * [JBWS-3323] - Get rid of WebServiceDeclaration & WebServiceDeployment SPI abstractions
+    * [JBWS-3326] - Restore project generator against AS7
+    * [JBWS-3328] - Restore @WebServiceRef functionalities on AS7
+    * [JBWS-3330] - Restore RecordProcessor functionalities on AS7
+    * [JBWS-3334] - Rewrite DD driven injection tests.
+    * [JBWS-3348] - Get rid of org.jboss.ws.backward_compatible_context_creator property
+    * [JBWS-3366] - Initial restore of JAX-RPC functionalities on AS 7
+    * [JBWS-3219] - Unexpected element 'port-qname' encountered
+    * [JBWS-3240] - Rewrite tests relying on $JBOSS_HOME/server/default/tmp/jbossws folder existence
+    * [JBWS-3246] - Resuscitate JSON
+    * [JBWS-3255] - Unable to lookup AuthenticationManager
+    * [JBWS-3256] - Failed to load users/passwords/role files
+    * [JBWS-3257] - No class available with name 'org.jboss.security.plugins.JaasSecurityDomain'
+    * [JBWS-3346] - Add EndpointType
+    * [JBWS-3359] - Enable deploy ejb webservice in a war file in native stack 
+    * [JBWS-3363] - Provide SPI hooks to obtain instances of handlers & endpoints from underlying stacks
+    * [JBWS-2338] - Review JBossWS SPI abstractions and interfaces
+    * [JBWS-2436] - Look for eventual optimizations when scanning classes
+    * [JBWS-3120] - Resuscitate Virtual host feature on AS 7 series
+    * [JBWS-3216] - Investigate & fix test failures against AS7
+    * [JBWS-3358] - Restore @EJB & @Resource injection on JAXWS components on AS7
+    * [JBWS-3369] - Fix AS7 jaxrpc classloading issues
+    * [JBWS-3375] - Restore JAXRPC EJB integration on AS7
+    * [JBWS-3381] - Support latest AS 7.0.x target container
+    * [JBWS-3382] - Add AS7 RemoteDeployer to jbossws container integration
+    * [JBWS-3225] - Resuscitate JBossWS console
+    * [JBWS-3232] - javax.naming.NameNotFoundException: Name 'service' not found in context 'env'
+    * [JBWS-3364] - Refactor injections on JAXWS components from common to ASIL
+    * [JBWS-3376] - Introduce jboss-webservices.xml DD
+    * [JBWS-3385] - Enable Remote EJB JNDI support in our test suite
+
 -----------------------
 jbossws-native-3.4.1.GA
 -----------------------
