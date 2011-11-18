@@ -44,6 +44,7 @@ import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaXmlTypeMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.PackageMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.VariableMapping;
+import org.jboss.wsf.spi.classloading.ClassLoaderProvider;
 import org.jboss.xb.binding.metadata.ClassMetaData;
 import org.jboss.xb.binding.metadata.PackageMetaData;
 import org.jboss.xb.binding.metadata.PropertyMetaData;
@@ -86,7 +87,7 @@ public class SchemaBindingBuilder
     */
    public SchemaBinding buildSchemaBinding(XSModel model, JavaWsdlMapping wsdlMapping)
    {
-      JBossEntityResolver resolver = new JBossWSEntityResolver();
+      JBossEntityResolver resolver = new JBossWSEntityResolver(ClassLoaderProvider.getDefaultProvider().getServerJAXRPCIntegrationClassLoader());
       SchemaBinding schemaBinding = XsdBinder.bind(model, new DefaultSchemaResolver(resolver));
 
       schemaBinding.setIgnoreLowLine(false);
