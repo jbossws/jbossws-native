@@ -1374,25 +1374,23 @@
                  <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
                  <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
 
-                 <!-- # JMX disabled in AS 7.1: https://github.com/jbossas/jboss-as/commit/aa50c9a8509644f7c060ffe4a2d16ce564157e3c -->
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1115/JBWS1115TestCase</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/addressrewrite/AddressRewriteTestCase</exclude>
-                 <exclude>org/jboss/test/ws/management/recording/MemoryBufferRecorderTestCase</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1190/JBWS1190TestCase</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2150/JBWS2150TestCase</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1178/JBWS1178TestCase</exclude>
-
                  <!-- ////////////////////////// -->
                  <!-- AS7 integration exclusions -->
                  <!-- ////////////////////////// -->
+
+                 <!-- # [JBWS-3388] Rewrite JMX based tests -->
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1115/JBWS1115TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/addressrewrite/AddressRewriteTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/management/recording/MemoryBufferRecorderTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/management/recording/CustomRecordProcessorTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1190/JBWS1190TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2150/JBWS2150TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1178/JBWS1178TestCase*</exclude>
 
                  <!-- # [JBWS-3308] Extends AS7 RemoteDeployer for supporting deployment of different security domains -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
-
-                 <!-- TODO: JMX client to AS7 server -->
-                 <exclude>org/jboss/test/ws/management/recording/CustomRecordProcessorTestCase*</exclude>
 
                  <!-- TODO: tests using org.jboss.ejb3.client.ClientLauncher -->
                  <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
