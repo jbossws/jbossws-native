@@ -1374,6 +1374,14 @@
                  <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
                  <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
 
+                 <!-- # JMX disabled in AS 7.1: https://github.com/jbossas/jboss-as/commit/aa50c9a8509644f7c060ffe4a2d16ce564157e3c -->
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1115/JBWS1115TestCase</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/addressrewrite/AddressRewriteTestCase</exclude>
+                 <exclude>org/jboss/test/ws/management/recording/MemoryBufferRecorderTestCase</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1190/JBWS1190TestCase</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws2150/JBWS2150TestCase</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1178/JBWS1178TestCase</exclude>
+
                  <!-- ////////////////////////// -->
                  <!-- AS7 integration exclusions -->
                  <!-- ////////////////////////// -->
