@@ -40,7 +40,6 @@ public class PortComponentResolver implements EndpointResolver
    private static final Logger log = Logger.getLogger(PortComponentResolver.class);
 
    private String pcLink;
-   private Endpoint result;
 
    public PortComponentResolver(String pcref)
    {
