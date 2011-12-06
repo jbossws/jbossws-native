@@ -208,53 +208,45 @@ public class ServiceEndpointInvoker
 
          if (handlersPass)
          {
-            msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
-            try
+            // Check if protocol handlers modified the payload
+            if (msgContext.isModified())
             {
-               // Check if protocol handlers modified the payload
-               if (msgContext.isModified())
+               log.debug("Handler modified payload, unbind message again");
+               reqMessage = msgContext.getMessageAbstraction();
+               sepInv = binding.unbindRequestMessage(opMetaData, reqMessage);
+            }
+            //JBWS-2969:check if the RPC/Lit input paramter is null
+            if (opMetaData.getEndpointMetaData().getType() != EndpointMetaData.Type.JAXRPC
+                  && opMetaData.isRPCLiteral() && sepInv.getRequestParamNames() != null)
+            {  
+
+               for (QName qname : sepInv.getRequestParamNames())
                {
-                  log.debug("Handler modified payload, unbind message again");
-                  reqMessage = msgContext.getMessageAbstraction();
-                  sepInv = binding.unbindRequestMessage(opMetaData, reqMessage);
-               }
-               //JBWS-2969:check if the RPC/Lit input paramter is null
-               if (opMetaData.getEndpointMetaData().getType() != EndpointMetaData.Type.JAXRPC
-                     && opMetaData.isRPCLiteral() && sepInv.getRequestParamNames() != null)
-               {  
-                  
-                  for (QName qname : sepInv.getRequestParamNames())
+                  ParameterMetaData paramMetaData = opMetaData.getParameter(qname);
+                  if ((paramMetaData.getMode().equals(ParameterMode.IN) || paramMetaData.getMode().equals(ParameterMode.INOUT)) && sepInv.getRequestParamValue(qname) == null)
                   {
-                     ParameterMetaData paramMetaData = opMetaData.getParameter(qname);
-                     if ((paramMetaData.getMode().equals(ParameterMode.IN) || paramMetaData.getMode().equals(ParameterMode.INOUT)) && sepInv.getRequestParamValue(qname) == null)
-                     {
-                        throw new WebServiceException(BundleUtils.getMessage(bundle, "RPC/LITERAL_PAPAMETERS_IS_NULL",  opMetaData.getQName()));
-                     }
+                     throw new WebServiceException(BundleUtils.getMessage(bundle, "RPC/LITERAL_PAPAMETERS_IS_NULL",  opMetaData.getQName()));
                   }
                }
-
-               // Invoke an instance of the SEI implementation bean 
-               Invocation inv = setupInvocation(endpoint, sepInv, invContext);
-               InvocationHandler invHandler = endpoint.getInvocationHandler();
-               
-               try
-               {
-                  invHandler.invoke(endpoint, inv);
-               }
-               catch (InvocationTargetException th)
-               {
-                  //Unwrap the throwable raised by the service endpoint implementation
-                  Throwable targetEx = th.getTargetException();
-                  throw (targetEx instanceof Exception ? (Exception)targetEx : new UndeclaredThrowableException(targetEx));
-               }
-
-               // Handler processing might have replaced the endpoint invocation
-               sepInv = inv.getInvocationContext().getAttachment(EndpointInvocation.class);
             }
-            finally
+
+            // Invoke an instance of the SEI implementation bean 
+            Invocation inv = setupInvocation(endpoint, sepInv, invContext);
+            InvocationHandler invHandler = endpoint.getInvocationHandler();
+
+            try
             {
-               msgContext.remove(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
+               invHandler.invoke(endpoint, inv);
             }
+            catch (InvocationTargetException th)
+            {
+               //Unwrap the throwable raised by the service endpoint implementation
+               Throwable targetEx = th.getTargetException();
+               throw (targetEx instanceof Exception ? (Exception)targetEx : new UndeclaredThrowableException(targetEx));
+            }
+
+            // Handler processing might have replaced the endpoint invocation
+            sepInv = inv.getInvocationContext().getAttachment(EndpointInvocation.class);
 
             // Reverse the message direction
             msgContext = processPivotInternal(msgContext, direction);

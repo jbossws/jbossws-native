@@ -274,8 +274,6 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
          log.debug("Enter: handleRequest");
 
          SOAPMessageContextJAXRPC jaxrpcContext = (SOAPMessageContextJAXRPC)msgContext;
-         jaxrpcContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
-
          // Replace handlers that did not survive the previous call
          replaceDirtyHandlers();
 
@@ -318,8 +316,6 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
             // we start at this index in the response chain
             if (doNext == false)
                falseIndex = (handlerIndex - 1);
-
-            jaxrpcContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
             log.debug("Exit: handleRequest with status: " + doNext);
          }
       }
@@ -356,7 +352,6 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
          log.debug("Enter: handleResponse");
 
          SOAPMessageContextJAXRPC jaxrpcContext = (SOAPMessageContextJAXRPC)msgContext;
-         jaxrpcContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
 
          int handlerIndex = handlers.size() - 1;
          if (falseIndex != -1)
@@ -401,7 +396,6 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
             if (doNext == false)
                falseIndex = (handlerIndex - 1);
 
-            jaxrpcContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
             log.debug("Exit: handleResponse with status: " + doNext);
          }
       }
@@ -435,34 +429,20 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
       if (handlers.size() > 0)
       {
-         log.debug("Enter: handleFault");
+         int handlerIndex = handlers.size() - 1;
+         if (falseIndex != -1)
+            handlerIndex = falseIndex;
 
-         SOAPMessageContextJAXRPC jaxrpcContext = (SOAPMessageContextJAXRPC)msgContext;
-         jaxrpcContext.setProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
-
-         try
+         Handler currHandler = null;
+         for (; doNext && handlerIndex >= 0; handlerIndex--)
          {
-            int handlerIndex = handlers.size() - 1;
-            if (falseIndex != -1)
-               handlerIndex = falseIndex;
-
-            Handler currHandler = null;
-            for (; doNext && handlerIndex >= 0; handlerIndex--)
+            HandlerEntry handlerEntry = (HandlerEntry)handlers.get(handlerIndex);
+            if (type == HandlerType.ALL || type == handlerEntry.getType())
             {
-               HandlerEntry handlerEntry = (HandlerEntry)handlers.get(handlerIndex);
-               if (type == HandlerType.ALL || type == handlerEntry.getType())
-               {
-                  currHandler = handlerEntry.getHandler();
-               
-                  log.debug("Handle fault: " + currHandler);
-                  doNext = currHandler.handleFault(msgContext);
-               }
+               currHandler = handlerEntry.getHandler();
+               log.debug("Handle fault: " + currHandler);
+               doNext = currHandler.handleFault(msgContext);
             }
-         }
-         finally
-         {
-            jaxrpcContext.removeProperty(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
-            log.debug("Exit: handleFault with status: " + doNext);
          }
       }
 

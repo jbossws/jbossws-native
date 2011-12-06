@@ -326,14 +326,12 @@ public class HandlerChainExecutor
 
       try
       {
-         context.put(MessageContextJAXWS.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
          context.setCurrentScope(Scope.HANDLER);
          return currHandler.handleMessage(msgContext);
       }
       finally
       {
          context.setCurrentScope(Scope.APPLICATION);
-         context.remove(MessageContextJAXWS.ALLOW_EXPAND_TO_DOM);
       }
    }
 
@@ -351,14 +349,12 @@ public class HandlerChainExecutor
 
       try
       {
-         context.put(MessageContextJAXWS.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
          context.setCurrentScope(Scope.HANDLER);
          return currHandler.handleFault(msgContext);
       }
       finally
       {
          context.setCurrentScope(Scope.APPLICATION);
-         context.remove(MessageContextJAXWS.ALLOW_EXPAND_TO_DOM);
       }
    }
 

@@ -621,13 +621,6 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
          // See SOAPFactoryImpl for details.
 
          log.debug("MTOM disabled: Force inline XOP data");
-
-         // TODO: This property must be reset, otherwise you negate its purpose
-         CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-         msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
-         if (msgContext instanceof MessageContextJAXWS)
-            ((MessageContextJAXWS)msgContext).setScope(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Scope.APPLICATION);
-
          expandToDOM();
       }
       else if (domContentState && XOPContext.isMTOMEnabled())

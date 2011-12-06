@@ -880,24 +880,15 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
             if (SOAP_ARRAY_NAME.equals(elName))
             {
-               CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-               msgContext.put(CommonMessageContext.ALLOW_EXPAND_TO_DOM, Boolean.TRUE);
-               try
+               QName compXMLName = paramMetaData.getXmlName();
+               Element compElement = DOMUtils.getFirstChildElement(aux);
+               // NPE when the soap encoded array size is 0 on the return path
+               // http://jira.jboss.org/jira/browse/JBWS-1285
+               if (compElement == null || compElement.getNodeName().equals(compXMLName.getLocalPart()))
                {
-                  QName compXMLName = paramMetaData.getXmlName();
-                  Element compElement = DOMUtils.getFirstChildElement(aux);
-                  // NPE when the soap encoded array size is 0 on the return path
-                  // http://jira.jboss.org/jira/browse/JBWS-1285
-                  if (compElement == null || compElement.getNodeName().equals(compXMLName.getLocalPart()))
-                  {
-                     soapContentElement = aux;
-                     soapContentElement.setParamMetaData(paramMetaData);
-                     break;
-                  }
-               }
-               finally
-               {
-                  msgContext.remove(CommonMessageContext.ALLOW_EXPAND_TO_DOM);
+                  soapContentElement = aux;
+                  soapContentElement.setParamMetaData(paramMetaData);
+                  break;
                }
             }
          }
