@@ -1289,7 +1289,7 @@
         <dependency>
           <groupId>org.jboss</groupId>
           <artifactId>jboss-ejb-client</artifactId>
-          <version>1.0.0.Beta7</version>
+          <version>1.0.0.Beta8</version>
           <exclusions>
             <exclusion>
               <groupId>org.jboss.remoting3</groupId>
