@@ -15,7 +15,6 @@
 
   <properties>
     <jboss.jbosssx.version>2.0.2.SP3</jboss.jbosssx.version>
-    <jboss.microcontainer.version>2.0.2.GA</jboss.microcontainer.version>
   </properties>
 
   <!-- Dependencies -->
@@ -200,34 +199,6 @@
                   <type>jar</type>
                   <overWrite>true</overWrite>
                   <outputDirectory>${project.build.directory}/endorsed</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-          <execution>
-            <id>copy-dependencies</id>
-            <phase>prepare-package</phase>
-            <goals>
-              <goal>unpack</goal>
-            </goals>
-            <configuration>
-              <artifactItems>org.jboss.ws:jbossws-jboss*:zip:resources</artifactItems>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.jboss.ws</groupId>
-                  <artifactId>jbossws-jboss600</artifactId>
-                  <version>${jbossws.jboss600.version}</version>
-                  <classifier>resources</classifier>
-                  <type>zip</type>
-                  <outputDirectory>${project.build.directory}/resources/jbossws-jboss600</outputDirectory>
-                </artifactItem>
-                <artifactItem>
-                  <groupId>org.jboss.ws</groupId>
-                  <artifactId>jbossws-jboss610</artifactId>
-                  <version>${jbossws.jboss610.version}</version>
-                  <classifier>resources</classifier>
-                  <type>zip</type>
-                  <outputDirectory>${project.build.directory}/resources/jbossws-jboss610</outputDirectory>
                 </artifactItem>
               </artifactItems>
             </configuration>

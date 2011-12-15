@@ -45,12 +45,6 @@
   	<taskdef name="eclipseProjectGenerator" classname="org.jboss.ws.tools.ant.EclipseProjectTask" classpathref="jbws-ant.path"/>
   	<taskdef name="pathWriter" classname="org.jboss.ws.tools.ant.PathWriterTask" classpathref="jbws-ant.path"/>
   	
-    <condition property="jbossws.integration.jboss7" value="true">
-      <or>
-        <equals arg1="${jbossws.integration.jboss700}" arg2="true"/>
-        <equals arg1="${jbossws.integration.jboss710}" arg2="true"/>
-      </or>
-    </condition>
   </target>
 
   <target name="setup-new-project" depends="init-project-properties" description="Prompt for settings and setup configuration for a new user project">
@@ -84,7 +78,6 @@
         <entry key="project.name" value="${project.name.new}"/>
         <entry key="project.type" value="${project.type.new}"/>
         <entry key="project.jboss.home" value="${jboss.home}"/>
-        <entry key="project.jboss.conf" value="${jboss.server.instance}"/>
     </propertyfile>
     
     <echo message=""/>
@@ -121,10 +114,7 @@
     </fail>
   </target>
   
-  <target name="configure-project" depends="configure-project-6,configure-project-7">
-  </target>
-
-  <target name="configure-project-7" if="jbossws.integration.jboss7"> <!-- Variable defined above -->
+  <target name="configure-project">
     <mkdir dir="${project.home}/src/main/java"/>
     <mkdir dir="${project.home}/src/main/resources"/>
     <copy tofile="${project.home}/build.xml" file="${basedir}/build/user-project-build.xml">
@@ -145,33 +135,6 @@
                   <include name="*.jar"/>
                 </fileset>
   		<path refid="integration.target.javac.classpath" />
-	</path>
-  	<eclipseClasspathGenerator pathId="project.classpath" outputFile="${project.home}/.classpath" srcPath="src/main/java" srcOutput="bin/main" />
-  	<eclipseProjectGenerator projectName="${project.name}" outputFile="${project.home}/.project" />
-  	<pathWriter pathId="project.classpath" outputFile="${project.home}/libraries.xml" variables="project.jboss.home" />
-  </target>
-  
-  <target name="configure-project-6" if="jbossws.integration.jboss60">
-    <mkdir dir="${project.home}/src/main/java"/>
-    <mkdir dir="${project.home}/src/main/resources"/>
-    <copy tofile="${project.home}/build.xml" file="${basedir}/build/user-project-build.xml">
-      <filterset refid="project"/>
-    </copy>
-    <copy tofile="${project.home}/build.properties" file="${basedir}/user-project.properties"/>
-  	<path id="project.classpath">
-	<pathelement location="${jboss.client}/jaxws-api.jar"/>
-	<pathelement location="${jboss.client}/jsr181-api.jar"/>
-	<pathelement location="${jboss.client}/jaxb-api.jar"/>
-        <pathelement location="${jboss.client}/jbossws-api.jar"/>
-        <pathelement location="${jboss.client}/jbossws-common.jar"/>
-        <pathelement location="${jboss.client}/jbossws-spi.jar"/>
-        <pathelement location="${jboss.client}/jaxrpc-api.jar"/>
-        <pathelement location="${jboss.client}/saaj-api.jar"/>
-        <pathelement location="${jboss.client}/jbossws-native-factories.jar"/>
-        <pathelement location="${jboss.client}/jbossws-native-core.jar"/>
-        <pathelement location="${jboss.client}/jbossws-native-services.jar"/>
-        <pathelement location="${jboss.client}/jbossws-native-client.jar"/>
-        <path refid="integration.target.javac.classpath" />
 	</path>
   	<eclipseClasspathGenerator pathId="project.classpath" outputFile="${project.home}/.classpath" srcPath="src/main/java" srcOutput="bin/main" />
   	<eclipseProjectGenerator projectName="${project.name}" outputFile="${project.home}/.project" />

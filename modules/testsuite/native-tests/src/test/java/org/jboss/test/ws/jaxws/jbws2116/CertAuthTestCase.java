@@ -55,22 +55,14 @@ public class CertAuthTestCase extends JBossWSTest
    public static Test suite() throws Exception
    {
       JBossWSTestSetup testSetup;
-      if (!isTargetJBoss6())
-      {
-         testSetup = new JBossWSTestSetup(CertAuthTestCase.class, "jaxws-jbws2116.jar");
-         Map<String, String> authenticationOptions = new HashMap<String, String>();
-         authenticationOptions.put("rolesProperties",
-               getResourceFile("jaxws/jbws2116/META-INF/jbossws-roles.properties").getAbsolutePath());
-         authenticationOptions.put("KeyStoreURL", "jaxws/jbws2116/META-INF/keystore.jks");
-         authenticationOptions.put("KeyStorePass", "password");
-         authenticationOptions.put("unauthenticatedIdentity", "anonymous");
-         testSetup.addSecurityDomainRequirement("JBossWSCert", authenticationOptions);
-      }
-      else
-      {
-         testSetup = new JBossWSTestSetup(CertAuthTestCase.class,
-               "jaxws-jbws2116-config.sar jaxws-jbws2116.jar");
-      }
+      testSetup = new JBossWSTestSetup(CertAuthTestCase.class, "jaxws-jbws2116.jar");
+      Map<String, String> authenticationOptions = new HashMap<String, String>();
+      authenticationOptions.put("rolesProperties",
+            getResourceFile("jaxws/jbws2116/META-INF/jbossws-roles.properties").getAbsolutePath());
+      authenticationOptions.put("KeyStoreURL", "jaxws/jbws2116/META-INF/keystore.jks");
+      authenticationOptions.put("KeyStorePass", "password");
+      authenticationOptions.put("unauthenticatedIdentity", "anonymous");
+      testSetup.addSecurityDomainRequirement("JBossWSCert", authenticationOptions);
       return testSetup;
    }
    

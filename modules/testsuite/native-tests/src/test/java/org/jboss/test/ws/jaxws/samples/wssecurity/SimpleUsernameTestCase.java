@@ -47,7 +47,7 @@ public class SimpleUsernameTestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(SimpleUsernameTestCase.class, "jaxws-samples-wssecurity-username.war", !isTargetJBoss6());
+      return new JBossWSTestSetup(SimpleUsernameTestCase.class, "jaxws-samples-wssecurity-username.war", true);
    }
 
    @Override

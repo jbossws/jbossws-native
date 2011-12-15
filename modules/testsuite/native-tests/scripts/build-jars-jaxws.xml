@@ -266,14 +266,6 @@
 				<include name="jboss.xml" />
 			</metainf>
 		</jar>
-		<jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws1988-config.sar">
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws1988/META-INF">
-				<include name="jboss-service.xml" />
-				<include name="login-config.xml" />
-				<include name="jbossws-users.properties" />
-				<include name="jbossws-roles.properties" />
-			</metainf>
-		</jar>
 
 		<!-- jaxws-jbws1991 -->
 		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1991.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws1991/META-INF/MANIFEST.MF">
@@ -364,14 +356,6 @@
 			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2116/">
 				<include name="wsse10.truststore" />
 				<include name="bob-sign.jks" />
-			</metainf>
-		</jar>
-		<jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws2116-config.sar">
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2116/META-INF">
-				<include name="jboss-service.xml" />
-				<include name="login-config.xml" />
-				<include name="keystore.jks" />
-				<include name="jbossws-roles.properties" />
 			</metainf>
 		</jar>
 

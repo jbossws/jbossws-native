@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.jaxws.samples.wssecurity;
 
-import java.io.File;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.Map;
@@ -59,7 +58,7 @@ public class SimpleDispatchTestCase extends JBossWSTest
 
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(SimpleDispatchTestCase.class, "jaxws-samples-wssecurity-username.war jaxws-samples-wssecurity-encrypt.war", !isTargetJBoss6());
+      return new JBossWSTestSetup(SimpleDispatchTestCase.class, "jaxws-samples-wssecurity-username.war jaxws-samples-wssecurity-encrypt.war", true);
    }
 
    @Override
