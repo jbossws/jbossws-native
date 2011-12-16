@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import javax.naming.Context;
 import javax.xml.namespace.QName;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
@@ -47,12 +46,10 @@ import org.jboss.ws.common.injection.InjectionHelper;
 import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
-import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.Reference;
 import org.jboss.wsf.spi.invocation.EndpointAssociation;
-import org.jboss.wsf.spi.metadata.injection.InjectionsMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
@@ -140,7 +137,7 @@ public class HandlerResolverImpl implements HandlerResolver
 
       ClassLoader classLoader = serviceMetaData.getUnifiedMetaData().getClassLoader();
       for (HandlerMetaData handlerMetaData : serviceMetaData.getHandlerMetaData())
-         addHandler(classLoader, HandlerType.ENDPOINT, handlerMetaData, null);
+         addHandler(classLoader, HandlerType.ENDPOINT, handlerMetaData);
    }
 
    public void initHandlerChain(EndpointConfigMetaData epConfigMetaData, HandlerType type, boolean clearExistingHandlers)
@@ -154,12 +151,11 @@ public class HandlerResolverImpl implements HandlerResolver
          handlerMap.clear();
 
       ClassLoader classLoader = epConfigMetaData.getEndpointMetaData().getClassLoader();
-      InjectionsMetaData injectionsMD = getInjectionsMetaData(epConfigMetaData);
       for (HandlerMetaData handlerMetaData : epConfigMetaData.getHandlerMetaData(type))
-         addHandler(classLoader, type, handlerMetaData, injectionsMD);
+         addHandler(classLoader, type, handlerMetaData);
    }
 
-   private void addHandler(ClassLoader classLoader, HandlerType type, HandlerMetaData handlerMetaData, InjectionsMetaData injections)
+   private void addHandler(ClassLoader classLoader, HandlerType type, HandlerMetaData handlerMetaData)
    {
       HandlerMetaDataJAXWS jaxwsMetaData = (HandlerMetaDataJAXWS)handlerMetaData;
       String handlerName = jaxwsMetaData.getHandlerName();
@@ -169,7 +165,7 @@ public class HandlerResolverImpl implements HandlerResolver
       try
       {
          // Load the handler class using the deployments top level CL
-         Handler<?> handler = getInstance(classLoader, className, injections);
+         Handler<?> handler = getInstance(classLoader, className);
 
          if (handler instanceof GenericHandler)
             ((GenericHandler)handler).setHandlerName(handlerName);
@@ -189,7 +185,7 @@ public class HandlerResolverImpl implements HandlerResolver
       }
    }
 
-   private Handler<?> getInstance(final ClassLoader fallbackLoader, final String className, InjectionsMetaData injections) throws Exception
+   private Handler<?> getInstance(final ClassLoader fallbackLoader, final String className) throws Exception
    {
        final Endpoint ep = EndpointAssociation.getEndpoint();
        final Handler<?> handler;
@@ -199,8 +195,6 @@ public class HandlerResolverImpl implements HandlerResolver
            handler = (Handler<?>)handlerReference.getValue();
            if (!handlerReference.isInitialized())
            {
-              Context ctx = ep.getJNDIContext();
-              InjectionHelper.injectResources(handler, injections, ctx);
               InjectionHelper.callPostConstructMethod(handler);
               handlerReference.setInitialized();
            }
@@ -315,17 +309,4 @@ public class HandlerResolverImpl implements HandlerResolver
       }
    }
    
-   private InjectionsMetaData getInjectionsMetaData(EndpointConfigMetaData endpointConfigMD)
-   {
-      if (endpointConfigMD.getEndpointMetaData() instanceof ServerEndpointMetaData)
-      {
-         ServerEndpointMetaData endpointMD = ((ServerEndpointMetaData)endpointConfigMD.getEndpointMetaData()); 
-         return endpointMD.getEndpoint().getAttachment(InjectionsMetaData.class);
-      }
-      else
-      {
-         return null;
-      }
-   }
-
 }
