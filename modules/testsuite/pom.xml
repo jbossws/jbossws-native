@@ -561,6 +561,7 @@
 
                  <!-- [JBWS-3330] Restore RecordProcessor functionalities, solved in AS 7.0.1 or greater -->
                  <exclude>org/jboss/test/ws/management/recording/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1190/JBWS1190TestCase*</exclude>
 
                   <!--# [JBAS-9188] On AS7 We don't support nested EJB & WAR archives neither in .sar nor in .jar archives -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
@@ -738,6 +739,7 @@
 
                  <!-- [JBWS-3330] Restore RecordProcessor functionalities, solved in AS 7.0.1 or greater -->
                  <exclude>org/jboss/test/ws/management/recording/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1190/JBWS1190TestCase*</exclude>
 
                   <!--# [JBAS-9188] On AS7 We don't support nested EJB & WAR archives neither in .sar nor in .jar archives -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
@@ -913,6 +915,7 @@
 
                  <!-- [JBWS-3330] Restore RecordProcessor functionalities, solved in AS 7.0.1 or greater -->
                  <exclude>org/jboss/test/ws/management/recording/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/jbws1190/JBWS1190TestCase*</exclude>
 
                   <!--# [JBAS-9188] On AS7 We don't support nested EJB & WAR archives neither in .sar nor in .jar archives -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
