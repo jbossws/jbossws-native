@@ -48,6 +48,25 @@ The JBossWS Team
 
 Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+-----------------------
+jbossws-native-4.0.0.GA
+-----------------------
+
+Bug
+
+    * [JBWS-3387] - JAXRPC SchemaBindingBuilder can't rely on jaxws integration classloader (AS7)
+
+Task
+
+    * [JBWS-3281] - Create a migration guide to JBossWS 4.0 / AS 7 integration
+    * [JBWS-3373] - port component link servlet on AS7
+    * [JBWS-3393] - Remove support for AS6 as target container
+    * [JBWS-3401] - Support deployment of EJB3 endpoints bundled in war archives referencing WSDL that is importing XML schema(s)
+
+Errata
+
+    See: https://jira.jboss.org/browse/JBWS-3404
+
 ------------------------
 jbossws-native-4.0.0.CR1
 ------------------------
