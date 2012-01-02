@@ -69,7 +69,7 @@
     <jboss700.version>7.0.0.Final</jboss700.version>
     <jboss701.version>7.0.1.Final</jboss701.version>
     <jboss702.version>7.0.2.Final</jboss702.version>
-    <jboss710.version>7.1.0.CR1-SNAPSHOT</jboss710.version>
+    <jboss710.version>7.1.0.Final-SNAPSHOT</jboss710.version>
     <ejb.api.version>1.0.1.Final</ejb.api.version>
     <ant.version>1.7.1</ant.version>
     <codehaus.jettison.version>1.0-RC2</codehaus.jettison.version>
