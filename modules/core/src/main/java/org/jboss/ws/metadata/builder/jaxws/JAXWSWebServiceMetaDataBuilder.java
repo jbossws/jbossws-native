@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2012, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -35,10 +35,7 @@ import javax.jws.WebService;
 import javax.jws.soap.SOAPMessageHandlers;
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
-import javax.xml.ws.RespectBindingFeature;
 import javax.xml.ws.WebServiceProvider;
-import javax.xml.ws.soap.AddressingFeature;
-import javax.xml.ws.soap.MTOMFeature;
 
 import org.jboss.ws.WSException;
 import org.jboss.ws.annotation.Documentation;
@@ -49,7 +46,6 @@ import org.jboss.ws.extensions.policy.annotation.PolicyAttachment;
 import org.jboss.ws.extensions.policy.metadata.PolicyMetaDataBuilder;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
@@ -71,14 +67,6 @@ import org.jboss.ws.tools.wsdl.WSDLWriterResolver;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
-import org.jboss.wsf.spi.metadata.webservices.PortComponentMetaData;
-import org.jboss.wsf.spi.metadata.webservices.WebserviceDescriptionMetaData;
-import org.jboss.wsf.spi.metadata.webservices.WebservicesFactory;
-import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
 
 /**
  * An abstract annotation meta data builder.
@@ -86,6 +74,7 @@ import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
  * @author Thomas.Diesler@jboss.org
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
  * @author Heiko.Braun@jboss.org
+ * @author alessio.soldano@jboss.com
  *
  * @since 15-Oct-2005
  */
@@ -214,7 +203,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
             processHandlerChain(sepMetaData, seiClass);
          
          // process webservices.xml contributions
-         processWSDDContribution(sepMetaData);
+         processWSDDContribution(dep, sepMetaData);
          
          //setup web service feature contributions
          epFeatureProcessor.setupEndpointFeatures(sepMetaData);
@@ -321,88 +310,6 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          }
       }
       return wsdlEndpoint;
-   }
-
-   /**
-    * With JAX-WS the use of webservices.xml is optional since the annotations can be used
-    * to specify most of the information specified in this deployment descriptor file.
-    * The deployment descriptors are only used to override or augment the annotation member attributes.
-    * @param sepMetaData
-    */
-   private void processWSDDContribution(ServerEndpointMetaData sepMetaData)
-   {
-      WebservicesMetaData webservices = WebservicesFactory.loadFromVFSRoot(sepMetaData.getRootFile());
-      if (webservices != null)
-      {
-         for (WebserviceDescriptionMetaData wsDesc : webservices.getWebserviceDescriptions())
-         {
-            for (PortComponentMetaData portComp : wsDesc.getPortComponents())
-            {
-               // We match portComp's by SEI first and portQName second
-               // In the first case the portComp may override the portQName that derives from the annotation
-               String portCompSEI = portComp.getServiceEndpointInterface();
-               boolean doesMatch = portCompSEI != null ? portCompSEI.equals(sepMetaData.getServiceEndpointInterfaceName()) : false;
-               if (!doesMatch)
-               {
-                  doesMatch = portComp.getWsdlPort().equals(sepMetaData.getPortName());
-               }
-
-               if (doesMatch)
-               {
-
-                  log.debug("Processing 'webservices.xml' contributions on EndpointMetaData");
-
-                  // PortQName overrides
-                  if (portComp.getWsdlPort() != null)
-                  {
-                     if (log.isDebugEnabled())
-                        log.debug("Override EndpointMetaData portName " + sepMetaData.getPortName() + " with " + portComp.getWsdlPort());
-                     sepMetaData.setPortName(portComp.getWsdlPort());
-                  }
-
-                  // HandlerChain contributions
-                  UnifiedHandlerChainsMetaData chainWrapper = portComp.getHandlerChains();
-                  if (chainWrapper != null)
-                  {
-                     for (UnifiedHandlerChainMetaData handlerChain : chainWrapper.getHandlerChains())
-                     {
-                        for (UnifiedHandlerMetaData uhmd : handlerChain.getHandlers())
-                        {
-                           if (log.isDebugEnabled())
-                              log.debug("Contribute handler from webservices.xml: " + uhmd.getHandlerName());
-                           HandlerMetaDataJAXWS hmd = HandlerMetaDataJAXWS.newInstance(uhmd, HandlerType.ENDPOINT);
-                           sepMetaData.addHandler(hmd);
-                        }
-                     }
-                  }
-
-                  // MTOM settings
-                  if (portComp.isMtomEnabled())
-                  {
-                     log.debug("Enabling MTOM");
-                     MTOMFeature feature = new MTOMFeature(true, portComp.getMtomThreshold());
-                     sepMetaData.getFeatures().addFeature(feature);
-                  }
-                  
-                  if (portComp.isAddressingEnabled()) 
-                  {  log.debug("Enabling Addressing");
-                     AddressingFeature.Responses responses = getAddressFeatureResponses(portComp.getAddressingResponses());              
-                     AddressingFeature feature = new AddressingFeature(true, portComp.isAddressingRequired(), responses);
-                     sepMetaData.getFeatures().addFeature(feature);
-                  }
-                  
-                  if (portComp.isRespectBindingEnabled()) 
-                  {
-                     log.debug("Enabling RespectBinding Feature");
-                     RespectBindingFeature feature = new RespectBindingFeature(true);
-                     sepMetaData.getFeatures().addFeature(feature);
-                  }
-
-               }
-            }
-         }
-
-      }
    }
 
    private EndpointResult processWebService(Deployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass, String linkName) throws ClassNotFoundException, IOException

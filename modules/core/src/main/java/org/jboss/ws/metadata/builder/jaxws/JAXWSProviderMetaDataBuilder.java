@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2012, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -57,6 +57,7 @@ import org.jboss.wsf.spi.deployment.Endpoint;
  *
  * @author Thomas.Diesler@jboss.org
  * @author <a href="mailto:jason.greene@jboss.com">Jason T. Greene</a>
+ * @author alessio.soldano@jboss.com
  * @since 23-Jul-2005
  */
 public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
@@ -134,6 +135,9 @@ public class JAXWSProviderMetaDataBuilder extends JAXWSServerMetaDataBuilder
 
       // process handler chain
       processHandlerChain(sepMetaData, sepClass);
+      
+      //process webservices.xml contributions
+      processWSDDContribution(dep, sepMetaData);
 
       // process config
       processEndpointConfig(dep, sepMetaData, sepClass, linkName);
