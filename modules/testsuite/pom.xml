@@ -1221,9 +1221,6 @@
                  <!-- # unpackaged EAR deployment failure -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase*</exclude>
 
-                 <!-- # [AS7-3324] waiting for pull request  -->
-                 <exclude>org/jboss/test/ws/publish/EndpointPublishTestCase*</exclude>
-
               </excludes>
             </configuration>
           </plugin>
