@@ -113,13 +113,13 @@ public class OMFactoryJAXRPC implements ObjectModelFactory
 
       if ("pre-handler-chain".equals(localName))
       {
-         UnifiedHandlerChainMetaData preHandlerChain = new UnifiedHandlerChainMetaData(null);
+         UnifiedHandlerChainMetaData preHandlerChain = new UnifiedHandlerChainMetaData();
          commonConfig.setPreHandlerChain(preHandlerChain);
          return preHandlerChain;
       }
       if ("post-handler-chain".equals(localName))
       {
-         UnifiedHandlerChainMetaData postHandlerChain = new UnifiedHandlerChainMetaData(null);
+         UnifiedHandlerChainMetaData postHandlerChain = new UnifiedHandlerChainMetaData();
          commonConfig.setPostHandlerChain(postHandlerChain);
          return postHandlerChain;
       }
