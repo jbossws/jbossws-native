@@ -38,6 +38,7 @@ import org.jboss.ws.common.injection.PreDestroyHolder;
 import org.jboss.ws.core.server.netty.NettyCallbackHandler;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
+import org.jboss.wsf.spi.classloading.ClassLoaderProvider;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.invocation.EndpointAssociation;
 import org.jboss.wsf.spi.invocation.InvocationContext;
@@ -64,7 +65,7 @@ final class NettyCallbackHandlerImpl implements NettyCallbackHandler
 
    /** Endpoints registry. */
    private static final EndpointRegistry ENDPOINTS_REGISTRY = NettyCallbackHandlerImpl.SPI_PROVIDER.getSPI(
-         EndpointRegistryFactory.class).getEndpointRegistry();
+         EndpointRegistryFactory.class, ClassLoaderProvider.getDefaultProvider().getServerIntegrationClassLoader()).getEndpointRegistry();
 
    /** @PreDestroy registry. */
    private final List<PreDestroyHolder> preDestroyRegistry = new LinkedList<PreDestroyHolder>();
