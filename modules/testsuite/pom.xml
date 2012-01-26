@@ -561,7 +561,6 @@
 
                  <!-- [JBWS-3330] Restore RecordProcessor functionalities, solved in AS 7.0.1 or greater -->
                  <exclude>org/jboss/test/ws/management/recording/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1190/JBWS1190TestCase*</exclude>
 
                   <!--# [JBAS-9188] On AS7 We don't support nested EJB & WAR archives neither in .sar nor in .jar archives -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
@@ -737,10 +736,6 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws1841/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude>
 
-                 <!-- [JBWS-3330] Restore RecordProcessor functionalities, solved in AS 7.0.1 or greater -->
-                 <exclude>org/jboss/test/ws/management/recording/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1190/JBWS1190TestCase*</exclude>
-
                   <!--# [JBAS-9188] On AS7 We don't support nested EJB & WAR archives neither in .sar nor in .jar archives -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
 
@@ -913,10 +908,6 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws1841/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude>
 
-                 <!-- [JBWS-3330] Restore RecordProcessor functionalities, solved in AS 7.0.1 or greater -->
-                 <exclude>org/jboss/test/ws/management/recording/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1190/JBWS1190TestCase*</exclude>
-
                   <!--# [JBAS-9188] On AS7 We don't support nested EJB & WAR archives neither in .sar nor in .jar archives -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
 
@@ -1028,6 +1019,12 @@
           <artifactId>xalan</artifactId>
           <version>2.7.1.patch01-brew</version>
         </dependency>
+        <dependency>
+          <groupId>org.jboss.remoting3</groupId>
+          <artifactId>remoting-jmx</artifactId>
+          <version>1.0.0.Beta1</version>
+          <scope>test</scope>
+        </dependency>
       </dependencies>
       <build>
         <plugins>
@@ -1080,14 +1077,8 @@
                  <!-- AS7 integration exclusions -->
                  <!-- ////////////////////////// -->
 
-                 <!-- # [JBWS-3388] Rewrite JMX based tests -->
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1115/JBWS1115TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/addressrewrite/AddressRewriteTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/management/recording/MemoryBufferRecorderTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/management/recording/CustomRecordProcessorTestCase*</exclude>
+                 <!-- # [JBWS-3419] waiting for pull request -->
                  <exclude>org/jboss/test/ws/jaxws/jbws1190/JBWS1190TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2150/JBWS2150TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1178/JBWS1178TestCase*</exclude>
 
                  <!-- # [JBWS-3308] Extends AS7 RemoteDeployer for supporting deployment of different security domains -->
                  <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
