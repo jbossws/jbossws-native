@@ -519,10 +519,7 @@
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
-                 <!-- # [JBAS-9188] Implement support for nested EJBs & WARs in .sar archives -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1854/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/jmstransport/**</exclude>
 
                  <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
                  <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
@@ -561,9 +558,6 @@
 
                  <!-- [JBWS-3330] Restore RecordProcessor functionalities, solved in AS 7.0.1 or greater -->
                  <exclude>org/jboss/test/ws/management/recording/**</exclude>
-
-                  <!--# [JBAS-9188] On AS7 We don't support nested EJB & WAR archives neither in .sar nor in .jar archives -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
 
                  <!-- [AS7-1101][AS7-1125] waiting for metadata upgrade in AS7, solved in AS 7.0.1 or greater -->
                  <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
@@ -696,10 +690,7 @@
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
-                 <!-- # [JBAS-9188] Implement support for nested EJBs & WARs in .sar archives -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1854/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/jmstransport/**</exclude>
 
                  <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
                  <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
@@ -735,9 +726,6 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1841/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude>
-
-                  <!--# [JBAS-9188] On AS7 We don't support nested EJB & WAR archives neither in .sar nor in .jar archives -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
 
                  <!-- [AS7-1101][AS7-1125] waiting for metadata upgrade in AS7, solved in AS 7.0.1 or greater -->
                  <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
@@ -868,10 +856,7 @@
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
-                 <!-- # [JBAS-9188] Implement support for nested EJBs & WARs in .sar archives -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1854/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/jmstransport/**</exclude>
 
                  <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
                  <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
@@ -907,9 +892,6 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws1813/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1841/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws2241/**</exclude>
-
-                  <!--# [JBAS-9188] On AS7 We don't support nested EJB & WAR archives neither in .sar nor in .jar archives -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
 
                  <!-- [AS7-1101][AS7-1125] waiting for metadata upgrade in AS7, solved in AS 7.0.1 or greater -->
                  <exclude>org/jboss/test/ws/jaxws/samples/webservicerefsec/**</exclude>
@@ -1064,11 +1046,7 @@
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
-                 <!-- # [JBAS-9188] On AS7 we don't support nested EJB & WAR archives neither in .sar nor in .jar archives -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws1854/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/jmstransport/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws2630/**</exclude>
 
                  <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
                  <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
