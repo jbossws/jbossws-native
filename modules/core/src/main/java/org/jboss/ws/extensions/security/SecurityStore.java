@@ -51,6 +51,8 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
+import javax.security.auth.x500.X500Principal;
+
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.api.util.ServiceLoader;
@@ -479,6 +481,7 @@ public class SecurityStore
       return null;
    }
 
+   @SuppressWarnings("rawtypes")
    public X509Certificate getCertificateByIssuerSerial(String issuer, String serial) throws WSSecurityException
    {
       if (keyStore == null)
@@ -498,11 +501,12 @@ public class SecurityStore
                continue;
 
             X509Certificate x509 = (X509Certificate)cert;
-            if (issuer.equals(x509.getIssuerDN().toString()) && serial.equals(x509.getSerialNumber().toString()))
+            X500Principal principal = new X500Principal(issuer);
+            if (principal.equals(x509.getIssuerX500Principal()) && serial.equals(x509.getSerialNumber().toString()))
                return x509;
          }
       }
-      catch (KeyStoreException e)
+      catch (Exception e)
       {
          throw new WSSecurityException(BundleUtils.getMessage(bundle, "PROBLEMS_RETRIEVING_CERT",  e.getMessage()),  e);
       }
