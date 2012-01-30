@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
 import javax.xml.namespace.QName;
 
 import org.apache.xml.security.utils.XMLUtils;
+import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.extensions.security.Constants;
@@ -82,8 +83,10 @@ public class UsernameToken implements Token
       this.username = XMLUtils.getFullTextChildrenFromElement(child);
 
       child = Util.getNextSiblingElement(child);
-      if (child == null || ! Constants.WSSE_NS.equals(child.getNamespaceURI()) || ! "Password".equals(child.getLocalName()))
-         throw new WSSecurityException(BundleUtils.getMessage(bundle, "PASSWORD_CHILD_EXPECTED"));
+      if (child == null || ! Constants.WSSE_NS.equals(child.getNamespaceURI()) || ! "Password".equals(child.getLocalName())) {
+         Logger.getLogger(this.getClass()).debug(BundleUtils.getMessage(bundle, "PASSWORD_CHILD_EXPECTED"));
+         return;
+      }
 
       this.password = XMLUtils.getFullTextChildrenFromElement(child);
       String passwordType = child.getAttribute("Type");
