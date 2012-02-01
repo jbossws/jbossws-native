@@ -1023,7 +1023,7 @@
                   <testExcludes>
                     <!-- TODO: tests using org.jboss.ejb3.client.ClientLauncher -->
                     <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
-                    <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/**</exclude>
+                    <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefClientTestCase*</exclude>
                   </testExcludes>
                 </configuration>
                 <goals>
@@ -1062,7 +1062,7 @@
 
                  <!-- TODO: tests using org.jboss.ejb3.client.ClientLauncher -->
                  <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefClientTestCase*</exclude>
 
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
@@ -1073,7 +1073,6 @@
 
                  <!-- # TODO: remote JNDI support (non EJB objects) -->
                  <exclude>org/jboss/test/ws/jaxrpc/samples/secureejb/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/serviceref/ServiceRefEJBTestCase*</exclude>
 
                  <!-- # [JBWS-3234] JNDI over RMI not available on AS7 -->
                  <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/**</exclude>
