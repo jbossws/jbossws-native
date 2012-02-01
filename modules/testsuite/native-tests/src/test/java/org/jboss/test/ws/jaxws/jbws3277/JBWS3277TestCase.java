@@ -79,7 +79,8 @@ public class JBWS3277TestCase extends JBossWSTest
       ByteArrayOutputStream os = new ByteArrayOutputStream();
       Result result = new StreamResult(os);
       t.transform(source, result);
-      assertEquals(375, os.toByteArray().length);
+      String cleaned = new String(os.toByteArray()).replaceAll("[\\r\\n]", "");
+      assertEquals(363, cleaned.length());
    }
 
 }
