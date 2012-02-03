@@ -49,6 +49,38 @@ The JBossWS Team
 Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -----------------------
+jbossws-native-4.0.1.GA
+-----------------------
+
+Feature Request / Enhancement
+
+    * [JBWS-2251] - Enhance X509 certificate issuer comparison
+    * [JBWS-3408] - maven-jaxws-tools-plugin <target> option is undocumented
+    * [JBWS-3420] - Enhance deployment performance by simplifying connector conf retrieval
+    * [JBWS-3162] - Add javaee_web_services_metadata_handler_2_0.xsd to jbossws-entities.properties
+
+Bug
+
+    * [JBWS-3386] - Usernametoken support requires optional elements
+    * [JBWS-3414] - DeploymentAspectManagerImpl does not properly deal with deployment failures
+    * [JBWS-3415] - Provider endpoints are not processed for DD contribution
+    * [JBWS-3416] - MetadataBuilder does not re-use WebserviceMetadata parsed into AS integration layer
+    * [JBWS-3417] - JAXWSServerMetaDataBuilder::processWSDDContribution does not process WSDL location override
+    * [JBWS-3421] - EndpointRegistryDeploymentAspect can't properly deal with AS7 domain reloads
+    * [JBWS-3423] - JBWS3277TestCase.testMtomSawpFile fails on Windows
+
+Task
+
+    * [JBWS-3388] - Switch to remoting-jmx for tests using JMX to connect to the server
+    * [JBWS-3419] - Restore managed endpoint registry
+    * [JBWS-3422] - Review and enable passing serviceref/webserviceref tests
+    * [JBWS-3425] - Upgrade to JAXB 2.2.4
+
+Errata
+
+    See: https://jira.jboss.org/browse/JBWS-3428
+
+-----------------------
 jbossws-native-4.0.0.GA
 -----------------------
 
