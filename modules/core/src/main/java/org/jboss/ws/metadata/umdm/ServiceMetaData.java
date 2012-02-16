@@ -22,6 +22,7 @@
 package org.jboss.ws.metadata.umdm;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -60,7 +61,7 @@ import org.jboss.xb.binding.sunday.unmarshalling.SchemaBinding;
  * @author Thomas.Diesler@jboss.org
  * @since 12-May-2005
  */
-public class ServiceMetaData implements InitalizableMetaData
+public class ServiceMetaData implements InitalizableMetaData, Serializable
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(ServiceMetaData.class);
    // provide logging
