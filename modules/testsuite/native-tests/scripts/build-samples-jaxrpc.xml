@@ -504,7 +504,7 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-samples-serviceref-ejb-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-samples-serviceref-ejbclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/samples/serviceref/EJBClient.class"/>
         <include name="org/jboss/test/ws/jaxrpc/samples/serviceref/EJBRemote.class"/>
