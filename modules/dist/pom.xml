@@ -45,13 +45,6 @@
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-resources</artifactId>
       <version>${project.version}</version>
-      <classifier>jboss700</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jboss.ws.native</groupId>
-      <artifactId>jbossws-native-resources</artifactId>
-      <version>${project.version}</version>
       <classifier>jboss701</classifier>
     </dependency>
 
@@ -105,22 +98,6 @@
       <groupId>juddi</groupId>
       <artifactId>juddi</artifactId>
       <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss700</artifactId>
-      <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>javax.xml.bind</groupId>
-          <artifactId>jaxb-api</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>sun-jaxb</groupId>
-          <artifactId>jaxb-api</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
 
     <dependency>
@@ -208,11 +185,6 @@
                 <mkdir dir="${basedir}/target/exclude-file" />
                 <xslt style="${basedir}/src/main/distro/test-exclude.xsl"
                   in="../testsuite/pom.xml"
-                  out="${basedir}/target/exclude-file/test-excludes-jboss700.txt">
-                  <param name="targetName" expression="jboss700" />
-                </xslt>
-                <xslt style="${basedir}/src/main/distro/test-exclude.xsl"
-                  in="../testsuite/pom.xml"
                   out="${basedir}/target/exclude-file/test-excludes-jboss701.txt">
                   <param name="targetName" expression="jboss701" />
                 </xslt>
@@ -225,6 +197,11 @@
                   in="../testsuite/pom.xml" 
                   out="${basedir}/target/exclude-file/test-excludes-jboss710.txt">
                   <param name="targetName" expression="jboss710" />
+                </xslt> 
+                <xslt style="${basedir}/src/main/distro/test-exclude.xsl" 
+                  in="../testsuite/pom.xml" 
+                  out="${basedir}/target/exclude-file/test-excludes-jboss711.txt">
+                  <param name="targetName" expression="jboss711" />
                 </xslt> 
               </tasks>
             </configuration>
@@ -251,12 +228,6 @@
       </activation>
       <dependencies>
         <!-- Libraries required for running binary distro testsuite and not available on server-->
-        <dependency>
-          <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss700</artifactId>
-          <classifier>tests-integration</classifier>
-          <scope>provided</scope>
-        </dependency>
         <dependency>
           <groupId>org.jboss.ws</groupId>
           <artifactId>jbossws-jboss701</artifactId>
