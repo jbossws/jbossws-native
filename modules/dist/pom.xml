@@ -56,6 +56,13 @@
     </dependency>
 
     <dependency>
+      <groupId>org.jboss.ws.native</groupId>
+      <artifactId>jbossws-native-resources</artifactId>
+      <version>${project.version}</version>
+      <classifier>jboss710</classifier>
+    </dependency>
+
+    <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-common-tools</artifactId>
       <scope>provided</scope>
@@ -130,6 +137,12 @@
           <artifactId>jaxb-api</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.ws</groupId>
+      <artifactId>jbossws-jboss710</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <!--junit-->
@@ -237,6 +250,12 @@
         <dependency>
           <groupId>org.jboss.ws</groupId>
           <artifactId>jbossws-jboss702</artifactId>
+          <classifier>tests-integration</classifier>
+          <scope>provided</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.ws</groupId>
+          <artifactId>jbossws-jboss710</artifactId>
           <classifier>tests-integration</classifier>
           <scope>provided</scope>
         </dependency>
