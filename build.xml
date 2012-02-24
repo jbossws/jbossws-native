@@ -82,10 +82,10 @@
      <condition>
       <and>
        <not>
-         <isset property="jboss702.home"/>
+         <isset property="jboss701.home"/>
        </not>
        <not>
-         <isset property="jboss700.home"/>
+         <isset property="jboss702.home"/>
        </not>
        <not>
          <isset property="jboss710.home"/>
