@@ -1135,7 +1135,6 @@
                   <testExcludes>
                     <!-- TODO: tests using org.jboss.ejb3.client.ClientLauncher -->
                     <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
-                    <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefClientTestCase*</exclude>
                   </testExcludes>
                 </configuration>
                 <goals>
@@ -1174,17 +1173,9 @@
 
                  <!-- TODO: tests using org.jboss.ejb3.client.ClientLauncher -->
                  <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/samples/webserviceref/WebServiceRefClientTestCase*</exclude>
 
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
-
-                 <!-- # TODO: appclient -->
-                 <exclude>org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefClientTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/serviceref/ServiceRefClientTestCase*</exclude>
-
-                 <!-- # TODO: remote JNDI support (non EJB objects) -->
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/secureejb/**</exclude>
 
                  <!-- # [JBWS-3234] JNDI over RMI not available on AS7 -->
                  <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/**</exclude>
@@ -1201,7 +1192,6 @@
                  <exclude>org/jboss/test/ws/jaxrpc/enventry/EnvEntryEJBTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/enventry/EnvEntryJSETestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbas897/JBAS897TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1010/JBWS1010TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1011/JBWS1011TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1093/JBWS1093TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1107/JBWS1107TestCase*</exclude>

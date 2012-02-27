@@ -25,6 +25,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.ServiceException;
@@ -50,7 +51,7 @@ public class ServiceRefClientTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(ServiceRefClientTestCase.class, "jaxrpc-samples-serviceref.war, jaxrpc-samples-serviceref-client.jar");
+      return new JBossWSTestSetup(ServiceRefClientTestCase.class, "jaxrpc-samples-serviceref.war, jaxrpc-samples-serviceref-appclient.ear#jaxrpc-samples-serviceref-appclient.jar");
    }
 
    public void testWSDLAccess() throws MalformedURLException
@@ -96,9 +97,24 @@ public class ServiceRefClientTestCase extends JBossWSTest
 
    public void testApplicationClient() throws Exception
    {
-      String helloWorld = "Hello World!";
-      ApplicationClient.encCtx = getInitialContext();
-      ApplicationClient.main(new String[] { helloWorld });
-      assertEquals(helloWorld, ApplicationClient.retStr);
+      InitialContext ctx = null;
+      try
+      {
+         ctx = getAppclientInitialContext();
+         final TestEndpoint port1 = (TestEndpoint)((Service)ctx.lookup("java:service1")).getPort(TestEndpoint.class);
+         final TestEndpoint port2 = ((TestEndpointService)ctx.lookup("java:service2")).getTestEndpointPort();
+         final String msg = "Hello World!";
+
+         assertEquals(msg, port1.echo(msg));
+         assertEquals(msg, port2.echo(msg));
+      }
+      finally
+      {
+         if (ctx != null)
+         {
+            ctx.close();
+         }
+      }
    }
+
 }
