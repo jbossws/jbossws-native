@@ -8,7 +8,7 @@
   <display-name>JAXRPC simple tests</display-name>
 
   <service-ref>
-    <service-ref-name>service1</service-ref-name>
+    <service-ref-name>java:jboss/exported/service1</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>META-INF/wsdl/TestEndpoint.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>
@@ -18,7 +18,7 @@
   </service-ref>
 
   <service-ref>
-    <service-ref-name>service2</service-ref-name>
+    <service-ref-name>java:jboss/exported/service2</service-ref-name>
     <service-interface>org.jboss.test.ws.jaxrpc.samples.serviceref.TestEndpointService</service-interface>
     <wsdl-file>META-INF/wsdl/TestEndpoint.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>

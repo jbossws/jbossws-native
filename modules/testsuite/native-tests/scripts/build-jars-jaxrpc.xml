@@ -2026,11 +2026,15 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws1010-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws1010-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws1010/InheritenceChildInterface.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws1010/InheritenceParentInterface.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/jbws1010/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -2040,7 +2044,12 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
-    
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws1010-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-jbws1010-appclient.jar"/>
+      </fileset>
+    </jar>
+
     <!-- jaxrpc-jbws1011 -->
     <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws1011.jar">
       <fileset dir="${tests.output.dir}/test-classes">

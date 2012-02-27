@@ -46,12 +46,29 @@ public class SecureEJBTestCase extends JBossWSTest
 {
    public static final String USERNAME = "kermit";
    public static final String PASSWORD = "thefrog";
+   private InitialContext appclientCtx;
 
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(SecureEJBTestCase.class, "jaxrpc-samples-secureejb.jar, jaxrpc-samples-secureejb-client.jar");
+      return new JBossWSTestSetup(SecureEJBTestCase.class, "jaxrpc-samples-secureejb.jar, jaxrpc-samples-secureejb-appclient.ear#jaxrpc-samples-secureejb-appclient.jar", true);
    }
    
+   public void setUp() throws Exception
+   {
+      super.setUp();
+      appclientCtx = getAppclientInitialContext();
+   }
+
+   public void tearDown() throws Exception
+   {
+      if (appclientCtx != null)
+      {
+         appclientCtx.close();
+         appclientCtx = null;
+      }
+      super.tearDown();
+   }
+
    public void testRoleSecuredWSDLAccess() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxrpc-samples-ejb/RoleSecured?wsdl");
@@ -62,8 +79,7 @@ public class SecureEJBTestCase extends JBossWSTest
 
    public void testRoleSecuredServiceAccess() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/RoleSecured");
+      Service service = (Service)appclientCtx.lookup("java:service/RoleSecured");
       QName portName = new QName("http://org.jboss.ws/samples/secureejb", "RoleSecuredPort");
       OrganizationService port = (OrganizationService)service.getPort(portName, OrganizationService.class);
 
@@ -85,22 +101,9 @@ public class SecureEJBTestCase extends JBossWSTest
       assertEquals("The 'mafia' boss is currently out of office, please call again.", info);
    }
 
-   /** Test that the remote access to this bean is unchecked
-    */
-   public void testBasicSecuredSLSB() throws Exception
-   {
-      InitialContext iniCtx = getInitialContext();
-      OrganizationHome home = (OrganizationHome)iniCtx.lookup("ejb/BasicSecuredSLSB");
-
-      OrganizationRemote bean = home.create();
-      String info = bean.getContactInfo("mafia");
-      assertEquals("The 'mafia' boss is currently out of office, please call again.", info);
-   }
-
    public void testBasicSecuredServiceAccess() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/BasicSecured");
+      Service service = (Service)appclientCtx.lookup("java:service/BasicSecured");
       QName portName = new QName("http://org.jboss.ws/samples/secureejb", "BasicSecuredPort");
       OrganizationService port = (OrganizationService)service.getPort(portName, OrganizationService.class);
 
@@ -132,8 +135,7 @@ public class SecureEJBTestCase extends JBossWSTest
 
    public void testConfidentialServiceAccess() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/ConfidentialSecured");
+      Service service = (Service)appclientCtx.lookup("java:service/ConfidentialSecured");
       QName portName = new QName("http://org.jboss.ws/samples/secureejb", "ConfidentialPort");
       OrganizationService port = (OrganizationService)service.getPort(portName, OrganizationService.class);
 
@@ -153,10 +155,5 @@ public class SecureEJBTestCase extends JBossWSTest
       {
          // ignore expected exception
       }
-
-      // test confidential access
-      //stub._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "https://" + getServerHost() + ":8443/jaxrpc-samples-ejb/ConfidentialSecured");
-      //String info = port.getContactInfo("mafia");
-      //assertEquals("The 'mafia' boss is currently out of office, please call again.", info);
    }
 }

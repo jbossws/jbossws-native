@@ -446,22 +446,31 @@
         <include name="webservices.xml"/>
         <include name="ejb-jar.xml"/>
         <include name="jboss.xml"/>
+        <include name="jboss-ejb3.xml"/>
         <include name="jboss-webservices.xml"/>
         <include name="wsdl/**"/>
       </metainf>
     </jar>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-secureejb-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-secureejb-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/samples/secureejb/OrganizationService.class"/>
         <include name="org/jboss/test/ws/jaxrpc/samples/secureejb/OrganizationHome.class"/>
         <include name="org/jboss/test/ws/jaxrpc/samples/secureejb/OrganizationRemote.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/samples/secureejb/META-INF">
         <include name="application-client.xml"/>
-        <include name="jboss-client.xml"/>
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-samples-secureejb-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-samples-secureejb-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-samples-serviceref -->
@@ -478,18 +487,26 @@
         <include name="webservices.xml"/>
       </webinf>
     </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-samples-serviceref-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-samples-serviceref-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/samples/serviceref/ApplicationClient.class"/>
         <include name="org/jboss/test/ws/jaxrpc/samples/serviceref/TestEndpointService.class"/>
         <include name="org/jboss/test/ws/jaxrpc/samples/serviceref/TestEndpoint.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/samples/serviceref/META-INF">
         <include name="application-client.xml"/>
-        <include name="jboss-client.xml"/>
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-samples-serviceref-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-samples-serviceref-appclient.jar"/>
+      </fileset>
     </jar>
     <war destfile="${tests.output.dir}/test-libs/jaxrpc-samples-serviceref-servlet-client.war"
       webxml="${tests.output.dir}/test-resources/jaxrpc/samples/serviceref/servlet-client/WEB-INF/web.xml">
