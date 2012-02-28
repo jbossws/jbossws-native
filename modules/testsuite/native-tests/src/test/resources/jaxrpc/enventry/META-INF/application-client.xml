@@ -8,19 +8,19 @@
   <display-name>JAXRPC simple tests</display-name>
 
   <env-entry>
-   <env-entry-name>jsr109/entry1</env-entry-name>
+   <env-entry-name>java:jboss/exported/comp/env/jsr109/entry1</env-entry-name>
    <env-entry-type>java.lang.String</env-entry-type>
    <env-entry-value>appclient</env-entry-value>
   </env-entry>
   
   <env-entry>
-   <env-entry-name>jsr109/entry2</env-entry-name>
+   <env-entry-name>java:jboss/exported/comp/env/jsr109/entry2</env-entry-name>
    <env-entry-type>java.lang.Integer</env-entry-type>
    <env-entry-value>8</env-entry-value>
   </env-entry>
 
   <service-ref>
-    <service-ref-name>service/TestService</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/TestService</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>META-INF/wsdl/TestService.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>

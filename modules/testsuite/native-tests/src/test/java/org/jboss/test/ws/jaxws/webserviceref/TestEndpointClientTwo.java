@@ -21,22 +21,19 @@
  */
 package org.jboss.test.ws.jaxws.webserviceref;
 
-import org.jboss.logging.Logger;
-import org.jboss.test.ws.jaxws.webserviceref.TestEndpoint;
-import org.jboss.test.ws.jaxws.webserviceref.TestEndpointService;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceRef;
 import javax.xml.ws.WebServiceRefs;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
+
+import org.jboss.logging.Logger;
 
 @WebServiceRef(name = "Service1", type=TestEndpointService.class)
 // Test multiple on type
@@ -75,16 +72,13 @@ public class TestEndpointClientTwo
    {
       if (iniCtx == null)
       {
-         InitialContext ctx = new InitialContext();
-         Hashtable env = ctx.getEnvironment();
-         env.put(Context.URL_PKG_PREFIXES, "org.jboss.naming.client");
-         env.put("j2ee.clientName", "jbossws-client");
-         iniCtx = new InitialContext(env);
+         iniCtx = new InitialContext();
       }
    }
 
    public static void main(String[] args) throws Exception
    {
+      System.out.println("TEST START");
       String testName = args[0];
       org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo client = new org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo();
       Method method = org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.class.getMethod(testName, new Class[] { String.class });
@@ -103,6 +97,8 @@ public class TestEndpointClientTwo
          org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.log.error("Error", ex);
          org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.testResult.put(testName, ex.toString());
       }
+      System.out.println("TEST END");
+      System.out.println("RESULT [" + org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo.testResult.get(testName) + "] RESULT");
    }
 
    /**

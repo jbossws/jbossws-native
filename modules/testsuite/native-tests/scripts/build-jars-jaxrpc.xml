@@ -298,12 +298,16 @@
         <include name="webservices.xml"/>
       </metainf>
     </jar>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-enventry-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-enventry-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/enventry/EnvEntryTestService.class"/>
         <include name="org/jboss/test/ws/jaxrpc/enventry/ClientSideHandler.class"/>
         <include name="org/jboss/test/ws/jaxrpc/enventry/EnvEntryHandler.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/enventry/WEB-INF">
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
@@ -313,7 +317,12 @@
         <include name="jboss-client.xml"/>
       </metainf>
     </jar>
-    
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-enventry-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-enventry-appclient.jar"/>
+      </fileset>
+    </jar>
+
     <!-- jaxrpc-jbas897 -->
     <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbas897.jar">
       <fileset dir="${tests.output.dir}/test-classes">

@@ -21,6 +21,8 @@
  */
 package org.jboss.test.ws.jaxrpc.enventry;
 
+import java.io.IOException;
+
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.xml.namespace.QName;
@@ -73,12 +75,24 @@ abstract public class EnvEntryHandler extends GenericHandler
          SOAPElement soapElement = (SOAPElement)soapBodyElement.getChildElements().next();
          value = soapElement.getValue();
          
-         InitialContext ic = getInitialContext();
-         String strValue = (String)ic.lookup("java:comp/env/jsr109/entry1");
-         Integer intValue = (Integer)ic.lookup("java:comp/env/jsr109/entry2");
-         
-         value = value + ":" + getHandlerName() + ":" + strValue + ":" + intValue;
-         soapElement.setValue(value);
+         InitialContext ic = null;
+         try
+         {
+            ic = getInitialContext();
+            String strValue = (String)ic.lookup("java:comp/env/jsr109/entry1");
+            Integer intValue = (Integer)ic.lookup("java:comp/env/jsr109/entry2");
+            
+            value = value + ":" + getHandlerName() + ":" + strValue + ":" + intValue;
+            soapElement.setValue(value);
+         }
+         finally
+         {
+            if (ic != null)
+            {
+               ic.close();
+               ic = null;
+            }
+         }
       }
       catch (Exception e)
       {
@@ -94,7 +108,7 @@ abstract public class EnvEntryHandler extends GenericHandler
       return handlerName.substring(handlerName.lastIndexOf(".") + 1);
    }
 
-   abstract public InitialContext getInitialContext() throws NamingException;
+   abstract public InitialContext getInitialContext() throws NamingException, IOException;
 
    /**
     * Get the JBoss server host from system property "jboss.bind.address"
