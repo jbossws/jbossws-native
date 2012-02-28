@@ -1268,6 +1268,8 @@
                  <!-- # unpackaged EAR deployment failure -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase*</exclude>
 
+                 <!-- # [AS7-3946] waiting for jboss metadata 7.0.1.Final upgrade -->
+                 <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
               </excludes>
             </configuration>
           </plugin>
