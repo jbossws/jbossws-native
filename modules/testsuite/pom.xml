@@ -1127,21 +1127,6 @@
             <configuration>
               <compilerArgument>-Djava.endorsed.dirs=${endorsed.dirs}</compilerArgument>
             </configuration>
-            <executions>
-              <execution>
-                <id>default-testCompile</id>
-                <phase>test-compile</phase>
-                <configuration>
-                  <testExcludes>
-                    <!-- TODO: tests using org.jboss.ejb3.client.ClientLauncher -->
-                    <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
-                  </testExcludes>
-                </configuration>
-                <goals>
-                  <goal>testCompile</goal>
-                </goals>
-              </execution>
-            </executions>
           </plugin>
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
@@ -1171,9 +1156,6 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
 
-                 <!-- TODO: tests using org.jboss.ejb3.client.ClientLauncher -->
-                 <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
-
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
 
@@ -1189,8 +1171,6 @@
                  <exclude>org/jboss/test/ws/jaxrpc/encoded/href/MarshallTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/encoded/marshalltest/MarshallTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/encoded/parametermode/ParameterModeTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/enventry/EnvEntryEJBTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/enventry/EnvEntryJSETestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbas897/JBAS897TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1011/JBWS1011TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1093/JBWS1093TestCase*</exclude>
@@ -1288,6 +1268,8 @@
                  <!-- # unpackaged EAR deployment failure -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase*</exclude>
 
+                 <!-- # [AS7-3946] waiting for jboss metadata 7.0.1.Final upgrade -->
+                 <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
               </excludes>
             </configuration>
           </plugin>

@@ -21,14 +21,13 @@
  */
 package org.jboss.test.ws.jaxws.webserviceref;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.Map;
+import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
 
 import junit.framework.Test;
 
-import org.jboss.ejb3.client.ClientLauncher;
 import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestHelper;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
@@ -43,70 +42,77 @@ public class ServiceRefOverridesTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(ServiceRefOverridesTestCase.class, "jaxws-webserviceref.war, jaxws-override-webserviceref-client.jar");
+      return new JBossWSTestSetup(ServiceRefOverridesTestCase.class, "jaxws-webserviceref.war");
    }
 
    public void testService1() throws Throwable
    {
-      String resStr = invokeTest(getName());
-      assertEquals(getName(), resStr);
+      final String reqMsg = getName();
+      final String respMsg = executeApplicationClient(reqMsg);
+      assertEquals(reqMsg, respMsg);
    }
 
    public void testService2() throws Throwable
    {
-      String resStr = invokeTest(getName());
-      assertEquals(getName(), resStr);
+      final String reqMsg = getName();
+      final String respMsg = executeApplicationClient(reqMsg);
+      assertEquals(reqMsg, respMsg);
    }
 
    public void testService3() throws Throwable
    {
-      String resStr = invokeTest(getName());
-      assertEquals(getName() + getName(), resStr);
+      final String reqMsg = getName();
+      final String respMsg = executeApplicationClient(reqMsg);
+      assertEquals(reqMsg + reqMsg, respMsg);
    }
 
    public void testService4() throws Throwable
    {
-      String resStr = invokeTest(getName());
-      assertEquals(getName() + getName(), resStr);
+      final String reqMsg = getName();
+      final String respMsg = executeApplicationClient(reqMsg);
+      assertEquals(reqMsg + reqMsg, respMsg);
    }
 
    public void testPort1() throws Throwable
    {
-      String resStr = invokeTest(getName());
-      assertEquals(getName(), resStr);
+      final String reqMsg = getName();
+      final String respMsg = executeApplicationClient(reqMsg);
+      assertEquals(reqMsg, respMsg);
    }
 
    public void testPort2() throws Throwable
    {
-      String resStr = invokeTest(getName());
-      assertEquals(getName() + getName(), resStr);
+      final String reqMsg = getName();
+      final String respMsg = executeApplicationClient(reqMsg);
+      assertEquals(reqMsg + reqMsg, respMsg);
    }
 
    public void testPort3() throws Throwable
    {
-      String resStr = invokeTest(getName());
-      assertEquals(getName() + getName(), resStr);
+      final String reqMsg = getName();
+      final String respMsg = executeApplicationClient(reqMsg);
+      assertEquals(reqMsg + reqMsg, respMsg);
    }
 
-   @SuppressWarnings("unchecked")
-   private String invokeTest(String reqStr) throws Throwable
+   private String executeApplicationClient(final String... appclientArgs) throws Throwable
    {
-      new ClientLauncher().launch(TestEndpointClientTwo.class.getName(), "jbossws-client", new String[] { reqStr });
-      Class<?> empty[] = {};
-      try
-      {
-         //Use reflection to compile on AS 5.0.0.CR1 too
-         Method getMainClassMethod = ClientLauncher.class.getMethod("getTheMainClass", empty);
-         //At least JBoss AS 5.0.0.CR2
-         //Use reflection to prevent double loading of the client class
-         Class<?> clientClass = (Class<?>)getMainClassMethod.invoke(null, new Object[] {});
-         Field field = clientClass.getField("testResult");
-         return ((Map<String, String>)field.get(clientClass)).get(reqStr);
+      final OutputStream appclientOS = new ByteArrayOutputStream();
+      JBossWSTestHelper.deployAppclient("jaxws-webserviceref-override-appclient.ear#jaxws-webserviceref-override-appclient.jar", appclientOS, appclientArgs);
+      // wait till appclient stops
+      String appclientLog = appclientOS.toString();
+      while (!appclientLog.contains("stopped in")) {
+         Thread.sleep(100);
+         appclientLog = appclientOS.toString();
       }
-      catch (NoSuchMethodException e)
-      {
-         //JBoss AS 5.0.0.CR1
-         return TestEndpointClientTwo.testResult.get(reqStr);
-      }
+      // assert appclient logs
+      assertTrue(appclientLog.contains("TEST START"));
+      assertTrue(appclientLog.contains("TEST END"));
+      assertTrue(appclientLog.contains("RESULT ["));
+      assertTrue(appclientLog.contains("] RESULT"));
+      int indexOfResultStart = appclientLog.indexOf("RESULT [");
+      int indexOfResultStop = appclientLog.indexOf("] RESULT");
+      assertTrue(indexOfResultStart > 0);
+      assertTrue(indexOfResultStop > 0);
+      return appclientLog.substring(indexOfResultStart + 8, indexOfResultStop);
    }
 }

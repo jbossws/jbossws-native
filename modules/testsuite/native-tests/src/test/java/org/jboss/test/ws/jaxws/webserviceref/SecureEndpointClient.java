@@ -46,6 +46,7 @@ public class SecureEndpointClient
 
    public static void main(String[] args)
    {
+      System.out.println("TEST START");
       String reqMsg = args[0];
       log.info("echo: " + reqMsg);
 
@@ -76,6 +77,8 @@ public class SecureEndpointClient
       {
          throw new IllegalArgumentException("Invalid req messge: " + reqMsg);
       }
+      System.out.println("TEST END");
+      System.out.println("RESULT [" + retStr + "] RESULT");
    }
 
    private static String invokeEndpoint(SecureEndpoint port, String inStr, String username, String password)

@@ -21,21 +21,19 @@
  */
 package org.jboss.test.ws.jaxrpc.enventry;
 
+import java.io.IOException;
 import java.util.Properties;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.jboss.wsf.test.JBossWSTest;
+
 public class ClientSideHandler extends EnvEntryHandler
 {
-   public InitialContext getInitialContext() throws NamingException
+   public InitialContext getInitialContext() throws NamingException, IOException
    {
-      Properties env = new Properties();
-      env.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.jnp.interfaces.NamingContextFactory");
-      env.setProperty(Context.URL_PKG_PREFIXES, "org.jboss.naming.client");
-      env.setProperty(Context.PROVIDER_URL, "jnp://" + getServerHost() + ":1099");
-      env.setProperty("j2ee.clientName", "jbossws-client");
-      return new InitialContext(env);
+      return JBossWSTest.getAppclientInitialContext();
    }
 }

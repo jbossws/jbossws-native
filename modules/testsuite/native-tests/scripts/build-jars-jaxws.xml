@@ -768,7 +768,7 @@
 				<include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointImpl.class" />
 			</fileset>
 		</jar>
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-webserviceref-secure-client.jar">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-webserviceref-secure-appclient.jar">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointClient.class" />
 				<include name="org/jboss/test/ws/jaxws/webserviceref/SecureEndpointService.class" />
@@ -779,10 +779,15 @@
 				<include name="jboss-client.xml" />
 			</metainf>
 			<manifest>
-				<attribute name="main-class" value="org.jboss.test.ws.jaxws.samples.webserviceref.SecureEndpointClient" />
+				<attribute name="main-class" value="org.jboss.test.ws.jaxws.webserviceref.SecureEndpointClient" />
 			</manifest>
 		</jar>
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-override-webserviceref-client.jar">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-webserviceref-secure-appclient.ear">
+			<fileset dir="${tests.output.dir}/test-libs">
+				<include name="jaxws-webserviceref-secure-appclient.jar"/>
+			</fileset>
+		</jar>
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-webserviceref-override-appclient.jar">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpointClientTwo.class" />
 				<include name="org/jboss/test/ws/jaxws/webserviceref/TestEndpointService.class" />
@@ -799,6 +804,11 @@
 			<manifest>
 				<attribute name="main-class" value="org.jboss.test.ws.jaxws.webserviceref.TestEndpointClientTwo" />
 			</manifest>
+		</jar>
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-webserviceref-override-appclient.ear">
+			<fileset dir="${tests.output.dir}/test-libs">
+				<include name="jaxws-webserviceref-override-appclient.jar"/>
+			</fileset>
 		</jar>
 
 		<!-- jaxws-webserviceref-secure -->
