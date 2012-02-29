@@ -42,11 +42,12 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 public class JBWS663WrappedUnboundTestCase extends JBossWSTest
 {
    private static SMSTextMessagingSoapWrapped port;
+   private static InitialContext iniCtx;
    
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS663WrappedUnboundTestCase.class, "jaxrpc-jbws663w.war, jaxrpc-jbws663w-client.jar");
+      return new JBossWSTestSetup(JBWS663WrappedUnboundTestCase.class, "jaxrpc-jbws663w.war, jaxrpc-jbws663w-appclient.ear#jaxrpc-jbws663w-appclient.jar");
    }
 
    protected void setUp() throws Exception
@@ -54,10 +55,20 @@ public class JBWS663WrappedUnboundTestCase extends JBossWSTest
       super.setUp();
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/SMSService");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/SMSService");
          port = (SMSTextMessagingSoapWrapped)service.getPort(SMSTextMessagingSoapWrapped.class);
       }
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
+      super.tearDown();
    }
 
    public void testCreateService() throws Exception

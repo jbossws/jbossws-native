@@ -1216,10 +1216,6 @@
                  <exclude>org/jboss/test/ws/jaxrpc/jbws632/JBWS632TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws637/JBWS637TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws643/JBWS643TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws663/JBWS663BareBoundTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws663/JBWS663BareUnboundTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws663/JBWS663WrappedBoundTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws663/JBWS663WrappedUnboundTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws68/JBWS68TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws70/JBWS70TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws706/JBWS706TestCase*</exclude>
