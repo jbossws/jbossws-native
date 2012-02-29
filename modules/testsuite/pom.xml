@@ -1108,9 +1108,9 @@
           <version>2.7.1.patch01-brew</version>
         </dependency>
         <dependency>
-          <groupId>org.jboss.remoting3</groupId>
+          <groupId>org.jboss.remotingjmx</groupId>
           <artifactId>remoting-jmx</artifactId>
-          <version>1.0.1.Final</version>
+          <version>1.0.2.Final</version>
           <scope>test</scope>
         </dependency>
         <dependency>
