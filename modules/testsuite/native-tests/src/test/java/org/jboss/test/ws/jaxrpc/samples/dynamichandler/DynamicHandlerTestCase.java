@@ -48,22 +48,32 @@ public class DynamicHandlerTestCase extends JBossWSTest
 
    private static ServiceExt service;
    private static HandlerTestService endpoint;
+   private static InitialContext iniCtx;
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(DynamicHandlerTestCase.class, "jaxrpc-samples-dynamichandler.war, jaxrpc-samples-dynamichandler-client.jar");
+      return new JBossWSTestSetup(DynamicHandlerTestCase.class, "jaxrpc-samples-dynamichandler.war, jaxrpc-samples-dynamichandler-appclient.ear#jaxrpc-samples-dynamichandler-appclient.jar");
    }
 
    protected void setUp() throws Exception
    {
       super.setUp();
-
       if (endpoint == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         service = (ServiceExt)iniCtx.lookup("java:comp/env/service/TestService");
+         iniCtx = getAppclientInitialContext();
+         service = (ServiceExt)iniCtx.lookup("java:service/TestService");
          endpoint = (HandlerTestService)service.getPort(HandlerTestService.class);
       }
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
+      super.tearDown();
    }
 
    public void testStaticHandlers() throws Exception

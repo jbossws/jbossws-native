@@ -42,7 +42,8 @@ public class SimpleEncryptTestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(SimpleEncryptTestCase.class, "jaxrpc-samples-wssecurity-encrypt.war, jaxrpc-samples-wssecurity-encrypt-client.jar");
+      return new JBossWSTestSetup(SimpleEncryptTestCase.class, "jaxrpc-samples-wssecurity-encrypt.war, " +
+         "jaxrpc-samples-wssecurity-encrypt-appclient.ear#jaxrpc-samples-wssecurity-encrypt-appclient.jar");
    }
 
    /**
@@ -59,9 +60,20 @@ public class SimpleEncryptTestCase extends JBossWSTest
 
    private Hello getPort() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
-      Hello port = (Hello)service.getPort(Hello.class);
-      return port;
+      InitialContext iniCtx = null;
+      try 
+      {
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/HelloService");
+         Hello port = (Hello)service.getPort(Hello.class);
+         return port;
+      }
+      finally
+      {
+         if (iniCtx != null)
+         {
+            iniCtx.close();
+         }
+      }
    }
 }

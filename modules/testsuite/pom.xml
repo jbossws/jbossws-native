@@ -1240,11 +1240,6 @@
                  <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallDocLitTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallRpcLitTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/overloaded/OverloadedTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/dynamichandler/DynamicHandlerTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/dynamichandler/StaticHandlerTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/wsaddr/replyto/AddressingReplyToTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleEncryptTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleSignTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/utf16/UTF16TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsdlpublish/WsdlPublishTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/UsernameTestCase*</exclude>
@@ -1270,6 +1265,9 @@
 
                  <!-- # [AS7-3946] waiting for jboss metadata 7.0.1.Final upgrade -->
                  <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/wsaddr/replyto/AddressingReplyToTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleEncryptTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleSignTestCase*</exclude>
               </excludes>
             </configuration>
           </plugin>
