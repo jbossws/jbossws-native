@@ -1033,10 +1033,14 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws358-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws358-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws358/Hello.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/jbws358/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -1044,14 +1048,16 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws358-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-jbws358-appclient.jar"/>
+      </fileset>
+    </jar>
     <mkdir dir="${tests.output.dir}/test-libs/jaxrpc-jbws358.ear/jaxrpc-jbws358.jar"/>
     <unjar dest="${tests.output.dir}/test-libs/jaxrpc-jbws358.ear/jaxrpc-jbws358.jar" src="${tests.output.dir}/test-libs/jaxrpc-jbws358.jar"/>
     <copy todir="${tests.output.dir}/test-libs/jaxrpc-jbws358.ear">
       <fileset dir="${tests.output.dir}/test-resources/jaxrpc/jbws358">
         <include name="META-INF/application.xml"/>
-      </fileset>
-      <fileset dir="${tests.output.dir}/test-libs">
-        <include name="jaxrpc-jbws358-client.jar"/>
       </fileset>
     </copy>
     
@@ -1554,12 +1560,16 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws663b-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws663b-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws663/*.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws663/holders/*.class"/>
         <exclude name="org/jboss/test/ws/jaxrpc/jbws663/*TestCase.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/jbws663b/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -1568,6 +1578,11 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws663b-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-jbws663b-appclient.jar"/>
+      </fileset>
     </jar>
     <war warfile="${tests.output.dir}/test-libs/jaxrpc-jbws663bb.war" webxml="${tests.output.dir}/test-resources/jaxrpc/jbws663bb/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">
@@ -1581,12 +1596,16 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws663bb-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws663bb-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws663/*.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws663/holders/*.class"/>
         <exclude name="org/jboss/test/ws/jaxrpc/jbws663/*TestCase.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/jbws663bb/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -1595,6 +1614,11 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws663bb-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-jbws663bb-appclient.jar"/>
+      </fileset>
     </jar>
     <war warfile="${tests.output.dir}/test-libs/jaxrpc-jbws663w.war" webxml="${tests.output.dir}/test-resources/jaxrpc/jbws663w/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">
@@ -1608,12 +1632,16 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws663w-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws663w-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws663/*.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws663/holders/*.class"/>
         <exclude name="org/jboss/test/ws/jaxrpc/jbws663/*TestCase.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/jbws663w/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -1622,6 +1650,11 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws663w-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-jbws663w-appclient.jar"/>
+      </fileset>
     </jar>
     <war warfile="${tests.output.dir}/test-libs/jaxrpc-jbws663wb.war" webxml="${tests.output.dir}/test-resources/jaxrpc/jbws663wb/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">
@@ -1635,12 +1668,16 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws663wb-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws663wb-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws663/*.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws663/holders/*.class"/>
         <exclude name="org/jboss/test/ws/jaxrpc/jbws663/*TestCase.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/jbws663wb/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -1649,6 +1686,11 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws663wb-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-jbws663wb-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-jbws706 -->

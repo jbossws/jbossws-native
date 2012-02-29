@@ -24,7 +24,7 @@ package org.jboss.test.ws.jaxrpc.samples.wsaddr.replyto;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 
-import javax.xml.namespace.QName;
+import javax.naming.InitialContext;
 import javax.xml.rpc.Service;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConnection;
@@ -46,12 +46,13 @@ public class AddressingReplyToTestCase extends JBossWSTest
 {
    private static Hello initial;
    private static ReplyTo replyto;
+   private static InitialContext iniCtx;
 
    public static Test suite()
    {
       return new JBossWSTestSetup(AddressingReplyToTestCase.class,
             "jaxrpc-samples-wsaddr-hello.war, jaxrpc-samples-wsaddr-replyto.war," +
-            "jaxrpc-samples-wsaddr-hello-client.jar");
+            "jaxrpc-samples-wsaddr-hello-appclient.jar#jaxrpc-samples-wsaddr-hello-appclient.jar");
    }
 
    protected void setUp() throws Exception
@@ -60,11 +61,22 @@ public class AddressingReplyToTestCase extends JBossWSTest
 
       if (initial == null)
       {
-         Service replytoService = (Service)getInitialContext("jaxrpc-addressing-replyto-client").lookup("java:comp/env/service/ReplyToService");
+         iniCtx = getAppclientInitialContext();
+         Service replytoService = (Service)iniCtx.lookup("java:service/ReplyToService");
          replyto = (ReplyTo)replytoService.getPort(ReplyTo.class);
-         Service initialService = (Service)getInitialContext("jaxrpc-addressing-replyto-client").lookup("java:comp/env/service/HelloService");
+         Service initialService = (Service)iniCtx.lookup("java:service/HelloService");
          initial = (Hello)initialService.getPort(Hello.class);
       }
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
+      super.tearDown();
    }
 
    /** This sends a valid message to the ReplyTo endpoint and verfies whether we can read it of again.

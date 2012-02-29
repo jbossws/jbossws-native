@@ -108,11 +108,15 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-dynamichandler-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-dynamichandler-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/samples/dynamichandler/*Service.class"/>
         <include name="org/jboss/test/ws/jaxrpc/samples/dynamichandler/*Handler.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/samples/dynamichandler/WEB-INF">
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
@@ -121,6 +125,11 @@
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-samples-dynamichandler-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-samples-dynamichandler-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-samples-exception -->
@@ -584,21 +593,6 @@
         <include name="wsse.truststore"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-store-pass-encrypt-client.jar">
-      <fileset dir="${tests.output.dir}/test-classes">
-        <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/Hello.class"/>
-        <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/UserType.class"/>
-      </fileset>
-      <metainf dir="${tests.output.dir}/test-resources/jaxrpc/samples/wssecurity/store-pass-encrypt/META-INF">
-        <include name="application-client.xml"/>
-        <include name="jboss-client.xml"/>
-        <include name="jboss-wsse-client.xml"/>
-      </metainf>
-      <metainf dir="${tests.output.dir}/test-resources/jaxrpc/samples/wssecurity/WEB-INF">
-        <include name="wsdl/**"/>
-        <include name="jaxrpc-mapping.xml"/>
-      </metainf>
-    </jar>
     
     <!-- jaxrpc-samples-wsaddr-hello.war -->
     <war warfile="${tests.output.dir}/test-libs/jaxrpc-samples-wsaddr-hello.war" webxml="${tests.output.dir}/test-resources/jaxrpc/samples/wsaddr/hello/WEB-INF/web.xml">
@@ -626,14 +620,18 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-wsaddr-hello-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-wsaddr-hello-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/samples/wsaddr/replyto/Hello.class"/>
         <include name="org/jboss/test/ws/jaxrpc/samples/wsaddr/replyto/Hello_*.class"/>
         <include name="org/jboss/test/ws/jaxrpc/samples/wsaddr/replyto/ClientHandler.class"/>
         <include name="org/jboss/test/ws/jaxrpc/samples/wsaddr/replyto/ReplyTo.class"/>
         <include name="org/jboss/test/ws/jaxrpc/samples/wsaddr/replyto/ReplyTo_*.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/samples/wsaddr/hello/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -646,6 +644,11 @@
         <include name="replyto-jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-samples-wsaddr-hello-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-samples-wsaddr-hello-appclient.jar"/>
+      </fileset>
     </jar>
 
     <!-- jaxrpc-samples-wssecurity-sign -->
@@ -668,11 +671,15 @@
         <include name="wsse.truststore"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-wssecurity-sign-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-wssecurity-sign-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/Hello.class"/>
         <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/UserType.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/samples/wssecurity/simple-sign/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -682,6 +689,11 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-samples-wssecurity-sign-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-samples-wssecurity-sign-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-samples-wssecurity-encrypt -->
@@ -705,11 +717,15 @@
         <include name="wsse.truststore"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-wssecurity-encrypt-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-samples-wssecurity-encrypt-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/Hello.class"/>
         <include name="org/jboss/test/ws/jaxrpc/samples/wssecurity/UserType.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/samples/wssecurity/simple-encrypt/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -719,6 +735,11 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-samples-wssecurity-encrypt-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-samples-wssecurity-encrypt-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- Please add alphabetically -->

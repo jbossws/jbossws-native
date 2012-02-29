@@ -1156,11 +1156,11 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
 
+                 <!-- # exploaded EAR deployment failure - should JBoss AS7 support it? -->
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase*</exclude>
+
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
-
-                 <!-- # [JBWS-3234] JNDI over RMI not available on AS7 -->
-                 <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/**</exclude>
 
                  <!-- # Remote JNDI lookup & jaxrpc client issues -->
                  <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkDocEJBTestCase*</exclude>
@@ -1216,10 +1216,6 @@
                  <exclude>org/jboss/test/ws/jaxrpc/jbws632/JBWS632TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws637/JBWS637TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws643/JBWS643TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws663/JBWS663BareBoundTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws663/JBWS663BareUnboundTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws663/JBWS663WrappedBoundTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws663/JBWS663WrappedUnboundTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws68/JBWS68TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws70/JBWS70TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws706/JBWS706TestCase*</exclude>
@@ -1240,11 +1236,6 @@
                  <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallDocLitTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallRpcLitTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/overloaded/OverloadedTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/dynamichandler/DynamicHandlerTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/dynamichandler/StaticHandlerTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/wsaddr/replyto/AddressingReplyToTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleEncryptTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleSignTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/utf16/UTF16TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsdlpublish/WsdlPublishTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/UsernameTestCase*</exclude>
@@ -1252,7 +1243,6 @@
                  <exclude>org/jboss/test/ws/jaxrpc/xop/doclit/XOPTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/xop/rpclit/XOPHandlerTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/xop/rpclit/XOPTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/AddressingReplyToTestCase*</exclude>
 
                  <!-- # webservices-description in jboss-web.xml / jboss.xml -->
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/SignEncryptFaultTestCase*</exclude>
@@ -1265,11 +1255,12 @@
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1124/JBWS1124TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsdlpublish/WsdlPublishTestCase*</exclude>
 
-                 <!-- # unpackaged EAR deployment failure -->
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase*</exclude>
-
                  <!-- # [AS7-3946] waiting for jboss metadata 7.0.1.Final upgrade -->
                  <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/wsaddr/replyto/AddressingReplyToTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleEncryptTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleSignTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/AddressingReplyToTestCase*</exclude>
               </excludes>
             </configuration>
           </plugin>

@@ -859,19 +859,6 @@
 				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/InitialEndpoint_*_ResponseStruct.class" />
 			</classes>
 		</war>
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-wsaddressing-initial-cl.jar">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/InitialEndpoint.class" />
-				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/InitialEndpoint_*_RequestStruct.class" />
-				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/InitialEndpoint_*_ResponseStruct.class" />
-			</fileset>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/wsaddressing/replyto/Initial-META-INF">
-				<include name="application-client.xml" />
-				<include name="jboss-client.xml" />
-				<include name="jaxws-jbossws-client-config.xml" />
-				<include name="jaxrpc-mapping.xml" />
-			</metainf>
-		</jar>
 		<war warfile="${tests.output.dir}/test-libs/jaxws-wsaddressing-replyto.war" webxml="${tests.output.dir}/test-resources/jaxws/wsaddressing/replyto/ReplyTo-WEB-INF/web.xml">
 			<classes dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/ReplyToEndpointImpl.class" />
@@ -880,19 +867,6 @@
 				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/ReplyToEndpoint_*_ResponseStruct.class" />
 			</classes>
 		</war>
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-wsaddressing-replyto-cl.jar">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/ReplyToEndpoint.class" />
-				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/ReplyToEndpoint_*_RequestStruct.class" />
-				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/ReplyToEndpoint_*_ResponseStruct.class" />
-			</fileset>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/wsaddressing/replyto/ReplyTo-META-INF">
-				<include name="application-client.xml" />
-				<include name="jboss-client.xml" />
-				<include name="jbossws-client-config.xml" />
-				<include name="jaxrpc-mapping.xml" />
-			</metainf>
-		</jar>
 		<war warfile="${tests.output.dir}/test-libs/jaxws-wsaddressing-faultto.war" webxml="${tests.output.dir}/test-resources/jaxws/wsaddressing/replyto/FaultTo-WEB-INF/web.xml">
 			<classes dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/FaultToEndpointImpl.class" />
@@ -900,6 +874,31 @@
 				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/FaultToEndpoint.class" />
 			</classes>
 		</war>
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-wsaddressing-appclient.jar">
+			<fileset dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/InitialEndpoint.class" />
+				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/ReplyToEndpoint.class" />
+				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/FaultToEndpoint.class" />
+				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/ClientHandler.class" />
+				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/FaultType.class" />
+				<include name="org/jboss/test/ws/jaxws/wsaddressing/AddressingHandler.class" />
+				<include name="org/jboss/test/ws/jaxws/wsaddressing/replyto/ApplicationClient.class" />
+			</fileset>
+			<manifest>
+				<attribute name="main-class" value="org.jboss.test.ws.jaxws.wsaddressing.replyto.ApplicationClient" />
+				<attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core,org.jboss.ws.common" />
+			</manifest>
+			<metainf dir="${tests.output.dir}/test-resources/jaxws/wsaddressing/appclient/META-INF">
+				<include name="application-client.xml" />
+				<include name="jboss-client.xml" />
+				<include name="jaxrpc-mapping.xml" />
+			</metainf>
+		</jar>
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-wsaddressing-appclient.ear">
+			<fileset dir="${tests.output.dir}/test-libs">
+				<include name="jaxws-wsaddressing-appclient.jar"/>
+			</fileset>
+		</jar>
 
 	</target>
 
