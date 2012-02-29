@@ -1033,10 +1033,14 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws358-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws358-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws358/Hello.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/jbws358/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -1044,14 +1048,16 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws358-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-jbws358-appclient.jar"/>
+      </fileset>
+    </jar>
     <mkdir dir="${tests.output.dir}/test-libs/jaxrpc-jbws358.ear/jaxrpc-jbws358.jar"/>
     <unjar dest="${tests.output.dir}/test-libs/jaxrpc-jbws358.ear/jaxrpc-jbws358.jar" src="${tests.output.dir}/test-libs/jaxrpc-jbws358.jar"/>
     <copy todir="${tests.output.dir}/test-libs/jaxrpc-jbws358.ear">
       <fileset dir="${tests.output.dir}/test-resources/jaxrpc/jbws358">
         <include name="META-INF/application.xml"/>
-      </fileset>
-      <fileset dir="${tests.output.dir}/test-libs">
-        <include name="jaxrpc-jbws358-client.jar"/>
       </fileset>
     </copy>
     

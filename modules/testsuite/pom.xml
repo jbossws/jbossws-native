@@ -1156,6 +1156,9 @@
                  <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
 
+                 <!-- # exploaded EAR deployment failure - should JBoss AS7 support it? -->
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase*</exclude>
+
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
 
@@ -1255,9 +1258,6 @@
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/signup/AccountSignupTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1124/JBWS1124TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsdlpublish/WsdlPublishTestCase*</exclude>
-
-                 <!-- # unpackaged EAR deployment failure -->
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase*</exclude>
 
                  <!-- # [AS7-3946] waiting for jboss metadata 7.0.1.Final upgrade -->
                  <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>

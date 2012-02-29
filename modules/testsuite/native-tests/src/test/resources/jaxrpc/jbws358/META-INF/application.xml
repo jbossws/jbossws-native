@@ -10,9 +10,6 @@
   <module>
     <java>jaxrpc-jbws358.jar</java>
   </module>
-  <module>
-    <java>jaxrpc-jbws358-client.jar</java>
-  </module>
 
 </application>
 

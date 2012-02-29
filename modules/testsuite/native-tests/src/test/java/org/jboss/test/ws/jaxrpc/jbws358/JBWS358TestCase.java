@@ -26,7 +26,10 @@ import java.rmi.RemoteException;
 import javax.naming.InitialContext;
 import javax.xml.rpc.Service;
 
+import junit.framework.Test;
+
 import org.jboss.wsf.test.JBossWSTest;
+import org.jboss.wsf.test.JBossWSTestSetup;
 
 
 
@@ -40,19 +43,34 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public class JBWS358TestCase extends JBossWSTest
 {
+   public static Test suite()
+   {
+      return new JBossWSTestSetup(JBWS358TestCase.class, "jaxrpc-jbws358-appclient.ear#jaxrpc-jbws358-appclient.jar");
+   }
+
    public void testClientAccess() throws Exception
    {
       Hello endpoint = null;
       try
       {
          deploy("jaxrpc-jbws358.ear");
+         InitialContext iniCtx = null;
+         try
+         {
+            iniCtx = getAppclientInitialContext();
+            Service service = (Service)iniCtx.lookup("java:service/HelloService");
+            endpoint = (Hello)service.getPort(Hello.class);
          
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
-         endpoint = (Hello)service.getPort(Hello.class);
-         
-         String retStr = endpoint.hello("Hello Server");
-         assertEquals("Hello Server", retStr);
+            String retStr = endpoint.hello("Hello Server");
+            assertEquals("Hello Server", retStr);
+         }
+         finally
+         {
+            if (iniCtx != null)
+            {
+               iniCtx.close();
+            }
+         }
       }
       finally
       {
