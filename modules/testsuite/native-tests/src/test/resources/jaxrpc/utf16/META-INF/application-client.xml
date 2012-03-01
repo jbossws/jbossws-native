@@ -8,7 +8,7 @@
   <display-name>HelloService</display-name>
 
   <service-ref>
-    <service-ref-name>service/TestService</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/TestService</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>META-INF/wsdl/HelloService.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>

@@ -8,7 +8,7 @@
   <display-name>JAXRPC simple tests</display-name>
 
   <service-ref>
-    <service-ref-name>service/OverloadedTestService</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/OverloadedTestService</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>use overwrite in jboss-client.xml</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>

@@ -41,7 +41,7 @@ public class JBWS153TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS153TestCase.class, "jaxrpc-jbws153.war, jaxrpc-jbws153-client.jar");
+      return new JBossWSTestSetup(JBWS153TestCase.class, "jaxrpc-jbws153.war, jaxrpc-jbws153-appclient.ear#jaxrpc-jbws153-appclient.jar");
    }
 
    /**
@@ -49,12 +49,23 @@ public class JBWS153TestCase extends JBossWSTest
     */
    public void testEndpoint() throws Exception
    {
-      InitialContext iniContext = getInitialContext();
-      Service service = (Service)iniContext.lookup("java:comp/env/service/OrderService");
-      Order port = (Order)service.getPort(Order.class);
+      InitialContext iniCtx = null;
+      try
+      {
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/OrderService");
+         Order port = (Order)service.getPort(Order.class);
 
-      String getMessage = "Ferrari";
-      String retStr = port.getOrder(getMessage);
-      assertEquals(getMessage, retStr);
+         String getMessage = "Ferrari";
+         String retStr = port.getOrder(getMessage);
+         assertEquals(getMessage, retStr);
+      }
+      finally
+      {
+         if (iniCtx != null)
+         {
+            iniCtx.close();
+         }
+      }
    }
 }

@@ -39,26 +39,33 @@ import javax.xml.rpc.Stub;
 public class BenchmarkDocEJBTestCase extends JBossWSTest
 {
    private static BenchmarkService endpoint;
+   private static InitialContext iniCtx;
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(BenchmarkDocEJBTestCase.class, "jaxrpc-benchmark-doclit.jar, jaxrpc-benchmark-doclit-client.jar");
+      return new JBossWSTestSetup(BenchmarkDocEJBTestCase.class, "jaxrpc-benchmark-doclit.jar, jaxrpc-benchmark-doclit-appclient.ear#jaxrpc-benchmark-doclit-appclient.jar");
    }
 
    protected void setUp() throws Exception
    {
       super.setUp();
-
       if (endpoint == null)
       {
-         InitialContext iniCtx = getInitialContext("benchmark-client");
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/BenchmarkEJB");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/BenchmarkEJB");
          endpoint = (BenchmarkService)service.getPort(BenchmarkService.class);
 
          ((Stub)endpoint)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-benchmark-doc-ejb");
       }
-
-
+   }
+   
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
    }
 
    public void testEchoSimpleType() throws Exception

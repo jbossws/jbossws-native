@@ -39,10 +39,11 @@ import javax.xml.rpc.Stub;
 public class BenchmarkRpcEJBTestCase extends JBossWSTest
 {
    private static BenchmarkService endpoint;
+   private static InitialContext iniCtx;
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(BenchmarkRpcEJBTestCase.class, "jaxrpc-benchmark-rpclit.jar, jaxrpc-benchmark-rpclit-client.jar");
+      return new JBossWSTestSetup(BenchmarkRpcEJBTestCase.class, "jaxrpc-benchmark-rpclit.jar, jaxrpc-benchmark-rpclit-appclient.ear#jaxrpc-benchmark-rpclit-appclient.jar");
    }
 
    protected void setUp() throws Exception
@@ -51,11 +52,20 @@ public class BenchmarkRpcEJBTestCase extends JBossWSTest
 
       if (endpoint == null)
       {
-         InitialContext iniCtx = getInitialContext("benchmark-client");
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/BenchmarkEJB");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/BenchmarkEJB");
          endpoint = (BenchmarkService)service.getPort(BenchmarkService.class);
 
          ((Stub)endpoint)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-benchmark-rpc-ejb");
+      }
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
       }
    }
 

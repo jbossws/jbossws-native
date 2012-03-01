@@ -44,10 +44,11 @@ public class JBWS1316CallTestCase extends JBossWSTest
    private static final String MESSAGE = "Hello JBWS1316!!";
 
    private static TestEndpoint port;
+   private static InitialContext iniCtx;
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(JBWS1316CallTestCase.class, "jaxrpc-jbws1316.war, jaxrpc-jbws1316-client.jar");
+      return new JBossWSTestSetup(JBWS1316CallTestCase.class, "jaxrpc-jbws1316.war, jaxrpc-jbws1316-appclient.ear#jaxrpc-jbws1316-appclient.jar");
    }
 
    protected void setUp() throws Exception
@@ -55,9 +56,18 @@ public class JBWS1316CallTestCase extends JBossWSTest
       super.setUp();
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/TestService");
          port = (TestEndpoint)service.getPort(TestEndpoint.class);
+      }
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
       }
    }
 

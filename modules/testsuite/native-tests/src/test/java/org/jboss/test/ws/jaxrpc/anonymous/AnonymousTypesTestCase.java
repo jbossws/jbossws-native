@@ -38,10 +38,11 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 public class AnonymousTypesTestCase extends JBossWSTest
 {
    private static AnonymousTypesTestService endpoint;
+   private static InitialContext iniCtx;
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(AnonymousTypesTestCase.class, "jaxrpc-anonymous.war, jaxrpc-anonymous-client.jar");
+      return new JBossWSTestSetup(AnonymousTypesTestCase.class, "jaxrpc-anonymous.war, jaxrpc-anonymous-appclient.ear#jaxrpc-anonymous-appclient.jar");
    }
 
    protected void setUp() throws Exception
@@ -50,9 +51,18 @@ public class AnonymousTypesTestCase extends JBossWSTest
 
       if (endpoint == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/TestService");
          endpoint = (AnonymousTypesTestService)service.getPort(AnonymousTypesTestService.class);
+      }
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
       }
    }
 

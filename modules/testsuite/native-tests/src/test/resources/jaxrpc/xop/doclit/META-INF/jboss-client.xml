@@ -5,10 +5,9 @@
    "http://www.jboss.org/j2ee/dtd/jboss-client_4_0.dtd">
 
 <jboss-client>
-  <jndi-name>jbossws-client</jndi-name>
 
   <service-ref>
-    <service-ref-name>service/XOPTestCase</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/XOPTestCase</service-ref-name>
     <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-xop-doclit?wsdl</wsdl-override>
   </service-ref>
 
