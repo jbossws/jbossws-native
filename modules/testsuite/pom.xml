@@ -1193,13 +1193,9 @@
                  <exclude>org/jboss/test/ws/jaxrpc/jbws168/JBWS168TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1792/JBWS1792TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws331/JBWS331TestCase*</exclude><!-- rewrite test -->
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws637/JBWS637TestCase*</exclude><!-- review test -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws723/JBWS723TestCase*</exclude><!-- review test -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws772/JBWS772TestCase*</exclude><!-- rewrite test -->
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws626/JBWS626TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws632/JBWS632TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws637/JBWS637TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws643/JBWS643TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws68/JBWS68TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws807/JBWS807TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws812/JBWS812TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws82/JBWS82TestCase*</exclude>
