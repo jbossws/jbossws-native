@@ -40,10 +40,11 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 public class JBWS349TestCase extends JBossWSTest
 {
    private static ServiceFacadeEndpoint endpoint;
+   private static InitialContext iniCtx;
 
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS349TestCase.class, "jaxrpc-jbws349.war, jaxrpc-jbws349-client.jar");
+      return new JBossWSTestSetup(JBWS349TestCase.class, "jaxrpc-jbws349.war, jaxrpc-jbws349-appclient.ear#jaxrpc-jbws349-appclient.jar");
    }
 
    public void setUp() throws Exception
@@ -51,11 +52,21 @@ public class JBWS349TestCase extends JBossWSTest
       super.setUp();
       if (endpoint == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/ServiceFacade");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/ServiceFacade");
          endpoint = (ServiceFacadeEndpoint)service.getPort(ServiceFacadeEndpoint.class);
       }
 
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
+      super.tearDown();
    }
 
    public void testAssetCreate() throws Exception

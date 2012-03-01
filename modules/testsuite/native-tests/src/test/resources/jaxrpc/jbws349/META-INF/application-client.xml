@@ -5,7 +5,7 @@
   <display-name>Test Service</display-name>
   
   <service-ref>
-    <service-ref-name>service/ServiceFacade</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/ServiceFacade</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>META-INF/wsdl/ServiceFacade.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>

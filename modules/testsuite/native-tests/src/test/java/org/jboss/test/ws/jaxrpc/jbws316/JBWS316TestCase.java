@@ -42,11 +42,12 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 public class JBWS316TestCase extends JBossWSTest
 {
    private static TestBusinessFacadeBF_WS endpoint;
+   private static InitialContext iniCtx;
    
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS316TestCase.class, "jaxrpc-jbws316.war, jaxrpc-jbws316-client.jar");
+      return new JBossWSTestSetup(JBWS316TestCase.class, "jaxrpc-jbws316.war, jaxrpc-jbws316-appclient.ear#jaxrpc-jbws316-appclient.jar");
    }
 
    public void setUp() throws Exception
@@ -54,12 +55,22 @@ public class JBWS316TestCase extends JBossWSTest
       super.setUp();
       if (endpoint == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/TestService");
          endpoint = (TestBusinessFacadeBF_WS)service.getPort(TestBusinessFacadeBF_WS.class);
       }
    }
    
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
+      super.tearDown();
+   }
+
    /**
     * Test JSE endpoint
     */
