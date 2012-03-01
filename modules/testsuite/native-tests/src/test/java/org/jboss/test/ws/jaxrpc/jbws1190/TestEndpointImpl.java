@@ -29,6 +29,7 @@ import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
+import org.jboss.wsf.spi.classloading.ClassLoaderProvider;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.jboss.wsf.spi.SPIProvider;
@@ -45,7 +46,7 @@ public class TestEndpointImpl implements TestEndpoint
    public void testAddress(final String archive, final String service, final String scheme, final String port)
    {
       SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();      
+      ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class, ClassLoaderProvider.getDefaultProvider().getServerIntegrationClassLoader()).getServerConfig();      
 
       File dataDir = serverConfig.getServerDataDir();
       File wsdlDir = new File(dataDir.getAbsolutePath() + File.separator + "wsdl" + File.separator + archive);

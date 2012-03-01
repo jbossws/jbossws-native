@@ -45,10 +45,11 @@ public class JBWS1121TestCase extends JBossWSTest
 {
 
    private static HelloWorld port;
+   private static InitialContext iniCtx;
 
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS1121TestCase.class, "jaxrpc-jbws1121.ear");
+      return new JBossWSTestSetup(JBWS1121TestCase.class, "jaxrpc-jbws1121.ear, jaxrpc-jbws1121-appclient.ear#jaxrpc-jbws1121-appclient.jar");
    }
 
    public void setUp() throws Exception
@@ -56,10 +57,20 @@ public class JBWS1121TestCase extends JBossWSTest
       super.setUp();
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloWorldService");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/HelloWorldService");
          port = (HelloWorld)service.getPort(HelloWorld.class);
       }
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
+      super.tearDown();
    }
 
    public void testCall() throws Exception

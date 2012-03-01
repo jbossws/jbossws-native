@@ -41,10 +41,11 @@ public class JBWS1148TestCase extends JBossWSTest
 {
 
    private static TestEndpoint port;
+   private static InitialContext iniCtx;
 
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS1148TestCase.class, "jaxrpc-jbws1148.war, jaxrpc-jbws1148-client.jar");
+      return new JBossWSTestSetup(JBWS1148TestCase.class, "jaxrpc-jbws1148.war, jaxrpc-jbws1148-appclient.ear#jaxrpc-jbws1148-appclient.jar");
    }
 
    public void setUp() throws Exception
@@ -52,10 +53,20 @@ public class JBWS1148TestCase extends JBossWSTest
       super.setUp();
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/TestService");
          port = (TestEndpoint)service.getPort(TestEndpoint.class);
       }
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
+      super.tearDown();
    }
 
    public void testCall() throws Exception
