@@ -1172,19 +1172,15 @@
                  <exclude>org/jboss/test/ws/jaxrpc/encoded/marshalltest/MarshallTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/encoded/parametermode/ParameterModeTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbas897/JBAS897TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1011/JBWS1011TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1093/JBWS1093TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1205/JBWS1205TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws124/JBWS124TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1303/JBWS1303TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1316/JBWS1316CallTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1427/JBWS1427TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws153/JBWS153TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1619/JBWS1619TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws163/JBWS163TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws165/JBWS165TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1653/JBWS1653TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws168/JBWS168TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1316/JBWS1316CallTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1427/JBWS1427TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1619/JBWS1619TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1653/JBWS1653TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1792/JBWS1792TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1179/JBWS1179TestCase*</exclude><!-- rewrite test -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws331/JBWS331TestCase*</exclude><!-- rewrite test -->
