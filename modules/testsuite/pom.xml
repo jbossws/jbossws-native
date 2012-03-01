@@ -1163,13 +1163,6 @@
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
 
                  <!-- # Remote JNDI lookup & jaxrpc client issues -->
-                 <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkDocEJBTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkDocJSETestCase*</exclude>
-                 <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkRpcEJBTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkRpcJSETestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbas897/JBAS897TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1316/JBWS1316CallTestCase*</exclude>
-
                  <exclude>org/jboss/test/ws/jaxrpc/jbws124/JBWS124TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws153/JBWS153TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws163/JBWS163TestCase*</exclude>
