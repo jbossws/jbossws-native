@@ -36,10 +36,11 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 public class XOPHandlerTestCase extends XOPBase  {
 
    private static XOPPing port;
+   private static InitialContext iniCtx;
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(XOPHandlerTestCase.class, "jaxrpc-xop-rpclit_handler.war, jaxrpc-xop-rpclit_handler-client.jar");
+      return new JBossWSTestSetup(XOPHandlerTestCase.class, "jaxrpc-xop-rpclit_handler.war, jaxrpc-xop-rpclit_handler-appclient.ear#jaxrpc-xop-rpclit_handler-appclient.jar");
    }
 
    protected void setUp() throws Exception
@@ -47,13 +48,20 @@ public class XOPHandlerTestCase extends XOPBase  {
       super.setUp();
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/XOPHandlerTestCaseRPC");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/XOPHandlerTestCaseRPC");
          port = (XOPPing)service.getPort(XOPPing.class);
          ((StubExt)port).setConfigName("Standard MTOM client");
       }
+   }
 
-      //((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://localhost:8081/jaxrpc-xop-rpclit_handler");
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
    }
 
    protected XOPPing getPort() {

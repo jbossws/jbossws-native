@@ -1192,13 +1192,9 @@
                  <exclude>org/jboss/test/ws/jaxrpc/overloaded/OverloadedTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/utf16/UTF16TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsdlpublish/WsdlPublishTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/UsernameTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/xop/doclit/XOPHandlerTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/xop/doclit/XOPTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/xop/rpclit/XOPHandlerTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/xop/rpclit/XOPTestCase*</exclude>
 
                  <!-- # webservices-description in jboss-web.xml / jboss.xml -->
+                 <exclude>org/jboss/test/ws/jaxrpc/wsse/UsernameTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/SignEncryptFaultTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/RpcTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/WebClientTestCase*</exclude>
