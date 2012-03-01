@@ -1168,8 +1168,6 @@
                  <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkRpcEJBTestCase*</exclude>
                  <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkRpcJSETestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/anonymous/AnonymousTypesTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/encoded/href/MarshallTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/encoded/marshalltest/MarshallTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/encoded/parametermode/ParameterModeTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbas897/JBAS897TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws124/JBWS124TestCase*</exclude>
@@ -1187,8 +1185,7 @@
                  <exclude>org/jboss/test/ws/jaxrpc/jbws637/JBWS637TestCase*</exclude><!-- review test -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws723/JBWS723TestCase*</exclude><!-- review test -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws772/JBWS772TestCase*</exclude><!-- rewrite test -->
-                 <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallDocLitTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallRpcLitTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallDocLitTestCase*</exclude><!-- investigate failure -->
                  <exclude>org/jboss/test/ws/jaxrpc/overloaded/OverloadedTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/utf16/UTF16TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsdlpublish/WsdlPublishTestCase*</exclude>

@@ -193,11 +193,15 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-encoded-href-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-encoded-href-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/encoded/href/MarshallTest.class"/>
         <include name="org/jboss/test/ws/jaxrpc/encoded/href/HRefHandler.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/encoded/href/WEB-INF">
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
@@ -206,6 +210,11 @@
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-encoded-href-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-encoded-href-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-encoded-marshalltest.war -->
@@ -220,12 +229,16 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-encoded-marshalltest-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-encoded-marshalltest-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/encoded/marshalltest/*.class"/>
         <exclude name="org/jboss/test/ws/jaxrpc/encoded/marshalltest/MarshallTestImpl.class"/>
         <exclude name="org/jboss/test/ws/jaxrpc/encoded/marshalltest/MarshallTestCase.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/encoded/marshalltest/WEB-INF">
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
@@ -234,6 +247,11 @@
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-encoded-marshalltest-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-encoded-marshalltest-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-encoded-parametermode.war -->
@@ -3217,11 +3235,15 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-marshall-doclit-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-marshall-doclit-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/marshall/StandardTypes.class"/>
         <include name="org/jboss/test/ws/jaxrpc/marshall/types/**"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/marshall-doclit/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -3229,6 +3251,11 @@
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/marshall-doclit/WEB-INF">
         <include name="jaxrpc-mapping.xml"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-marshall-doclit-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-marshall-doclit-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-marshall-rpclit.war -->
@@ -3245,12 +3272,16 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-marshall-rpclit-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-marshall-rpclit-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/marshall/StandardTypes.class"/>
         <include name="org/jboss/test/ws/jaxrpc/marshall/types/JavaBean.class"/>
         <include name="org/jboss/test/ws/jaxrpc/marshall/types/JavaBean2.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/marshall-rpclit/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -3258,6 +3289,11 @@
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/marshall-rpclit/WEB-INF">
         <include name="jaxrpc-mapping.xml"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-marshall-rpclit-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-marshall-rpclit-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-outparam.war -->
