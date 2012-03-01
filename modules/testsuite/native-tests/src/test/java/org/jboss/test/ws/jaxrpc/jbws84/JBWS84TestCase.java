@@ -54,7 +54,7 @@ public class JBWS84TestCase extends JBossWSTest
    /** Deploy the test ear */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS84TestCase.class, "jaxrpc-jbws84.war, jaxrpc-jbws84-client.jar");
+      return new JBossWSTestSetup(JBWS84TestCase.class, "jaxrpc-jbws84.war, jaxrpc-jbws84-appclient.ear#jaxrpc-jbws84-appclient.jar");
    }
 
    /** Use the JBoss generated dynamic proxy send the SOAP message.
@@ -62,23 +62,34 @@ public class JBWS84TestCase extends JBossWSTest
     */
    public void testProcessSOAPElement() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/MessageService");
-      Message port = (Message)service.getPort(Message.class);
+      InitialContext iniCtx = null;
+      try
+      {
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/MessageService");
+         Message port = (Message)service.getPort(Message.class);
 
-      MessageFactory factory = MessageFactory.newInstance();
-      SOAPMessage reqMessage = factory.createMessage();
+         MessageFactory factory = MessageFactory.newInstance();
+         SOAPMessage reqMessage = factory.createMessage();
 
-      DocumentBuilder builder = getDocumentBuilder();
-      Document doc = builder.parse(new ByteArrayInputStream(Message.request.getBytes()));
-      reqMessage.getSOAPBody().addDocument(doc);
+         DocumentBuilder builder = getDocumentBuilder();
+         Document doc = builder.parse(new ByteArrayInputStream(Message.request.getBytes()));
+         reqMessage.getSOAPBody().addDocument(doc);
 
-      SOAPEnvelope soapEnvelope = reqMessage.getSOAPPart().getEnvelope();
-      SOAPBody soapBody = soapEnvelope.getBody();
-      SOAPElement reqElement = (SOAPElement)soapBody.getChildElements().next();
+         SOAPEnvelope soapEnvelope = reqMessage.getSOAPPart().getEnvelope();
+         SOAPBody soapBody = soapEnvelope.getBody();
+         SOAPElement reqElement = (SOAPElement)soapBody.getChildElements().next();
 
-      SOAPElement resElement = port.processSOAPElement(reqElement);
-      validateResponse(resElement);
+         SOAPElement resElement = port.processSOAPElement(reqElement);
+         validateResponse(resElement);
+      }
+      finally
+      {
+         if (iniCtx != null)
+         {
+            iniCtx.close();
+         }
+      }
    }
 
    private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException

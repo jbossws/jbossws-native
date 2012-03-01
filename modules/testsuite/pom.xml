@@ -1196,11 +1196,6 @@
                  <exclude>org/jboss/test/ws/jaxrpc/jbws637/JBWS637TestCase*</exclude><!-- review test -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws723/JBWS723TestCase*</exclude><!-- review test -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws772/JBWS772TestCase*</exclude><!-- rewrite test -->
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws807/JBWS807TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws812/JBWS812TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws82/JBWS82TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws83/JBWS83TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws84/JBWS84TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallDocLitTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallRpcLitTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/overloaded/OverloadedTestCase*</exclude>

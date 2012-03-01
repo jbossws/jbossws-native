@@ -9,7 +9,7 @@
   <display-name>Test web service</display-name>
 
   <service-ref>
-    <service-ref-name>service/MessageService</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/MessageService</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>META-INF/wsdl/MessageService.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>
