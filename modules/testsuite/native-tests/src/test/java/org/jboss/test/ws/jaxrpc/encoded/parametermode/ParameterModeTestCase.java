@@ -121,6 +121,7 @@ public class ParameterModeTestCase extends JBossWSTest
    private static EnumFloat _varEnumFloat = EnumFloat.value1;
    private static EnumDouble _varEnumDouble = EnumDouble.value1;
    private static EnumByte _varEnumByte = EnumByte.value1;
+   private static InitialContext iniCtx;
 
    static
    {
@@ -129,7 +130,7 @@ public class ParameterModeTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(ParameterModeTestCase.class, "jaxrpc-encoded-parametermode.war, jaxrpc-encoded-parametermode-client.jar");
+      return new JBossWSTestSetup(ParameterModeTestCase.class, "jaxrpc-encoded-parametermode.war, jaxrpc-encoded-parametermode-appclient.ear#jaxrpc-encoded-parametermode-appclient.jar");
    }
 
    protected void setUp() throws Exception
@@ -137,9 +138,18 @@ public class ParameterModeTestCase extends JBossWSTest
       super.setUp();
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/TestService");
          port = (ParameterModeTest)service.getPort(ParameterModeTest.class);
+      }
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
       }
    }
 

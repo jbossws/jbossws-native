@@ -73,13 +73,17 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-anonymous-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-anonymous-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/anonymous/AnonymousTypesTestService.class"/>
         <include name="org/jboss/test/ws/jaxrpc/anonymous/ComplexTypeRoot.class"/>
         <include name="org/jboss/test/ws/jaxrpc/anonymous/ElementTypeRoot.class"/>
         <include name="org/jboss/test/ws/jaxrpc/anonymous/ElementTypeInside.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/anonymous/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -88,6 +92,11 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-anonymous-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-anonymous-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-benchmark -->
@@ -268,13 +277,17 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-encoded-parametermode-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-encoded-parametermode-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/encoded/parametermode/*.class"/>
         <include name="org/jboss/test/ws/jaxrpc/encoded/parametermode/holders/*.class"/>
         <exclude name="org/jboss/test/ws/jaxrpc/encoded/parametermode/ParameterModeTestImpl.class"/>
         <exclude name="org/jboss/test/ws/jaxrpc/encoded/parametermode/ParameterModeTestCase.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/encoded/parametermode/WEB-INF">
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
@@ -283,6 +296,11 @@
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-encoded-parametermode-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-encoded-parametermode-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-enventry.war -->
@@ -3322,11 +3340,15 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-overloaded-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-overloaded-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/overloaded/Overloaded.class"/>
         <include name="org/jboss/test/ws/jaxrpc/overloaded/OverloadedBean.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/overloaded/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -3335,6 +3357,11 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-overloaded-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-overloaded-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-utf16 -->
@@ -3349,10 +3376,14 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-utf16-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-utf16-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/utf16/Hello.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/utf16/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -3362,6 +3393,11 @@
         <include name="wsdl/**"/>
       </metainf>
     </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-utf16-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-utf16-appclient.jar"/>
+      </fileset>
+    </jar>
     
     <!-- jaxrpc-wsdlpublish -->
     <war warfile="${tests.output.dir}/test-libs/jaxrpc-wsdlpublish.war" webxml="${tests.output.dir}/test-resources/jaxrpc/wsdlpublish/WEB-INF/web.xml">
@@ -3369,6 +3405,9 @@
         <include name="org/jboss/test/ws/jaxrpc/wsdlpublish/TestEndpoint.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsdlpublish/TestEndpointImpl.class"/>
       </classes>
+      <manifest>
+          <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
+      </manifest>
       <webinf dir="${tests.output.dir}/test-resources/jaxrpc/wsdlpublish/WEB-INF">
         <include name="webservices.xml"/>
         <include name="jaxrpc-mapping.xml"/>
