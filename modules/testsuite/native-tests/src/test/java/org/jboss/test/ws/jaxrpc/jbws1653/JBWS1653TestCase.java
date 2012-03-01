@@ -47,7 +47,7 @@ public class JBWS1653TestCase extends JBossWSTest
    
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS1653TestCase.class, "jaxrpc-jbws1653.war, jaxrpc-jbws1653-client.jar");
+      return new JBossWSTestSetup(JBWS1653TestCase.class, "jaxrpc-jbws1653.war, jaxrpc-jbws1653-appclient.ear#jaxrpc-jbws1653-appclient.jar");
    }
 
    public void setUp() throws Exception
@@ -57,13 +57,24 @@ public class JBWS1653TestCase extends JBossWSTest
 
    public void testStandardConfig() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
-      TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
+      InitialContext iniCtx = null;
+      try
+      {
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/TestService");
+         TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
 
-      String retStr = port.echoString("kermit");
-      assertEquals("kermit", retStr);
-      assertNull(ClientHandler.message);
+         String retStr = port.echoString("kermit");
+         assertEquals("kermit", retStr);
+         assertNull(ClientHandler.message);
+      }
+      finally
+      {
+         if (iniCtx != null)
+         {
+            iniCtx.close();
+         }
+      }
    }
 
    public void testStandardConfigConfiguredDII() throws Exception
@@ -140,13 +151,24 @@ public class JBWS1653TestCase extends JBossWSTest
          URL configURL = urlLoader.findResource("META-INF/standard-jaxrpc-client-config.xml");
          assertTrue("Invalid config url: " + configURL, configURL.toExternalForm().indexOf("jbws1653") > 0);
 
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
-         TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
+         InitialContext iniCtx = null;
+         try
+         {
+            iniCtx = getAppclientInitialContext();
+            Service service = (Service)iniCtx.lookup("java:service/TestService");
+            TestEndpoint port = (TestEndpoint)service.getPort(TestEndpoint.class);
 
-         String retStr = port.echoString("kermit");
-         assertEquals("kermit", retStr);
-         assertEquals("kermit", ClientHandler.message);
+            String retStr = port.echoString("kermit");
+            assertEquals("kermit", retStr);
+            assertEquals("kermit", ClientHandler.message);
+         }
+         finally
+         {
+            if (iniCtx != null)
+            {
+               iniCtx.close();
+            }
+         }
       }
       finally
       {
