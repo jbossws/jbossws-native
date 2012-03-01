@@ -160,7 +160,7 @@
       </copy>
       <copy todir="@{targetdir}/org/jboss/as/webservices/main" flatten="false" overwrite="true">
         <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/jbossws-native-resources.jar"/>
+          <include name="**/jbossws-native-resources-@{jbossid}.jar"/>
           <include name="**/jbossws-@{jbossid}.jar"/>
         </fileset>
       </copy>
