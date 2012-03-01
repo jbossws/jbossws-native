@@ -63,6 +63,13 @@
     </dependency>
 
     <dependency>
+      <groupId>org.jboss.ws.native</groupId>
+      <artifactId>jbossws-native-resources</artifactId>
+      <version>${project.version}</version>
+      <classifier>jboss711</classifier>
+    </dependency>
+
+    <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-common-tools</artifactId>
       <scope>provided</scope>
@@ -107,6 +114,7 @@
       <scope>provided</scope>
     </dependency>
 
+    <!-- Container integrations -->
     <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-jboss701</artifactId>
