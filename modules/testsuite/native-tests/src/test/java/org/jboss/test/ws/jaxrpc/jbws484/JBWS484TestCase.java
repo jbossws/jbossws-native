@@ -42,10 +42,11 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 public class JBWS484TestCase extends JBossWSTest
 {
    private static TestService_PortType endpoint;
+   private static InitialContext iniCtx;
 
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS484TestCase.class, "jaxrpc-jbws484.war, jaxrpc-jbws484-client.jar");
+      return new JBossWSTestSetup(JBWS484TestCase.class, "jaxrpc-jbws484.war, jaxrpc-jbws484-appclient.ear#jaxrpc-jbws484-appclient.jar");
    }
    
    public void setUp() throws Exception
@@ -53,12 +54,22 @@ public class JBWS484TestCase extends JBossWSTest
       super.setUp();
       if (endpoint == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/TestService");
          endpoint = (TestService_PortType)service.getPort(TestService_PortType.class);
       }
    }
    
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
+      super.tearDown();
+   }
+
    public void testValidAccess() throws Exception
    {  
       int retObj = endpoint.testMethod("Hello", "Server");
