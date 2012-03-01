@@ -8,7 +8,7 @@
   <display-name>TestService</display-name>
 
   <service-ref>
-    <service-ref-name>service/DocumentTranslator</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/DocumentTranslator</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>META-INF/wsdl/translator.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>
@@ -18,7 +18,7 @@
   </service-ref>
   
   <service-ref>
-    <service-ref-name>service/TextTranslator</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/TextTranslator</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>META-INF/wsdl/translator.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>

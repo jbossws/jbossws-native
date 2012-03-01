@@ -40,18 +40,33 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class JBWS79TestCase extends JBossWSTest
 {
+   private static InitialContext iniCtx;
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS79TestCase.class, "jaxrpc-jbws79.war, jaxrpc-jbws79-client.jar");
+      return new JBossWSTestSetup(JBWS79TestCase.class, "jaxrpc-jbws79.war, jaxrpc-jbws79-appclient.ear#jaxrpc-jbws79-appclient.jar");
+   }
+
+   protected void setUp() throws Exception
+   {
+      super.setUp();
+      iniCtx = getAppclientInitialContext();
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+      }
+      super.tearDown();
    }
 
    /** Test endpoint one
     */
    public void testEndpointOne() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloOneService");
+      Service service = (Service)iniCtx.lookup("java:service/HelloOneService");
       HelloOne hello = (HelloOne)service.getPort(HelloOne.class);
 
       String in0 = "Kermit";
@@ -62,8 +77,7 @@ public class JBWS79TestCase extends JBossWSTest
     */
    public void testEndpointTwo() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloTwoService");
+      Service service = (Service)iniCtx.lookup("java:service/HelloTwoService");
       HelloTwo hello = (HelloTwo)service.getPort(HelloTwo.class);
 
       QName in0 = new QName("http://somens", "Kermit");

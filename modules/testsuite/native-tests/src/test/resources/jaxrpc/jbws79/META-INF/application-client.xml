@@ -9,7 +9,7 @@
   <display-name>HelloService</display-name>
 
   <service-ref>
-    <service-ref-name>service/HelloOneService</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/HelloOneService</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>META-INF/wsdl/HelloService.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping-one.xml</jaxrpc-mapping-file>
@@ -19,7 +19,7 @@
     </port-component-ref>
   </service-ref>
   <service-ref>
-    <service-ref-name>service/HelloTwoService</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/HelloTwoService</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>META-INF/wsdl/HelloService.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping-two.xml</jaxrpc-mapping-file>

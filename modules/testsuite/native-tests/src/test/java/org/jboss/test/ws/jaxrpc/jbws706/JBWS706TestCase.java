@@ -42,16 +42,27 @@ public class JBWS706TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS706TestCase.class, "jaxrpc-jbws706.war, jaxrpc-jbws706-client.jar");
+      return new JBossWSTestSetup(JBWS706TestCase.class, "jaxrpc-jbws706.war, jaxrpc-jbws706-appclient.ear#jaxrpc-jbws706-appclient.jar");
    }
 
    public void testEndpoint() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
-      DemoServicePortType hello = (DemoServicePortType)service.getPort(DemoServicePortType.class);
+      InitialContext iniCtx = null;
+      try
+      {
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/TestService");
+         DemoServicePortType hello = (DemoServicePortType)service.getPort(DemoServicePortType.class);
 
-      Descr retObj = hello.processDescr("descr");
-      assertEquals("descr", retObj.getDescription());
+         Descr retObj = hello.processDescr("descr");
+         assertEquals("descr", retObj.getDescription());
+      }
+      finally
+      {
+         if (iniCtx != null)
+         {
+            iniCtx.close();
+         }
+      }
    }
 }

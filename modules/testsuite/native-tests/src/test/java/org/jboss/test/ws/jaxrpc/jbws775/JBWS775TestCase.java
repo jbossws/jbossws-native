@@ -50,25 +50,36 @@ public class JBWS775TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS775TestCase.class, "jaxrpc-jbws775.war, jaxrpc-jbws775-client.jar");
+      return new JBossWSTestSetup(JBWS775TestCase.class, "jaxrpc-jbws775.war, jaxrpc-jbws775-appclient.ear#jaxrpc-jbws775-appclient.jar");
    }
 
    public void testEndpointAccess() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/DocumentTranslator");
-      DocumentTranslator port = (DocumentTranslator)service.getPort(DocumentTranslator.class);
+      InitialContext iniCtx = null;
+      try
+      {
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/DocumentTranslator");
+         DocumentTranslator port = (DocumentTranslator)service.getPort(DocumentTranslator.class);
 
-      TDocumentHead tDocHead = new TDocumentHead("title", "en");
-      TDocumentBody tDocBody = new TDocumentBody(new String[] {"hi", "bye"});
-      TDocument tDocReq = new TDocument(tDocHead, tDocBody);
-      TTranslationRequest tReq = new TTranslationRequest("es", tDocReq);
+         TDocumentHead tDocHead = new TDocumentHead("title", "en");
+         TDocumentBody tDocBody = new TDocumentBody(new String[] {"hi", "bye"});
+         TDocument tDocReq = new TDocument(tDocHead, tDocBody);
+         TTranslationRequest tReq = new TTranslationRequest("es", tDocReq);
 
-      TDocument tDocRes = port.translate(tReq);
-      assertEquals("en", tDocRes.getHead().getLanguage());
-      assertEquals("title", tDocRes.getHead().getTitle());
-      assertEquals("hi", tDocRes.getBody().getParagraph()[0]);
-      assertEquals("bye", tDocRes.getBody().getParagraph()[1]);
+         TDocument tDocRes = port.translate(tReq);
+         assertEquals("en", tDocRes.getHead().getLanguage());
+         assertEquals("title", tDocRes.getHead().getTitle());
+         assertEquals("hi", tDocRes.getBody().getParagraph()[0]);
+         assertEquals("bye", tDocRes.getBody().getParagraph()[1]);
+      }
+      finally
+      {
+         if (iniCtx != null)
+         {
+            iniCtx.close();
+         }
+      }
    }
 
    public void testSAAJAccess() throws Exception

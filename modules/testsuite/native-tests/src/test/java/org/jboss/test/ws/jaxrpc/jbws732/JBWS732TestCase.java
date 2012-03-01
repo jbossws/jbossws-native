@@ -42,10 +42,11 @@ public class JBWS732TestCase extends JBossWSTest
 {
    private static WrappedEndpoint wrapped;
    private static BareEndpoint bare;
+   private static InitialContext iniCtx;
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(JBWS732TestCase.class, "jaxrpc-jbws732.war, jaxrpc-jbws732-client.jar");
+      return new JBossWSTestSetup(JBWS732TestCase.class, "jaxrpc-jbws732.war, jaxrpc-jbws732-appclient.ear#jaxrpc-jbws732-appclient.jar");
    }
 
    protected void setUp() throws Exception
@@ -53,15 +54,24 @@ public class JBWS732TestCase extends JBossWSTest
       super.setUp();
       if (wrapped == null || bare == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/jbws732/wrapped");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/jbws732/wrapped");
          wrapped = (WrappedEndpoint)service.getPort(WrappedEndpoint.class);
 
-         service = (Service)iniCtx.lookup("java:comp/env/service/jbws732/bare");
+         service = (Service)iniCtx.lookup("java:service/jbws732/bare");
          bare = (BareEndpoint)service.getPort(BareEndpoint.class);
       }
    }
 
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
+      super.tearDown();
+   }
 
    /* Wrapped Style, Unwrapped Arrays */
    public void testEchoUnwrappedArrayWrappedStyleElements() throws Exception

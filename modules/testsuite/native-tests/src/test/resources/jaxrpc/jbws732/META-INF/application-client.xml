@@ -3,7 +3,7 @@
   <display-name>JAXRPC simple tests</display-name>
 
   <service-ref>
-    <service-ref-name>service/jbws732/wrapped</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/jbws732/wrapped</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>USE_JBOSS_CLIENT_XML_OVERRIDE</wsdl-file>
     <jaxrpc-mapping-file>META-INF/wrapped-mapping.xml</jaxrpc-mapping-file>
@@ -14,7 +14,7 @@
   </service-ref>
 
   <service-ref>
-    <service-ref-name>service/jbws732/bare</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/jbws732/bare</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>USE_JBOSS_CLIENT_XML_OVERRIDE</wsdl-file>
     <jaxrpc-mapping-file>META-INF/bare-mapping.xml</jaxrpc-mapping-file>
