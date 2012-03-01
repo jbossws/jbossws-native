@@ -5,7 +5,7 @@
 
   <servlet>
     <servlet-name>ConfidentialEndpoint</servlet-name>
-    <servlet-class>org.jboss.test.ws.jaxrpc.jbws1190.ConfidentialEndpoint</servlet-class>
+    <servlet-class>org.jboss.test.ws.jaxrpc.jbws1190.ConfidentialEndpointImpl</servlet-class>
   </servlet>
     
   <servlet>

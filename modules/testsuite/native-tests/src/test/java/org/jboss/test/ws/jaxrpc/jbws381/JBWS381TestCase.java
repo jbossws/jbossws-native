@@ -41,11 +41,12 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 public class JBWS381TestCase extends JBossWSTest
 {
    private WeatherForecastSoap port;
+   private static InitialContext iniCtx;
 
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS381TestCase.class, "jaxrpc-jbws381.war, jaxrpc-jbws381-client.jar");
+      return new JBossWSTestSetup(JBWS381TestCase.class, "jaxrpc-jbws381.war, jaxrpc-jbws381-appclient.ear#jaxrpc-jbws381-appclient.jar");
    }
 
    protected void setUp() throws Exception
@@ -53,10 +54,20 @@ public class JBWS381TestCase extends JBossWSTest
       super.setUp();
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/TestService");
          port = (WeatherForecastSoap)service.getPort(WeatherForecastSoap.class);
       }
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
+      super.tearDown();
    }
 
    public void testWeatherByPlaceName() throws Exception

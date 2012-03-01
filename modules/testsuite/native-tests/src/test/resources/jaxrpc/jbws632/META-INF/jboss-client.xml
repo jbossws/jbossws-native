@@ -5,10 +5,9 @@
    "http://www.jboss.org/j2ee/dtd/jboss-client_4_0.dtd">
 
 <jboss-client>
-  <jndi-name>jbossws-client</jndi-name>
 
   <service-ref>
-    <service-ref-name>service/TestService</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/TestService</service-ref-name>
     <wsdl-override>http://@jboss.bind.address@:8080/jaxrpc-jbws632?wsdl</wsdl-override>
   </service-ref>
 

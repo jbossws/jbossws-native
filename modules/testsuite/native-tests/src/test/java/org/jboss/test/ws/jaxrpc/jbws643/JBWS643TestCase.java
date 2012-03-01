@@ -42,11 +42,12 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 public class JBWS643TestCase extends JBossWSTest
 {
    private static ResearchService port;
+   private static InitialContext iniCtx;
    
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS643TestCase.class, "jaxrpc-jbws643.war, jaxrpc-jbws643-client.jar");
+      return new JBossWSTestSetup(JBWS643TestCase.class, "jaxrpc-jbws643.war, jaxrpc-jbws643-appclient.ear#jaxrpc-jbws643-appclient.jar");
    }
 
    protected void setUp() throws Exception
@@ -54,10 +55,19 @@ public class JBWS643TestCase extends JBossWSTest
       super.setUp();
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/ResearchService");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/ResearchService");
          port = (ResearchService)service.getPort(ResearchService.class);
       }
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+      }
+      super.tearDown();
    }
 
    public void testCreateService() throws Exception

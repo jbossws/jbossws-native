@@ -49,18 +49,29 @@ public class JBWS413TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS413TestCase.class, "jaxrpc-jbws413.war, jaxrpc-jbws413-client.jar");
+      return new JBossWSTestSetup(JBWS413TestCase.class, "jaxrpc-jbws413.war, jaxrpc-jbws413-appclient.ear#jaxrpc-jbws413-appclient.jar");
    }
 
-   public void testClientAccess() throws Exception
+   public void testAppclientAccess() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
-      TestSEI port = (TestSEI)service.getPort(TestSEI.class);
+      InitialContext iniCtx = null;
+      try
+      {
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/TestService");
+         TestSEI port = (TestSEI)service.getPort(TestSEI.class);
 
-      JavaType in = new JavaType(new Double[] { new Double(1), new Double(2), new Double(3) });
-      JavaType retObj = port.doStuff(in);
-      assertEquals(in, retObj);
+         JavaType in = new JavaType(new Double[] { new Double(1), new Double(2), new Double(3) });
+         JavaType retObj = port.doStuff(in);
+         assertEquals(in, retObj);
+      }
+      finally
+      {
+         if (iniCtx != null)
+         {
+            iniCtx.close();
+         }
+      }
    }
 
    /**

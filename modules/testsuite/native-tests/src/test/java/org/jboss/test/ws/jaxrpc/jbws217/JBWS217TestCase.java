@@ -41,7 +41,7 @@ public class JBWS217TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS217TestCase.class, "jaxrpc-jbws217.war, jaxrpc-jbws217-client.jar");
+      return new JBossWSTestSetup(JBWS217TestCase.class, "jaxrpc-jbws217.war, jaxrpc-jbws217-appclient.ear#jaxrpc-jbws217-appclient.jar");
    }
 
    /**
@@ -49,12 +49,23 @@ public class JBWS217TestCase extends JBossWSTest
     */
    public void testEndpoint() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
-      Hello hello = (Hello)service.getPort(Hello.class);
+      InitialContext iniCtx = null;
+      try
+      {
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/HelloService");
+         Hello hello = (Hello)service.getPort(Hello.class);
 
-      int in0 = 100;
-      int retObj = hello.hello(in0);
-      assertEquals(in0, retObj);
+         int in0 = 100;
+         int retObj = hello.hello(in0);
+         assertEquals(in0, retObj);
+      }
+      finally
+      {
+         if (iniCtx != null)
+         {
+            iniCtx.close();
+         }
+      }
    }
 }

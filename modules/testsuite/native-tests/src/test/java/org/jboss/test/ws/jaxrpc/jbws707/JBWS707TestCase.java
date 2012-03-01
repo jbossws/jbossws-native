@@ -54,11 +54,12 @@ import org.w3c.dom.NodeList;
 public class JBWS707TestCase extends JBossWSTest
 {
    private static TestEndpoint port;
+   private static InitialContext iniCtx;
    
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS707TestCase.class, "jaxrpc-jbws707.war, jaxrpc-jbws707-client.jar");
+      return new JBossWSTestSetup(JBWS707TestCase.class, "jaxrpc-jbws707.war, jaxrpc-jbws707-appclient.ear#jaxrpc-jbws707-appclient.jar");
    }
 
    public void setUp() throws Exception
@@ -66,12 +67,22 @@ public class JBWS707TestCase extends JBossWSTest
       super.setUp();
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/TestService");
          port = (TestEndpoint)service.getPort(TestEndpoint.class);
       }
    }
    
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
+      super.tearDown();
+   }
+
    public void testSpecialChars() throws Exception
    {
       String inStr = "&Test & this &";

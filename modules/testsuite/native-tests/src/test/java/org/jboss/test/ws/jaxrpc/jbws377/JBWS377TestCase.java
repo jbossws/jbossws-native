@@ -39,16 +39,34 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class JBWS377TestCase extends JBossWSTest
 {
+
+   private InitialContext iniCtx;
+
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS377TestCase.class, "jaxrpc-jbws377.war, jaxrpc-jbws377-client.jar");
+      return new JBossWSTestSetup(JBWS377TestCase.class, "jaxrpc-jbws377.war, jaxrpc-jbws377-appclient.ear#jaxrpc-jbws377-appclient.jar");
+   }
+
+   protected void setUp() throws Exception
+   {
+      super.setUp();
+      iniCtx = getAppclientInitialContext();
+   }
+   
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
+      super.tearDown();
    }
 
    public void testEndpointNotNull() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
+      Service service = (Service)iniCtx.lookup("java:service/HelloService");
       Hello hello = (Hello)service.getPort(Hello.class);
 
       UserType user = new UserType("kermit");
@@ -58,8 +76,7 @@ public class JBWS377TestCase extends JBossWSTest
 
    public void testEndpointNull() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
+      Service service = (Service)iniCtx.lookup("java:service/HelloService");
       Hello hello = (Hello)service.getPort(Hello.class);
 
       String retObj = hello.echoStrings(null, "str2", null);

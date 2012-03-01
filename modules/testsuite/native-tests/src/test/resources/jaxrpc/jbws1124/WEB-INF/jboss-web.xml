@@ -4,10 +4,6 @@
 
 <jboss-web>
   
-  <class-loading>
-    <loader-repository>jbossws.jbws1124:domain=@jbws1124.domain@ </loader-repository>
-  </class-loading>
-  
   <context-root>/@jbws1124.domain@</context-root>
   
 </jboss-web>

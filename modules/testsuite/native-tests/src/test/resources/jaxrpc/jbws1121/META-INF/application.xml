@@ -13,8 +13,4 @@
     </web>
   </module>
 
-  <module>
-    <java>jaxrpc-jbws1121-client.jar</java>
-  </module>
-
 </application>
