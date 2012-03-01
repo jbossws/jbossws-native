@@ -21,22 +21,16 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws165;
 
-import java.io.File;
 import java.net.URL;
 
-import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
-import javax.xml.rpc.Stub;
 
 import junit.framework.Test;
 
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
-import org.jboss.ws.core.jaxrpc.client.ServiceImpl;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
-
-
 
 /**
  * Tests <context-root> and <port-component-root> elements in EJB endpoints

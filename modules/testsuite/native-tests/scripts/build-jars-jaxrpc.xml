@@ -738,10 +738,14 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws124-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws124-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws124/Hello.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/jbws124/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -750,6 +754,11 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws124-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-jbws124-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-jbws128 -->
@@ -794,10 +803,14 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws153-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws153-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws153/Order.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/jbws153/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -806,6 +819,11 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="jaxrpc-deployment.xml"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws153-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-jbws153-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-jbws163 -->
@@ -820,10 +838,14 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws163-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws163-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws163/Hello.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/jbws163/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -832,6 +854,11 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws163-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-jbws163-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-jbws165 -->
@@ -931,13 +958,17 @@
         <include name="wsdl/**"/>
       </webinf>
     </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws168-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws168-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws168/Hello.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws168/UserType.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws168/*RequestStruct.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws168/*ResponseStruct.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/jbws168/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -947,6 +978,11 @@
         <include name="jaxrpc-deployment.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws168-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-jbws168-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-jbws217 -->

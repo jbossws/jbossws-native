@@ -42,18 +42,29 @@ public class JBWS168TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS168TestCase.class, "jaxrpc-jbws168.war, jaxrpc-jbws168-client.jar");
+      return new JBossWSTestSetup(JBWS168TestCase.class, "jaxrpc-jbws168.war, jaxrpc-jbws168-appclient.ear#jaxrpc-jbws168-appclient.jar");
    }
 
    public void testEmptyProperty() throws Exception
    {
 
-      InitialContext iniCtx = getInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
-      Hello hello = (Hello)service.getPort(Hello.class);
+      InitialContext iniCtx = null;
+      try
+      {
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/HelloService");
+         Hello hello = (Hello)service.getPort(Hello.class);
 
-      UserType ut = new UserType("A", null, null);
-      UserType retObj = hello.hello(ut);
-      assertEquals(ut, retObj);
+         UserType ut = new UserType("A", null, null);
+         UserType retObj = hello.hello(ut);
+         assertEquals(ut, retObj);
+      }
+      finally
+      {
+         if (iniCtx != null)
+         {
+            iniCtx.close();
+         }
+      }
    }
 }
