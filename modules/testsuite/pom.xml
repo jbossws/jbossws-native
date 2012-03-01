@@ -1168,12 +1168,13 @@
                  <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkRpcEJBTestCase*</exclude>
                  <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkRpcJSETestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbas897/JBAS897TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1316/JBWS1316CallTestCase*</exclude>
+
                  <exclude>org/jboss/test/ws/jaxrpc/jbws124/JBWS124TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws153/JBWS153TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws163/JBWS163TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws165/JBWS165TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws168/JBWS168TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1316/JBWS1316CallTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1427/JBWS1427TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1619/JBWS1619TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1653/JBWS1653TestCase*</exclude>
