@@ -1175,6 +1175,7 @@
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/SignFaultTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/SimpleSignEncryptTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/UsernameTestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/wsse/WebClientTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/signup/AccountSignupTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/AddressingReplyToTestCase*</exclude>
               </excludes>
