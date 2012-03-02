@@ -3363,7 +3363,7 @@
     </war>
     <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-marshall-doclit-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
-        <include name="org/jboss/test/ws/jaxrpc/marshall/StandardTypes.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/marshall/StandardTypes*.class"/>
         <include name="org/jboss/test/ws/jaxrpc/marshall/types/**"/>
         <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
@@ -3547,13 +3547,18 @@
         <include name="wsse.truststore"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-wsse-account-signup-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-wsse-account-signup-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/wsse/signup/AccountInfo.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/signup/AccountSignup.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/wsse/signup/AccountSignup_*.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/signup/Address.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/signup/CreditCardInfo.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/wsse/account-signup/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -3563,6 +3568,11 @@
         <include name="wsdl/**"/>
         <include name="jaxrpc-mapping.xml"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-wsse-account-signup-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-wsse-account-signup-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-wsse-rpc.war -->
@@ -3586,12 +3596,16 @@
         <include name="wsse.truststore"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-wsse-rpc-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-wsse-rpc-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/wsse/Hello.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/HelloException.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/UserType.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/wsse/rpc/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -3602,12 +3616,21 @@
         <include name="jaxrpc-mapping.xml"/>
       </metainf>
     </jar>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-wsse-rpc-none-client.jar">
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-wsse-rpc-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-wsse-rpc-appclient.jar"/>
+      </fileset>
+    </jar>
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-wsse-rpc-none-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/wsse/Hello.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/HelloException.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/UserType.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/wsse/rpc/META-INF">
         <include name="application-client.xml"/>
       </metainf>
@@ -3618,6 +3641,11 @@
         <include name="wsdl/**"/>
         <include name="jaxrpc-mapping.xml"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-wsse-rpc-none-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-wsse-rpc-none-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-wsse-simple-sign-encrypt -->
@@ -3643,12 +3671,16 @@
         <include name="wsse.truststore"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-wsse-simple-sign-encrypt-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-wsse-simple-sign-encrypt-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/wsse/Hello.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/HelloException.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/UserType.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/wsse/rpc/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -3660,6 +3692,11 @@
         <include name="wsdl/**"/>
         <include name="jaxrpc-mapping.xml"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-wsse-simple-sign-encrypt-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-wsse-simple-sign-encrypt-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-wsse-sign-fault.war -->
@@ -3685,12 +3722,16 @@
         <include name="wsse.truststore"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-wsse-sign-fault-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-wsse-sign-fault-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/wsse/Hello.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/HelloException.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/UserType.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/wsse/rpc/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -3702,6 +3743,11 @@
         <include name="wsdl/**"/>
         <include name="jaxrpc-mapping.xml"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-wsse-sign-fault-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-wsse-sign-fault-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-wsse-sign-encrypt-fault.war -->
@@ -3727,12 +3773,16 @@
         <include name="wsse.truststore"/>
       </webinf>
     </war>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-wsse-sign-encrypt-fault-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-wsse-sign-encrypt-fault-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/wsse/Hello.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/HelloException.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/UserType.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/wsse/rpc/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -3744,6 +3794,11 @@
         <include name="wsdl/**"/>
         <include name="jaxrpc-mapping.xml"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-wsse-sign-encrypt-fault-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-wsse-sign-encrypt-fault-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-wsse-store-pass-encrypt-class-cmd.war -->
@@ -3830,6 +3885,7 @@
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/wsse/username/META-INF">
         <include name="ejb-jar.xml"/>
         <include name="jboss.xml"/>
+        <include name="jboss-ejb3.xml"/>
         <include name="jboss-webservices.xml"/>
         <include name="jaxrpc-mapping.xml"/>
         <include name="jboss-wsse-server.xml"/>
@@ -3841,12 +3897,18 @@
         <include name="wsse.truststore"/>
       </metainf>
     </jar>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-wsse-username-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-wsse-username-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/wsse/username/*Type.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/username/*Struct.class"/>
         <include name="org/jboss/test/ws/jaxrpc/wsse/username/*Service.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/wsse/JaxRpcTestService*.class"/>
+        <include name="org/jboss/test/ws/jaxrpc/wsse/SimpleUserType.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/wsse/username/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
@@ -3854,6 +3916,11 @@
         <include name="jboss-wsse-client.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-wsse-username-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-wsse-username-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-xop-doclit without handlers -->

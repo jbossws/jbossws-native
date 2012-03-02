@@ -38,35 +38,46 @@ public class AccountSignupTestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(AccountSignupTestCase.class, "jaxrpc-wsse-account-signup.war, jaxrpc-wsse-account-signup-client.jar");
+      return new JBossWSTestSetup(AccountSignupTestCase.class, "jaxrpc-wsse-account-signup.war, jaxrpc-wsse-account-signup-appclient.ear#jaxrpc-wsse-account-signup-appclient.jar");
    }
 
    public void testEndpoint() throws Exception
    {
-      InitialContext iniCtx = getAppclientInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/AccountSignupService");
-      AccountSignup signup = (AccountSignup)service.getPort(AccountSignup.class);
+      InitialContext iniCtx = null;
+      try
+      {
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/AccountSignupService");
+         AccountSignup signup = (AccountSignup)service.getPort(AccountSignup.class);
 
-      AccountInfo account = new AccountInfo();
-      account.setFirstName("Jason");
-      account.setLastName("Greene");
-      Address address = new Address();
-      address.setCity("Madison");
-      address.setStreet("Some street");
-      address.setZip("53717");
-      account.setAddress(address);
+         AccountInfo account = new AccountInfo();
+         account.setFirstName("Jason");
+         account.setLastName("Greene");
+         Address address = new Address();
+         address.setCity("Madison");
+         address.setStreet("Some street");
+         address.setZip("53717");
+         account.setAddress(address);
 
-      CreditCardInfo credit = new CreditCardInfo();
-      credit.setCreditCardNumber("1234-1234-1234-1234");
-      Calendar cal = Calendar.getInstance();
-      cal.clear();
-      cal.set(2005, 11, 1, 0, 0);
+         CreditCardInfo credit = new CreditCardInfo();
+         credit.setCreditCardNumber("1234-1234-1234-1234");
+         Calendar cal = Calendar.getInstance();
+         cal.clear();
+         cal.set(2005, 11, 1, 0, 0);
 
-      credit.setExpiration(cal.getTime());
-      credit.setSecurityCode("123");
-      account.setCreditCardInfo(credit);
+         credit.setExpiration(cal.getTime());
+         credit.setSecurityCode("123");
+         account.setCreditCardInfo(credit);
 
-      int result = signup.signup(account, 0.0f, new Date());
-      assertTrue(result == 345);
+         int result = signup.signup(account, 0.0f, new Date());
+         assertTrue(result == 345);
+      }
+      finally
+      {
+         if (iniCtx != null)
+         {
+            iniCtx.close();
+         }
+      }
    }
 }
