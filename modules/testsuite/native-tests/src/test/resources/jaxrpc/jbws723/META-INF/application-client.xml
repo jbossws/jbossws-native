@@ -8,19 +8,19 @@
   <display-name>webservice client app</display-name>
 
   <service-ref>
-    <service-ref-name>service/BasicSecured</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/BasicSecured</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>META-INF/wsdl/OrganizationService.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>
   </service-ref>
   <service-ref>
-    <service-ref-name>service/RoleSecured</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/RoleSecured</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>META-INF/wsdl/OrganizationService.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>
   </service-ref>
   <service-ref>
-    <service-ref-name>service/ConfidentialSecured</service-ref-name>
+    <service-ref-name>java:jboss/exported/service/ConfidentialSecured</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
     <wsdl-file>META-INF/wsdl/OrganizationService.wsdl</wsdl-file>
     <jaxrpc-mapping-file>META-INF/jaxrpc-mapping.xml</jaxrpc-mapping-file>

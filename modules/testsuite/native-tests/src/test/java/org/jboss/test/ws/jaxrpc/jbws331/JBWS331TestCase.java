@@ -48,7 +48,7 @@ public class JBWS331TestCase extends JBossWSTest
 
    public void testEndpointAccess() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
+      InitialContext iniCtx = getAppclientInitialContext();
       Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
       Hello endpoint = (Hello)service.getPort(Hello.class);
 
@@ -58,7 +58,7 @@ public class JBWS331TestCase extends JBossWSTest
 
    public void testRemoteAccess() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
+      InitialContext iniCtx = getAppclientInitialContext();
       HelloHome home = (HelloHome)iniCtx.lookup("java:comp/env/ejb/Hello");
       HelloRemote slsb = home.create();
 

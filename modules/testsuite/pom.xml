@@ -1162,12 +1162,13 @@
                  <!-- JAXR not available -->
                  <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
 
-                 <!-- # Remote JNDI lookup & jaxrpc client issues -->
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1179/JBWS1179TestCase*</exclude><!-- rewrite test -->
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws331/JBWS331TestCase*</exclude><!-- rewrite test -->
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws723/JBWS723TestCase*</exclude><!-- review test -->
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws772/JBWS772TestCase*</exclude><!-- rewrite test -->
-                 <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallDocLitTestCase*</exclude><!-- investigate failure -->
+                 <!-- # TODO: rewrite tests using AS6 internals -->
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws1179/JBWS1179TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws331/JBWS331TestCase*</exclude>
+                 <exclude>org/jboss/test/ws/jaxrpc/jbws772/JBWS772TestCase*</exclude>
+
+                 <!-- # TODO: investigate failure -->
+                 <exclude>org/jboss/test/ws/jaxrpc/marshall/MarshallDocLitTestCase*</exclude>
 
                  <!-- # webservices-description in jboss-web.xml / jboss.xml -->
                  <exclude>org/jboss/test/ws/jaxrpc/wsse/UsernameTestCase*</exclude>

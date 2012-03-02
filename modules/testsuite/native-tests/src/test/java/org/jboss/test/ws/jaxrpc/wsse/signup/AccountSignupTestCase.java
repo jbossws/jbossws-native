@@ -43,7 +43,7 @@ public class AccountSignupTestCase extends JBossWSTest
 
    public void testEndpoint() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
+      InitialContext iniCtx = getAppclientInitialContext();
       Service service = (Service)iniCtx.lookup("java:comp/env/service/AccountSignupService");
       AccountSignup signup = (AccountSignup)service.getPort(AccountSignup.class);
 
