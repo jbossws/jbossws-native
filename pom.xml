@@ -94,7 +94,7 @@
     <woodstox.version>3.2.6</woodstox.version>
     <wscommons.policy.version>1.0</wscommons.policy.version>
     <wsdl4j.version>1.6.2</wsdl4j.version>
-    <xmlsec.version>1.4.6</xmlsec.version>
+    <xmlsec.version>1.5.1</xmlsec.version>
     <xerces.version>2.9.1</xerces.version>
     <jbossxb.version>2.0.3.GA</jbossxb.version>
     <junit.version>3.8.1</junit.version>
