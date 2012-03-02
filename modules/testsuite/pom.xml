@@ -1136,9 +1136,6 @@
                  <!-- # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
                  <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
 
-                 <!-- # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored-->
-                 <exclude>org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*</exclude>
-
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
