@@ -54,7 +54,7 @@ public class JBWS1179TestCase extends JBossWSTest
       super.setUp();
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
+         InitialContext iniCtx = getAppclientInitialContext();
          Service service = (Service)iniCtx.lookup("java:comp/env/service/TestService");
          port = (TestEndpoint)service.getPort(TestEndpoint.class);
       }

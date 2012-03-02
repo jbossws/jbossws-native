@@ -2211,23 +2211,33 @@
         <include name="jaxrpc-mapping.xml"/>
         <include name="webservices.xml"/>
         <include name="ejb-jar.xml"/>
+        <include name="jboss-ejb3.xml"/>
         <include name="jboss.xml"/>
         <include name="jboss-webservices.xml"/>
         <include name="wsdl/**"/>
       </metainf>
     </jar>
-    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-jbws723-client.jar">
+    <jar jarfile="${tests.output.dir}/test-libs/jaxrpc-jbws723-appclient.jar">
       <fileset dir="${tests.output.dir}/test-classes">
         <include name="org/jboss/test/ws/jaxrpc/jbws723/OrganizationService.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws723/OrganizationHome.class"/>
         <include name="org/jboss/test/ws/jaxrpc/jbws723/OrganizationRemote.class"/>
+        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
       </fileset>
+      <manifest>
+          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
+      </manifest>
       <metainf dir="${tests.output.dir}/test-resources/jaxrpc/jbws723/META-INF">
         <include name="application-client.xml"/>
         <include name="jboss-client.xml"/>
         <include name="jaxrpc-mapping.xml"/>
         <include name="wsdl/**"/>
       </metainf>
+    </jar>
+    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws723-appclient.ear">
+      <fileset dir="${tests.output.dir}/test-libs">
+        <include name="jaxrpc-jbws723-appclient.jar"/>
+      </fileset>
     </jar>
     
     <!-- jaxrpc-jbws732 -->

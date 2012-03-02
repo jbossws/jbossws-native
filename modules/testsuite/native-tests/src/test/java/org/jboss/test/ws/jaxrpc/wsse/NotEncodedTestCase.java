@@ -52,7 +52,7 @@ public class NotEncodedTestCase extends JBossWSTest
     */
    public void testEndpoint() throws Exception
    {
-      InitialContext iniCtx = getInitialContext();
+      InitialContext iniCtx = getAppclientInitialContext();
       Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
       Hello hello = (Hello)service.getPort(Hello.class);
 

@@ -59,7 +59,7 @@ public class UsernameTestCase extends JBossWSTest
 
       if (port == null)
       {
-         InitialContext iniCtx = getInitialContext();
+         InitialContext iniCtx = getAppclientInitialContext();
          Service service = (Service)iniCtx.lookup("java:comp/env/service/TestServiceEJB");
          port = (JaxRpcTestService)service.getPort(JaxRpcTestService.class);
       }
