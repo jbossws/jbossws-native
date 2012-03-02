@@ -36,19 +36,32 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class RpcTestCase extends JBossWSTest
 {
-   /** Construct the test case with a given name
-    */
 
-   /** Deploy the test */
+   private static InitialContext iniCtx = null;
+   
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(RpcTestCase.class, "jaxrpc-wsse-rpc.war, jaxrpc-wsse-rpc-client.jar");
+      return new JBossWSTestSetup(RpcTestCase.class, "jaxrpc-wsse-rpc.war, jaxrpc-wsse-rpc-appclient.ear#jaxrpc-wsse-rpc-appclient.jar");
+   }
+
+   protected void setUp() throws Exception
+   {
+      iniCtx = getAppclientInitialContext(); 
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
+      super.tearDown();
    }
 
    public void testEndpoint() throws Exception
    {
-      InitialContext iniCtx = getAppclientInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
+      Service service = (Service)iniCtx.lookup("java:service/HelloService");
       Hello hello = (Hello)service.getPort(Hello.class);
 
       UserType in0 = new UserType("Kermit");
@@ -58,8 +71,7 @@ public class RpcTestCase extends JBossWSTest
 
    public void testFault() throws Exception
    {
-      InitialContext iniCtx = getAppclientInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
+      Service service = (Service)iniCtx.lookup("java:service/HelloService");
       Hello hello = (Hello)service.getPort(Hello.class);
 
       HelloException exception = null;

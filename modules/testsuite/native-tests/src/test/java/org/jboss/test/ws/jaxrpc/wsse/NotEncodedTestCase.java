@@ -44,7 +44,7 @@ public class NotEncodedTestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(NotEncodedTestCase.class, "jaxrpc-wsse-rpc.war, jaxrpc-wsse-rpc-none-client.jar");
+      return new JBossWSTestSetup(NotEncodedTestCase.class, "jaxrpc-wsse-rpc.war, jaxrpc-wsse-rpc-none-appclient.ear#jaxrpc-wsse-rpc-none-appclient.jar");
    }
 
    /**
@@ -52,20 +52,31 @@ public class NotEncodedTestCase extends JBossWSTest
     */
    public void testEndpoint() throws Exception
    {
-      InitialContext iniCtx = getAppclientInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
-      Hello hello = (Hello)service.getPort(Hello.class);
-
+      InitialContext iniCtx = null;
       try
       {
-         UserType in0 = new UserType("Kermit");
-         hello.echoUserType(in0);
-         fail("RemoteException expected");
+         iniCtx = getAppclientInitialContext();
+         Service service = (Service)iniCtx.lookup("java:service/HelloService");
+         Hello hello = (Hello)service.getPort(Hello.class);
+
+         try
+         {
+            UserType in0 = new UserType("Kermit");
+            hello.echoUserType(in0);
+            fail("RemoteException expected");
+         }
+         catch (RemoteException ex)
+         {
+            String message = ex.getMessage();
+            assertTrue("Unexpected message: " + message, message.indexOf("requires <wsse:Security>") >= 0);
+         }
       }
-      catch (RemoteException ex)
+      finally
       {
-         String message = ex.getMessage();
-         assertTrue("Unexpected message: " + message, message.indexOf("requires <wsse:Security>") >= 0);
+         if (iniCtx != null)
+         {
+            iniCtx.close();
+         }
       }
    }
 }

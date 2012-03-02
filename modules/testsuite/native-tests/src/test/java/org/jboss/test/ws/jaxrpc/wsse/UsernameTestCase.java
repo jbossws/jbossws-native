@@ -50,7 +50,7 @@ public class UsernameTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(UsernameTestCase.class, "jaxrpc-wsse-username.jar, jaxrpc-wsse-username-client.jar");
+      return new JBossWSTestSetup(UsernameTestCase.class, "jaxrpc-wsse-username.jar, jaxrpc-wsse-username-appclient.ear#jaxrpc-wsse-username-appclient.jar", true);
    }
 
    protected void setUp() throws Exception
@@ -60,8 +60,9 @@ public class UsernameTestCase extends JBossWSTest
       if (port == null)
       {
          InitialContext iniCtx = getAppclientInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/TestServiceEJB");
+         Service service = (Service)iniCtx.lookup("java:service/TestServiceEJB");
          port = (JaxRpcTestService)service.getPort(JaxRpcTestService.class);
+         iniCtx.close();
       }
 
       //Backup values

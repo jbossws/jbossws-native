@@ -45,6 +45,7 @@ public class SimpleSignEncryptTestCase extends JBossWSTest
    private String trustStorePassword;
    private String keyStoreType;
    private String trustStoreType;
+   private static InitialContext iniCtx;
    
    /** Construct the test case with a given name
     */
@@ -52,13 +53,28 @@ public class SimpleSignEncryptTestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(SimpleSignEncryptTestCase.class, "jaxrpc-wsse-simple-sign-encrypt.war, jaxrpc-wsse-simple-sign-encrypt-client.jar");
+      return new JBossWSTestSetup(SimpleSignEncryptTestCase.class, "jaxrpc-wsse-simple-sign-encrypt.war, jaxrpc-wsse-simple-sign-encrypt-appclient.ear#jaxrpc-wsse-simple-sign-encrypt-appclient.jar");
+   }
+
+   protected void setUp() throws Exception
+   {
+      super.setUp();
+      iniCtx = getAppclientInitialContext();
+   }
+
+   protected void tearDown() throws Exception
+   {
+      if (iniCtx != null)
+      {
+         iniCtx.close();
+         iniCtx = null;
+      }
+      super.tearDown();
    }
 
    public void testEndpoint() throws Exception
    {
-      InitialContext iniCtx = getAppclientInitialContext();
-      Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
+      Service service = (Service)iniCtx.lookup("java:service/HelloService");
       Hello hello = (Hello)service.getPort(Hello.class);
 
       UserType in0 = new UserType("Kermit");
@@ -71,8 +87,7 @@ public class SimpleSignEncryptTestCase extends JBossWSTest
       clearEnvironment();
       try
       {
-         InitialContext iniCtx = getAppclientInitialContext();
-         Service service = (Service)iniCtx.lookup("java:comp/env/service/HelloService");
+         Service service = (Service)iniCtx.lookup("java:service/HelloService");
          Hello hello = (Hello)service.getPort(Hello.class);
    
          UserType in0 = new UserType("Kermit");

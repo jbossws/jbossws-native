@@ -37,6 +37,6 @@ public class SignEncryptFaultTestCase extends RpcTestCase
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(SignEncryptFaultTestCase.class, "jaxrpc-wsse-sign-encrypt-fault.war, jaxrpc-wsse-sign-encrypt-fault-client.jar");
+      return new JBossWSTestSetup(SignEncryptFaultTestCase.class, "jaxrpc-wsse-sign-encrypt-fault.war, jaxrpc-wsse-sign-encrypt-fault-appclient.ear#jaxrpc-wsse-sign-encrypt-fault-appclient.jar");
    }
 }
