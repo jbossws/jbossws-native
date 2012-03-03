@@ -93,7 +93,7 @@
           <include name="**/wscommons-policy.jar"/>
         </fileset>
       </copy>
-      <copy todir="@{targetdir}/org/apache/xmlsec/main" flatten="false" overwrite="true">
+      <copy todir="@{targetdir}/org/apache/santuario/xmlsec/main" flatten="false" overwrite="true">
         <fileset dir="@{thirdpartydir}/lib">
           <include name="**/xmlsec.jar"/>
         </fileset>
