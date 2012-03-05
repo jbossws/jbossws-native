@@ -49,6 +49,30 @@ The JBossWS Team
 Previous Releases ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 -----------------------
+jbossws-native-4.0.2.GA
+-----------------------
+
+Feature Request
+
+    * [JBWS-3439] - Upgrade to Apache WSS4J 1.6.5 and Santuario 1.5.1
+
+Bug
+
+    * [JBWS-3432] - WebservicesFactory can't parse webservices.xml with javaee:descriptionGroup references
+
+Task
+
+    * [JBWS-3442] - Verify dependencies are up to date
+    * [JBWS-3437] - WS Refs have to keep classloader reference
+    * [JBWS-3438] - JAX-RPC generated proxies have to be de/serializable
+    * [JBWS-3444] - Review and rewrite appclient tests
+
+Errata
+
+    See: https://issues.jboss.org/browse/JBWS-3450
+
+
+-----------------------
 jbossws-native-4.0.1.GA
 -----------------------
 
