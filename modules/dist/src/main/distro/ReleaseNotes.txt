@@ -28,19 +28,22 @@ What's new in jbossws-native-${project.version}
 
 Feature Request
 
-    TODO: enumerate
+    * [JBWS-3439] - Upgrade to Apache WSS4J 1.6.5 and Santuario 1.5.1
 
 Bug
 
-    TODO: enumerate
+    * [JBWS-3432] - WebservicesFactory can't parse webservices.xml with javaee:descriptionGroup references
 
 Task
 
-    TODO: enumerate
+    * [JBWS-3442] - Verify dependencies are up to date
+    * [JBWS-3437] - WS Refs have to keep classloader reference
+    * [JBWS-3438] - JAX-RPC generated proxies have to be de/serializable
+    * [JBWS-3444] - Review and rewrite appclient tests
 
 Errata
 
-    See: TODO: reference to associated JIRA issue
+    See: https://issues.jboss.org/browse/JBWS-3450
     
 Enjoy,
 The JBossWS Team
