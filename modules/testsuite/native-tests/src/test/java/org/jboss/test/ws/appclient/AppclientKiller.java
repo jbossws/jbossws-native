@@ -46,7 +46,6 @@ public final class AppclientKiller
             break;
          }
       }
-      System.exit(1);
    }
 
 }
