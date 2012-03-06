@@ -52,7 +52,7 @@ public class AddressingReplyToTestCase extends JBossWSTest
    {
       return new JBossWSTestSetup(AddressingReplyToTestCase.class,
             "jaxrpc-samples-wsaddr-hello.war, jaxrpc-samples-wsaddr-replyto.war," +
-            "jaxrpc-samples-wsaddr-hello-appclient.jar#jaxrpc-samples-wsaddr-hello-appclient.jar");
+            "jaxrpc-samples-wsaddr-hello-appclient.ear#jaxrpc-samples-wsaddr-hello-appclient.jar");
    }
 
    protected void setUp() throws Exception
