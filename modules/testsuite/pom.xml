@@ -1163,21 +1163,6 @@
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1179/JBWS1179TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws331/JBWS331TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws772/JBWS772TestCase*</exclude>
-
-                 <!-- # [AS7-3946] waiting for jboss metadata 7.0.1.Final upgrade -->
-                 <exclude>org/jboss/test/ws/jaxws/webserviceref/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1121/JBWS1121TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/wsaddr/replyto/AddressingReplyToTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleEncryptTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleSignTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/RpcTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/SignEncryptFaultTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/SignFaultTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/SimpleSignEncryptTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/UsernameTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/WebClientTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/signup/AccountSignupTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/AddressingReplyToTestCase*</exclude>
               </excludes>
             </configuration>
           </plugin>
