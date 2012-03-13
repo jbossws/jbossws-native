@@ -45,25 +45,19 @@ public class JBWS2969TestCase extends JBossWSTest
    
    public final String TARGET_ENDPOINT_ADDRESS = "http://" + getServerHost() + ":8080/jaxws-jbws2969/";
 
-   private static Endpoint port;
-
    public static Test suite() throws Exception
    {
       return new JBossWSTestSetup(JBWS2969TestCase.class, "jaxws-jbws2969.war");
    }
 
-   public void setUp() throws Exception
+   public void testRpcLitPassNull() throws Exception
    {
-      super.setUp();
       URL wsdlURL = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
       QName serviceName = new QName("http://ws.jboss.org", "EndpointService");
 
       Service service = Service.create(wsdlURL, serviceName);
-      port = service.getPort(Endpoint.class);
-   }
-
-   public void testRpcLitPassNull() throws Exception
-   {
+      Endpoint port = service.getPort(Endpoint.class);
+      
       // this should be successful
       assertEquals("helloworld",port.testPassNull("hello"));
       //Throw WebServiceException 

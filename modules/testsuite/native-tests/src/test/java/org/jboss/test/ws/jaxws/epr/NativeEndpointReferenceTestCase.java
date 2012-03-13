@@ -51,22 +51,21 @@ public final class NativeEndpointReferenceTestCase extends JBossWSTest
    private static final QName WSAM_SERVICE_QNAME = new QName(WSAM_NS, "ServiceName");
    private static final QName WSAM_INTERFACE_QNAME = new QName(WSAM_NS, "InterfaceName");
    private static final QName METADATA_QNAME = new QName(WSA_NS, "Metadata");
-   private static final String XML = 
-      "<EndpointReference xmlns='http://www.w3.org/2005/08/addressing'> " +
-      "  <Address>http://localhost:8080/hello</Address>" +
-      "  <ReferenceParameters>" +
-      "    <ns1:param1 wsa:IsReferenceParameter='true' xmlns:ns1='http://helloservice.org/param1' xmlns:wsa='http://www.w3.org/2005/08/addressing'>Hello</ns1:param1>" +
-      "    <ns2:param2 wsa:IsReferenceParameter='true' xmlns:ns2='http://helloservice.org/param2' xmlns:wsa='http://www.w3.org/2005/08/addressing'>World</ns2:param2>" +
-      "  </ReferenceParameters>" +
-      "  <Metadata wsdli:wsdlLocation='http://helloservice.org/wsdl http://localhost:8080/hello?wsdl' xmlns:wsdli='http://www.w3.org/ns/wsdl-instance'>" +
-      "    <wsam:ServiceName EndpointName='HelloPort' xmlns:myns='http://helloservice.org/wsdl' xmlns:wsam='http://www.w3.org/2007/05/addressing/metadata'>myns:HelloService</wsam:ServiceName>" +
-      "    <wsam:InterfaceName xmlns:myns='http://helloservice.org/wsdl' xmlns:wsam='http://www.w3.org/2007/05/addressing/metadata'>myns:Hello</wsam:InterfaceName>" +
-      "  </Metadata>" +
-      "</EndpointReference>";
 
    public void testNativeEndpointReferenceFromSource() throws Exception
    {
-      System.out.println(DOMUtils.node2String(DOMUtils.parse(XML)));
+      String XML = 
+         "<EndpointReference xmlns='http://www.w3.org/2005/08/addressing'> " +
+         "  <Address>http://localhost:8080/hello</Address>" +
+         "  <ReferenceParameters>" +
+         "    <ns1:param1 wsa:IsReferenceParameter='true' xmlns:ns1='http://helloservice.org/param1' xmlns:wsa='http://www.w3.org/2005/08/addressing'>Hello</ns1:param1>" +
+         "    <ns2:param2 wsa:IsReferenceParameter='true' xmlns:ns2='http://helloservice.org/param2' xmlns:wsa='http://www.w3.org/2005/08/addressing'>World</ns2:param2>" +
+         "  </ReferenceParameters>" +
+         "  <Metadata wsdli:wsdlLocation='http://helloservice.org/wsdl http://localhost:8080/hello?wsdl' xmlns:wsdli='http://www.w3.org/ns/wsdl-instance'>" +
+         "    <wsam:ServiceName EndpointName='HelloPort' xmlns:myns='http://helloservice.org/wsdl' xmlns:wsam='http://www.w3.org/2007/05/addressing/metadata'>myns:HelloService</wsam:ServiceName>" +
+         "    <wsam:InterfaceName xmlns:myns='http://helloservice.org/wsdl' xmlns:wsam='http://www.w3.org/2007/05/addressing/metadata'>myns:Hello</wsam:InterfaceName>" +
+         "  </Metadata>" +
+         "</EndpointReference>";
       final Source xml = new DOMSource(DOMUtils.parse(XML));
       NativeEndpointReference epr = new NativeEndpointReference(xml);
       DOMResult dr = new DOMResult(); 

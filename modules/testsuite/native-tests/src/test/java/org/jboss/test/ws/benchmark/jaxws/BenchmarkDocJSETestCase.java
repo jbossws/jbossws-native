@@ -25,6 +25,7 @@ import org.jboss.test.ws.benchmark.jaxws.doclit.BenchmarkService;
 import junit.framework.Test;
 
 import org.jboss.test.ws.benchmark.jaxws.doclit.*;
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -48,7 +49,12 @@ public class BenchmarkDocJSETestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(BenchmarkDocJSETestCase.class, "jaxws-benchmark-doclit.war");
+      return new JBossWSTestSetup(BenchmarkDocJSETestCase.class, "jaxws-benchmark-doclit.war", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            endpoint = null;
+         }
+      });
    }
 
    protected void setUp() throws Exception

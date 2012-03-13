@@ -29,6 +29,7 @@ import junit.framework.Test;
 
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
 import org.jboss.ws.core.jaxrpc.client.ServiceImpl;
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -47,7 +48,12 @@ public class RpcProxyTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(RpcProxyTestCase.class, "jaxrpc-samples-jsr109ejb-rpc.jar");
+      return new JBossWSTestSetup(RpcProxyTestCase.class, "jaxrpc-samples-jsr109ejb-rpc.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            port = null;
+         }
+      });
    }
 
    protected void setUp() throws Exception

@@ -28,6 +28,7 @@ import javax.xml.rpc.Service;
 
 import junit.framework.Test;
 
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -46,7 +47,12 @@ public class JBWS807TestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(JBWS807TestCase.class, "jaxrpc-jbws807.war, jaxrpc-jbws807-appclient.ear#jaxrpc-jbws807-appclient.jar");
+      return new JBossWSTestSetup(JBWS807TestCase.class, "jaxrpc-jbws807.war, jaxrpc-jbws807-appclient.ear#jaxrpc-jbws807-appclient.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            port = null;
+         }
+      });
    }
 
    protected void setUp() throws Exception

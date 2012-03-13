@@ -33,6 +33,7 @@ import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
 import org.jboss.ws.core.jaxrpc.client.ServiceImpl;
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -51,7 +52,12 @@ public class HeaderProxyTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(HeaderProxyTestCase.class, "jaxrpc-samples-handler.war");
+      return new JBossWSTestSetup(HeaderProxyTestCase.class, "jaxrpc-samples-handler.war", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            endpoint = null;
+         }
+      });
    }
 
    protected void setUp() throws Exception

@@ -31,6 +31,7 @@ import javax.xml.rpc.Service;
 import junit.framework.Test;
 
 import org.jboss.test.ws.jaxrpc.marshall.types.JavaBean;
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
@@ -48,7 +49,12 @@ public class MarshallDocLitTestCase extends MarshallTest
    /** Deploy the test ear */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(MarshallDocLitTestCase.class, "jaxrpc-marshall-doclit.war, jaxrpc-marshall-doclit-appclient.ear#jaxrpc-marshall-doclit-appclient.jar");
+      return new JBossWSTestSetup(MarshallDocLitTestCase.class, "jaxrpc-marshall-doclit.war, jaxrpc-marshall-doclit-appclient.ear#jaxrpc-marshall-doclit-appclient.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            port = null;
+         }
+      });
    }
 
    protected void setUp() throws Exception

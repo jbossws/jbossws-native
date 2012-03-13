@@ -23,7 +23,6 @@ package org.jboss.test.ws.jaxrpc.samples.handler;
 
 import java.net.URL;
 
-import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.Service;
@@ -32,9 +31,9 @@ import javax.xml.rpc.holders.StringHolder;
 
 import junit.framework.Test;
 
-import org.jboss.test.ws.jaxrpc.samples.handler.HeaderTestService;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.StubExt;
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -53,7 +52,12 @@ public class HeaderClientTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(HeaderClientTestCase.class, "jaxrpc-samples-handler.war, jaxrpc-samples-handler-client.jar");
+      return new JBossWSTestSetup(HeaderClientTestCase.class, "jaxrpc-samples-handler.war, jaxrpc-samples-handler-client.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            port = null;
+         }
+      });
    }
 
    protected void setUp() throws Exception

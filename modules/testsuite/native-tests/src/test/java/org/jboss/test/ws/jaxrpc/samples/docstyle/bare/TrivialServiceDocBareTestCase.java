@@ -23,7 +23,6 @@ package org.jboss.test.ws.jaxrpc.samples.docstyle.bare;
 
 import java.net.URL;
 
-import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.ServiceFactory;
@@ -43,23 +42,12 @@ public class TrivialServiceDocBareTestCase extends JBossWSTest
 {
    private static final String TARGET_NAMESPACE = "http://org.jboss.ws/samples/docstyle/bare";
    private static final String TARGET_ENDPOINT_URL = "http://" + getServerHost() + ":8080/jaxrpc-samples-docstyle-bare";
-   private static TrivialService port;
 
    public static Test suite()
    {
       return new JBossWSTestSetup(TrivialServiceDocBareTestCase.class, "jaxrpc-samples-docstyle-bare.war, jaxrpc-samples-docstyle-bare-client.jar");
    }
 
-   protected void setUp() throws Exception
-   {
-      super.setUp();
-
-      if (port == null)
-      {
-         port = getService(TrivialService.class, "SampleService", "TrivialServicePort");
-      }
-   }
-   
    protected <T> T getService(final Class<T> clazz, final String serviceName, final String portName) throws Exception {
       ServiceFactory serviceFactory = ServiceFactory.newInstance();
       Service service = serviceFactory.createService(new URL(TARGET_ENDPOINT_URL + "?wsdl"), new QName(TARGET_NAMESPACE, serviceName));
@@ -68,6 +56,7 @@ public class TrivialServiceDocBareTestCase extends JBossWSTest
 
    public void testProducPurchase() throws Exception
    {
+      TrivialService port = getService(TrivialService.class, "SampleService", "TrivialServicePort");
       String person = "Kermit";
       String product = "Ferrari";
       TrivialOrder req = new TrivialOrder(person, product);

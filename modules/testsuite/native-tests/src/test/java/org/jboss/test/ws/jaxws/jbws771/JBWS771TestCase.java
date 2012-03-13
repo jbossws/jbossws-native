@@ -39,6 +39,7 @@ import javax.xml.ws.Service;
 
 import junit.framework.Test;
 
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -50,10 +51,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class JBWS771TestCase extends JBossWSTest
 {
-   private static final String FS = System.getProperty("file.separator"); // '/' on unix, '\' on windows
-   private static final String PS = System.getProperty("path.separator"); // ':' on unix, ';' on windows
-   private static final String EXT = ":".equals( PS ) ? ".sh" : ".bat";
-
    private static final String TARGET_NAMESPACE = "http://jbws771.jaxws.ws.test.jboss.org/";
    private static URL wsdlURL;
    private static IWebsvc port;
@@ -63,7 +60,13 @@ public class JBWS771TestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(JBWS771TestCase.class, "jaxws-jbws771.jar");
+      return new JBossWSTestSetup(JBWS771TestCase.class, "jaxws-jbws771.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            port = null;
+            wsdlURL = null;
+         }
+      });
    }
 
    @Override
@@ -146,6 +149,9 @@ public class JBWS771TestCase extends JBossWSTest
 
    public void testWSConsume() throws Exception
    {
+      String FS = System.getProperty("file.separator"); // '/' on unix, '\' on windows
+      String PS = System.getProperty("path.separator"); // ':' on unix, ';' on windows
+      String EXT = ":".equals( PS ) ? ".sh" : ".bat";
       // use absolute path for the output to be re-usable
       String absOutput = createResourceFile("wsconsume" + FS + "java").getAbsolutePath();
       String command = JBOSS_HOME + FS + "bin" + FS + "wsconsume" + EXT + " -k -o " + absOutput + " --extension --binding=" + RESOURCES_DIR + FS + "jaxws" + FS + "jbws771" + FS + "binding.xml " + wsdlURL.toExternalForm();

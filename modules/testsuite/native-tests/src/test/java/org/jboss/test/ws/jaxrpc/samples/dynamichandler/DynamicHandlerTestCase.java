@@ -32,6 +32,7 @@ import javax.xml.rpc.handler.HandlerRegistry;
 import junit.framework.Test;
 
 import org.jboss.ws.core.jaxrpc.client.ServiceExt;
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -52,7 +53,13 @@ public class DynamicHandlerTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(DynamicHandlerTestCase.class, "jaxrpc-samples-dynamichandler.war, jaxrpc-samples-dynamichandler-appclient.ear#jaxrpc-samples-dynamichandler-appclient.jar");
+      return new JBossWSTestSetup(DynamicHandlerTestCase.class, "jaxrpc-samples-dynamichandler.war, jaxrpc-samples-dynamichandler-appclient.ear#jaxrpc-samples-dynamichandler-appclient.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            endpoint = null;
+            service = null;
+         }
+      });
    }
 
    protected void setUp() throws Exception

@@ -40,14 +40,12 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class StorePassEncryptTestCase extends JBossWSTest
 {
-   private static Hello port;
-   
    public static Test suite() throws Exception
    {
       return new JBossWSTestSetup(StorePassEncryptTestCase.class, "jaxrpc-samples-store-pass-encrypt.war");
    }
 
-   public void setUp() throws Exception
+   public void testEndpoint() throws Exception
    {
       ServiceFactoryImpl factory = new ServiceFactoryImpl();
       URL wsdlURL = getResourceURL("jaxrpc/samples/wssecurity/WEB-INF/wsdl/HelloService.wsdl");
@@ -55,13 +53,10 @@ public class StorePassEncryptTestCase extends JBossWSTest
       URL securityURL = getResourceURL("jaxrpc/samples/wssecurity/store-pass-encrypt/META-INF/jboss-wsse-client.xml");
       QName qname = new QName("http://org.jboss.ws/samples/wssecurity", "HelloService");
       ServiceImpl service = (ServiceImpl)factory.createService(wsdlURL, qname, mappingURL, securityURL);
-      port = (Hello)service.getPort(Hello.class);
+      Hello port = (Hello)service.getPort(Hello.class);
       ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-samples-store-pass-encrypt");
       ((StubExt)port).setConfigName("Standard WSSecurity Client");
-   }
-   
-   public void testEndpoint() throws Exception
-   {
+      
       UserType in0 = new UserType("Kermit");
       UserType retObj = port.echoUserType(in0);
       assertEquals(in0, retObj);
