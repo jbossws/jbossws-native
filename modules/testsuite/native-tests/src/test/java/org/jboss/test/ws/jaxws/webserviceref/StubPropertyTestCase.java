@@ -119,24 +119,31 @@ public class StubPropertyTestCase extends JBossWSTest
 
    private String executeApplicationClient(final String... appclientArgs) throws Throwable
    {
-      final OutputStream appclientOS = new ByteArrayOutputStream();
-      JBossWSTestHelper.deployAppclient("jaxws-webserviceref-secure-appclient.ear#jaxws-webserviceref-secure-appclient.jar", appclientOS, appclientArgs);
-      // wait till appclient stops
-      String appclientLog = appclientOS.toString();
-      while (!appclientLog.contains("stopped in")) {
-         Thread.sleep(100);
-         appclientLog = appclientOS.toString();
+      try
+      {
+         final OutputStream appclientOS = new ByteArrayOutputStream();
+         JBossWSTestHelper.deployAppclient("jaxws-webserviceref-secure-appclient.ear#jaxws-webserviceref-secure-appclient.jar", appclientOS, appclientArgs);
+         // wait till appclient stops
+         String appclientLog = appclientOS.toString();
+         while (!appclientLog.contains("stopped in")) {
+            Thread.sleep(100);
+            appclientLog = appclientOS.toString();
+         }
+         // assert appclient logs
+         assertTrue(appclientLog.contains("TEST START"));
+         assertTrue(appclientLog.contains("TEST END"));
+         assertTrue(appclientLog.contains("RESULT ["));
+         assertTrue(appclientLog.contains("] RESULT"));
+         int indexOfResultStart = appclientLog.indexOf("RESULT [");
+         int indexOfResultStop = appclientLog.indexOf("] RESULT");
+         assertTrue(indexOfResultStart > 0);
+         assertTrue(indexOfResultStop > 0);
+         return appclientLog.substring(indexOfResultStart + 8, indexOfResultStop);
       }
-      // assert appclient logs
-      assertTrue(appclientLog.contains("TEST START"));
-      assertTrue(appclientLog.contains("TEST END"));
-      assertTrue(appclientLog.contains("RESULT ["));
-      assertTrue(appclientLog.contains("] RESULT"));
-      int indexOfResultStart = appclientLog.indexOf("RESULT [");
-      int indexOfResultStop = appclientLog.indexOf("] RESULT");
-      assertTrue(indexOfResultStart > 0);
-      assertTrue(indexOfResultStop > 0);
-      return appclientLog.substring(indexOfResultStart + 8, indexOfResultStop);
+      finally
+      {
+         JBossWSTestHelper.undeployAppclient("jaxws-webserviceref-secure-appclient.ear#jaxws-webserviceref-secure-appclient.jar", false);
+      }
    }
    
 }
