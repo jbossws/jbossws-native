@@ -31,7 +31,7 @@
   <packaging>pom</packaging>
   <description>JBossWS Native stack</description>
 
-  <version>4.0.2-SNAPSHOT</version>
+  <version>4.0.3-SNAPSHOT</version>
 
   <!-- Parent -->
   <parent>
