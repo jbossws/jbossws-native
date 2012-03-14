@@ -53,7 +53,7 @@ public class AddressingReplyToTestCase extends JBossWSTest
    {
       try
       {
-         final String appclientArg = getServerHost();;
+         final String appclientArg = getServerHost();
          final OutputStream appclientOS = new ByteArrayOutputStream();
          JBossWSTestHelper.deployAppclient("jaxws-wsaddressing-appclient.ear#jaxws-wsaddressing-appclient.jar", appclientOS, appclientArg);
          // wait till appclient stops
