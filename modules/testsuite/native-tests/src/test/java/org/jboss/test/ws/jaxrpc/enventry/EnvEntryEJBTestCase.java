@@ -26,6 +26,7 @@ import javax.xml.rpc.Service;
 
 import junit.framework.Test;
 
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -42,7 +43,12 @@ public class EnvEntryEJBTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(EnvEntryEJBTestCase.class, "jaxrpc-enventry.jar, jaxrpc-enventry-appclient.ear#jaxrpc-enventry-appclient.jar");
+      return new JBossWSTestSetup(EnvEntryEJBTestCase.class, "jaxrpc-enventry.jar, jaxrpc-enventry-appclient.ear#jaxrpc-enventry-appclient.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            port = null;
+         }
+      });
    }
 
    protected void setUp() throws Exception

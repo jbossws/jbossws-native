@@ -56,25 +56,19 @@ public class JBWS2285TestCase extends JBossWSTest
 
    public final String TARGET_ENDPOINT_ADDRESS = "http://" + getServerHost() + ":8080/jaxws-jbws2285/";
 
-   private static Endpoint port;
-
    public static Test suite() throws Exception
    {
       return new JBossWSTestSetup(JBWS2285TestCase.class, "jaxws-jbws2285.war");
    }
 
-   public void setUp() throws Exception
+   public void testCall() throws Exception
    {
-      super.setUp();
       URL wsdlURL = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
       QName serviceName = new QName("http://ws.jboss.org/jbws2285", "EndpointImplService");
 
       Service service = Service.create(wsdlURL, serviceName);
-      port = service.getPort(Endpoint.class);
-   }
-
-   public void testCall() throws Exception
-   {
+      Endpoint port = service.getPort(Endpoint.class);
+      
       final String message = "Hello!!";
       String response = port.echo(message);
 

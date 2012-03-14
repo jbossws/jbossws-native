@@ -75,6 +75,7 @@ import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.EnumIntegerHolder;
 import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.EnumLongHolder;
 import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.EnumShortHolder;
 import org.jboss.test.ws.jaxrpc.encoded.parametermode.holders.EnumStringHolder;
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -130,7 +131,17 @@ public class ParameterModeTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(ParameterModeTestCase.class, "jaxrpc-encoded-parametermode.war, jaxrpc-encoded-parametermode-appclient.ear#jaxrpc-encoded-parametermode-appclient.jar");
+      return new JBossWSTestSetup(
+            ParameterModeTestCase.class,
+            "jaxrpc-encoded-parametermode.war, jaxrpc-encoded-parametermode-appclient.ear#jaxrpc-encoded-parametermode-appclient.jar",
+            new CleanupOperation()
+            {
+               @Override
+               public void cleanUp()
+               {
+                  port = null;
+               }
+            });
    }
 
    protected void setUp() throws Exception

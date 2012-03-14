@@ -43,6 +43,7 @@ import org.jboss.test.ws.interop.InteropConfigFactory;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
 import org.jboss.ws.common.DOMUtils;
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.w3c.dom.Element;
@@ -79,7 +80,14 @@ public class AddressingTestCase extends JBossWSTest {
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(AddressingTestCase.class, "jbossws-interop-nov2007-wsaSoap12.war, jbossws-interop-nov2007-wsaSoap12-client.jar");
+      return new JBossWSTestSetup(AddressingTestCase.class, "jbossws-interop-nov2007-wsaSoap12.war, jbossws-interop-nov2007-wsaSoap12-client.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            echoPort = null;
+            notifyPort = null;
+            wsdlLocation = null;
+         }
+      });
    }
    
    protected void setUp() throws Exception

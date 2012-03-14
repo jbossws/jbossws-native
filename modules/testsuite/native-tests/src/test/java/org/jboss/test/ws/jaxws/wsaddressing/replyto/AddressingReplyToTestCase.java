@@ -51,19 +51,26 @@ public class AddressingReplyToTestCase extends JBossWSTest
 
    public void testApplicationClient() throws Exception
    {
-      final String appclientArg = getServerHost();;
-      final OutputStream appclientOS = new ByteArrayOutputStream();
-      JBossWSTestHelper.deployAppclient("jaxws-wsaddressing-appclient.ear#jaxws-wsaddressing-appclient.jar", appclientOS, appclientArg);
-      // wait till appclient stops
-      String appclientLog = appclientOS.toString();
-      while (!appclientLog.contains("stopped in")) {
-         Thread.sleep(100);
-         appclientLog = appclientOS.toString();
+      try
+      {
+         final String appclientArg = getServerHost();
+         final OutputStream appclientOS = new ByteArrayOutputStream();
+         JBossWSTestHelper.deployAppclient("jaxws-wsaddressing-appclient.ear#jaxws-wsaddressing-appclient.jar", appclientOS, appclientArg);
+         // wait till appclient stops
+         String appclientLog = appclientOS.toString();
+         while (!appclientLog.contains("stopped in")) {
+            Thread.sleep(100);
+            appclientLog = appclientOS.toString();
+         }
+         // assert appclient logs
+         assertTrue(!appclientLog.contains("APPCLIENT TEST FAILURE"));
+         assertTrue(appclientLog.contains("TEST START"));
+         assertTrue(appclientLog.contains("TEST END"));
       }
-      // assert appclient logs
-      assertTrue(!appclientLog.contains("APPCLIENT TEST FAILURE"));
-      assertTrue(appclientLog.contains("TEST START"));
-      assertTrue(appclientLog.contains("TEST END"));
+      finally
+      {
+         JBossWSTestHelper.undeployAppclient("jaxws-wsaddressing-appclient.ear#jaxws-wsaddressing-appclient.jar", false);
+      }
    }
    
 }

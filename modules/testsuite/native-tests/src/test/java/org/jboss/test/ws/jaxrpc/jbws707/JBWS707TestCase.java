@@ -35,6 +35,7 @@ import javax.xml.soap.SOAPMessage;
 import junit.framework.Test;
 
 import org.jboss.ws.core.soap.SOAPBodyImpl;
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.w3c.dom.Node;
@@ -59,7 +60,12 @@ public class JBWS707TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS707TestCase.class, "jaxrpc-jbws707.war, jaxrpc-jbws707-appclient.ear#jaxrpc-jbws707-appclient.jar");
+      return new JBossWSTestSetup(JBWS707TestCase.class, "jaxrpc-jbws707.war, jaxrpc-jbws707-appclient.ear#jaxrpc-jbws707-appclient.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            port = null;
+         }
+      });
    }
 
    public void setUp() throws Exception

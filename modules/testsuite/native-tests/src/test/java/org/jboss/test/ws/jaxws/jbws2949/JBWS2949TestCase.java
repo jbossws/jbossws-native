@@ -22,51 +22,33 @@
 package org.jboss.test.ws.jaxws.jbws2949;
 
 import java.net.URL;
-import java.util.Iterator;
 
 import javax.xml.namespace.QName;
-import javax.xml.soap.MessageFactory;
-import javax.xml.soap.SOAPBody;
-import javax.xml.soap.SOAPConnection;
-import javax.xml.soap.SOAPConnectionFactory;
-import javax.xml.soap.SOAPEnvelope;
-import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.Service;
 
 import junit.framework.Test;
 
-import org.jboss.ws.core.soap.NodeImpl;
-
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
-
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 public class JBWS2949TestCase extends JBossWSTest
 {
    
    public final String TARGET_ENDPOINT_ADDRESS = "http://" + getServerHost() + ":8080/jaxws-jbws2949";
 
-   private static Endpoint port;
-
    public static Test suite() throws Exception
    {
       return new JBossWSTestSetup(JBWS2949TestCase.class, "jaxws-jbws2949.war");
    }
 
-   public void setUp() throws Exception
-   {
-      super.setUp();
+   public void testCall() throws Exception
+   {     
       URL wsdlURL = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
       QName serviceName = new QName("http://ws.jboss.org/jbws2949", "EndpointService");
 
       Service service = Service.create(wsdlURL, serviceName);
-      port = service.getPort(Endpoint.class);
-   }
-
-   public void testCall() throws Exception
-   {     
+      Endpoint port = service.getPort(Endpoint.class);
+      
       String response = port.echo("testJBWS2949");
       assertEquals("PutByServerHandler2", response);
    }

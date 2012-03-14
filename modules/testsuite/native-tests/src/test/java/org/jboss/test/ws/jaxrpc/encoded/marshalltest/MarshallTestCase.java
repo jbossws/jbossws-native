@@ -32,6 +32,7 @@ import javax.xml.rpc.Service;
 
 import junit.framework.Test;
 
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -48,7 +49,12 @@ public class MarshallTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(MarshallTestCase.class, "jaxrpc-encoded-marshalltest.war, jaxrpc-encoded-marshalltest-appclient.ear#jaxrpc-encoded-marshalltest-appclient.jar");
+      return new JBossWSTestSetup(MarshallTestCase.class, "jaxrpc-encoded-marshalltest.war, jaxrpc-encoded-marshalltest-appclient.ear#jaxrpc-encoded-marshalltest-appclient.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            port = null;
+         }
+      });
    }
 
    protected void setUp() throws Exception

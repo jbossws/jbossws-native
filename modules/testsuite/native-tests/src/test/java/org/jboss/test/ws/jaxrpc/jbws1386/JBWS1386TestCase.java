@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws1386;
 
-import java.io.File;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -45,30 +44,21 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class JBWS1386TestCase extends JBossWSTest
 {
-   private static RequestService port;
-   
    public static Test suite()
    {
       return new JBossWSTestSetup(JBWS1386TestCase.class, "jaxrpc-jbws1386.war");
    }
 
-   protected void setUp() throws Exception
-   {
-      super.setUp();
-      if (port == null)
-      {
-         ServiceFactoryImpl factory = (ServiceFactoryImpl)ServiceFactory.newInstance();
-         URL wsdlURL = getResourceURL("jaxrpc/jbws1386/WEB-INF/wsdl/TestService.wsdl");
-         URL mappingURL = getResourceURL("jaxrpc/jbws1386/WEB-INF/jaxrpc-mapping.xml");
-         QName serviceName = new QName("http://org.jboss.test.ws/jbws1386", "TestService");
-         Service service = factory.createService(wsdlURL, serviceName , mappingURL);
-         port = (RequestService)service.getPort(RequestService.class);
-         ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-jbws1386");
-      }
-   }
-
    public final void testEndpointAccess() throws Exception
    {
+      ServiceFactoryImpl factory = (ServiceFactoryImpl)ServiceFactory.newInstance();
+      URL wsdlURL = getResourceURL("jaxrpc/jbws1386/WEB-INF/wsdl/TestService.wsdl");
+      URL mappingURL = getResourceURL("jaxrpc/jbws1386/WEB-INF/jaxrpc-mapping.xml");
+      QName serviceName = new QName("http://org.jboss.test.ws/jbws1386", "TestService");
+      Service service = factory.createService(wsdlURL, serviceName , mappingURL);
+      RequestService port = (RequestService)service.getPort(RequestService.class);
+      ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-jbws1386");
+      
       Message inObj = new Message("Kermit", "base64".getBytes());
       Message retObj = port.processClaim(inObj);
       assertEquals(inObj, retObj);

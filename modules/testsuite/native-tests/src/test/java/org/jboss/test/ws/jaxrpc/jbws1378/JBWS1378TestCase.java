@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws1378;
 
-import java.io.File;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -45,30 +44,21 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class JBWS1378TestCase extends JBossWSTest
 {
-   private static ExamplePort port;
-
    public static Test suite()
    {
       return new JBossWSTestSetup(JBWS1378TestCase.class, "jaxrpc-jbws1378.war");
    }
 
-   protected void setUp() throws Exception
-   {
-      super.setUp();
-      if (port == null)
-      {
-         ServiceFactoryImpl factory = (ServiceFactoryImpl)ServiceFactory.newInstance();
-         URL wsdlURL = getResourceURL("jaxrpc/jbws1378/WEB-INF/wsdl/ExampleService.wsdl");
-         URL mappingURL = getResourceURL("jaxrpc/jbws1378/WEB-INF/jaxrpc-mapping.xml");
-         QName serviceName = new QName("http://www.example.com/Example", "ExampleService");
-         Service service = factory.createService(wsdlURL, serviceName , mappingURL);
-         port = (ExamplePort)service.getPort(ExamplePort.class);
-         ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-jbws1378");
-      }
-   }
-
    public void testEndpoint() throws Exception
    {
+      ServiceFactoryImpl factory = (ServiceFactoryImpl)ServiceFactory.newInstance();
+      URL wsdlURL = getResourceURL("jaxrpc/jbws1378/WEB-INF/wsdl/ExampleService.wsdl");
+      URL mappingURL = getResourceURL("jaxrpc/jbws1378/WEB-INF/jaxrpc-mapping.xml");
+      QName serviceName = new QName("http://www.example.com/Example", "ExampleService");
+      Service service = factory.createService(wsdlURL, serviceName , mappingURL);
+      ExamplePort port = (ExamplePort)service.getPort(ExamplePort.class);
+      ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-jbws1378");
+      
       String retStr = port.echo("Hello World");
       assertEquals("Hello World", retStr);
    }

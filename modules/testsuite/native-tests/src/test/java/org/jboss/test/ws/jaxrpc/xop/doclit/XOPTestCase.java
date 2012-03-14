@@ -27,6 +27,7 @@ import javax.xml.rpc.Service;
 import junit.framework.Test;
 
 import org.jboss.ws.core.StubExt;
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
 /**
@@ -42,7 +43,12 @@ public class XOPTestCase extends XOPBase {
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(XOPTestCase.class, "jaxrpc-xop-doclit.war, jaxrpc-xop-doclit-appclient.ear#jaxrpc-xop-doclit-appclient.jar");
+      return new JBossWSTestSetup(XOPTestCase.class, "jaxrpc-xop-doclit.war, jaxrpc-xop-doclit-appclient.ear#jaxrpc-xop-doclit-appclient.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            port = null;
+         }
+      });
    }
 
    protected void setUp() throws Exception

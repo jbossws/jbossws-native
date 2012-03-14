@@ -36,7 +36,7 @@ import org.jboss.wsf.test.JBossWSTest;
  */
 public final class JBWS3124TestCase extends JBossWSTest
 {
-   private static final String XML_SOURCE = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n" +
+   private final String XML_SOURCE = "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>\n" +
    "<EndpointReference xmlns='http://www.w3.org/2005/08/addressing'>\n" +
    "  <Address>http://localhost:8080/jaxws-endpointReference</Address>\n" +
    "  <Metadata/>\n" +

@@ -21,7 +21,6 @@
  */
 package org.jboss.test.ws.jaxrpc.jbws1384;
 
-import java.io.File;
 import java.net.URL;
 
 import javax.xml.namespace.QName;
@@ -46,26 +45,9 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class JBWS1384TestCase extends JBossWSTest
 {
-   private static TransmulatorInterface port;
-
    public static Test suite()
    {
       return new JBossWSTestSetup(JBWS1384TestCase.class, "jaxrpc-jbws1384.war");
-   }
-
-   protected void setUp() throws Exception
-   {
-      super.setUp();
-      if (port == null)
-      {
-         ServiceFactoryImpl factory = (ServiceFactoryImpl)ServiceFactory.newInstance();
-         URL wsdlURL = getResourceURL("jaxrpc/jbws1384/WEB-INF/wsdl/ExampleService.wsdl");
-         URL mappingURL = getResourceURL("jaxrpc/jbws1384/WEB-INF/jaxrpc-mapping.xml");
-         QName serviceName = new QName("http://org.jboss.test.webservice/samples2", "Gasherbrum");
-         Service service = factory.createService(wsdlURL, serviceName , mappingURL);
-         port = (TransmulatorInterface)service.getPort(TransmulatorInterface.class);
-         ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-jbws1384");
-      }
    }
 
    public void testWsdlToJava() throws Exception
@@ -78,6 +60,14 @@ public class JBWS1384TestCase extends JBossWSTest
 
    public void testEndpoint() throws Exception
    {
+      ServiceFactoryImpl factory = (ServiceFactoryImpl)ServiceFactory.newInstance();
+      URL wsdlURL = getResourceURL("jaxrpc/jbws1384/WEB-INF/wsdl/ExampleService.wsdl");
+      URL mappingURL = getResourceURL("jaxrpc/jbws1384/WEB-INF/jaxrpc-mapping.xml");
+      QName serviceName = new QName("http://org.jboss.test.webservice/samples2", "Gasherbrum");
+      Service service = factory.createService(wsdlURL, serviceName , mappingURL);
+      TransmulatorInterface port = (TransmulatorInterface)service.getPort(TransmulatorInterface.class);
+      ((Stub)port)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY, "http://" + getServerHost() + ":8080/jaxrpc-jbws1384");
+      
       /*
       StubExt stub = (StubExt)port;
       AttachmentPart part = stub.createAttachmentPart();

@@ -22,11 +22,7 @@
 package org.jboss.test.ws.jaxrpc.jbws1188;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.net.URL;
 
-import javax.xml.namespace.QName;
-import javax.xml.rpc.Service;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPConnectionFactory;
@@ -35,7 +31,6 @@ import javax.xml.soap.SOAPMessage;
 
 import junit.framework.Test;
 
-import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -46,8 +41,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
  */
 public class JBWS1188TestCase extends JBossWSTest
 {
-
-   private static TestEndpoint port;
 
    public static Test suite() throws Exception
    {

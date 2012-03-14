@@ -29,6 +29,7 @@ import javax.xml.rpc.ServiceFactory;
 
 import junit.framework.Test;
 
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -46,7 +47,12 @@ public class RpcJSETestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(RpcJSETestCase.class, "jaxrpc-samples-jsr109pojo-rpc.war, jaxrpc-samples-jsr109pojo-rpc-client.jar");
+      return new JBossWSTestSetup(RpcJSETestCase.class, "jaxrpc-samples-jsr109pojo-rpc.war, jaxrpc-samples-jsr109pojo-rpc-client.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            port = null;
+         }
+      });
    }
 
    protected void setUp() throws Exception

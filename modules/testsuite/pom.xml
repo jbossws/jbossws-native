@@ -27,6 +27,7 @@
     <jboss.javaee.version>5.0.0.GA</jboss.javaee.version>
     <hornetq.version>2.1.0.BETA3</hornetq.version>
     <log4j.output.dir>${project.build.directory}</log4j.output.dir>
+    <appclient.output.dir>${project.build.directory}/appclient-logs</appclient.output.dir>
   </properties>
 
   <!-- Modules -->
@@ -286,6 +287,10 @@
             <property>
               <name>log4j.output.dir</name>
               <value>${log4j.output.dir}</value>
+            </property>
+            <property>
+              <name>appclient.output.dir</name>
+              <value>${appclient.output.dir}</value>
             </property>
             <property>
               <name>org.jboss.ws.testsuite.securityDomain.users.propfile</name>
@@ -1065,7 +1070,7 @@
         <dependency>
           <groupId>org.jboss</groupId>
           <artifactId>jboss-remote-naming</artifactId>
-          <version>1.0.1.Final</version>
+          <version>1.0.2.Final</version>
         </dependency>
         <dependency>
           <groupId>javax.mail</groupId>

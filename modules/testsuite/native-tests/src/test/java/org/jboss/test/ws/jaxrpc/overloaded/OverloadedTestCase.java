@@ -26,6 +26,7 @@ import javax.xml.rpc.Service;
 
 import junit.framework.Test;
 
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -41,7 +42,12 @@ public class OverloadedTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(OverloadedTestCase.class, "jaxrpc-overloaded.war, jaxrpc-overloaded-appclient.ear#jaxrpc-overloaded-appclient.jar");
+      return new JBossWSTestSetup(OverloadedTestCase.class, "jaxrpc-overloaded.war, jaxrpc-overloaded-appclient.ear#jaxrpc-overloaded-appclient.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            endpoint = null;
+         }
+      });
    }
 
    protected void setUp() throws Exception

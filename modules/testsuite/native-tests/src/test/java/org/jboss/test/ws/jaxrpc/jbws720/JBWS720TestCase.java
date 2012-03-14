@@ -28,6 +28,7 @@ import javax.xml.soap.SOAPFactory;
 
 import junit.framework.Test;
 
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -47,7 +48,12 @@ public class JBWS720TestCase extends JBossWSTest
    /** Deploy the test */
    public static Test suite() throws Exception
    {
-      return new JBossWSTestSetup(JBWS720TestCase.class, "jaxrpc-jbws720.war, jaxrpc-jbws720-appclient.ear#jaxrpc-jbws720-appclient.jar");
+      return new JBossWSTestSetup(JBWS720TestCase.class, "jaxrpc-jbws720.war, jaxrpc-jbws720-appclient.ear#jaxrpc-jbws720-appclient.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            port = null;
+         }
+      });
    }
 
    public void setUp() throws Exception

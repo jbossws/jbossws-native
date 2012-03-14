@@ -47,33 +47,23 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 public class JBWS2259TestCase extends JBossWSTest
 {
 
-   private static Endpoint port;
-
    public static Test suite() throws Exception
    {
       return new JBossWSTestSetup(JBWS2259TestCase.class, "jaxws-jbws2259.war");
    }
 
-   public void setUp() throws Exception
-   {
-      super.setUp();
-
-      if (port == null)
-      {
-         URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws2259?wsdl");
-         QName serviceName = new QName("http://ws.jboss.org/jbws2259", "EndpointService");
-
-         Service service = Service.create(wsdlURL, serviceName);
-         port = service.getPort(Endpoint.class);
-
-         BindingProvider bindingProvider = (BindingProvider)port;
-         SOAPBinding soapBinding = (SOAPBinding)bindingProvider.getBinding();
-         soapBinding.setMTOMEnabled(true);
-      }
-   }
-
    public void testCall() throws Exception
    {
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws2259?wsdl");
+      QName serviceName = new QName("http://ws.jboss.org/jbws2259", "EndpointService");
+
+      Service service = Service.create(wsdlURL, serviceName);
+      Endpoint port = service.getPort(Endpoint.class);
+
+      BindingProvider bindingProvider = (BindingProvider)port;
+      SOAPBinding soapBinding = (SOAPBinding)bindingProvider.getBinding();
+      soapBinding.setMTOMEnabled(true);
+      
       File sharkFile = getResourceFile("jaxws/jbws2259/attach.jpeg");
       DataSource ds = new FileDataSource(sharkFile);
       DataHandler handler = new DataHandler(ds);

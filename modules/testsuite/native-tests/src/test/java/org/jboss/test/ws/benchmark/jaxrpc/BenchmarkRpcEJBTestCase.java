@@ -23,6 +23,7 @@ package org.jboss.test.ws.benchmark.jaxrpc;
 
 import junit.framework.Test;
 
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -43,7 +44,12 @@ public class BenchmarkRpcEJBTestCase extends JBossWSTest
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(BenchmarkRpcEJBTestCase.class, "jaxrpc-benchmark-rpclit.jar, jaxrpc-benchmark-rpclit-appclient.ear#jaxrpc-benchmark-rpclit-appclient.jar");
+      return new JBossWSTestSetup(BenchmarkRpcEJBTestCase.class, "jaxrpc-benchmark-rpclit.jar, jaxrpc-benchmark-rpclit-appclient.ear#jaxrpc-benchmark-rpclit-appclient.jar", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            endpoint = null;
+         }
+      });
    }
 
    protected void setUp() throws Exception

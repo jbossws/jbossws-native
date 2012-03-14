@@ -24,6 +24,7 @@ package org.jboss.test.ws.interop.wsa;
 import junit.framework.Test;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.extensions.addressing.AddressingClientUtil;
+import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.jboss.ws.common.DOMUtils;
@@ -70,7 +71,14 @@ public class AddressingTestCase extends JBossWSTest {
 
    public static Test suite()
    {
-      return new JBossWSTestSetup(AddressingTestCase.class, "jbossws-interop-wsa10.war");
+      return new JBossWSTestSetup(AddressingTestCase.class, "jbossws-interop-wsa10.war", new CleanupOperation() {
+         @Override
+         public void cleanUp() {
+            echoPort = null;
+            notifyPort = null;
+            wsdlLocation = null;
+         }
+      });
    }
 
    protected void setUp() throws Exception
@@ -78,7 +86,7 @@ public class AddressingTestCase extends JBossWSTest {
       
       if (echoPort==null || notifyPort==null)
       {
-         this.wsdlLocation = getResourceURL("interop/wsa/WEB-INF/wsdl/service.wsdl");
+         wsdlLocation = getResourceURL("interop/wsa/WEB-INF/wsdl/service.wsdl");
 
          Service service = Service.create(wsdlLocation, new QName("http://tempuri.org/", "WSAddressingCR"));
          echoPort = service.getPort(EchoPortType.class);
