@@ -227,6 +227,10 @@
         <version>${sun.jaxws.version}</version>
         <exclusions>
           <exclusion>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+          </exclusion>
+          <exclusion>
             <groupId>javax.xml.ws</groupId>
             <artifactId>jaxws-api</artifactId>
           </exclusion>
@@ -335,6 +339,12 @@
         <groupId>org.codehaus.woodstox</groupId>
         <artifactId>wstx-lgpl</artifactId>
         <version>${woodstox.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>wsdl4j</groupId>
