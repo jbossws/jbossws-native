@@ -128,11 +128,6 @@
           <include name="**/stax-ex.jar"/>
         </fileset>
       </copy>
-      <copy todir="@{targetdir}/org/codehaus/jettison/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/jettison.jar"/>
-        </fileset>
-      </copy>
       <copy todir="@{targetdir}/org/jboss/jaxbintros/main" flatten="false" overwrite="true">
         <fileset dir="@{thirdpartydir}/lib">
           <include name="**/jboss-jaxb-intros.jar"/>

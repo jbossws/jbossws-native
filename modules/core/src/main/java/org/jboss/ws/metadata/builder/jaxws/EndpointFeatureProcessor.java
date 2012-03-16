@@ -40,13 +40,11 @@ import javax.xml.ws.spi.WebServiceFeatureAnnotation;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.annotation.FastInfoset;
-import org.jboss.ws.annotation.JsonEncoding;
 import org.jboss.ws.annotation.SchemaValidation;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.extensions.addressing.jaxws.WSAddressingServerHandler;
 import org.jboss.ws.feature.FastInfosetFeature;
-import org.jboss.ws.feature.JsonEncodingFeature;
 import org.jboss.ws.feature.SchemaValidationFeature;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
@@ -100,12 +98,6 @@ public class EndpointFeatureProcessor
             {
                FastInfoset anFeature = sepClass.getAnnotation(FastInfoset.class);
                FastInfosetFeature feature = new FastInfosetFeature(anFeature.enabled());
-               sepMetaData.addFeature(feature);
-            }
-            else if (an.annotationType() == JsonEncoding.class)
-            {
-               JsonEncoding anFeature = sepClass.getAnnotation(JsonEncoding.class);
-               JsonEncodingFeature feature = new JsonEncodingFeature(anFeature.enabled());
                sepMetaData.addFeature(feature);
             }
             else if (an.annotationType() == RespectBinding.class)
@@ -234,7 +226,7 @@ public class EndpointFeatureProcessor
          feature.setSchemaLocation(xsdLoc);
       }
 
-      Class handlerClass = anFeature.errorHandler();
+      Class<?> handlerClass = anFeature.errorHandler();
       if (handlerClass != null)
       {
          try
