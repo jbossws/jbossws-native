@@ -119,16 +119,6 @@
 			</metainf>
 		</jar>
 
-		<!-- jaxws-json -->
-		<war warfile="${tests.output.dir}/test-libs/jaxws-json.war" webxml="${tests.output.dir}/test-resources/jaxws/json/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/json/JsonEndpoint.class" />
-			</classes>
-			<manifest>
-				<attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
-			</manifest>
-		</war>
-
 		<!-- jaxws-jaxbintros -->
 		<war warfile="${tests.output.dir}/test-libs/jaxws-jaxbintros.war" webxml="${tests.output.dir}/test-resources/jaxws/jaxbintros/WEB-INF/web.xml">
 			<classes dir="${tests.output.dir}/test-classes">

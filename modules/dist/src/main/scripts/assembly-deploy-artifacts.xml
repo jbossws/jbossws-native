@@ -46,7 +46,6 @@
         <include>org.jboss.ws:jbossws-api:jar</include>
         <include>org.jboss.ws:jbossws-common:jar</include>
         <include>org.jboss.ws:jbossws-spi:jar</include>
-        <include>org.codehaus.jettison:jettison:jar</include>
         <include>com.sun.xml.ws:policy:jar</include>
         <include>javax.xml.stream:stax-api:jar</include>
         <include>org.jvnet.staxex:stax-ex:jar</include>

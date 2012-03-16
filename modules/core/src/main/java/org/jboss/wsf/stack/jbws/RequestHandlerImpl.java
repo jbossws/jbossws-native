@@ -76,16 +76,12 @@ import org.jboss.ws.core.server.ServletRequestContext;
 import org.jboss.ws.core.server.WSDLRequestHandler;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
-import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
-import org.jboss.ws.extensions.json.BadgerFishDOMDocumentParser;
-import org.jboss.ws.extensions.json.BadgerFishDOMDocumentSerializer;
 import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.feature.FastInfosetFeature;
-import org.jboss.ws.feature.JsonEncodingFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
@@ -441,17 +437,6 @@ public class RequestHandlerImpl implements RequestHandler
             serializer.setOutputStream(output);
             serializer.serialize(soapEnv);
          }
-         // JSON support
-         else if (epMetaData.isFeatureEnabled(JsonEncodingFeature.class) && resMessage instanceof SOAPMessage)
-         {
-            SOAPMessage soapMessage = (SOAPMessage)resMessage;
-            if (soapMessage.getAttachments().hasNext())
-               throw new IllegalStateException(BundleUtils.getMessage(bundle, "NOT_SUPPORTED_WITH_JSON"));
-
-            SOAPBodyImpl soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
-            BadgerFishDOMDocumentSerializer serializer = new BadgerFishDOMDocumentSerializer(output);
-            serializer.serialize(soapBody.getBodyElement());
-         }
          else
          {
             resMessage.writeTo(output);
@@ -494,14 +479,6 @@ public class RequestHandlerImpl implements RequestHandler
          if (HTTPBinding.HTTP_BINDING.equals(bindingID))
          {
             reqMessage = new HTTPMessageImpl(headers, inputStream);
-         }
-         else if (sepMetaData.isFeatureEnabled(JsonEncodingFeature.class))
-         {
-            MessageFactoryImpl factory = new MessageFactoryImpl();
-            SOAPMessageImpl soapMsg = (SOAPMessageImpl)factory.createMessage();
-            Document doc = new BadgerFishDOMDocumentParser().parse(inputStream);
-            soapMsg.getSOAPBody().addDocument(doc);
-            reqMessage = soapMsg;
          }
          else
          {
