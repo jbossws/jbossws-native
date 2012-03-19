@@ -88,11 +88,6 @@
           <include name="**/jbossxb.jar"/>
         </fileset>
       </copy>
-      <copy todir="@{targetdir}/org/apache/ws/commons/policy/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/wscommons-policy.jar"/>
-        </fileset>
-      </copy>
       <copy todir="@{targetdir}/org/apache/santuario/xmlsec/main" flatten="false" overwrite="true">
         <fileset dir="@{thirdpartydir}/lib">
           <include name="**/xmlsec.jar"/>

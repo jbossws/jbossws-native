@@ -42,8 +42,6 @@ import org.jboss.ws.annotation.Documentation;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.IOUtils;
-import org.jboss.ws.extensions.policy.annotation.PolicyAttachment;
-import org.jboss.ws.extensions.policy.metadata.PolicyMetaDataBuilder;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
@@ -60,7 +58,6 @@ import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.ws.tools.ToolsUtils;
 import org.jboss.ws.tools.wsdl.JAXBWSDLGenerator;
-import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLWriter;
 import org.jboss.ws.tools.wsdl.WSDLWriterResolver;
@@ -94,7 +91,6 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       private ServerEndpointMetaData sepMetaData;
       private ServiceMetaData serviceMetaData;
       private URL wsdlLocation;
-      private URL policyLocation;
    }
 
    public void setGenerateWsdl(boolean generateWsdl)
@@ -153,7 +149,6 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          
          if (!toolMode)
          {
-            processPolicies(serviceMetaData, sepMetaData);
             setupOperationsFromWSDL(serviceMetaData, sepMetaData);
          }
 
@@ -168,13 +163,6 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          // Initialize types
          createJAXBContext(sepMetaData);
          populateXmlTypes(sepMetaData);
-
-         //Process an optional @PolicyAttachment annotation
-         if (sepClass.isAnnotationPresent(PolicyAttachment.class))
-         {
-            PolicyMetaDataBuilder policyBuilder = PolicyMetaDataBuilder.getServerSidePolicyMetaDataBuilder(toolMode);
-            policyBuilder.processPolicyAnnotations(sepMetaData, sepClass);
-         }
 
          // The server must always generate WSDL
          if (generateWsdl || !toolMode)
@@ -231,24 +219,6 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       {
          WSException.rethrow("Cannot build meta data: " + ex.getMessage(), ex);
          return null;
-      }
-   }
-
-   private void processPolicies(ServiceMetaData serviceMetaData, EndpointMetaData epMetaData)
-   {
-      final URL wsdlLocation = serviceMetaData.getWsdlLocation(); 
-
-      if (wsdlLocation != null)
-      {
-         PolicyMetaDataBuilder policyBuilder = PolicyMetaDataBuilder.getServerSidePolicyMetaDataBuilder(toolMode);
-         WSDLDefinitionsFactory factory = WSDLDefinitionsFactory.newInstance();
-         //we can no longer use the user provided wsdl without parsing it right now, since we
-         //need to look for policies and eventually choose the supported policy alternatives
-         WSDLDefinitions wsdlDefinitions = factory.parse(wsdlLocation);
-         policyBuilder.processPolicyExtensions(epMetaData, wsdlDefinitions);
-         //now we have the UMDM containing policy data; anyway we can't write a new wsdl file with
-         //the supported alternatives and so on, since we need to publish the file the user provided
-         serviceMetaData.setWsdlLocation(wsdlLocation);
       }
    }
 
