@@ -36,7 +36,6 @@
         <include>org.jboss.ws.native:jbossws-native-factories:jar</include>
         <include>org.jboss.ws.native:jbossws-native-services:jar</include>
         <include>org.jboss.ws.native:jbossws-native-core</include>
-        <include>com.sun.xml.fastinfoset:FastInfoset:jar</include>
         <include>javax.jws:jsr181-api:jar</include>
         <include>com.sun.xml.bind:jaxb-impl:jar</include>
         <include>com.sun.xml.bind:jaxb-xjc:jar</include>

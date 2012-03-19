@@ -81,7 +81,6 @@ import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.extensions.xop.XOPContext;
-import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
@@ -97,8 +96,6 @@ import org.jboss.wsf.spi.management.EndpointMetrics;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.w3c.dom.Document;
-
-import com.sun.xml.fastinfoset.dom.DOMDocumentSerializer;
 
 /**
  * A request handler
@@ -425,22 +422,7 @@ public class RequestHandlerImpl implements RequestHandler
       }
       else
       {
-         // FastInfoset support
-         if (epMetaData.isFeatureEnabled(FastInfosetFeature.class) && resMessage instanceof SOAPMessage)
-         {
-            SOAPMessage soapMessage = (SOAPMessage)resMessage;
-            if (soapMessage.getAttachments().hasNext())
-               throw new IllegalStateException(BundleUtils.getMessage(bundle, "NOT_SUPPORTED_WITH_FASTINFOSET"));
-
-            SOAPEnvelope soapEnv = soapMessage.getSOAPPart().getEnvelope();
-            DOMDocumentSerializer serializer = new DOMDocumentSerializer();
-            serializer.setOutputStream(output);
-            serializer.serialize(soapEnv);
-         }
-         else
-         {
-            resMessage.writeTo(output);
-         }
+         resMessage.writeTo(output);
       }
    }
 

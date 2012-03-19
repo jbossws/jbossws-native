@@ -31,7 +31,6 @@
     <dependencies>
         <module name="com.sun.tools.ws" services="import" optional="true"/>
         <module name="com.sun.xml.bind" services="import"/>
-        <module name="com.sun.xml.fastinfoset" optional="true"/>
         <module name="javax.api" />
         <module name="javax.servlet.api" />
         <module name="javax.jws.api" />

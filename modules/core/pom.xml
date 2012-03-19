@@ -118,10 +118,6 @@
       <artifactId>jaxb-xjc</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.sun.xml.fastinfoset</groupId>
-      <artifactId>FastInfoset</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.sun.xml.ws</groupId>
       <artifactId>jaxws-rt</artifactId>
     </dependency>

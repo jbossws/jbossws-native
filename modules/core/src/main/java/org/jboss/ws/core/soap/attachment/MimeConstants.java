@@ -44,7 +44,6 @@ public class MimeConstants
    public static final String TYPE_XML_UTF8 = TYPE_TEXT_XML + "; charset=UTF-8";
    public static final String TYPE_SOAP11 = TYPE_TEXT_XML;
    public static final String TYPE_SOAP12 = "application/soap+xml";
-   public static final String TYPE_FASTINFOSET = "application/fastinfoset";
 
    // Encoding
    public static final String TEXT_8BIT_ENCODING = "8bit";

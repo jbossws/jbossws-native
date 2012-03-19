@@ -41,7 +41,6 @@ import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxws.binding.BindingExt;
 import org.jboss.ws.extensions.addressing.jaxws.WSAddressingClientHandler;
 import org.jboss.ws.feature.ChunkedEncodingFeature;
-import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.feature.SchemaValidationFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FeatureAwareEndpointMetaData;
@@ -70,7 +69,6 @@ public class ClientFeatureProcessor
    private static FeatureSet supportedFeatures = new FeatureSet();
    static
    {
-      supportedFeatures.addFeature(new FastInfosetFeature());
       supportedFeatures.addFeature(new SchemaValidationFeature());
       supportedFeatures.addFeature(new AddressingFeature());
       supportedFeatures.addFeature(new MTOMFeature());
