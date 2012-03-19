@@ -21,27 +21,11 @@
  */
 package org.jboss.ws.core.soap;
 
-import java.io.InputStream;
-import java.util.ResourceBundle;
-import org.jboss.ws.api.util.BundleUtils;
-import java.net.URL;
-
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBodyElement;
-import javax.xml.transform.Source;
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.SOAPContent.State;
-import org.jboss.ws.extensions.validation.SchemaExtractor;
-import org.jboss.ws.extensions.validation.SchemaValidationHelper;
-import org.jboss.ws.feature.SchemaValidationFeature;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.common.DOMUtils;
-import org.w3c.dom.Element;
-import org.xml.sax.ErrorHandler;
 
 /**
  * An abstract implemenation of the SOAPBodyElement
@@ -54,12 +38,6 @@ import org.xml.sax.ErrorHandler;
  */
 public class SOAPBodyElementDoc extends SOAPContentElement implements SOAPBodyElement
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(EndpointMetaData.class);
-   // provide logging
-   private static Logger log = Logger.getLogger(SOAPBodyElementDoc.class);
-   
-   private SchemaValidationFeature feature;
-   
    public SOAPBodyElementDoc(Name name)
    {
       super(name);
@@ -81,74 +59,8 @@ public class SOAPBodyElementDoc extends SOAPContentElement implements SOAPBodyEl
       State prevState = soapContent.getState();
       if (nextState != prevState)
       {
-         if (isValidationEnabled() && nextState == State.OBJECT_VALID)
-         {
-            log.info("Validating: " + prevState);
-            validatePayload(soapContent.getPayload());
-         }
-         
          prevState = super.transitionTo(nextState);
-         
-         if (isValidationEnabled() && prevState == State.OBJECT_VALID)
-         {
-            log.info("Validating: " + nextState);
-            validatePayload(soapContent.getPayload());
-         }
       }
       return prevState;
-   }
-
-   private void validatePayload(Source source) 
-   {
-      SchemaExtractor schemaExtractor = new SchemaExtractor();
-      try
-      {
-         CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-         EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
-         feature = epMetaData.getFeature(SchemaValidationFeature.class);
-         URL xsdURL = feature.getSchemaLocation() != null ? new URL(feature.getSchemaLocation()) : null;
-         InputStream[] xsdStreams = null;
-         if (xsdURL == null)
-         {
-            URL wsdlURL = epMetaData.getServiceMetaData().getWsdlFileOrLocation();
-            if (wsdlURL == null)
-            {
-               log.warn(BundleUtils.getMessage(bundle, "VALIDATION_ERROR"));
-            }
-            else
-            {
-               xsdStreams = schemaExtractor.getSchemas(wsdlURL);
-            }
-         }
-         if (xsdURL != null)
-         {
-            ErrorHandler errorHandler = feature.getErrorHandler();
-            Element xmlDOM = DOMUtils.sourceToElement(source);
-            new SchemaValidationHelper(xsdURL).setErrorHandler(errorHandler).validateDocument(xmlDOM);
-         }
-         else //xsdStreams != null
-         {
-            ErrorHandler errorHandler = feature.getErrorHandler();
-            Element xmlDOM = DOMUtils.sourceToElement(source);
-            new SchemaValidationHelper(xsdStreams).setErrorHandler(errorHandler).validateDocument(xmlDOM);
-         }
-      }
-      catch (RuntimeException rte)
-      {
-         throw rte;
-      }
-      catch (Exception ex)
-      {
-         WSException.rethrow(ex);
-      }
-   }
-
-   private boolean isValidationEnabled()
-   {
-      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      if (msgContext != null)
-         feature = msgContext.getEndpointMetaData().getFeature(SchemaValidationFeature.class);
-      
-      return feature != null ? feature.isEnabled() : false;
    }
 }
