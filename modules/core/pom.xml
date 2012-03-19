@@ -171,7 +171,7 @@
       <artifactId>wsdl4j</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache</groupId>
+      <groupId>org.apache.santuario</groupId>
       <artifactId>xmlsec</artifactId>
     </dependency>
     <dependency>

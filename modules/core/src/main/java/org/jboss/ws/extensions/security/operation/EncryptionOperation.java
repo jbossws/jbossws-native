@@ -76,7 +76,7 @@ public class EncryptionOperation implements EncodingOperation
 
    private static HashMap<String, Algorithm> algorithms;
 
-   private static final String DEFAULT_ALGORITHM = "aes-128";
+   private static final String DEFAULT_ALGORITHM = "aes-128-gcm";
 
    static
    {
@@ -84,6 +84,9 @@ public class EncryptionOperation implements EncodingOperation
       algorithms.put("aes-128", new Algorithm("AES", XMLCipher.AES_128, 128));
       algorithms.put("aes-192", new Algorithm("AES", XMLCipher.AES_192, 192));
       algorithms.put("aes-256", new Algorithm("AES", XMLCipher.AES_256, 256));
+      algorithms.put("aes-128-gcm", new Algorithm("AES", XMLCipher.AES_128_GCM, 128));
+      algorithms.put("aes-192-gcm", new Algorithm("AES", XMLCipher.AES_192_GCM, 192));
+      algorithms.put("aes-256-gcm", new Algorithm("AES", XMLCipher.AES_256_GCM, 256));
       algorithms.put("tripledes", new Algorithm("TripleDes", XMLCipher.TRIPLEDES, 168));
    }
 

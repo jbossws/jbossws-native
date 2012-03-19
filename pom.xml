@@ -73,7 +73,7 @@
     <sun.jaxws.version>2.1.7</sun.jaxws.version>
     <woodstox.version>3.2.9</woodstox.version>
     <wsdl4j.version>1.6.2</wsdl4j.version>
-    <xmlsec.version>1.4.3</xmlsec.version>
+    <xmlsec.version>1.5.1</xmlsec.version>
     <xalan.version>2.7.1.patch02</xalan.version>
     <xerces.version>2.9.1</xerces.version>
   </properties>
@@ -361,7 +361,7 @@
         <version>${xerces.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache</groupId>
+        <groupId>org.apache.santuario</groupId>
         <artifactId>xmlsec</artifactId>
         <version>${xmlsec.version}</version>
       </dependency>
