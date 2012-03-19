@@ -63,7 +63,6 @@ import org.jboss.ws.core.client.UnMarshaller;
 import org.jboss.ws.core.client.ssl.SSLContextFactory;
 import org.jboss.ws.core.client.transport.WSResponseHandler.Result;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.metadata.config.EndpointProperty;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.wsf.spi.metadata.config.CommonConfig;
@@ -356,10 +355,6 @@ public class NettyClient
             String sizeValue = config.getProperty(EndpointProperty.CHUNKED_ENCODING_SIZE);
             if (sizeValue != null)
                chunkSize = Integer.valueOf(sizeValue);
-
-            //fastinfoset always disable chunking
-            if (epMetaData.isFeatureEnabled(FastInfosetFeature.class))
-               chunkSize = 0;
          }
          //override using call props
          try

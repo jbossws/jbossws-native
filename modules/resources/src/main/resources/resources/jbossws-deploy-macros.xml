@@ -118,11 +118,6 @@
           <include name="**/policy.jar"/>
         </fileset>
       </copy>
-      <copy todir="@{targetdir}/com/sun/xml/fastinfoset/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/FastInfoset.jar"/>
-        </fileset>
-      </copy>
       <copy todir="@{targetdir}/org/jvnet/staxex/main" flatten="false" overwrite="true">
         <fileset dir="@{thirdpartydir}/lib">
           <include name="**/stax-ex.jar"/>

@@ -39,7 +39,7 @@ public final class ChunkedEncodingFeature extends WebServiceFeature
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(ChunkedEncodingFeature.class);
    /** 
-    * Constant value identifying the FastInfosetFeature
+    * Constant value identifying the ChunkedEncodingFeature
     */
    public static final String ID = Constants.NS_JBOSSWS_URI + "/features/chunkedencoding";
 

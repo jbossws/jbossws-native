@@ -61,7 +61,6 @@ import org.jboss.ws.core.soap.attachment.MultipartRelatedEncoder;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedSwAEncoder;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedXOPEncoder;
 import org.jboss.ws.extensions.xop.XOPContext;
-import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.w3c.dom.Node;
@@ -362,10 +361,6 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
                   multipartRelatedEncoder.encodeMultipartRelatedMessage();
                   contentType = multipartRelatedEncoder.getContentType();
                }
-            }
-            else if (msgContext != null && msgContext.getEndpointMetaData().getFeatures().isFeatureEnabled(FastInfosetFeature.class))
-            {
-               contentType = MimeConstants.TYPE_FASTINFOSET;
             }
             //JBWS-2964:Create a new mimeHeaders to avoid changing another referenced mimeHeaders
             MimeHeaders newMimeHeaders = new MimeHeaders();            
