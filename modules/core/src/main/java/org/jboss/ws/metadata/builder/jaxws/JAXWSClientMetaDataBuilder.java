@@ -43,7 +43,6 @@ import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.ResourceLoaderAdapter;
 import org.jboss.ws.core.jaxws.client.serviceref.NativeServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
-import org.jboss.ws.extensions.policy.metadata.PolicyMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
@@ -102,8 +101,6 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          //Setup policies and EPRs for each endpoint
          for (EndpointMetaData epMetaData : serviceMetaData.getEndpoints())
          {
-            PolicyMetaDataBuilder policyBuilder = PolicyMetaDataBuilder.getClientSidePolicyMetaDataBuilder();
-            policyBuilder.processPolicyExtensions(epMetaData, wsdlDefinitions);
             processEPRs(epMetaData, wsdlDefinitions);
          }
 

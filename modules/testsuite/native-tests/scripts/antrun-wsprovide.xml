@@ -30,7 +30,6 @@
       <classpath>
         <pathelement path="${maven.test.classpath}"/>
       </classpath>
-      <classpath location="${tests.output.dir}/test-resources/jaxws/samples/wssecurityAnnotatedpolicy"/>
     </taskdef>
 
     <wsprovide-macro
@@ -42,17 +41,6 @@
       log4jConf="${log4j.conf}"
       loggingDir="${log4j.output.dir}"
       resourcesDir="wsprovide/jaxws/samples/wssecurity"
-    />
-
-    <wsprovide-macro
-      sei="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy.HelloJavaBean"
-      destDir=""
-      javaEndorsedDirs="${endorsed.dirs}"
-      jbossHome="${jboss.home}"
-      outputDir="${tests.output.dir}"
-      log4jConf="${log4j.conf}"
-      loggingDir="${log4j.output.dir}"
-      resourcesDir="wsprovide/jaxws/samples/wssecurityAnnotatedpolicy"
     />
 
   </target>

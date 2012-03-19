@@ -83,16 +83,6 @@
     />
 
     <wsconsume-macro
-      wsdl="${tests.resources.dir}/jaxws/samples/wssecurityAnnotatedpolicy/META-INF/wsdl/HelloService.wsdl"
-      package="org.jboss.test.ws.jaxws.samples.wssecurityAnnotatedpolicy"
-      outputDir="${tests.output.dir}"
-      javaEndorsedDirs="${endorsed.dirs}"
-      jbossHome="${jboss.home}"
-      log4jConf="${log4j.conf}"
-      loggingDir="${log4j.output.dir}"
-    />
-
-    <wsconsume-macro
       wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl"
       package="org.jboss.test.ws.jaxws.samples.wssecurity"
       outputDir="${tests.output.dir}"

@@ -84,7 +84,6 @@
     <sun.policy.version>2.0-b01</sun.policy.version>
     <stax.api.version>1.0-2</stax.api.version>
     <woodstox.version>3.2.6</woodstox.version>
-    <wscommons.policy.version>1.0</wscommons.policy.version>
     <wsdl4j.version>1.6.2</wsdl4j.version>
     <xmlsec.version>1.5.1</xmlsec.version>
     <xerces.version>2.9.1</xerces.version>
@@ -323,11 +322,6 @@
         <groupId>org.jboss.logging</groupId>
         <artifactId>jboss-logging</artifactId>
         <version>${jboss.logging.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>ws-commons</groupId>
-        <artifactId>policy</artifactId>
-        <version>${wscommons.policy.version}</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.woodstox</groupId>
