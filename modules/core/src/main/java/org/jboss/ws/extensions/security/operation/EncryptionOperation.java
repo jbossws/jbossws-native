@@ -76,7 +76,7 @@ public class EncryptionOperation implements EncodingOperation
 
    private static HashMap<String, Algorithm> algorithms;
 
-   private static final String DEFAULT_ALGORITHM = "aes-128-gcm";
+   private static final String DEFAULT_ALGORITHM = "aes-128";
 
    static
    {
