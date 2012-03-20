@@ -49,10 +49,8 @@ import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLTypes;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
-import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.ws.tools.wsdl.WSDLDefinitionsFactory;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.xb.binding.sunday.unmarshalling.SchemaBinding;
 
 /**
@@ -94,9 +92,6 @@ public class ServiceMetaData implements InitalizableMetaData, Serializable
    
    // derived cached encoding style
    private Use encStyle;
-   
-   // The security configuration
-   private WSSecurityConfiguration securityConfig;
    
    // The key to the wsdl cache
    private String wsdlCacheKey;
@@ -343,16 +338,6 @@ public class ServiceMetaData implements InitalizableMetaData, Serializable
       return typeMapping;
    }
 
-   public WSSecurityConfiguration getSecurityConfiguration()
-   {
-      return securityConfig;
-   }
-
-   public void setSecurityConfiguration(WSSecurityConfiguration securityConfiguration)
-   {
-      this.securityConfig = securityConfiguration;
-   }
-
    public Use getEncodingStyle()
    {
       if (encStyle == null)
@@ -393,19 +378,6 @@ public class ServiceMetaData implements InitalizableMetaData, Serializable
 
    public void validate()
    {
-      // Validate that there is at least one handler configured
-      // if we have a security configuration
-      if (securityConfig != null)
-      {
-         int handlerCount = 0;
-         for (EndpointMetaData epMetaData : endpoints.values())
-         {
-            handlerCount += epMetaData.getHandlerMetaData(HandlerType.ALL).size();
-         }
-         if (handlerCount == 0)
-            log.warn(BundleUtils.getMessage(bundle, "REQUIRES_A_SECURITY_HANDLER"));
-      }
-
       // Validate endpoints
       for (EndpointMetaData epMetaData : endpoints.values())
          epMetaData.validate();
@@ -457,7 +429,6 @@ public class ServiceMetaData implements InitalizableMetaData, Serializable
       buffer.append("\n wsdlLocation=" + wsdlLocation);
       buffer.append("\n jaxrpcMapping=" + mappingLocation);
       buffer.append("\n publishLocation=" + wsdlPublishLocation);
-      buffer.append("\n securityConfig=" + (securityConfig != null ? "found" : null));
       buffer.append("\n properties=" + properties);
       buffer.append("\n" + types);
       buffer.append("\n");

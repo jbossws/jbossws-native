@@ -53,9 +53,6 @@ import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
-import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
-import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
-import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.ws.tools.ToolsUtils;
 import org.jboss.ws.tools.wsdl.JAXBWSDLGenerator;
 import org.jboss.ws.tools.wsdl.WSDLGenerator;
@@ -124,11 +121,6 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          sepMetaData.setLinkName(linkName);
          sepMetaData.setServiceEndpointImplName(sepClass.getName());
          sepMetaData.setServiceEndpointInterfaceName(seiClass.getName());
-
-         // Assign the WS-Security configuration,
-         WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
-         WSSecurityConfiguration securityConfiguration = wsseConfFactory.createConfiguration(wsMetaData.getRootFile(), WSSecurityOMFactory.SERVER_RESOURCE_NAME);
-         serviceMetaData.setSecurityConfiguration(securityConfiguration);
 
          // Process an optional @SOAPBinding annotation
          processSOAPBinding(sepMetaData, seiClass);

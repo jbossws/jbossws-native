@@ -40,9 +40,6 @@ import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLService;
-import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
-import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
-import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.metadata.j2ee.EJBArchiveMetaData;
@@ -108,11 +105,6 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
             // Build type mapping meta data
             setupTypesMetaData(serviceMetaData);
-
-            // Assign the WS-Security configuration,
-            WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
-            WSSecurityConfiguration securityConfiguration = wsseConfFactory.createConfiguration(wsMetaData.getRootFile(), WSSecurityOMFactory.SERVER_RESOURCE_NAME);
-            serviceMetaData.setSecurityConfiguration(securityConfiguration);
 
             // For every port-component build the EndpointMetaData
             PortComponentMetaData[] pcMetaDataArr = wsdMetaData.getPortComponents();

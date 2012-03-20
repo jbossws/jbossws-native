@@ -33,10 +33,10 @@ import javax.xml.transform.dom.DOMResult;
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
-import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.metadata.wsdl.DOMTypes;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import com.sun.xml.bind.api.JAXBRIContext;
 
@@ -112,7 +112,7 @@ public class JAXBWSDLGenerator extends WSDLGenerator
 
    private void removeSchemaLocations(Element element)
    {
-      for (Element child = Util.getFirstChildElement(element); child != null; child = Util.getNextSiblingElement(child))
+      for (Element child = getFirstChildElement(element); child != null; child = getNextSiblingElement(child))
       {
          if ("import".equals(child.getLocalName()) && Constants.NS_SCHEMA_XSD.equals(child.getNamespaceURI())
                && "replace-me".equals(child.getAttribute("schemaLocation")))
@@ -130,4 +130,23 @@ public class JAXBWSDLGenerator extends WSDLGenerator
          }
       }
    }
+
+   public static Element getFirstChildElement(Node node)
+   {
+      Node child = node.getFirstChild();
+      while (child != null && child.getNodeType() != Node.ELEMENT_NODE)
+         child = child.getNextSibling();
+
+      return (Element)child;
+   }
+
+   public static Element getNextSiblingElement(Element element)
+   {
+      Node sibling = element.getNextSibling();
+      while (sibling != null && sibling.getNodeType() != Node.ELEMENT_NODE)
+         sibling = sibling.getNextSibling();
+
+      return (Element)sibling;
+   }
+
 }

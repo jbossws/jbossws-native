@@ -24,7 +24,6 @@ package org.jboss.ws.core.jaxrpc.client.serviceref;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.net.URL;
 import java.util.ResourceBundle;
 
 import javax.naming.BinaryRefAddr;
@@ -34,12 +33,8 @@ import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
 
 import org.jboss.ws.api.util.BundleUtils;
-import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
-import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
-import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
-import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
@@ -58,12 +53,10 @@ public final class NativeServiceReferenceableJAXRPC implements Referenceable
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(NativeServiceReferenceableJAXRPC.class);
    public static final String SERVICE_REF_META_DATA = "SERVICE_REF_META_DATA";
-   public static final String SECURITY_CONFIG = "SECURITY_CONFIG";
    public static final String PORT_COMPONENT_LINK = "PORT_COMPONENT_LINK";
    public static final String PORT_COMPONENT_LINK_SERVLET = "PORT_COMPONENT_LINK_SERVLET";
 
    private UnifiedServiceRefMetaData refMetaData;
-   private UnifiedVirtualFile vfsRoot;
 
    /**
     * A service referenceable for a WSDL document that is part of the deployment
@@ -71,7 +64,6 @@ public final class NativeServiceReferenceableJAXRPC implements Referenceable
    public NativeServiceReferenceableJAXRPC(UnifiedServiceRefMetaData refMetaData)
    {
       this.refMetaData = refMetaData;
-      this.vfsRoot = refMetaData.getVfsRoot();
    }
 
    /**
@@ -86,10 +78,6 @@ public final class NativeServiceReferenceableJAXRPC implements Referenceable
 
       // Add a reference to the ServiceRefMetaData and WSDLDefinitions
       myRef.add(new BinaryRefAddr(SERVICE_REF_META_DATA, marshallServiceRef()));
-
-      // FIXME: JBWS-1431 Merge ws-security config with jaxrpc/jaxws config
-      if (getSecurityConfig() != null)
-         myRef.add(new BinaryRefAddr(SECURITY_CONFIG, marshallSecurityConfig()));
 
       // Add references to port component links
       for (UnifiedPortComponentRefMetaData pcr : refMetaData.getPortComponentRefs())
@@ -137,49 +125,4 @@ public final class NativeServiceReferenceableJAXRPC implements Referenceable
       return baos.toByteArray();
    }
 
-   /** Marshall the WSSecurityConfiguration to an byte array
-    */
-   private byte[] marshallSecurityConfig() throws NamingException
-   {
-      ByteArrayOutputStream baos = new ByteArrayOutputStream(512);
-      try
-      {
-         WSSecurityConfiguration securityConfig = WSSecurityConfigFactory.newInstance().createConfiguration(
-           refMetaData.getVfsRoot(), WSSecurityOMFactory.CLIENT_RESOURCE_NAME
-         );
-         
-         ObjectOutputStream oos = new ObjectOutputStream(baos);
-         oos.writeObject(securityConfig);
-         oos.close();
-      }
-      catch (IOException e)
-      {
-         throw new NamingException(BundleUtils.getMessage(bundle, "CANNOT_MARSHALL_SECURITY_CONFIG",  e.toString()));
-      }
-      return baos.toByteArray();
-   }
-
-   private URL getSecurityConfig()
-   {
-      URL securityConfigURL = null;
-      try
-      {
-         UnifiedVirtualFile vfConfig = vfsRoot.findChild("WEB-INF/" + WSSecurityOMFactory.CLIENT_RESOURCE_NAME);
-         securityConfigURL = vfConfig.toURL();
-      }
-      catch (IOException ex)
-      {
-         // ignore
-      }
-      try
-      {
-         UnifiedVirtualFile vfConfig = vfsRoot.findChild("META-INF/" + WSSecurityOMFactory.CLIENT_RESOURCE_NAME);
-         securityConfigURL = vfConfig.toURL();
-      }
-      catch (IOException ex)
-      {
-         // ignore
-      }
-      return securityConfigURL;
-   }
 }

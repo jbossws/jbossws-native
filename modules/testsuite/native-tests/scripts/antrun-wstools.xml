@@ -59,7 +59,6 @@
     <macro-wstools dest="jaxrpc/samples/secureejb/META-INF" config="jaxrpc/samples/secureejb/wstools-config.xml"/>
     <macro-wstools dest="jaxrpc/samples/wsaddr/hello/WEB-INF" config="jaxrpc/samples/wsaddr/hello/wstools-config.xml"/>
     <macro-wstools dest="jaxrpc/samples/wsaddr/replyto/WEB-INF" config="jaxrpc/samples/wsaddr/replyto/wstools-config.xml"/>
-    <macro-wstools dest="jaxrpc/samples/wssecurity/WEB-INF" config="jaxrpc/samples/wssecurity/wstools-config.xml"/>
 
   </target>
 

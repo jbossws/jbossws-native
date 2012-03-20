@@ -301,30 +301,6 @@
               <value>${project.build.directory}/test-classes/jbossws-roles.properties</value>
             </property>
             <property>
-              <name>org.jboss.ws.wsse.keyStore</name>
-              <value>${test.resources.directory}/jaxws/samples/wssecurity/wsse.keystore</value>
-            </property>
-            <property>
-              <name>org.jboss.ws.wsse.trustStore</name>
-              <value>${test.resources.directory}/jaxws/samples/wssecurity/wsse.truststore</value>
-            </property>
-            <property>
-              <name>org.jboss.ws.wsse.keyStorePassword</name>
-              <value>jbossws</value>
-            </property>
-            <property>
-              <name>org.jboss.ws.wsse.trustStorePassword</name>
-              <value>jbossws</value>
-            </property>
-            <property>
-              <name>org.jboss.ws.wsse.keyStoreType</name>
-              <value>jks</value>
-            </property>
-            <property>
-              <name>org.jboss.ws.wsse.trustStoreType</name>
-              <value>jks</value>
-            </property>
-            <property>
               <name>test.archive.directory</name>
               <value>${test.archive.directory}</value>
             </property>
@@ -509,9 +485,6 @@
             <configuration>
               <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
               <excludes>
-                 <!-- # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
-                 <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
-
                  <!-- # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored-->
                  <exclude>org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*</exclude>
 
@@ -522,9 +495,6 @@
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
                  <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
-
-                 <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
-                 <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
 
                  <!-- ////////////////////////// -->
                  <!-- AS7 integration exclusions -->
@@ -710,9 +680,6 @@
             <configuration>
               <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} ${surefire.default-mgmt-serurity.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
               <excludes>
-                 <!-- # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
-                 <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
-
                  <!-- # [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored-->
                  <exclude>org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*</exclude>
 
@@ -720,9 +687,6 @@
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
                  <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
-
-                 <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
-                 <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
 
                  <!-- ////////////////////////// -->
                  <!-- AS7 integration exclusions -->
@@ -834,11 +798,8 @@
                  <exclude>org/jboss/test/ws/jaxrpc/samples/dynamichandler/DynamicHandlerTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/dynamichandler/StaticHandlerTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/wsaddr/replyto/AddressingReplyToTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleEncryptTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/wssecurity/SimpleSignTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/utf16/UTF16TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsdlpublish/WsdlPublishTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/UsernameTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/xop/doclit/XOPHandlerTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/xop/doclit/XOPTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/xop/rpclit/XOPHandlerTestCase*</exclude>
@@ -846,13 +807,6 @@
                  <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/AddressingReplyToTestCase*</exclude>
 
                  <!-- # webservices-description in jboss-web.xml / jboss.xml -->
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/SignEncryptFaultTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/RpcTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/WebClientTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/NotEncodedTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/SignFaultTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/SimpleSignEncryptTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/wsse/signup/AccountSignupTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1124/JBWS1124TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsdlpublish/WsdlPublishTestCase*</exclude>
 
@@ -977,16 +931,10 @@
             <configuration>
               <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} ${surefire.default-mgmt-serurity.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
               <excludes>
-                 <!-- # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
-                 <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
-
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
                  <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
-
-                 <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
-                 <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
 
                  <!-- ////////////////////////// -->
                  <!-- AS7 integration exclusions -->
@@ -1125,16 +1073,10 @@
             <configuration>
               <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} ${surefire.default-mgmt-serurity.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
               <excludes>
-                 <!-- # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
-                 <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
-
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
                  <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
-
-                 <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
-                 <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
 
                  <!-- ////////////////////////// -->
                  <!-- AS7 integration exclusions -->

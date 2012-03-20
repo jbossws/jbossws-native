@@ -153,12 +153,6 @@ public class EndpointConfigMetaData
       return epMetaData;
    }
 
-   void validate()
-   {
-      for (HandlerMetaData handler : handlers)
-         handler.validate();
-   }
-
    void initializeInternal()
    {
       // Initialize handlers
