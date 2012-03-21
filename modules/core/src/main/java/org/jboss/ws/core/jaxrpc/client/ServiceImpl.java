@@ -58,7 +58,6 @@ import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
@@ -90,9 +89,7 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
    // The optional WSDL location
    private URL wsdlLocation;
    private URL mappingURL;
-   private URL securityURL;
    private JavaWsdlMapping mappingConfig;
-   private WSSecurityConfiguration securityConfig;
    // The <service-ref> meta data
    private UnifiedServiceRefMetaData usrMetaData;
 
@@ -120,19 +117,17 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
       this.serviceName = serviceName;
       this.wsdlLocation = wsdlURL;
       this.mappingURL = mappingURL;
-      this.securityURL = securityURL;
       init();
    }
 
    /**
     * Construct a Service that has access to some WSDL meta data
     */
-   public ServiceImpl(QName serviceName, URL wsdlURL, JavaWsdlMapping mappingURL, WSSecurityConfiguration securityConfig, UnifiedServiceRefMetaData usrMetaData)
+   public ServiceImpl(QName serviceName, URL wsdlURL, JavaWsdlMapping mappingURL, UnifiedServiceRefMetaData usrMetaData)
    {
       this.serviceName = serviceName;
       this.wsdlLocation = wsdlURL;
       this.mappingConfig = mappingURL;
-      this.securityConfig = securityConfig;
       this.usrMetaData = usrMetaData;
       init();
    }
@@ -141,9 +136,7 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
        out.writeObject(serviceName);
        out.writeObject(wsdlLocation);
        out.writeObject(mappingURL);
-       out.writeObject(securityURL);
        out.writeObject(mappingConfig);
-       out.writeObject(securityConfig);
        out.writeObject(usrMetaData);
    }
 
@@ -151,30 +144,28 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
        serviceName = (QName)in.readObject();
        wsdlLocation = (URL)in.readObject();
        mappingURL = (URL)in.readObject();
-       securityURL = (URL)in.readObject();
        mappingConfig = (JavaWsdlMapping)in.readObject();
-       securityConfig = (WSSecurityConfiguration)in.readObject();
        usrMetaData = (UnifiedServiceRefMetaData)in.readObject();
        init();
    }
 
    private void init() {
-       if ((wsdlLocation == null) && (mappingURL == null) && (securityURL == null) && (securityConfig == null) && (mappingConfig == null) && (usrMetaData == null)) {
+       if ((wsdlLocation == null) && (mappingURL == null) && (mappingConfig == null) && (usrMetaData == null)) {
            UnifiedMetaData wsMetaData = new UnifiedMetaData(new ResourceLoaderAdapter());
            serviceMetaData = new ServiceMetaData(wsMetaData, serviceName);
            handlerRegistry = new HandlerRegistryImpl(serviceMetaData);
            return;
        }
-       if ((mappingURL != null) || (securityURL != null)) {
+       if (mappingURL != null) {
            JAXRPCClientMetaDataBuilder builder = new JAXRPCClientMetaDataBuilder();
            ClassLoader ctxClassLoader = SecurityActions.getContextClassLoader();
-           serviceMetaData = builder.buildMetaData(serviceName, wsdlLocation, mappingURL, securityURL, null, ctxClassLoader);
+           serviceMetaData = builder.buildMetaData(serviceName, wsdlLocation, mappingURL, null, ctxClassLoader);
            handlerRegistry = new HandlerRegistryImpl(serviceMetaData);
            return;
        }
        JAXRPCClientMetaDataBuilder builder = new JAXRPCClientMetaDataBuilder();
        ClassLoader ctxClassLoader = SecurityActions.getContextClassLoader();
-       serviceMetaData = builder.buildMetaData(serviceName, wsdlLocation, mappingConfig, securityConfig, usrMetaData, ctxClassLoader);
+       serviceMetaData = builder.buildMetaData(serviceName, wsdlLocation, mappingConfig, usrMetaData, ctxClassLoader);
        handlerRegistry = new HandlerRegistryImpl(serviceMetaData);
    }
 

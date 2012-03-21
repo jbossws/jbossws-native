@@ -544,8 +544,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    public void validate()
    {
-      getEndpointConfigMetaData().validate();
-
       for (OperationMetaData opMetaData : operations)
          opMetaData.validate();
    }

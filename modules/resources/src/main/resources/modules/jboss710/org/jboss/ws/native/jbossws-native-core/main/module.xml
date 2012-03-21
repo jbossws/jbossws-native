@@ -40,9 +40,7 @@
         <module name="javax.xml.stream.api" />
         <module name="javax.xml.rpc.api" />
         <module name="javax.xml.ws.api" />
-        <module name="org.picketbox"/>
         <module name="org.apache.xerces" services="import"/>
-        <module name="org.apache.santuario.xmlsec" />
         <module name="org.javassist" />
         <module name="org.jboss.netty" />
         <module name="org.jboss.xb" />

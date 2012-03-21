@@ -125,7 +125,7 @@ public class EndpointImpl extends Endpoint
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_ADDRESS",  addr));
       }
 
-      // Check with the security manger
+      // Check with the security manager
       this.checkPublishEndpointPermission();
 
       // Get HTTP server
@@ -154,7 +154,7 @@ public class EndpointImpl extends Endpoint
       if (isDestroyed)
          throw new IllegalStateException(BundleUtils.getMessage(bundle, "ENDPOINT_ALREADY_DESTROYED"));
 
-      // Check with the security manger
+      // Check with the security manager
       checkPublishEndpointPermission();
 
       if (context instanceof HttpContext)

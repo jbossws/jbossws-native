@@ -46,9 +46,6 @@ import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLService;
-import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
-import org.jboss.ws.metadata.wsse.WSSecurityOMFactory;
-import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
@@ -67,7 +64,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
 
    /** Build from WSDL and jaxrpc-mapping.xml
     */
-   public ServiceMetaData buildMetaData(QName serviceQName, URL wsdlURL, URL mappingURL, URL securityURL,
+   public ServiceMetaData buildMetaData(QName serviceQName, URL wsdlURL, URL mappingURL,
          UnifiedServiceRefMetaData serviceRefMetaData, ClassLoader loader)
    {
       try
@@ -79,13 +76,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
             javaWsdlMapping = mappingFactory.parse(mappingURL);
          }
 
-         WSSecurityConfiguration securityConfig = null;
-         if (securityURL != null)
-         {
-            securityConfig = WSSecurityOMFactory.newInstance().parse(securityURL);
-         }
-
-         return buildMetaData(serviceQName, wsdlURL, javaWsdlMapping, securityConfig, serviceRefMetaData, loader);
+         return buildMetaData(serviceQName, wsdlURL, javaWsdlMapping, serviceRefMetaData, loader);
       }
       catch (RuntimeException rte)
       {
@@ -99,7 +90,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
 
    /** Build from WSDL and jaxrpc-mapping.xml
     */
-   public ServiceMetaData buildMetaData(QName serviceQName, URL wsdlURL, JavaWsdlMapping javaWsdlMapping, WSSecurityConfiguration securityConfig,
+   public ServiceMetaData buildMetaData(QName serviceQName, URL wsdlURL, JavaWsdlMapping javaWsdlMapping,
          UnifiedServiceRefMetaData usrMetaData, ClassLoader loader)
    {
       if(log.isDebugEnabled()) log.debug("START buildMetaData: [service=" + serviceQName + "]");
@@ -125,12 +116,6 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
             }
             wsMetaData.addMappingDefinition(mappingURL.toExternalForm(), javaWsdlMapping);
             serviceMetaData.setMappingLocation(mappingURL);
-         }
-
-         if (securityConfig != null)
-         {
-            serviceMetaData.setSecurityConfiguration(securityConfig);
-            setupSecurity(securityConfig, wsMetaData.getRootFile());
          }
 
          buildMetaDataInternal(serviceMetaData, wsdlDefinitions, javaWsdlMapping, usrMetaData);
@@ -239,29 +224,6 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
                HandlerMetaDataJAXRPC hmd = HandlerMetaDataJAXRPC.newInstance(uhmd, HandlerType.ENDPOINT);
                epMetaData.addHandler(hmd);
             }
-         }
-      }
-   }
-
-   private void setupSecurity(WSSecurityConfiguration securityConfig, UnifiedVirtualFile vfsRoot)
-   {
-      if (securityConfig.getKeyStoreFile() != null)
-      {
-         try {
-            UnifiedVirtualFile child = vfsRoot.findChild( securityConfig.getKeyStoreFile() );
-            securityConfig.setKeyStoreURL(child.toURL());
-         } catch (IOException e) {
-            // ignore
-         }
-      }
-
-      if (securityConfig.getTrustStoreFile() != null)
-      {
-         try {
-            UnifiedVirtualFile child = vfsRoot.findChild( securityConfig.getTrustStoreFile() );
-            securityConfig.setTrustStoreURL(child.toURL());
-         } catch (IOException e) {
-            // Ignore
          }
       }
    }

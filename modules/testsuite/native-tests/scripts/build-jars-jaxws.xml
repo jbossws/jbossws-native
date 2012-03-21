@@ -160,29 +160,6 @@
 			</metainf>
 		</jar>
 
-		<!-- jaxws-jbws1309-->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1309.jar">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws1309/*.class" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws1309/*TestCase.class" />
-			</fileset>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws1309/META-INF">
-				<include name="jboss-wsse-server.xml" />
-				<include name="jboss.xml" />
-				<include name="jboss-webservices.xml" />
-			</metainf>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws1309/">
-				<include name="wsse.truststore" />
-				<include name="wsse.keystore" />
-			</metainf>
-		</jar>
-		<jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws1309-client.jar">
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws1309">
-				<include name="wsse.truststore" />
-				<include name="wsse.keystore" />
-			</metainf>
-		</jar>
-
 		<!-- jaxws-jbws1809 -->
 		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1809.jar">
 			<fileset dir="${tests.output.dir}/test-classes">
@@ -191,19 +168,6 @@
 			</fileset>
 			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws1809/META-INF" />
 		</jar>
-
-		<!-- jaxws-jbws1814 -->
-		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws1814.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws1814/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws1814/HelloJavaBean.class" />
-			</classes>
-			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws1814/WEB-INF">
-				<include name="*" />
-			</webinf>
-            <manifest>
-                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
-            </manifest>
-		</war>
 
 		<!-- jaxws-jbws1850 -->
 		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1850.jar">
@@ -223,110 +187,6 @@
 			</fileset>
 		</jar>
 
-		<!-- jaxws-jbws1988 -->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1988.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws1988/META-INF/MANIFEST.MF">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws1988/*.class" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws1988/*TestCase.class" />
-			</fileset>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws1988/META-INF">
-				<include name="jboss-wsse-server.xml" />
-				<include name="jboss.xml" />
-			</metainf>
-		</jar>
-
-		<!-- jaxws-jbws1991 -->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1991.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws1991/META-INF/MANIFEST.MF">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws1991/*.class" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws1991/*TestCase.class" />
-			</fileset>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws1991/META-INF">
-				<include name="jboss-wsse-server.xml" />
-				<include name="jboss.xml" />
-			</metainf>
-		</jar>
-
-		<!-- jaxws-jbws1999 -->
-		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws1999.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws1999/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws1999/*.class" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws1999/*TestCase.class" />
-			</classes>
-			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws1999/WEB-INF">
-				<include name="*" />
-			</webinf>
-		</war>
-
-		<!-- jaxws-jbws2011-->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2011.jar">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws2011/*.class" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws2011/*TestCase.class" />
-			</fileset>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2011/META-INF">
-				<include name="jboss-wsse-server.xml" />
-			</metainf>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2011/">
-				<include name="wsse.truststore" />
-				<include name="wsse.keystore" />
-			</metainf>
-		</jar>
-		<jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws2011-client.jar">
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2011">
-				<include name="wsse.truststore" />
-				<include name="wsse.keystore" />
-			</metainf>
-		</jar>
-
-		<!-- jaxws-jbws2014-->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2014-sign.jar">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws2014/*.class" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws2014/*TestCase.class" />
-			</fileset>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2014/sign/META-INF">
-				<include name="jboss-wsse-server.xml" />
-			</metainf>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2014/">
-				<include name="wsse.*" />
-			</metainf>
-            <manifest>
-                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
-            </manifest>
-		</jar>
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2014-encrypt.jar">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws2014/*.class" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws2014/*TestCase.class" />
-			</fileset>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2014/encrypt/META-INF">
-				<include name="jboss-wsse-server.xml" />
-			</metainf>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2014/">
-				<include name="wsse.*" />
-			</metainf>
-            <manifest>
-                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
-            </manifest>
-		</jar>					
-		
-		<!-- jaxws-jbws2116-->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2116.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws2116/META-INF/MANIFEST.MF">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws2116/*.class" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws2116/*TestCase.class" />
-			</fileset>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2116/META-INF">
-				<include name="jboss-wsse-server.xml" />
-				<include name="jboss.xml" />
-			</metainf>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2116/">
-				<include name="wsse10.truststore" />
-				<include name="bob-sign.jks" />
-			</metainf>
-		</jar>
-
 		<!-- jaxws-jbws2166-->
 		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2166-A.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws2166/META-INF/MANIFEST.MF">
 			<fileset dir="${tests.output.dir}/test-classes">
@@ -340,27 +200,6 @@
 				<include name="org/jboss/test/ws/jaxws/jbws2166/EndpointB.class" />
 				<include name="org/jboss/test/ws/jaxws/jbws2166/EndpointImplB.class" />
 			</fileset>
-		</jar>
-
-		<!-- jaxws-jbws2182-->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2182.jar">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws2182/*.class" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws2182/*TestCase.class" />
-			</fileset>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2182/META-INF">
-				<include name="jboss-wsse-server.xml" />
-			</metainf>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2182/">
-				<include name="wsse.truststore" />
-				<include name="wsse.keystore" />
-			</metainf>
-		</jar>
-		<jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws2182-client.jar">
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws2182">
-				<include name="wsse.truststore" />
-				<include name="wsse.keystore" />
-			</metainf>
 		</jar>
 
 		<!-- jaxws-jbws2187 -->
@@ -641,30 +480,6 @@
 			</classes>
 		</war>
 
-		<!-- jaxws-jbws3182 -->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws3182.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws3182/META-INF/MANIFEST.MF">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws3182/*.class" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws3182/*TestCase.class" />
-			</fileset>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws3182/META-INF">
-				<include name="jboss-wsse-server.xml" />
-			</metainf>
-		</jar>
-		<jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws3182-service.sar">
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws3182/META-INF">
-				<include name="jboss-service.xml" />
-				<include name="wsse.keystore" />
-				<include name="wsse.truststore" />
-			</metainf>
-		</jar>
-                <jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws3182-client.jar">
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws3182/META-INF">
-				<include name="wsse.truststore" />
-				<include name="wsse.keystore" />
-			</metainf>
-		</jar>
-
         <!-- jaxws-jbws3250 -->
         <war warfile="${tests.output.dir}/test-libs/jaxws-jbws3250.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws3250/WEB-INF/web.xml">
             <classes dir="${tests.output.dir}/test-classes">
@@ -672,14 +487,6 @@
                <exclude name="org/jboss/test/ws/jaxws/jbws3250/*TestCase*.class" />
             </classes>
         </war>
-		
-        <!-- jaxws-jbws3277 -->
-        <war warfile="${tests.output.dir}/test-libs/jaxws-jbws3277.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws3277/WEB-INF/web.xml">
-            <classes dir="${tests.output.dir}/test-classes">
-               <include name="org/jboss/test/ws/jaxws/jbws3277/*.class" />
-               <exclude name="org/jboss/test/ws/jaxws/jbws3277/*TestCase*.class" />
-            </classes>
-        </war>				
 		
 		<!-- jaxws-webserviceref -->
 		<war warfile="${tests.output.dir}/test-libs/jaxws-webserviceref.war" webxml="${tests.output.dir}/test-resources/jaxws/webserviceref/WEB-INF/web.xml">

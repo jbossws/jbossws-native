@@ -88,11 +88,6 @@
           <include name="**/jbossxb.jar"/>
         </fileset>
       </copy>
-      <copy todir="@{targetdir}/org/apache/santuario/xmlsec/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/xmlsec.jar"/>
-        </fileset>
-      </copy>
       <copy todir="@{targetdir}/com/sun/tools/ws/main" flatten="false" overwrite="true">
         <fileset dir="@{thirdpartydir}/lib">
           <include name="**/jaxws-tools.jar"/>

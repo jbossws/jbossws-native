@@ -115,7 +115,6 @@
                     <ant antfile="scripts/build-samples-jaxrpc.xml" target="build-samples-jaxrpc" />
                     <ant antfile="scripts/build-jars-jaxws.xml" target="build-jars-jaxws" />
                     <ant antfile="scripts/build-samples-jaxws.xml" target="build-samples-jaxws" />
-                    <ant antfile="scripts/build-jars-interop.xml" target="build-jars-interop" />
                   </tasks>
                 </configuration>
               </execution>

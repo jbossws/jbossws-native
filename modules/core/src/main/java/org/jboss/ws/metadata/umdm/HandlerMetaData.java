@@ -151,21 +151,6 @@ public abstract class HandlerMetaData implements InitalizableMetaData, Serializa
       return initParams;
    }
 
-   public void validate()
-   {
-      List<String> securityHandlers = new ArrayList<String>();
-      securityHandlers.add(org.jboss.ws.extensions.security.jaxrpc.WSSecurityHandlerInbound.class.getName());
-      securityHandlers.add(org.jboss.ws.extensions.security.jaxrpc.WSSecurityHandlerOutbound.class.getName());
-      securityHandlers.add(org.jboss.ws.extensions.security.jaxws.WSSecurityHandlerServer.class.getName());
-      securityHandlers.add(org.jboss.ws.extensions.security.jaxws.WSSecurityHandlerClient.class.getName());
-      
-      if (securityHandlers.contains(handlerClassName) && epMetaData != null)
-      {
-         if (epMetaData.getServiceMetaData().getSecurityConfiguration() == null)
-            log.warn(BundleUtils.getMessage(bundle, "REQUIRES_SECURITY_CONFIGURATION"));
-      }
-   }
-
    public void eagerInitialize()
    {
       handlerClass = getHandlerClass();

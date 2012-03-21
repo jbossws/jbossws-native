@@ -32,17 +32,6 @@
       </classpath>
     </taskdef>
 
-    <wsprovide-macro
-      sei="org.jboss.test.ws.jaxws.samples.wssecurity.HelloJavaBean"
-      destDir=""
-      javaEndorsedDirs="${endorsed.dirs}"
-      jbossHome="${jboss.home}"
-      outputDir="${tests.output.dir}"
-      log4jConf="${log4j.conf}"
-      loggingDir="${log4j.output.dir}"
-      resourcesDir="wsprovide/jaxws/samples/wssecurity"
-    />
-
   </target>
 
   <macrodef name="wsprovide-macro">

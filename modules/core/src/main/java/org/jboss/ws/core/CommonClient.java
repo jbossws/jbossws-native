@@ -21,7 +21,6 @@
  */
 package org.jboss.ws.core;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -68,8 +67,6 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
-import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
@@ -97,8 +94,6 @@ public abstract class CommonClient implements StubExt, HeaderSource
    private Map<QName, UnboundHeader> unboundHeaders = new LinkedHashMap<QName, UnboundHeader>();
    // A List<AttachmentPart> of attachment parts set through the proxy
    private List<AttachmentPart> attachmentParts = new ArrayList<AttachmentPart>();
-   // The WS-Security config
-   private String securityConfig;
 
    /** Create a call that needs to be configured manually
     */
@@ -459,6 +454,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
       responseContext.put(MessageContext.HTTP_RESPONSE_HEADERS, remotingMetadata.get(NettyClient.RESPONSE_HEADERS));
    }
 
+   @SuppressWarnings({"unchecked", "rawtypes"})
    private void saveSessionInfo(Map<String, Object> remotingMetadata, Map<String, Object> requestContext)
    {
       Map<String, String> cookies = (Map)requestContext.get(SESSION_COOKIES);
@@ -501,9 +497,10 @@ public abstract class CommonClient implements StubExt, HeaderSource
       }
    }
 
+   @SuppressWarnings("unchecked")
    protected void addSessionInfo(MessageAbstraction reqMessage, Map<String, Object> callProperties)
    {
-      Map<String, String> cookies = (Map)callProperties.get(SESSION_COOKIES);
+      Map<String, String> cookies = (Map<String, String>)callProperties.get(SESSION_COOKIES);
       if (cookies != null)
       {
          for (Map.Entry<String, String> cookie : cookies.entrySet())
@@ -513,6 +510,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
       }
    }
    
+   @SuppressWarnings("unchecked")
    private void propagateRequestHeaders(MessageAbstraction reqMessage, CommonMessageContext callProperties)
    {
       Map<String, List<String>> requestHeaders = (Map<String, List<String>>)callProperties.get(MessageContext.HTTP_REQUEST_HEADERS);
@@ -740,35 +738,5 @@ public abstract class CommonClient implements StubExt, HeaderSource
    {
       EndpointMetaData epMetaData = getEndpointMetaData();
       return epMetaData.getConfigFile();
-   }
-
-   public String getSecurityConfig()
-   {
-      return securityConfig;
-   }
-
-   public void setSecurityConfig(String securityConfig)
-   {
-      this.securityConfig = securityConfig;
-
-      if (securityConfig != null)
-      {
-         EndpointMetaData epMetaData = getEndpointMetaData();
-         ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
-         if (serviceMetaData.getSecurityConfiguration() == null)
-         {
-            try
-            {
-               WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
-               UnifiedVirtualFile vfsRoot = serviceMetaData.getUnifiedMetaData().getRootFile();
-               WSSecurityConfiguration config = wsseConfFactory.createConfiguration(vfsRoot, securityConfig);
-               serviceMetaData.setSecurityConfiguration(config);
-            }
-            catch (IOException ex)
-            {
-               WSException.rethrow("Cannot set security config", ex);
-            }
-         }
-      }
    }
 }

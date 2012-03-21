@@ -42,56 +42,6 @@
       loggingDir="${log4j.output.dir}"
     />
 
-    <wsconsume-macro
-      wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitB/WEB-INF/wsdl/service.wsdl"
-      package="org.jboss.test.ws.interop.soapwsdl.basedoclitb"
-      outputDir="${tests.output.dir}"
-      javaEndorsedDirs="${endorsed.dirs}"
-      jbossHome="${jboss.home}"
-      log4jConf="${log4j.conf}"
-      loggingDir="${log4j.output.dir}"
-    />
-
-    <wsconsume-macro
-      wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesDocLitW/WEB-INF/wsdl/service.wsdl"
-      package="org.jboss.test.ws.interop.soapwsdl.basedoclitw"
-      outputDir="${tests.output.dir}"
-      javaEndorsedDirs="${endorsed.dirs}"
-      jbossHome="${jboss.home}"
-      log4jConf="${log4j.conf}"
-      loggingDir="${log4j.output.dir}"
-    />
-
-    <wsconsume-macro
-      wsdl="${tests.resources.dir}/interop/soapwsdl/BaseDataTypesRpcLit/WEB-INF/wsdl/service.wsdl"
-      package="org.jboss.test.ws.interop.soapwsdl.baserpclit"
-      outputDir="${tests.output.dir}"
-      javaEndorsedDirs="${endorsed.dirs}"
-      jbossHome="${jboss.home}"
-      log4jConf="${log4j.conf}"
-      loggingDir="${log4j.output.dir}"
-    />
-
-    <wsconsume-macro
-      wsdl="${tests.resources.dir}/jaxws/samples/wssecuritypolicy/WEB-INF/wsdl/HelloService.wsdl"
-      package="org.jboss.test.ws.jaxws.samples.wssecuritypolicy"
-      outputDir="${tests.output.dir}"
-      javaEndorsedDirs="${endorsed.dirs}"
-      jbossHome="${jboss.home}"
-      log4jConf="${log4j.conf}"
-      loggingDir="${log4j.output.dir}"
-    />
-
-    <wsconsume-macro
-      wsdl="${tests.resources.dir}/jaxws/samples/wssecurity/META-INF/wsdl/HelloService.wsdl"
-      package="org.jboss.test.ws.jaxws.samples.wssecurity"
-      outputDir="${tests.output.dir}"
-      javaEndorsedDirs="${endorsed.dirs}"
-      jbossHome="${jboss.home}"
-      log4jConf="${log4j.conf}"
-      loggingDir="${log4j.output.dir}"
-    />
-
   </target>
 
   <macrodef name="wsconsume-macro">

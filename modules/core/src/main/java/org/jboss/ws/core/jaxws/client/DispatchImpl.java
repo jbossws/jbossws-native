@@ -81,8 +81,6 @@ import org.jboss.ws.metadata.umdm.FeatureAwareClientEndpointMetaDataAdapter;
 import org.jboss.ws.metadata.umdm.FeatureAwareEndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.ws.metadata.wsse.WSSecurityConfigFactory;
-import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.w3c.dom.Node;
@@ -597,35 +595,6 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
    public void setConfigName(String configName, String configFile)
    {
       epMetaData.setConfigName(configName, configFile);
-   }
-
-   public String getSecurityConfig()
-   {
-      return securityConfig;
-   }
-
-   public void setSecurityConfig(String securityConfig)
-   {
-      this.securityConfig = securityConfig;
-
-      if (securityConfig != null)
-      {
-         ServiceMetaData serviceMetaData = epMetaData.getServiceMetaData();
-         if (serviceMetaData.getSecurityConfiguration() == null)
-         {
-            try
-            {
-               WSSecurityConfigFactory wsseConfFactory = WSSecurityConfigFactory.newInstance();
-               UnifiedVirtualFile vfsRoot = serviceMetaData.getUnifiedMetaData().getRootFile();
-               WSSecurityConfiguration config = wsseConfFactory.createConfiguration(vfsRoot, securityConfig);
-               serviceMetaData.setSecurityConfiguration(config);
-            }
-            catch (IOException ex)
-            {
-               WSException.rethrow("Cannot set security config", ex);
-            }
-         }
-      }
    }
 
    private boolean callRequestHandlerChain(QName portName, HandlerType type)

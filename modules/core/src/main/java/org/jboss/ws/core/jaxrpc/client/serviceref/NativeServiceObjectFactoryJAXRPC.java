@@ -63,7 +63,6 @@ import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.ws.metadata.wsse.WSSecurityConfiguration;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Endpoint;
@@ -131,24 +130,6 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
             throw ne;
          }
 
-         // Unmarshall the WSSecurityConfiguration
-         WSSecurityConfiguration securityConfig = null;
-         RefAddr wsseRefAddr = ref.get(NativeServiceReferenceableJAXRPC.SECURITY_CONFIG);
-         if (wsseRefAddr != null)
-         {
-            bais = new ByteArrayInputStream((byte[])wsseRefAddr.getContent());
-            try
-            {
-               ObjectInputStream ois = new ObjectInputStream(bais);
-               securityConfig = (WSSecurityConfiguration)ois.readObject();
-               ois.close();
-            }
-            catch (IOException e)
-            {
-               throw new NamingException(BundleUtils.getMessage(bundle, "CANNOT_UNMARSHALL_SECURITY_CONFIG", e.toString()));
-            }
-         }
-
          ServiceImpl jaxrpcService = null;
          URL wsdlLocation = serviceRef.getWsdlLocation();
          if (wsdlLocation != null)
@@ -159,7 +140,7 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
             // Create the actual service object
             QName serviceName = serviceRef.getServiceQName();
             JavaWsdlMapping javaWsdlMapping = getJavaWsdlMapping(serviceRef);
-            jaxrpcService = new ServiceImpl(serviceName, wsdlLocation, javaWsdlMapping, securityConfig, serviceRef);
+            jaxrpcService = new ServiceImpl(serviceName, wsdlLocation, javaWsdlMapping, serviceRef);
          }
          else
          {

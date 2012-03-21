@@ -301,30 +301,6 @@
               <value>${project.build.directory}/test-classes/jbossws-roles.properties</value>
             </property>
             <property>
-              <name>org.jboss.ws.wsse.keyStore</name>
-              <value>${test.resources.directory}/jaxws/samples/wssecurity/wsse.keystore</value>
-            </property>
-            <property>
-              <name>org.jboss.ws.wsse.trustStore</name>
-              <value>${test.resources.directory}/jaxws/samples/wssecurity/wsse.truststore</value>
-            </property>
-            <property>
-              <name>org.jboss.ws.wsse.keyStorePassword</name>
-              <value>jbossws</value>
-            </property>
-            <property>
-              <name>org.jboss.ws.wsse.trustStorePassword</name>
-              <value>jbossws</value>
-            </property>
-            <property>
-              <name>org.jboss.ws.wsse.keyStoreType</name>
-              <value>jks</value>
-            </property>
-            <property>
-              <name>org.jboss.ws.wsse.trustStoreType</name>
-              <value>jks</value>
-            </property>
-            <property>
               <name>test.archive.directory</name>
               <value>${test.archive.directory}</value>
             </property>
@@ -534,16 +510,10 @@
             <configuration>
               <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} ${surefire.default-mgmt-serurity.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
               <excludes>
-                 <!-- # UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration-->
-                 <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
-
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
                  <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
-
-                 <!-- # [JBWS-3252] Investigate WSA interop tests regression -->
-                 <exclude>org/jboss/test/ws/interop/wsa/AddressingTestCase*</exclude>
 
                  <!-- ////////////////////////// -->
                  <!-- AS7 integration exclusions -->

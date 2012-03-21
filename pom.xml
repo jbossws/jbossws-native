@@ -85,7 +85,6 @@
     <stax.api.version>1.0-2</stax.api.version>
     <woodstox.version>3.2.6</woodstox.version>
     <wsdl4j.version>1.6.2</wsdl4j.version>
-    <xmlsec.version>1.5.1</xmlsec.version>
     <xerces.version>2.9.1</xerces.version>
     <jbossxb.version>2.0.3.GA</jbossxb.version>
     <junit.version>3.8.1</junit.version>
@@ -343,11 +342,6 @@
         <groupId>xerces</groupId>
         <artifactId>xercesImpl</artifactId>
         <version>${xerces.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.santuario</groupId>
-        <artifactId>xmlsec</artifactId>
-        <version>${xmlsec.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.netty</groupId>

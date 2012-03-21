@@ -53,7 +53,7 @@ import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.handler.ssl.SslHandler;
-import org.jboss.security.Base64Encoder;
+import org.jboss.util.Base64;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.StubExt;
@@ -414,7 +414,7 @@ public class NettyClient
 
    private static String getBasicAuthHeader(String username, String password) throws IOException
    {
-      return "Basic " + Base64Encoder.encode(username + ":" + password);
+      return "Basic " + new String(Base64.encodeBytes((username + ":" + password).getBytes("ISO-8859-1"), Base64.DONT_BREAK_LINES));
    }
 
    /**
