@@ -65,12 +65,6 @@
       <arg value="help:effective-settings"/>
     </exec>
     <xmlproperty file="${dist.output.dir}/effective-settings.xml" keeproot="false"/>
-    <condition property="jboss702.home" value="${profiles.profile.properties.jboss702.home}">
-      <isset property="profiles.profile.properties.jboss702.home"/>
-    </condition>
-    <condition property="jboss710.home" value="${profiles.profile.properties.jboss710.home}">
-      <isset property="profiles.profile.properties.jboss710.home"/>
-    </condition>
     <condition property="jboss711.home" value="${profiles.profile.properties.jboss711.home}">
       <isset property="profiles.profile.properties.jboss711.home"/>
     </condition>
@@ -78,15 +72,9 @@
       <isset property="profiles.profile.properties.jboss712.home"/>
     </condition>
 
-  	<fail message="jboss home not set, use jboss702.home=value, jboss710.home=value, jboss711.home=value or jboss712.home=value to set">
+  	<fail message="jboss home not set, use jboss711.home=value or jboss712.home=value to set">
      <condition>
       <and>
-       <not>
-         <isset property="jboss702.home"/>
-       </not>
-       <not>
-         <isset property="jboss710.home"/>
-       </not>
        <not>
          <isset property="jboss711.home"/>
        </not>
@@ -98,8 +86,6 @@
     </fail>
 
     <echo/>
-    <echo message="jboss702.home=${jboss702.home}"/>
-    <echo message="jboss710.home=${jboss710.home}"/>
     <echo message="jboss711.home=${jboss711.home}"/>
     <echo message="jboss712.home=${jboss712.home}"/>
   </target>
@@ -123,7 +109,7 @@
 
   <target name="prepare-deploy" depends="prepare,os-init">
 
-    <!-- Use a system property to overwrite the empty default value -->
+    <!-- Use a system property to overwrite the empty default value  -->
     <property name="maven.opts" value=""/>
 
     <echo/>
@@ -135,56 +121,4 @@
       <arg line="${maven.opts} -Pdist -Dno-testsuite install"/>
     </exec>
   </target>
-
-  <target name="build-bin-dist" depends="prepare,os-init,makedir" description="Build the binary distribution">
-    <!-- Use a system property to overwrite the empty default value -->
-    <property name="maven.opts" value=""/>
-
-    <echo/>
-    <echo message="${mvn} ${maven.opts} -Pdist -Dbindist -Dno-testsuite install"/>
-    <echo/>
-
-    <delete dir="${dist.output.dir}/jbossws-native-bin-dist"/>
-    <exec dir="${basedir}" executable="${mvn}" failonerror="true">
-      <arg line="${maven.opts} -Pdist -Dbindist -Dno-testsuite install"/>
-    </exec>
-
-    <zip destfile="${stack.output.dir}/jbossws-native-bin-dist.zip">
-      <zipfileset
-        dir="${dist.output.dir}/assembly/jbossws-native-bin-dist"
-        includes="build/ deploy/ docs/ tests/ build.xml ant.properties.example"
-        prefix="jbossws-native-bin-dist"/>
-    </zip>
-  </target>
-
-  <target name="build-src-dist" depends="prepare,os-init,makedir" description="Build the source distribution">
-    <!-- Use a system property to overwrite the empty default value -->
-    <property name="maven.opts" value=""/>
-
-    <echo/>
-    <echo message="${mvn} ${maven.opts} -Pdist -Dsrcdist -Dno-testsuite install"/>
-    <echo/>
-
-    <delete dir="${stack.output.dir}/jbossws-native-src-dist"/>
-    <exec dir="${basedir}" executable="${mvn}" failonerror="true">
-      <arg line="${maven.opts} -Pdist -Dsrcdist -Dno-testsuite install"/>
-    </exec>
-
-    <zip destfile="${stack.output.dir}/jbossws-native-src-dist.zip">
-      <zipfileset
-        dir="${dist.output.dir}/assembly/jbossws-native-src-dist"
-        includes="modules/ src/ eclipse/ build.xml pom.xml profiles.xml.example .classpath .project "
-        prefix="jbossws-native-src-dist"/>
-    </zip>
-  </target>
-
-   <target name="check.exist">
-       <available file="${stack.output.dir}" property="file.exists" value="true" />
-   </target>
-
-   <target name="makedir" depends="check.exist" unless="file.exists">
-       <mkdir dir="${stack.output.dir}" />
-   </target>
-
-
 </project>

@@ -61,9 +61,6 @@
       <outputDirectory>deploy-artifacts/lib</outputDirectory>
       <unpack>false</unpack>
       <includes>
-        <include>org.jboss.jaxr:juddi-service:sar</include>
-        <include>apache-scout:scout:jar</include>
-        <include>juddi:juddi:jar</include>
         <include>org.jboss.ws:jbossws-common-tools:jar</include>
         <include>org.jboss.ws:jbossws-jboss*:jar</include>
         <include>org.jboss:jbossxb:jar</include>
@@ -181,7 +178,5 @@
     </dependencySet>
 
   </dependencySets>
-
-
 
 </assembly>
