@@ -382,7 +382,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Feature
 
    public <T extends EndpointReference> T getEndpointReference(Class<T> clazz)
    {
-      return bindingProvider.getEndpointReference(clazz);
+      throw new UnsupportedOperationException();
    }
 
    public EndpointConfigMetaData getEndpointConfigMetaData()

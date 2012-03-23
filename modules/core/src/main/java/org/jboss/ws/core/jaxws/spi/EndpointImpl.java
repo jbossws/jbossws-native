@@ -37,9 +37,7 @@ import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.WebServicePermission;
-import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
-import javax.xml.ws.wsaddressing.W3CEndpointReferenceBuilder;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
@@ -47,7 +45,6 @@ import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
 import org.jboss.ws.core.jaxws.spi.http.HttpContext;
 import org.jboss.ws.core.jaxws.spi.http.HttpServer;
 import org.jboss.ws.core.jaxws.spi.http.NettyHttpServerFactory;
-import org.jboss.ws.core.jaxws.wsaddressing.EndpointReferenceUtil;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Deployment;
@@ -70,7 +67,6 @@ public class EndpointImpl extends Endpoint
 
    private Object implementor;
    private Executor executor;
-   private WebServiceFeature[] features; // TODO: use features
    private List<Source> metadata;
    private BindingProviderImpl bindingProvider;
    private Map<String, Object> properties = new HashMap<String, Object>();
@@ -89,7 +85,6 @@ public class EndpointImpl extends Endpoint
 
       this.implementor = implementor;
       this.bindingProvider = new BindingProviderImpl(bindingId);
-      this.features = features;
    }
 
    @Override
@@ -285,24 +280,7 @@ public class EndpointImpl extends Endpoint
    @Override
    public <T extends EndpointReference> T getEndpointReference(Class<T> clazz, Element... referenceParameters)
    {
-      if (isDestroyed || !isPublished)
-         throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_GET_EPR_FOR_ENDPOINT"));
-
-      if (getBinding() instanceof HTTPBinding)
-      {
-         throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "CANNOT_GET_EPR_WITH_XML_BINDING"));
-      }
-      W3CEndpointReferenceBuilder builder = new W3CEndpointReferenceBuilder();
-      builder.address(address.toString());
-      builder.wsdlDocumentLocation(address.toString() +  "?wsdl");
-      //TODO set other parameters in the builder
-      if (referenceParameters != null && W3CEndpointReference.class.getName().equals(clazz.getName()))
-      {
-         for (Element el : referenceParameters)
-            builder.referenceParameter(el);
-      }
-
-      return EndpointReferenceUtil.transform(clazz, builder.build());
+      throw new UnsupportedOperationException();
    }
    
    public String getPath()

@@ -28,7 +28,6 @@ import java.util.ResourceBundle;
 import javax.jws.WebService;
 import javax.xml.ws.RespectBindingFeature;
 import javax.xml.ws.WebServiceProvider;
-import javax.xml.ws.soap.AddressingFeature;
 
 import org.jboss.ws.api.annotation.EndpointConfig;
 import org.jboss.ws.api.annotation.WebContext;
@@ -46,7 +45,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.wsf.spi.metadata.webservices.PortComponentMetaData;
 import org.jboss.wsf.spi.metadata.webservices.WebserviceDescriptionMetaData;
-import org.jboss.wsf.spi.metadata.webservices.WebservicesFactory;
 import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
 
 /**
@@ -235,13 +233,6 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
                      }
                   }
 
-                  if (portComp.isAddressingEnabled()) 
-                  {  log.debug("Enabling Addressing");
-                     AddressingFeature.Responses responses = getAddressFeatureResponses(portComp.getAddressingResponses());              
-                     AddressingFeature feature = new AddressingFeature(true, portComp.isAddressingRequired(), responses);
-                     sepMetaData.getFeatures().addFeature(feature);
-                  }
-                  
                   if (portComp.isRespectBindingEnabled()) 
                   {
                      log.debug("Enabling RespectBinding Feature");

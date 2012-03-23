@@ -493,8 +493,6 @@
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
-                 <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
-
                  <!-- ////////////////////////// -->
                  <!-- AS7 integration exclusions -->
                  <!-- ////////////////////////// -->
@@ -545,7 +543,6 @@
                  <exclude>org/jboss/test/ws/benchmark/jaxrpc/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws944/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/samples/serviceref/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/**</exclude>
                  <exclude>org/jboss/test/ws/jaxws/jbws1581/**</exclude>
 
                  <!-- # [AS7-1322] Implemented on AS 7.1.0 or greater only -->
@@ -685,8 +682,6 @@
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
-                 <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
-
                  <!-- ////////////////////////// -->
                  <!-- AS7 integration exclusions -->
                  <!-- ////////////////////////// -->
@@ -709,9 +704,6 @@
 
                  <!-- # TODO: remote JNDI support (non EJB objects) -->
                  <exclude>org/jboss/test/ws/jaxrpc/samples/secureejb/**</exclude>
-
-                 <!-- # [JBWS-3234] JNDI over RMI not available on AS7 -->
-                 <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/**</exclude>
 
                  <!-- # Remote JNDI lookup & jaxrpc client issues -->
                  <exclude>org/jboss/test/ws/benchmark/jaxrpc/BenchmarkDocEJBTestCase*</exclude>
@@ -796,10 +788,8 @@
                  <exclude>org/jboss/test/ws/jaxrpc/overloaded/OverloadedTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/dynamichandler/DynamicHandlerTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/samples/dynamichandler/StaticHandlerTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/samples/wsaddr/replyto/AddressingReplyToTestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/utf16/UTF16TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/wsdlpublish/WsdlPublishTestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/wsaddressing/replyto/AddressingReplyToTestCase*</exclude>
 
                  <!-- # webservices-description in jboss-web.xml / jboss.xml -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1124/JBWS1124TestCase*</exclude>
@@ -928,8 +918,6 @@
               <excludes>
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
-
-                 <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
 
                  <!-- ////////////////////////// -->
                  <!-- AS7 integration exclusions -->
@@ -1070,8 +1058,6 @@
               <excludes>
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
-
-                 <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
 
                  <!-- ////////////////////////// -->
                  <!-- AS7 integration exclusions -->

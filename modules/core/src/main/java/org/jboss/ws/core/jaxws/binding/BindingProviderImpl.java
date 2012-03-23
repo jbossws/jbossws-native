@@ -27,6 +27,7 @@ import java.util.ResourceBundle;
 
 import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
+import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Service.Mode;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.http.HTTPBinding;
@@ -94,5 +95,11 @@ public class BindingProviderImpl extends CommonBindingProvider implements Bindin
    public Binding getBinding()
    {
       return (Binding)binding;
+   }
+
+   @Override
+   public <T extends EndpointReference> T getEndpointReference(Class<T> clazz)
+   {
+      throw new UnsupportedOperationException();
    }
 }

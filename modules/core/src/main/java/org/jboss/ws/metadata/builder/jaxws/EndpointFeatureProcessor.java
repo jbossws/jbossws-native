@@ -28,15 +28,11 @@ import java.util.ResourceBundle;
 import javax.xml.ws.RespectBinding;
 import javax.xml.ws.RespectBindingFeature;
 import javax.xml.ws.WebServiceException;
-import javax.xml.ws.soap.Addressing;
-import javax.xml.ws.soap.AddressingFeature;
 import javax.xml.ws.spi.WebServiceFeatureAnnotation;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMWriter;
-import org.jboss.ws.extensions.addressing.jaxws.WSAddressingServerHandler;
-import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.wsdl.Extendable;
@@ -46,7 +42,6 @@ import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * Process EndpointFeature annotations
@@ -66,13 +61,7 @@ public class EndpointFeatureProcessor
          WebServiceFeatureAnnotation wsfa = an.annotationType().getAnnotation(WebServiceFeatureAnnotation.class);
          if (wsfa != null)
          {
-            if (an.annotationType() == Addressing.class)
-            {
-               Addressing anFeature = sepClass.getAnnotation(Addressing.class);
-               AddressingFeature feature = new AddressingFeature(anFeature.enabled(), anFeature.required(), anFeature.responses());
-               sepMetaData.addFeature(feature);
-            }
-            else if (an.annotationType() == RespectBinding.class)
+            if (an.annotationType() == RespectBinding.class)
             {
                RespectBinding anFeature = sepClass.getAnnotation(RespectBinding.class);
                RespectBindingFeature feature = new RespectBindingFeature(anFeature.enabled());
@@ -88,23 +77,7 @@ public class EndpointFeatureProcessor
    
    protected void setupEndpointFeatures(ServerEndpointMetaData sepMetaData)
    {
-      setupAddressingFeature(sepMetaData);
       setupRespectBindingFeature(sepMetaData);
-   }
-   
-   private static void setupAddressingFeature(ServerEndpointMetaData sepMetaData)
-   {
-      AddressingFeature addressingFeature = sepMetaData.getFeature(AddressingFeature.class);
-      if (addressingFeature != null && addressingFeature.isEnabled())
-      {
-         log.debug("AddressingFeature found, installing WS-Addressing post-handler");
-         HandlerMetaDataJAXWS hmd = new HandlerMetaDataJAXWS(HandlerType.POST);
-         hmd.setEndpointMetaData(sepMetaData);
-         hmd.setHandlerClassName(WSAddressingServerHandler.class.getName());
-         hmd.setHandlerName("WSAddressing Handler");
-         hmd.setProtocolBindings("##SOAP11_HTTP ##SOAP12_HTTP");
-         sepMetaData.addHandler(hmd);
-      }
    }
    
    private static void setupRespectBindingFeature(ServerEndpointMetaData sepMetaData)

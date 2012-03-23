@@ -26,11 +26,9 @@ import java.util.ResourceBundle;
 import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.addressing.EndpointReference;
 
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.MessageAbstraction;
-import org.jboss.ws.core.client.EndpointInfo;
 import org.jboss.ws.core.client.HTTPRemotingConnection;
 import org.jboss.ws.core.client.RemoteConnection;
 import org.jboss.ws.core.client.SOAPProtocolConnectionHTTP;
@@ -95,21 +93,6 @@ public class SOAPConnectionImpl extends SOAPConnection
    {
       if (endpoint == null)
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ENDPOINT_CANNOT_BE_NULL"));
-
-      String targetAddress = null;
-      if (endpoint instanceof EndpointInfo)
-      {
-         targetAddress = ((EndpointInfo) endpoint).getTargetAddress();
-      }
-      else if (endpoint instanceof EndpointReference)
-      {
-         EndpointReference epr = (EndpointReference) endpoint;
-         targetAddress = epr.getAddress().toString();
-      }
-      else
-      {
-         targetAddress = endpoint.toString();
-      }
 
       return remotingConnection;
    }

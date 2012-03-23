@@ -7,15 +7,4 @@
     <config-name>Standard Endpoint</config-name>
   </endpoint-config>
   
-  <endpoint-config>
-    <config-name>Standard WSAddressing Endpoint</config-name>
-    <pre-handler-chain>
-      <handler-chain-name>WSAddressing Handlers</handler-chain-name>
-      <handler>
-        <j2ee:handler-name>WSAddressing Handler</j2ee:handler-name>
-        <j2ee:handler-class>org.jboss.ws.extensions.addressing.jaxrpc.WSAddressingServerHandler</j2ee:handler-class>
-      </handler>
-    </pre-handler-chain>
-  </endpoint-config>
-  
 </jaxrpc-config>

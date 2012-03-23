@@ -30,10 +30,8 @@ import java.util.ResourceBundle;
 
 import javax.jws.soap.SOAPBinding;
 import javax.xml.namespace.QName;
-import javax.xml.transform.dom.DOMSource;
 import javax.xml.ws.BindingType;
 import javax.xml.ws.RespectBindingFeature;
-import javax.xml.ws.soap.AddressingFeature;
 
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.annotation.EndpointConfig;
@@ -41,7 +39,6 @@ import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.ResourceLoaderAdapter;
 import org.jboss.ws.core.jaxws.client.serviceref.NativeServiceObjectFactoryJAXWS;
-import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
@@ -50,7 +47,6 @@ import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
-import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
@@ -59,7 +55,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
-import org.w3c.dom.Element;
 
 /**
  * A client side meta data builder.
@@ -98,12 +93,6 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 
          buildMetaDataInternal(serviceMetaData, wsdlDefinitions);
 
-         //Setup policies and EPRs for each endpoint
-         for (EndpointMetaData epMetaData : serviceMetaData.getEndpoints())
-         {
-            processEPRs(epMetaData, wsdlDefinitions);
-         }
-
          // Read the WSDL and initialize the schema model
          // This should only be needed for debuging purposes of the UMDM
          JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
@@ -120,33 +109,6 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       catch (Exception ex)
       {
          throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_BUILD_META_DATA", ex.getMessage()), ex);
-      }
-   }
-
-   private void processEPRs(EndpointMetaData endpointMD, WSDLDefinitions wsdlDefinitions)
-   {
-      WSDLService wsdlService = wsdlDefinitions.getService(endpointMD.getServiceMetaData().getServiceName());
-      if (wsdlService != null)
-      {
-         WSDLEndpoint wsdlEndpoint = wsdlService.getEndpoint(endpointMD.getPortName());
-         if (wsdlEndpoint != null)
-         {
-            List<WSDLExtensibilityElement> portEPRs = wsdlEndpoint.getExtensibilityElements(Constants.WSDL_ELEMENT_EPR);
-            if (portEPRs != null && portEPRs.size() != 0)
-            {
-               if (portEPRs.size() > 1)
-                  throw new IllegalStateException(BundleUtils.getMessage(bundle, "ONLY_ONE_EPR_ALLOWED"));
-
-               Element eprElement = portEPRs.get(0).getElement();
-
-               // construct Native EPR
-               DOMSource eprInfoset = new DOMSource(eprElement);
-               NativeEndpointReference nativeEPR = (NativeEndpointReference) NativeEndpointReference
-                     .readFrom(eprInfoset);
-               nativeEPR.setAddress(endpointMD.getEndpointAddress());
-               endpointMD.setEndpointReference(nativeEPR);
-            }
-         }
       }
    }
 
@@ -251,13 +213,6 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          {
             if (log.isDebugEnabled())
                log.debug("Processing service-ref contribution on portType: " + epMetaData.getPortTypeName());
-
-            // process Addressing
-            if (portComp.isAddressingEnabled())
-            {
-               AddressingFeature.Responses response = getAddressFeatureResponses(portComp.getAddressingResponses());
-               epMetaData.addFeature(new AddressingFeature(true, portComp.isAddressingRequired(), response));
-            }
 
             // process RespectBinding
             if (portComp.isRespectBindingEnabled())
