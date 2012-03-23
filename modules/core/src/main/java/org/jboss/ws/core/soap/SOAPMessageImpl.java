@@ -59,8 +59,6 @@ import org.jboss.ws.core.soap.attachment.CIDGenerator;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedEncoder;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedSwAEncoder;
-import org.jboss.ws.core.soap.attachment.MultipartRelatedXOPEncoder;
-import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.w3c.dom.Node;
@@ -83,8 +81,6 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
    private List<AttachmentPart> attachments = new LinkedList<AttachmentPart>();
    private CIDGenerator cidGenerator = new CIDGenerator();
    private boolean faultMessage;
-   private boolean isXOPMessage;
-   private boolean isSWARefMessage;
    private SOAPPartImpl soapPart;   
    private MultipartRelatedEncoder multipartRelatedEncoder;
    private static final boolean writeXMLDeclaration = Boolean.getBoolean(WRITE_XML_DECLARATION);
@@ -154,26 +150,6 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
    public void setFaultMessage(boolean faultMessage)
    {
       this.faultMessage = faultMessage;
-   }
-
-   public boolean isXOPMessage()
-   {
-      return isXOPMessage;
-   }
-
-   public void setXOPMessage(boolean isXOPMessage)
-   {
-      this.isXOPMessage = isXOPMessage;
-   }
-
-   public boolean isSWARefMessage()
-   {
-      return isSWARefMessage;
-   }
-
-   public void setSWARefMessage(boolean isSWAMessage)
-   {
-      this.isSWARefMessage = isSWAMessage;
    }
 
    public void setAttachments(Collection<AttachmentPart> parts) throws SOAPException
@@ -340,27 +316,15 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
          {
             boolean hasAttachments = attachments.size() > 0;
 
-            if (isXOPMessage() && !XOPContext.isMTOMEnabled() && hasAttachments)
-               throw new IllegalStateException(BundleUtils.getMessage(bundle, "XOP_PARAMETER_NOT_PROPERLY_INLINED"));
-
             // default content-type
             CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
             String contentType = getSOAPContentType(msgContext) + "; charset=" + getCharSetEncoding();
 
             if (hasAttachments)
             {
-               if (isXOPMessage() && XOPContext.isMTOMEnabled())
-               {
-                  multipartRelatedEncoder = new MultipartRelatedXOPEncoder(this);
-                  multipartRelatedEncoder.encodeMultipartRelatedMessage();
-                  contentType = multipartRelatedEncoder.getContentType();
-               }
-               else
-               {
-                  multipartRelatedEncoder = new MultipartRelatedSwAEncoder(this);
-                  multipartRelatedEncoder.encodeMultipartRelatedMessage();
-                  contentType = multipartRelatedEncoder.getContentType();
-               }
+               multipartRelatedEncoder = new MultipartRelatedSwAEncoder(this);
+               multipartRelatedEncoder.encodeMultipartRelatedMessage();
+               contentType = multipartRelatedEncoder.getContentType();
             }
             //JBWS-2964:Create a new mimeHeaders to avoid changing another referenced mimeHeaders
             MimeHeaders newMimeHeaders = new MimeHeaders();            

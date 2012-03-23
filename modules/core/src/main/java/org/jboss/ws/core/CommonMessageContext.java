@@ -38,7 +38,6 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.soap.attachment.SwapableMemoryDataSource;
-import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.xb.binding.NamespaceRegistry;
@@ -268,12 +267,6 @@ public abstract class CommonMessageContext implements Map<String, Object>
 
    public boolean isModified()
    {
-      // skip changes from XOP handler interactions
-      if (XOPContext.isXOPEncodedRequest() && !XOPContext.isXOPMessage())
-      {
-         log.debug("Disregard changes from XOP/Handler interactions");
-         return false;
-      }
       return isModified;
    }
 

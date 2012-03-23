@@ -31,8 +31,6 @@ import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.soap.AddressingFeature;
-import javax.xml.ws.soap.MTOMFeature;
-import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
@@ -69,7 +67,6 @@ public class ClientFeatureProcessor
    static
    {
       supportedFeatures.addFeature(new AddressingFeature());
-      supportedFeatures.addFeature(new MTOMFeature());
       supportedFeatures.addFeature(new RespectBindingFeature());
       supportedFeatures.addFeature(new ChunkedEncodingFeature());
    }
@@ -81,7 +78,6 @@ public class ClientFeatureProcessor
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_FEATURE",  feature));
       }
       processAddressingFeature(feature, epMetaData, stub);
-      processMTOMFeature(feature, epMetaData, stub);
       processRespectBindingFeature(feature, epMetaData, stub);
       processChunkedEncodingFeature(feature, epMetaData, stub);
 
@@ -153,24 +149,6 @@ public class ClientFeatureProcessor
       {
          Map<String, Object> ctx = ((BindingProvider)stub).getRequestContext();
          ctx.put(StubExt.PROPERTY_CHUNKED_ENCODING_SIZE, ((ChunkedEncodingFeature)feature).getChunkSize());
-      }
-   }
-   
-   /**
-    * Setup MTOM
-    * 
-    * @param <T>
-    * @param feature
-    * @param epMetaData
-    * @param stub
-    * @return
-    */
-   private static <T> void processMTOMFeature(WebServiceFeature feature, EndpointMetaData epMetaData, T stub)
-   {
-      if (feature instanceof MTOMFeature)
-      {
-         SOAPBinding binding = (SOAPBinding)((BindingProvider)stub).getBinding();
-         binding.setMTOMEnabled(feature.isEnabled());
       }
    }
    

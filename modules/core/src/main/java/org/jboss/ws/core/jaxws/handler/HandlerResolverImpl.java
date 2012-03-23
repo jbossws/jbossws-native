@@ -73,9 +73,7 @@ public class HandlerResolverImpl implements HandlerResolver
    static
    {
       protocolMap.put("##SOAP11_HTTP", SOAPBinding.SOAP11HTTP_BINDING);
-      protocolMap.put("##SOAP11_HTTP_MTOM", SOAPBinding.SOAP11HTTP_MTOM_BINDING);
       protocolMap.put("##SOAP12_HTTP", SOAPBinding.SOAP12HTTP_BINDING);
-      protocolMap.put("##SOAP12_HTTP_MTOM", SOAPBinding.SOAP12HTTP_MTOM_BINDING);
       protocolMap.put("##XML_HTTP", HTTPBinding.HTTP_BINDING);
    }
 

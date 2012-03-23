@@ -31,16 +31,13 @@ import javax.xml.soap.Name;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
-import javax.xml.ws.handler.MessageContext.Scope;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.soap.SOAPContent.State;
-import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
@@ -588,55 +585,6 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
          soapContent.getXMLFragment().writeTo(writer);
 
       }
-   }
-
-   /**
-    * When a SOAPContentElement transitions between dom-valid and xml-valid
-    * the XOP elements need to transition from XOP optimized to base64 and reverse.<p>
-    *
-    * If MTOM is disabled through a message context property we always enforce the
-    * base64 representation by expanding to DOM, the same happens when a JAXRPC handler
-    * accesses the SOAPContentElement.<p>
-    *
-    * If the element is in dom-valid state (because a handlers accessed it), upon marshalling
-    * it's needs to be decided wether or not the <code>xop:Include</code> should be restored.
-    * This as well depends upon the message context property.
-    */
-   public void handleMTOMTransitions()
-   {
-      // JMS transport hot fix. Can be removed once we got a immutabe object model
-      if (MessageContextAssociation.peekMessageContext() == null)
-         return;
-      
-      // MTOM processing is only required on XOP parameters
-      if (!isXOPParameter())
-         return;
-
-      boolean domContentState = (soapContent instanceof DOMContent);
-
-      if (!XOPContext.isMTOMEnabled())
-      {
-         // If MTOM is disabled, we force dom expansion on XOP parameters.
-         // This will inline any XOP include element and remove the attachment part.
-         // See SOAPFactoryImpl for details.
-
-         log.debug("MTOM disabled: Force inline XOP data");
-         expandToDOM();
-      }
-      else if (domContentState && XOPContext.isMTOMEnabled())
-      {
-         // When the DOM representation is valid,
-         // but MTOM is enabled we need to convert the inlined
-         // element back to an xop:Include element and create the attachment part
-
-         log.debug("MTOM enabled: Restore XOP data");
-         XOPContext.restoreXOPDataDOM(this);
-      }
-   }
-
-   boolean isXOPParameter()
-   {
-      return paramMetaData != null && paramMetaData.isXOP();
    }
 
    public void accept(SAAJVisitor visitor)

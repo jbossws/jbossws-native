@@ -320,7 +320,7 @@ public class EndpointInvocation
 
                // Verify that the java type matches a registered xmlType
                // Attachments are skipped because they don't use type mapping
-               if (value != null && !paramMetaData.isSwA() && !paramMetaData.isXOP())
+               if (value != null && !paramMetaData.isSwA())
                {
                   if (JavaUtils.isAssignableFrom(javaType, inputType) == false)
                      throw new WSException(BundleUtils.getMessage(bundle, "PARAMETER_NOT_ASSIGNABLE", new Object[]{ javaType ,  inputType}));

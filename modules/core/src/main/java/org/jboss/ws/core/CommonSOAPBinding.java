@@ -74,7 +74,6 @@ import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.core.soap.attachment.AttachmentPartImpl;
 import org.jboss.ws.core.soap.attachment.CIDGenerator;
 import org.jboss.ws.core.utils.MimeUtils;
-import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
@@ -93,18 +92,12 @@ public abstract class CommonSOAPBinding implements CommonBinding
    // provide logging
    protected Logger log = Logger.getLogger(getClass());
 
-   private boolean mtomEnabled;
-
    protected HeaderSource headerSource;
 
    /** A constant representing the identity of the SOAP 1.1 over HTTP binding. */
    public static final String SOAP11HTTP_BINDING = "http://schemas.xmlsoap.org/wsdl/soap/http";
    /** A constant representing the identity of the SOAP 1.2 over HTTP binding. */
    public static final String SOAP12HTTP_BINDING = "http://www.w3.org/2003/05/soap/bindings/HTTP/";
-   /** A constant representing the identity of the SOAP 1.1 over HTTP binding with MTOM enabled by default. */
-   public static final String SOAP11HTTP_MTOM_BINDING = "http://schemas.xmlsoap.org/wsdl/soap/http?mtom=true";
-   /** A constant representing the identity of the SOAP 1.2 over HTTP binding with MTOM enabled by default. */
-   public static final String SOAP12HTTP_MTOM_BINDING = "http://www.w3.org/2003/05/soap/bindings/HTTP/?mtom=true";
    /** The SOAP encoded Array name */
    private static final Name SOAP_ARRAY_NAME = new NameImpl("Array", Constants.PREFIX_SOAP11_ENC, Constants.URI_SOAP11_ENC);
 
@@ -120,16 +113,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
    public SOAPFactory getSOAPFactory()
    {
       return new SOAPFactoryImpl();
-   }
-
-   public boolean isMTOMEnabled()
-   {
-      return this.mtomEnabled;
-   }
-
-   public void setMTOMEnabled(boolean flag)
-   {
-      this.mtomEnabled = flag;
    }
 
    /** Create the message */
@@ -148,12 +131,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          if (msgContext == null)
             throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
-
-         // Disable MTOM for rpc/encoded
-         if (opMetaData.isRPCEncoded())
-            XOPContext.setMTOMEnabled(false);
-         else
-            XOPContext.setMTOMEnabled(isMTOMEnabled());
 
          // Associate current message with message context
          SOAPMessageImpl reqMessage = (SOAPMessageImpl)createMessage(opMetaData);
@@ -283,10 +260,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
          if (msgContext == null)
             throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
 
-         // Disable MTOM for rpc/encoded
-         if (opMetaData.isRPCEncoded())
-            msgContext.put(StubExt.PROPERTY_MTOM_ENABLED, Boolean.FALSE);
-
          // Get the namespace registry
          NamespaceRegistry namespaceRegistry = msgContext.getNamespaceRegistry();
 
@@ -389,12 +362,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          if (msgContext == null)
             throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
-
-         // Disable MTOM for rpc/encoded
-         if (opMetaData.isRPCEncoded())
-            XOPContext.setMTOMEnabled(false);
-         else
-            XOPContext.setMTOMEnabled(isMTOMEnabled());
 
          // Associate current message with message context
          SOAPMessageImpl resMessage = (SOAPMessageImpl)createMessage(opMetaData);
@@ -566,10 +533,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
          CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
          if (msgContext == null)
             throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
-
-         // Disable MTOM for rpc/encoded
-         if (opMetaData.isRPCEncoded())
-            msgContext.put(StubExt.PROPERTY_MTOM_ENABLED, Boolean.FALSE);
 
          SOAPHeader soapHeader = soapEnvelope.getHeader();
          SOAPBodyImpl soapBody = (SOAPBodyImpl)soapEnvelope.getBody();
@@ -748,11 +711,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
          String swaCID = '<' + partName + "=" + cidGenerator.generateFromCount() + '>';
          part.setContentId(swaCID);
       }
-      if (paramMetaData.isXOP())
-      {
-         String xopCID = '<' + cidGenerator.generateFromName(partName) + '>';
-         part.setContentId(xopCID);
-      }
 
       return part;
    }
@@ -783,7 +741,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
       QName xmlName = paramMetaData.getXmlName();
       Class javaType = paramMetaData.getJavaType();
 
-      if (value != null && paramMetaData.isXOP() == false)
+      if (value != null)
       {
          Class valueType = value.getClass();
          if (JavaUtils.isAssignableFrom(javaType, valueType) == false)
@@ -827,22 +785,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
       {
          log.trace("Add parameter as SOAP encoded Array");
          contentElement.addNamespaceDeclaration(Constants.PREFIX_SOAP11_ENC, Constants.URI_SOAP11_ENC);
-      }
-
-      // When a potential xop parameter is detected and MTOM is enabled
-      // we flag the SOAP message as a XOP package
-      if (paramMetaData.isXOP() && XOPContext.isMTOMEnabled())
-      {
-         log.trace("Add parameter as XOP");
-         CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-         SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
-         soapMessage.setXOPMessage(true);
-      }
-      else if (paramMetaData.isSwaRef())
-      {
-         CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-         SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
-         soapMessage.setSWARefMessage(true);
       }
 
       contentElement.setObjectValue(value);
@@ -936,20 +878,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
       if (soapContentElement == null && optional == false)
          throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_CHILD_ELEMENT",  xmlName));
-
-      // When a potential XOP parameter is detected and
-      // the incomming request is actuall XOP encoded we flag
-      // the SOAP message a XOP packaged.
-      if (paramMetaData.isXOP() && XOPContext.isXOPEncodedRequest())
-      {
-         SOAPMessageImpl soapMessage = (SOAPMessageImpl)MessageContextAssociation.peekMessageContext().getSOAPMessage();
-         soapMessage.setXOPMessage(true);
-      }
-      else if (paramMetaData.isSwaRef())
-      {
-         SOAPMessageImpl soapMessage = (SOAPMessageImpl)MessageContextAssociation.peekMessageContext().getSOAPMessage();
-         soapMessage.setSWARefMessage(true);
-      }
 
       return soapContentElement;
    }

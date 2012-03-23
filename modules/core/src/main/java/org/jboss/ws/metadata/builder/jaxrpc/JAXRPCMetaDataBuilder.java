@@ -32,7 +32,6 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.encoding.TypeMappingRegistry;
 
-import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
@@ -44,7 +43,6 @@ import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
 import org.jboss.ws.core.jaxrpc.TypeMappingRegistryImpl;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
-import org.jboss.ws.extensions.xop.jaxrpc.XOPScanner;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
 import org.jboss.ws.metadata.jaxrpcmapping.ExceptionMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
@@ -78,7 +76,6 @@ import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
 import org.jboss.ws.metadata.wsdl.WSDLSOAPHeader;
 import org.jboss.ws.metadata.wsdl.WSDLTypes;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
-import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 
 /**
  * A meta data builder that is based on webservices.xml.
@@ -504,34 +501,6 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       }
    }
 
-   private void setupXOPAttachmentParameter(WSDLInterfaceOperation operation, ParameterMetaData paramMetaData)
-   {
-      QName xmlType = paramMetaData.getXmlType();
-
-      // An XOP parameter is detected if it is a complex type that derives from xsd:base64Binary
-      WSDLTypes wsdlTypes = operation.getWsdlInterface().getWsdlDefinitions().getWsdlTypes();
-      JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlTypes);
-      String localPart = xmlType.getLocalPart() != null ? xmlType.getLocalPart() : "";
-      String ns = xmlType.getNamespaceURI() != null ? xmlType.getNamespaceURI() : "";
-      XSTypeDefinition xsType = schemaModel.getTypeDefinition(localPart, ns);
-      XOPScanner scanner = new XOPScanner();
-      if (scanner.findXOPTypeDef(xsType) != null || (localPart.equals("base64Binary") && ns.equals(Constants.NS_SCHEMA_XSD)))
-      {
-         // FIXME: read the xmime:contentType from the element declaration
-         // See SchemaUtils#findXOPTypeDef(XSTypeDefinition typeDef) for details
-
-         /*
-          FIXME: the classloader is not set yet
-          paramMetaData.setXopContentType(
-          MimeUtils.resolveMimeType(paramMetaData.getJavaType())
-          );
-          */
-
-         paramMetaData.setXOP(true);
-
-      }
-   }
-
    /*
     * Perhaps the JAX-RPC mapping model should be hash based. For now we optimize just this case.
     */
@@ -565,7 +534,6 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
 
          ParameterMetaData pmd = buildInputParameter(opMetaData, wsdlOperation, seiMethodMapping, typeMapping, partName, xmlName, xmlType, wsdlPosition++, false);
 
-         setupXOPAttachmentParameter(wsdlOperation, pmd);
          setupSOAPArrayParameter(pmd);
       }
 
@@ -593,7 +561,6 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
                if (opMetaData.getReturnParameter() != pmd)
                   wsdlPosition++;
 
-               setupXOPAttachmentParameter(wsdlOperation, pmd);
                setupSOAPArrayParameter(pmd);
             }
          }
@@ -696,7 +663,6 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
             }
          }
 
-         setupXOPAttachmentParameter(wsdlOperation, inMetaData);
          wsdlPosition = 1;
       }
 
@@ -852,7 +818,6 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
             }
          }
 
-         setupXOPAttachmentParameter(wsdlOperation, outMetaData);
          setupSOAPArrayParameter(outMetaData);
       }
 

@@ -55,7 +55,6 @@ import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.ConfigProvider;
@@ -73,15 +72,12 @@ import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
-import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FeatureAwareClientEndpointMetaDataAdapter;
 import org.jboss.ws.metadata.umdm.FeatureAwareEndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.metadata.umdm.ServiceMetaData;
-import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.w3c.dom.Node;
 
@@ -248,8 +244,6 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
             boolean handlerPass = callRequestHandlerChain(portName, handlerType[0]);
             handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[1]);
             handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[2]);
-
-            XOPContext.visitAndRestoreXOPData();
 
             // Handlers might have replaced the message
             reqMsg = (SOAPMessageImpl)msgContext.getSOAPMessage();

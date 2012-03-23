@@ -21,20 +21,16 @@
  */
 package org.jboss.ws.core.jaxrpc;
 
-import java.awt.Image;
 
 import javax.activation.DataHandler;
 import javax.mail.internet.MimeMultipart;
 import javax.xml.soap.SOAPElement;
-import javax.xml.transform.Source;
 
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.ElementDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.ElementSerializerFactory;
-import org.jboss.ws.core.jaxrpc.binding.JBossXBDeserializerFactory;
-import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPElementDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPElementSerializerFactory;
 import org.w3c.dom.Element;
@@ -62,21 +58,6 @@ public class LiteralTypeMapping extends TypeMappingImpl
     */
    public LiteralTypeMapping()
    {
-      // XOP default mapping
-      JBossXBSerializerFactory jbxbSF = new JBossXBSerializerFactory();
-      JBossXBDeserializerFactory jbxbDF = new JBossXBDeserializerFactory();
-
-      register(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      register(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      register(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      register(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      register(DataHandler.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-
-      register(String.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      register(Image.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      register(Source.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      register(MimeMultipart.class, Constants.TYPE_XMIME_DEFAULT, jbxbSF, jbxbDF);
-      
       registerStandardLiteralTypes();
 
       // register default mime mappings

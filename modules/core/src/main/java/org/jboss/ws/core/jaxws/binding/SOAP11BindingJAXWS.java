@@ -47,16 +47,6 @@ public class SOAP11BindingJAXWS extends CommonSOAP11Binding implements BindingEx
    // Delegate to JAXWS SOAP binding
    private SOAPBindingJAXWS delegate = new SOAPBindingJAXWS();
 
-   public SOAP11BindingJAXWS()
-   {
-      setMTOMEnabled(false);
-   }
-
-   public SOAP11BindingJAXWS(boolean mtomEnabled)
-   {
-      setMTOMEnabled(mtomEnabled);
-   }
-
    public void setSOAPActionHeader(OperationMetaData opMetaData, SOAPMessage reqMessage)
    {
       delegate.setSOAPActionHeader(opMetaData, reqMessage);
@@ -109,6 +99,17 @@ public class SOAP11BindingJAXWS extends CommonSOAP11Binding implements BindingEx
 
    public String getBindingID()
    {
-      return isMTOMEnabled() ? SOAPBinding.SOAP11HTTP_MTOM_BINDING : SOAPBinding.SOAP11HTTP_BINDING;
+      return SOAPBinding.SOAP11HTTP_BINDING;
+   }
+
+   @Override
+   public boolean isMTOMEnabled() // does nothing
+   {
+      return false;
+   }
+
+   @Override
+   public void setMTOMEnabled(boolean flag) // does nothing
+   {
    }
 }

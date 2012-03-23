@@ -247,22 +247,6 @@
 			</webinf>
 		</war>
 
-		<!-- jaxws-jbws2259 -->
-		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2259.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2259/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws2259/Endpoint.class" />
-				<include name="org/jboss/test/ws/jaxws/jbws2259/EndpointImpl.class" />
-				<include name="org/jboss/test/ws/jaxws/jbws2259/CustomHandler.class" />
-				<include name="org/jboss/test/ws/jaxws/jbws2259/Photo.class" />
-			</classes>
-			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2259/WEB-INF">
-				<include name="jaxws-endpoint-config.xml" />
-			</webinf>
-            <manifest>
-                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
-            </manifest>
-		</war>
-
 		<!-- jaxws-jbws2285 -->
 		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2285.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2285/WEB-INF/web.xml">
 			<classes dir="${tests.output.dir}/test-classes">
@@ -480,14 +464,6 @@
 			</classes>
 		</war>
 
-        <!-- jaxws-jbws3250 -->
-        <war warfile="${tests.output.dir}/test-libs/jaxws-jbws3250.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws3250/WEB-INF/web.xml">
-            <classes dir="${tests.output.dir}/test-classes">
-               <include name="org/jboss/test/ws/jaxws/jbws3250/*.class" />
-               <exclude name="org/jboss/test/ws/jaxws/jbws3250/*TestCase*.class" />
-            </classes>
-        </war>
-		
 		<!-- jaxws-webserviceref -->
 		<war warfile="${tests.output.dir}/test-libs/jaxws-webserviceref.war" webxml="${tests.output.dir}/test-resources/jaxws/webserviceref/WEB-INF/web.xml">
 			<classes dir="${tests.output.dir}/test-classes">

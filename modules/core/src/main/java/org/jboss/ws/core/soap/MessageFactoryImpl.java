@@ -259,10 +259,6 @@ public class MessageFactoryImpl extends MessageFactory
 
             inputStream = decoder.getRootPart().getDataHandler().getInputStream();
             attachments = decoder.getRelatedParts();
-            if (isXOPContent(contentType))
-            {
-               soapMessage.setXOPMessage(true);
-            }
          }
          else if (isSoapContent(contentType) == false)
          {
@@ -327,11 +323,5 @@ public class MessageFactoryImpl extends MessageFactory
    {
       String baseType = type.getBaseType();
       return MimeConstants.TYPE_MULTIPART_RELATED.equalsIgnoreCase(baseType);
-   }
-   
-   private boolean isXOPContent(ContentType type)
-   {      
-      String paramType = type.getParameter("type");
-      return MimeConstants.TYPE_APPLICATION_XOP_XML.endsWith(paramType);
    }
 }

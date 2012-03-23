@@ -41,9 +41,6 @@ public class WSDDEndpointImpl implements WSDDEndpoint {
    @WebMethod
    public Boolean checkMTOMEnabled()
    {
-      // At this point it's not set
-      // The MTOM property is avaialbel when the CommonSOAPBinding
-      // did bin the reponse. Therefore we delegate this task to the handler impl.
       return Boolean.FALSE;
    }
 

@@ -40,8 +40,6 @@ import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.core.utils.HolderUtils;
-import org.jboss.ws.extensions.xop.jaxws.AttachmentScanResult;
-import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
 import org.jboss.ws.metadata.accessor.AccessorFactoryCreator;
 import org.jboss.ws.metadata.accessor.ReflectiveMethodAccessorFactoryCreator;
 import org.jboss.ws.metadata.config.EndpointFeature;
@@ -72,8 +70,6 @@ public class ParameterMetaData implements InitalizableMetaData
    private Set<String> mimeTypes;
    private boolean inHeader;
    private boolean isSwA;
-   private boolean isXOP;
-   private boolean isSwaRef;
    private List<WrappedParameter> wrappedParameters;
    private int index;
 
@@ -336,26 +332,6 @@ public class ParameterMetaData implements InitalizableMetaData
       this.isSwA = isSwA;
    }
 
-   public boolean isSwaRef()
-   {
-      return isSwaRef;
-   }
-
-   public void setSwaRef(boolean swaRef)
-   {
-      isSwaRef = swaRef;
-   }
-
-   public boolean isXOP()
-   {
-      return isXOP;
-   }
-
-   public void setXOP(boolean isXOP)
-   {
-      this.isXOP = isXOP;
-   }
-
    public boolean isSOAPArrayParam()
    {
       return soapArrayParam;
@@ -480,33 +456,6 @@ public class ParameterMetaData implements InitalizableMetaData
       javaType = getJavaType();
       if (javaType == null)
          throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_JAVA_TYPE",  javaTypeName));
-
-      initializeAttachmentParameter(epType);
-   }
-
-   /**
-    * Identify MTOM and SWA:Ref parameter as these require special treatment.
-    * This only affects JAX-WS endpoints.
-    *
-    * Note: For SEI parameter annotations this happens within the metadata builder.
-    * @param epType
-    */
-   private void initializeAttachmentParameter(Type epType)
-   {
-      if (epType == Type.JAXWS)
-      {
-         ReflectiveAttachmentRefScanner scanner = new ReflectiveAttachmentRefScanner();
-         AttachmentScanResult scanResult = scanner.scanBean(javaType);
-         if (scanResult != null)
-         {
-            if (log.isDebugEnabled())
-               log.debug("Identified attachment reference: " + xmlName + ", type=" + scanResult.getType());
-            if (scanResult.getType() == AttachmentScanResult.Type.XOP)
-               setXOP(true);
-            else
-               setSwaRef(true);
-         }
-      }
    }
 
    private ClassLoader getClassLoader()
@@ -580,12 +529,6 @@ public class ParameterMetaData implements InitalizableMetaData
       if (isSwA())
       {
          buffer.append("\n isSwA=").append(isSwA());
-         buffer.append("\n mimeTypes=").append(getMimeTypes());
-      }
-
-      if (isXOP())
-      {
-         buffer.append("\n isXOP=").append(isXOP());
          buffer.append("\n mimeTypes=").append(getMimeTypes());
       }
 

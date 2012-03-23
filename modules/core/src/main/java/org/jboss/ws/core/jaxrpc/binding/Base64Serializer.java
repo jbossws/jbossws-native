@@ -28,14 +28,10 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.SerializerSupport;
-import org.jboss.ws.extensions.xop.XOPContext;
-import org.jboss.ws.extensions.xop.jaxrpc.XOPMarshallerImpl;
 import org.jboss.ws.util.xml.BufferedStreamResult;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.jboss.xb.binding.SimpleTypeBindings;
-import org.jboss.xb.binding.sunday.xop.XOPMarshaller;
-import org.jboss.xb.binding.sunday.xop.XOPObject;
 import org.w3c.dom.NamedNodeMap;
 
 /**
@@ -57,21 +53,9 @@ public class Base64Serializer extends SerializerSupport
       String xmlFragment = null;
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
 
-      if (XOPContext.isXOPMessage())
-      {
-         XOPMarshaller xopMarshaller = new XOPMarshallerImpl();
-         XOPObject xopObject = new XOPObject(value);
-         xopObject.setContentType("application/octet-stream");
-         String cid = xopMarshaller.addMtomAttachment(xopObject, xmlName.getNamespaceURI(), xmlType.getLocalPart());
-         String xopInclude = "<xop:Include xmlns:xop='http://www.w3.org/2004/08/xop/include' href='" + cid + "'/>";
-         xmlFragment = wrapValueStr(xmlName, xopInclude, nsRegistry, null, attributes, false);
-      }
-      else
-      {
-         value = JavaUtils.getPrimitiveValueArray(value);
-         String valueStr = SimpleTypeBindings.marshalBase64((byte[])value);
-         xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);
-      }
+      value = JavaUtils.getPrimitiveValueArray(value);
+      String valueStr = SimpleTypeBindings.marshalBase64((byte[])value);
+      xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);
       return new BufferedStreamResult(xmlFragment);
    }
 }

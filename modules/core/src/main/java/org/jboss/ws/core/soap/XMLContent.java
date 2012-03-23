@@ -21,16 +21,11 @@
  */
 package org.jboss.ws.core.soap;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
@@ -39,7 +34,6 @@ import javax.xml.transform.Source;
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.CommonMessageContext;
@@ -49,9 +43,6 @@ import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxws.SerializationContextJAXWS;
-import org.jboss.ws.core.soap.attachment.SwapableMemoryDataSource;
-import org.jboss.ws.core.utils.MimeUtils;
-import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.Comment;
@@ -219,30 +210,6 @@ class XMLContent extends SOAPContent
 
             if (!isAssignable)
             {
-               // handle XOP simple types, i.e. in RPC/LIT
-               try
-               {
-                  String contentType = MimeUtils.resolveMimeType(javaType);
-                  if (debugEnabled)
-                     log.debug("Adopt DataHandler to " + javaType + ", contentType " + contentType);
-
-                  DataSource ds = new SwapableMemoryDataSource(((DataHandler)obj).getInputStream(), contentType);
-                  DataHandler dh = new DataHandler(ds);
-                  obj = dh.getContent();
-
-                  // 'application/octet-stream' will return a byte[] instead fo the stream
-                  if (obj instanceof InputStream)
-                  {
-                     ByteArrayOutputStream bout = new ByteArrayOutputStream();
-                     dh.writeTo(bout);
-                     obj = bout.toByteArray();
-                  }
-               }
-               catch (IOException e)
-               {
-                  throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_ADOPT_XOP_CONTENT_TYPE"),  e);
-               }
-
                if (!JavaUtils.isAssignableFrom(javaType, obj.getClass()))
                {
                   throw new WSException(BundleUtils.getMessage(bundle, "JAVA_TYPE_NOT_ASSIGNABLE", new Object[]{ javaType ,  objType.getName()}));
@@ -356,9 +323,6 @@ class XMLContent extends SOAPContent
                }
                SOAPElement soapElement = soapFactory.createElement((Element)child);
                container.addChildElement(soapElement);
-               if (Constants.NAME_XOP_INCLUDE.equals(qname) || container.isXOPParameter())
-                  XOPContext.inlineXOPData(soapElement);
-
             }
             finally
             {

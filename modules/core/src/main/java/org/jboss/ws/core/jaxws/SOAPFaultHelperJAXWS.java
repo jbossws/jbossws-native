@@ -345,7 +345,7 @@ public class SOAPFaultHelperJAXWS
       {
          EndpointMetaData emd = msgContext.getEndpointMetaData();
          String bindingId = emd.getBindingId();
-         if (SOAPBinding.SOAP12HTTP_BINDING.equals(bindingId) || SOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
+         if (SOAPBinding.SOAP12HTTP_BINDING.equals(bindingId))
          {
             return true;
          }

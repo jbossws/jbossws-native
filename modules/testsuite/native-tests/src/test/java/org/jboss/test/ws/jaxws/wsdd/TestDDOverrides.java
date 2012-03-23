@@ -28,8 +28,6 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
-import javax.xml.ws.BindingProvider;
-import javax.xml.ws.soap.SOAPBinding;
 import java.net.URL;
 
 /**
@@ -57,17 +55,5 @@ public class TestDDOverrides extends JBossWSTest {
       ResponseMessage response = port.echo(request);
       assertNotNull(response);
       assertEquals(response.msg, "HelloWorld");
-   }
-
-    public void testMTOMOverride() throws Exception
-   {
-      QName serviceName = new QName("http://wsdd.jaxws.ws.test.jboss.org/", "WSDDEndpointImplService");
-      URL wsdlURL = new URL(TARGET_ENDPOINT_ADDRESS + "?wsdl");
-
-      Service service = Service.create(wsdlURL, serviceName);
-      WSDDEndpoint port = service.getPort(WSDDEndpoint.class);
-
-      assertTrue("MTOM should be enabled thorugh webservice.xml overrides", port.checkMTOMEnabled());
-
    }
 }

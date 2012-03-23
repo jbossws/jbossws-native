@@ -27,7 +27,6 @@ import java.util.ResourceBundle;
 
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
-import org.jboss.ws.extensions.xop.jaxrpc.XOPUnmarshallerImpl;
 import org.jboss.xb.binding.JBossXBException;
 import org.jboss.xb.binding.UnmarshallerFactory;
 import org.jboss.xb.binding.sunday.unmarshalling.SchemaBinding;
@@ -54,8 +53,6 @@ public class JBossXBUnmarshallerImpl implements JBossXBUnmarshaller
 
       org.jboss.xb.binding.Unmarshaller unm = UnmarshallerFactory.newInstance().newUnmarshaller();
       SchemaBinding schemaBinding = JBossXBSupport.getOrCreateSchemaBinding(properties);
-      XOPUnmarshallerImpl xopUnmarshaller = new XOPUnmarshallerImpl();
-      schemaBinding.setXopUnmarshaller(xopUnmarshaller);
 
       try
       {
