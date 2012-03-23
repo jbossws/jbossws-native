@@ -3,7 +3,7 @@
 <jboss-ws-security xmlns="http://www.jboss.com/ws-security/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.jboss.com/ws-security/config http://www.jboss.com/ws-security/schema/jboss-ws-security_1_0.xsd">
   <config>
-    <encrypt type="x509v3" alias="wsse"/>
+    <encrypt type="x509v3" algorithm="aes-192-gcm" alias="wsse"/>
     <requires>
       <encryption/>
     </requires>

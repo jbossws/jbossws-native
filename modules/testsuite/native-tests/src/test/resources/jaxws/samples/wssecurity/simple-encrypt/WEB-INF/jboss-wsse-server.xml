@@ -7,7 +7,7 @@
   <trust-store-file>WEB-INF/wsse.truststore</trust-store-file>
   <trust-store-password>jbossws</trust-store-password>
   <config>
-    <encrypt type="x509v3" alias="wsse"/>
+    <encrypt type="x509v3" algorithm="aes-192-gcm" alias="wsse"/>
     <requires>
       <encryption/>
     </requires>
