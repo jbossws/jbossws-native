@@ -80,7 +80,6 @@ import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
 import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
-import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
@@ -574,7 +573,6 @@ public class RequestHandlerImpl implements RequestHandler
          // Set the outbound headers
          if (headerSource != null && resMessage instanceof SOAPMessage)
          {
-            XOPContext.eagerlyCreateAttachments();
             ((SOAPMessage)resMessage).saveChanges();
             headerSource.setMimeHeaders(resMessage.getMimeHeaders());
          }

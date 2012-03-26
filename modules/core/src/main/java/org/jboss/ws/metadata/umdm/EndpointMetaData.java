@@ -105,8 +105,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    {
       SUPPORTED_BINDINGS.add(Constants.SOAP11HTTP_BINDING);
       SUPPORTED_BINDINGS.add(Constants.SOAP12HTTP_BINDING);
-      SUPPORTED_BINDINGS.add(Constants.SOAP11HTTP_MTOM_BINDING);
-      SUPPORTED_BINDINGS.add(Constants.SOAP12HTTP_MTOM_BINDING);
       SUPPORTED_BINDINGS.add(Constants.HTTP_BINDING);
    }
 
@@ -773,20 +771,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    {
       CommonConfig config = getConfig();
 
-      // SOAPBinding configuration
-      if (configurable instanceof CommonBindingProvider)
-      {
-         log.debug("Configure SOAPBinding");
-
-         if (config.hasFeature(EndpointFeature.MTOM))
-         {
-            CommonBindingProvider provider = (CommonBindingProvider)configurable;
-            ((CommonSOAPBinding)provider.getCommonBinding()).setMTOMEnabled(true);
-            if (log.isDebugEnabled())
-               log.debug("Enable MTOM on endpoint " + getPortName());
-         }
-      }
-      else if (configurable instanceof DispatchBinding)
+      if (configurable instanceof DispatchBinding)
       {
          DispatchBinding dpb = (DispatchBinding)configurable;
          dpb.setValidateDispatch(config.hasFeature(EndpointFeature.VALIDATE_DISPATCH));

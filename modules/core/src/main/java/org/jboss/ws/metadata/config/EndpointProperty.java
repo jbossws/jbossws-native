@@ -34,8 +34,6 @@ import java.net.URI;
 @Deprecated
 public class EndpointProperty
 {
-   public final static String MTOM_THRESHOLD = "http://org.jboss.ws/mtom#threshold";
-
    /**
     * Set to 0 in order to disable chunked encoding
     */

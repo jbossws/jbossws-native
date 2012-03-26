@@ -74,7 +74,6 @@ public class CommonBindingProvider implements Configurable
 
    private void configure()
    {
-      // process MTOM config elements
       if (epMetaData != null)
       {
          epMetaData.configure(this);
@@ -87,17 +86,9 @@ public class CommonBindingProvider implements Configurable
       {
          binding = (type == Type.JAXWS ? new SOAP11BindingJAXWS() : new SOAP11BindingJAXRPC());
       }
-      else if (SOAPBinding.SOAP11HTTP_MTOM_BINDING.equals(bindingId))
-      {
-         binding = (type == Type.JAXWS ? new SOAP11BindingJAXWS(true) : new SOAP11BindingJAXRPC(true));
-      }
       else if (SOAPBinding.SOAP12HTTP_BINDING.equals(bindingId))
       {
          binding = (type == Type.JAXWS ? new SOAP12BindingJAXWS() : new SOAP12BindingJAXRPC());
-      }
-      else if (SOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
-      {
-         binding = (type == Type.JAXWS ? new SOAP12BindingJAXWS(true) : new SOAP12BindingJAXRPC(true));
       }
       else if (HTTPBinding.HTTP_BINDING.equals(bindingId))
       {

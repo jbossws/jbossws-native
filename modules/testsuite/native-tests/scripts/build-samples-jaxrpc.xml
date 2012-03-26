@@ -364,32 +364,6 @@
       </metainf>
     </jar>
     
-    <!-- jaxrpc-samples-mtom -->
-    <war warfile="${tests.output.dir}/test-libs/jaxrpc-samples-mtom.war" webxml="${tests.output.dir}/test-resources/jaxrpc/samples/mtom/WEB-INF/web.xml">
-      <classes dir="${tests.output.dir}/test-classes">
-        <include name="org/jboss/test/ws/jaxrpc/samples/mtom/**"/>
-        <exclude name="org/jboss/test/ws/jaxrpc/samples/mtom/MTOMTestCase.class"/>
-      </classes>
-      <webinf dir="${tests.output.dir}/test-resources/jaxrpc/samples/mtom/WEB-INF">
-        <include name="jaxrpc-mapping.xml"/>
-        <include name="webservices.xml"/>
-        <include name="wsdl/**"/>
-      </webinf>
-      <manifest>
-        <attribute name="Dependencies" value="org.jboss.ws.common,javax.mail.api services export,javax.activation.api services export"/>
-      </manifest>
-    </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-samples-mtom-client.jar">
-      <metainf dir="${tests.output.dir}/test-resources/jaxrpc/samples/mtom/META-INF">
-        <include name="application-client.xml"/>
-        <include name="jboss-client.xml"/>
-      </metainf>
-      <metainf dir="${tests.output.dir}/test-resources/jaxrpc/samples/mtom/WEB-INF">
-        <include name="jaxrpc-mapping.xml"/>
-        <include name="wsdl/**"/>
-      </metainf>
-    </jar>
-    
     <!-- jaxrpc-samples-oneway -->
     <war warfile="${tests.output.dir}/test-libs/jaxrpc-samples-oneway.war" webxml="${tests.output.dir}/test-resources/jaxrpc/samples/oneway/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">

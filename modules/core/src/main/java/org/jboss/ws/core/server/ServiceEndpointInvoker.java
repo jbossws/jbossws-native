@@ -68,7 +68,6 @@ import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
-import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
@@ -171,9 +170,6 @@ public class ServiceEndpointInvoker
          CommonBinding binding = bindingProvider.getCommonBinding();
          binding.setHeaderSource(delegate);
 
-         if (binding instanceof CommonSOAPBinding)
-            XOPContext.setMTOMEnabled(((CommonSOAPBinding)binding).isMTOMEnabled());
-         
          // call the request handler chain
          boolean handlersPass = callRequestHandlerChain(sepMetaData, handlerType[0]);
 

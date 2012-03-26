@@ -28,9 +28,6 @@ package org.jboss.ws.metadata.config;
  */
 public interface EndpointFeature
 {
-   /** Enable MTOM per endpoint */
-   final static String MTOM = "http://org.jboss.ws/mtom";
-
    /** 
     * Validate the XML stream upon dispatch.
     * Introduces an additional parsing overhead and could be disabled.

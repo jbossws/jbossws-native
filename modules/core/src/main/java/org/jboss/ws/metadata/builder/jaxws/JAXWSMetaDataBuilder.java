@@ -74,8 +74,6 @@ import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
 import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
-import org.jboss.ws.extensions.xop.jaxws.AttachmentScanResult;
-import org.jboss.ws.extensions.xop.jaxws.ReflectiveAttachmentRefScanner;
 import org.jboss.ws.metadata.accessor.JAXBAccessorFactoryCreator;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -763,10 +761,6 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          opMetaData.setDocumentation(method.getAnnotation(Documentation.class).content());
       }
 
-      // Build parameter meta data
-      // Attachment annotations on SEI parameters
-      List<AttachmentScanResult> scanResult = ReflectiveAttachmentRefScanner.scanMethod(method);
-
       Class<?>[] parameterTypes = method.getParameterTypes();
       Type[] genericTypes = method.getGenericParameterTypes();
       Annotation[][] parameterAnnotations = method.getParameterAnnotations();
@@ -841,8 +835,6 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
                   wrappedParameter = new WrappedParameter(wrappedParameter);
                wrappedOutputParameters.add(wrappedParameter);
             }
-
-            processAttachmentAnnotationsWrapped(scanResult, i, wrappedParameter);
          }
          else
          {
@@ -872,7 +864,6 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             javaTypes.add(javaType);
             typeRefs.add(new TypeReference(xmlName, genericType, parameterAnnotations[i]));
 
-            processAttachmentAnnotations(scanResult, i, paramMetaData);
             processMIMEBinding(epMetaData, opMetaData, paramMetaData);
          }
       }
@@ -905,8 +896,6 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
             // insert at the beginning just for prettiness
             wrappedOutputParameters.add(0, wrapped);
-
-            processAttachmentAnnotationsWrapped(scanResult, -1, wrapped);
          }
          else
          {
@@ -939,7 +928,6 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
             javaTypes.add(returnType);
             typeRefs.add(new TypeReference(xmlName, genericReturnType, method.getAnnotations()));
 
-            processAttachmentAnnotations(scanResult, -1, retMetaData);
             processMIMEBinding(epMetaData, opMetaData, retMetaData);
          }
       }
@@ -982,42 +970,6 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
       // process operation meta data extension
       processMetaExtensions(method, epMetaData, opMetaData);
-   }
-
-   /**
-    * @see org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilder#processAttachmentAnnotations(java.util.List, int, org.jboss.ws.metadata.umdm.ParameterMetaData) 
-    * @param scanResult
-    * @param i
-    * @param wrappedParameter
-    */
-   private void processAttachmentAnnotationsWrapped(List<AttachmentScanResult> scanResult, int i, WrappedParameter wrappedParameter)
-   {
-      AttachmentScanResult asr = ReflectiveAttachmentRefScanner.getResultByIndex(scanResult, i);
-      if (asr != null)
-      {
-         if (AttachmentScanResult.Type.SWA_REF == asr.getType())
-            wrappedParameter.setSwaRef(true);
-         else
-            wrappedParameter.setXOP(true);
-      }
-   }
-
-   /**
-    * Update PMD according to attachment annotations that might be in place
-    * @param scanResult
-    * @param i
-    * @param parameter
-    */
-   private void processAttachmentAnnotations(List<AttachmentScanResult> scanResult, int i, ParameterMetaData parameter)
-   {
-      AttachmentScanResult asr = ReflectiveAttachmentRefScanner.getResultByIndex(scanResult, i);
-      if (asr != null)
-      {
-         if (AttachmentScanResult.Type.SWA_REF == asr.getType())
-            parameter.setSwaRef(true);
-         else
-            parameter.setXOP(true);
-      }
    }
 
    private void processMIMEBinding(EndpointMetaData epMetaData, OperationMetaData opMetaData, ParameterMetaData paramMetaData)

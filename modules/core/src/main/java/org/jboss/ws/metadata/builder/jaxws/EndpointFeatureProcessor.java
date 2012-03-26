@@ -30,9 +30,6 @@ import javax.xml.ws.RespectBindingFeature;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.soap.Addressing;
 import javax.xml.ws.soap.AddressingFeature;
-import javax.xml.ws.soap.MTOM;
-import javax.xml.ws.soap.MTOMFeature;
-import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.spi.WebServiceFeatureAnnotation;
 
 import org.jboss.logging.Logger;
@@ -75,12 +72,6 @@ public class EndpointFeatureProcessor
                AddressingFeature feature = new AddressingFeature(anFeature.enabled(), anFeature.required(), anFeature.responses());
                sepMetaData.addFeature(feature);
             }
-            else if (an.annotationType() == MTOM.class)
-            {
-               MTOM anFeature = sepClass.getAnnotation(MTOM.class);
-               MTOMFeature feature = new MTOMFeature(anFeature.enabled(), anFeature.threshold());
-               sepMetaData.addFeature(feature);
-            }
             else if (an.annotationType() == RespectBinding.class)
             {
                RespectBinding anFeature = sepClass.getAnnotation(RespectBinding.class);
@@ -98,8 +89,7 @@ public class EndpointFeatureProcessor
    protected void setupEndpointFeatures(ServerEndpointMetaData sepMetaData)
    {
       setupAddressingFeature(sepMetaData);
-      setupMTOMFeature(sepMetaData);
-      setupRespectBindingFeature(sepMetaData); //this need to be processed last
+      setupRespectBindingFeature(sepMetaData);
    }
    
    private static void setupAddressingFeature(ServerEndpointMetaData sepMetaData)
@@ -112,29 +102,8 @@ public class EndpointFeatureProcessor
          hmd.setEndpointMetaData(sepMetaData);
          hmd.setHandlerClassName(WSAddressingServerHandler.class.getName());
          hmd.setHandlerName("WSAddressing Handler");
-         hmd.setProtocolBindings("##SOAP11_HTTP ##SOAP12_HTTP ##SOAP11_HTTP_MTOM ##SOAP12_HTTP_MTOM");
+         hmd.setProtocolBindings("##SOAP11_HTTP ##SOAP12_HTTP");
          sepMetaData.addHandler(hmd);
-      }
-   }
-   
-   private static void setupMTOMFeature(ServerEndpointMetaData sepMetaData)
-   {
-      MTOMFeature mtomFeature = sepMetaData.getFeature(MTOMFeature.class);
-      if (mtomFeature != null && mtomFeature.isEnabled())
-      {
-         String bindingId = sepMetaData.getBindingId();
-         if (SOAPBinding.SOAP11HTTP_BINDING.equals(bindingId))
-         {
-            if (log.isDebugEnabled())
-               log.debug("MTOMFeature found, setting binding to " + SOAPBinding.SOAP11HTTP_MTOM_BINDING);
-            sepMetaData.setBindingId(SOAPBinding.SOAP11HTTP_MTOM_BINDING);
-         }
-         else if (SOAPBinding.SOAP12HTTP_BINDING.equals(bindingId))
-         {
-            if (log.isDebugEnabled())
-               log.debug("MTOMFeature found, setting binding to " + SOAPBinding.SOAP12HTTP_MTOM_BINDING);
-            sepMetaData.setBindingId(SOAPBinding.SOAP12HTTP_MTOM_BINDING);
-         }
       }
    }
    

@@ -34,7 +34,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.ws.BindingType;
 import javax.xml.ws.RespectBindingFeature;
 import javax.xml.ws.soap.AddressingFeature;
-import javax.xml.ws.soap.MTOMFeature;
 
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.annotation.EndpointConfig;
@@ -71,6 +70,7 @@ import org.w3c.dom.Element;
 public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(JAXWSClientMetaDataBuilder.class);
+
    public ServiceMetaData buildMetaData(QName serviceName, URL wsdlURL, UnifiedVirtualFile vfsRoot)
    {
       return this.buildMetaData(serviceName, wsdlURL, vfsRoot, null);
@@ -80,7 +80,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          ClassLoader classLoader)
    {
       if (wsdlURL == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_WSDLURL",  wsdlURL));
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_WSDLURL", wsdlURL));
 
       if (log.isDebugEnabled())
          log.debug("START buildMetaData: [service=" + serviceName + "]");
@@ -119,7 +119,7 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
       }
       catch (Exception ex)
       {
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_BUILD_META_DATA",  ex.getMessage()),  ex);
+         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_BUILD_META_DATA", ex.getMessage()), ex);
       }
    }
 
@@ -138,10 +138,11 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
                   throw new IllegalStateException(BundleUtils.getMessage(bundle, "ONLY_ONE_EPR_ALLOWED"));
 
                Element eprElement = portEPRs.get(0).getElement();
-               
+
                // construct Native EPR
                DOMSource eprInfoset = new DOMSource(eprElement);
-               NativeEndpointReference nativeEPR = (NativeEndpointReference)NativeEndpointReference.readFrom(eprInfoset);
+               NativeEndpointReference nativeEPR = (NativeEndpointReference) NativeEndpointReference
+                     .readFrom(eprInfoset);
                nativeEPR.setAddress(endpointMD.getEndpointAddress());
                endpointMD.setEndpointReference(nativeEPR);
             }
@@ -181,7 +182,8 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          for (WSDLService wsdls : wsdlDefinitions.getServices())
             serviceNames.add(wsdls.getName());
 
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_WSDL_SERVICE", new Object[]{ serviceName ,  serviceNames}));
+         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_WSDL_SERVICE", new Object[]
+         {serviceName, serviceNames}));
       }
 
       // Build endpoint meta data
@@ -250,20 +252,15 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
             if (log.isDebugEnabled())
                log.debug("Processing service-ref contribution on portType: " + epMetaData.getPortTypeName());
 
-            // process MTOM overrides
-            if (portComp.isMtomEnabled())
-            {
-               epMetaData.addFeature(new MTOMFeature(true, portComp.getMtomThreshold()));
-            }
             // process Addressing
-            if (portComp.isAddressingEnabled()) 
+            if (portComp.isAddressingEnabled())
             {
-               AddressingFeature.Responses response = getAddressFeatureResponses(portComp.getAddressingResponses());               
+               AddressingFeature.Responses response = getAddressFeatureResponses(portComp.getAddressingResponses());
                epMetaData.addFeature(new AddressingFeature(true, portComp.isAddressingRequired(), response));
             }
-            
+
             // process RespectBinding
-            if (portComp.isRespectBindingEnabled()) 
+            if (portComp.isRespectBindingEnabled())
             {
                epMetaData.addFeature(new RespectBindingFeature(true));
             }

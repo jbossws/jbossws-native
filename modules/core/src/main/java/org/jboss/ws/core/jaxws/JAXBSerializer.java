@@ -35,13 +35,11 @@ import javax.xml.transform.Result;
 import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.ComplexTypeSerializer;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.extensions.xop.jaxws.AttachmentMarshallerImpl;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.util.xml.BufferedStreamResult;
 import org.jboss.ws.api.binding.BindingCustomization;
@@ -79,7 +77,6 @@ public class JAXBSerializer extends ComplexTypeSerializer
          Marshaller marshaller = jaxbContext.createMarshaller();
 
          marshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
-         marshaller.setAttachmentMarshaller(new AttachmentMarshallerImpl());
 
          // It's safe to pass a stream result, because the SCE will always be in XML_VALID state afterwards.
          // This state can safely be written to an outstream. See XMLFragment and XMLContent as well.

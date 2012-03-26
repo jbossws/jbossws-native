@@ -38,7 +38,6 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.utils.JBossWSEntityResolver;
-import org.jboss.ws.extensions.xop.jaxrpc.JBossXBContentAdapter;
 import org.jboss.ws.metadata.jaxrpcmapping.ExceptionMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaXmlTypeMapping;
@@ -100,9 +99,6 @@ public class SchemaBindingBuilder
       {
          bindSchemaToJava(schemaBinding, wsdlMapping);
       }
-
-      // setup MTOM handler
-      JBossXBContentAdapter.register(schemaBinding);
 
       return schemaBinding;
    }

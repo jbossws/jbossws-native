@@ -31,7 +31,6 @@ import javax.xml.soap.SOAPMessage;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.soap.SOAPMessageMarshaller;
 import org.jboss.ws.core.soap.SOAPMessageUnMarshallerHTTP;
-import org.jboss.ws.extensions.xop.XOPContext;
 
 /**
  * SOAPConnection implementation
@@ -57,10 +56,6 @@ public class SOAPProtocolConnectionHTTP extends HTTPRemotingConnection
    {
       try
       {
-         // enforce xop transitions
-         // TODO: there should be a clear transition to an immutable object model
-         XOPContext.eagerlyCreateAttachments();
-
          // save object model changes
          SOAPMessage soapMessage = (SOAPMessage)reqMessage;
          if (reqMessage != null && soapMessage.saveRequired())

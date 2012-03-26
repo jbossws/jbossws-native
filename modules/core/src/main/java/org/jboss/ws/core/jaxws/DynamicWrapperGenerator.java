@@ -40,10 +40,8 @@ import javassist.bytecode.ConstPool;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttachmentRef;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlList;
-import javax.xml.bind.annotation.XmlMimeType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
@@ -126,7 +124,6 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
                   clazz, parameter.getType(),
                   parameter.getName(), parameter.getVariable(),
                   parameter.getTypeArguments(),
-                  new boolean[] {parameter.isSwaRef(), parameter.isXop()},
                   false, parameter.isXmlList(), parameter.getAdapter()
             );
          }
@@ -164,7 +161,7 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
             addProperty(
                   clazz, prop.getReturnType().getName(),
                   new QName(prop.getName()), prop.getName(), null,
-                  new boolean[] {false, false}, prop.isTransientAnnotated(), false, null
+                  prop.isTransientAnnotated(), false, null
             );
 
          clazz.stopPruning(!prune);
@@ -221,7 +218,7 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
 
    private void addProperty(CtClass clazz, String typeName,
                             QName name, String variable, String[] typeArguments,
-                            boolean[] attachments, boolean xmlTransient, boolean xmlList, String adapter)
+                            boolean xmlTransient, boolean xmlList, String adapter)
          throws CannotCompileException, NotFoundException
    {
       ConstPool constPool = clazz.getClassFile().getConstPool();
@@ -251,19 +248,6 @@ public class DynamicWrapperGenerator extends AbstractWrapperGenerator
          if (name.getNamespaceURI() != null)
             annotation.addParameter("namespace", name.getNamespaceURI());
          annotation.addParameter("name", name.getLocalPart());
-         annotation.markField(field);
-      }
-      // @XmlAttachmentRef
-      if(attachments[0])
-      {
-         annotation = JavassistUtils.createAnnotation(XmlAttachmentRef.class, constPool);
-         annotation.markField(field);
-      }
-      // @XmlMimeType
-      if(attachments[1])
-      {
-         annotation = JavassistUtils.createAnnotation(XmlMimeType.class, constPool);
-         annotation.addParameter("value", "application/octet-stream"); // TODO: default mime 
          annotation.markField(field);
       }
       // @XmlTransient

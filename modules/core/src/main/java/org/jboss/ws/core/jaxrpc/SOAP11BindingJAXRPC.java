@@ -44,16 +44,6 @@ public class SOAP11BindingJAXRPC extends CommonSOAP11Binding
    // Delegate to JAXWS SOAP binding
    private SOAPBindingJAXRPC delegate = new SOAPBindingJAXRPC();
 
-   public SOAP11BindingJAXRPC()
-   {
-      setMTOMEnabled(false);
-   }
-
-   public SOAP11BindingJAXRPC(boolean mtomEnabled)
-   {
-      setMTOMEnabled(mtomEnabled);
-   }
-
    public void setSOAPActionHeader(OperationMetaData opMetaData, SOAPMessage reqMessage)
    {
       delegate.setSOAPActionHeader(opMetaData, reqMessage);

@@ -37,12 +37,11 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.core.RoleSource;
 import org.jboss.ws.core.server.ServerHandlerDelegate;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.extensions.xop.XOPContext;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
 
 /** Delegates to JAXRPC handlers
  *
@@ -126,12 +125,7 @@ public class HandlerDelegateJAXRPC extends ServerHandlerDelegate implements Role
       else if (type == HandlerType.POST)
          handlerChain = postHandlerChain;
 
-      boolean status = (handlerChain != null ? handlerChain.handleResponse(msgContext) : true);
-
-      if (type == HandlerType.ENDPOINT)
-         XOPContext.visitAndRestoreXOPData();
-
-      return status;
+      return handlerChain != null ? handlerChain.handleResponse(msgContext) : true;
    }
 
    public boolean callFaultHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type, Exception ex)
@@ -146,12 +140,7 @@ public class HandlerDelegateJAXRPC extends ServerHandlerDelegate implements Role
       else if (type == HandlerType.POST)
          handlerChain = postHandlerChain;
 
-      boolean status = (handlerChain != null ? handlerChain.handleFault(msgContext) : true);
-
-      if (type == HandlerType.ENDPOINT)
-         XOPContext.visitAndRestoreXOPData();
-
-      return status;
+      return handlerChain != null ? handlerChain.handleFault(msgContext) : true;
    }
 
    public void closeHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)

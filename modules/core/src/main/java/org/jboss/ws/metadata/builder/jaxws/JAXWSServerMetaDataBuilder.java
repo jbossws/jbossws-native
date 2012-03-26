@@ -29,7 +29,6 @@ import javax.jws.WebService;
 import javax.xml.ws.RespectBindingFeature;
 import javax.xml.ws.WebServiceProvider;
 import javax.xml.ws.soap.AddressingFeature;
-import javax.xml.ws.soap.MTOMFeature;
 
 import org.jboss.ws.api.annotation.EndpointConfig;
 import org.jboss.ws.api.annotation.WebContext;
@@ -236,14 +235,6 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
                      }
                   }
 
-                  // MTOM settings
-                  if (portComp.isMtomEnabled())
-                  {
-                     log.debug("Enabling MTOM");
-                     MTOMFeature feature = new MTOMFeature(true, portComp.getMtomThreshold());
-                     sepMetaData.getFeatures().addFeature(feature);
-                  }
-                  
                   if (portComp.isAddressingEnabled()) 
                   {  log.debug("Enabling Addressing");
                      AddressingFeature.Responses responses = getAddressFeatureResponses(portComp.getAddressingResponses());              

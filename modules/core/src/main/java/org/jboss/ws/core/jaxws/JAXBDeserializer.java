@@ -34,14 +34,12 @@ import javax.xml.transform.Source;
 import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.ComplexTypeDeserializer;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.extensions.xop.jaxws.AttachmentUnmarshallerImpl;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.api.binding.BindingCustomization;
 import org.jboss.ws.api.binding.JAXBBindingCustomization;
@@ -76,8 +74,7 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
          JAXBContext jaxbContext = getJAXBContext(javaTypes);
 
          Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-         unmarshaller.setAttachmentUnmarshaller( new AttachmentUnmarshallerImpl());
-         
+
          //workaround for https://jira.jboss.org/jira/browse/JBWS-2686 while waiting for Sun's bug to be fixed
          unmarshaller.setEventHandler(new ValidationEventHandler() {
             public boolean handleEvent(final ValidationEvent event)

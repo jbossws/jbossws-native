@@ -65,8 +65,6 @@ public interface StubExt extends ConfigProvider, EndpointMetadataProvider
    static final String PROPERTY_AUTH_TYPE = "org.jboss.ws.authType";
    /** Authentication type, BASIC */
    static final String PROPERTY_AUTH_TYPE_BASIC = "org.jboss.ws.authType.basic";
-   /** Enable MTOM on the stub */
-   static final String PROPERTY_MTOM_ENABLED= "org.jboss.ws.mtom.enabled";
    /** HTTP chunk size */
    static final String PROPERTY_CHUNKED_ENCODING_SIZE = "http://org.jboss.ws/http#chunksize";
    

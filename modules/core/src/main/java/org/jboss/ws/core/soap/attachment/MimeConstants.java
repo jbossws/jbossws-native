@@ -38,7 +38,6 @@ public class MimeConstants
 
    // Types
    public static final String TYPE_APPLICATION_OCTET_STREAM = "application/octet-stream";
-   public static final String TYPE_APPLICATION_XOP_XML = "application/xop+xml";
    public static final String TYPE_MULTIPART_RELATED = "multipart/related";
    public static final String TYPE_TEXT_XML = "text/xml";
    public static final String TYPE_XML_UTF8 = TYPE_TEXT_XML + "; charset=UTF-8";
@@ -55,5 +54,4 @@ public class MimeConstants
    // Misc
    public static final String CID_DOMAIN = "ws.jboss.org";
    public static final String ROOTPART_CID = "<rootpart@" + CID_DOMAIN + ">";
-   public static final String START_INFO_XOP = "text/xml";
 }
