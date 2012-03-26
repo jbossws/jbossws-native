@@ -399,14 +399,14 @@
     </profile>
 
     <!--
-    Name:  jboss711
-    Descr: JBoss-7.1.1 specific options
+    Name:  jboss712
+    Descr: JBoss-7.1.2 specific options
     -->
     <profile>
-      <id>jboss711</id>
+      <id>jboss712</id>
       <properties>
-        <jboss.version>${jboss711.version}</jboss.version>
-        <jbossws.integration.target>jboss711</jbossws.integration.target>
+        <jboss.version>${jboss712.version}</jboss.version>
+        <jbossws.integration.target>jboss712</jbossws.integration.target>
         <endorsed.dirs>${project.build.directory}/endorsed</endorsed.dirs>
       </properties>
       <dependencies>

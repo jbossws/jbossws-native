@@ -63,7 +63,7 @@
     <jbossws.common.version>2.0.3-SNAPSHOT</jbossws.common.version>
     <jbossws.common.tools.version>1.0.1-SNAPSHOT</jbossws.common.tools.version>
     <jbossws.shared.testsuite.version>4.0.3-SNAPSHOT</jbossws.shared.testsuite.version>
-    <jboss711.version>7.1.1.Final</jboss711.version>
+    <jboss712.version>7.1.2.Final-SNAPSHOT</jboss712.version>
     <ejb.api.version>1.0.1.Final</ejb.api.version>
     <ant.version>1.7.1</ant.version>
     <commons.logging.version>1.1.1</commons.logging.version>
@@ -117,7 +117,7 @@
       <dependency>
         <groupId>org.jboss.as</groupId>
         <artifactId>jboss-as-webservices-tests-integration</artifactId>
-        <version>${jboss711.version}</version>
+        <version>${jboss712.version}</version>
       </dependency>
       <!-- provided apis -->
       <dependency>
@@ -504,14 +504,14 @@
     </profile>
 
     <!--
-    Name:  jboss711
-    Descr: JBoss-7.1.1 specific options
+    Name:  jboss712
+    Descr: JBoss-7.1.2 specific options
     -->
     <profile>
-      <id>jboss711</id>
+      <id>jboss712</id>
       <properties>
-        <jbossws.integration.target>jboss711</jbossws.integration.target>
-        <jboss.home>${jboss711.home}</jboss.home>
+        <jbossws.integration.target>jboss712</jbossws.integration.target>
+        <jboss.home>${jboss712.home}</jboss.home>
       </properties>
     </profile>
 
