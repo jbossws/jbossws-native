@@ -30,12 +30,9 @@ import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.addressing.AddressingProperties;
-import javax.xml.ws.addressing.JAXWSAConstants;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
-import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 
@@ -58,24 +55,6 @@ public class SOAPMessageDispatcher
       OperationMetaData opMetaData = null;
 
       boolean debugEnabled = log.isDebugEnabled();
-      // Dispatch based on wsa:Action
-      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      AddressingProperties inProps = (AddressingProperties)msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_INBOUND);
-      if (inProps != null && inProps.getAction() != null)
-      {
-         String wsaAction = inProps.getAction().getURI().toASCIIString();
-         for (OperationMetaData opAux : epMetaData.getOperations())
-         {
-            if (wsaAction.equals(opAux.getSOAPAction()))
-            {
-               opMetaData = opAux;
-               if (debugEnabled)
-                  log.debug("Use wsa:Action dispatch: " + wsaAction);
-               break;
-            }
-         }
-      }
-
       // Dispatch to JAXWS Provider
       if (opMetaData == null && epMetaData.getServiceMode() != null)
       {

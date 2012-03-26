@@ -512,28 +512,13 @@
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
 
-                 <exclude>org/jboss/test/ws/jaxws/samples/dar/**</exclude>
-
-                 <!-- ////////////////////////// -->
-                 <!-- AS7 integration exclusions -->
-                 <!-- ////////////////////////// -->
-
-                 <!-- # [JBWS-3308] Extends AS7 RemoteDeployer for supporting deployment of different security domains -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
-
                  <!-- # exploaded EAR deployment failure - should JBoss AS7 support it? -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase*</exclude>
-
-                 <!-- JAXR not available -->
-                 <exclude>org/jboss/test/ws/jaxws/samples/jaxr/**</exclude>
 
                  <!-- # TODO: rewrite tests using AS6 internals -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws1179/JBWS1179TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws331/JBWS331TestCase*</exclude>
                  <exclude>org/jboss/test/ws/jaxrpc/jbws772/JBWS772TestCase*</exclude>
-
               </excludes>
             </configuration>
           </plugin>

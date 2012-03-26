@@ -57,8 +57,6 @@
     <macro-wstools dest="jaxrpc/samples/oneway/WEB-INF" config="jaxrpc/samples/oneway/wstools-config.xml"/>
     <macro-wstools dest="jaxrpc/samples/rpcstyle/WEB-INF" config="jaxrpc/samples/rpcstyle/wstools-config.xml"/>
     <macro-wstools dest="jaxrpc/samples/secureejb/META-INF" config="jaxrpc/samples/secureejb/wstools-config.xml"/>
-    <macro-wstools dest="jaxrpc/samples/wsaddr/hello/WEB-INF" config="jaxrpc/samples/wsaddr/hello/wstools-config.xml"/>
-    <macro-wstools dest="jaxrpc/samples/wsaddr/replyto/WEB-INF" config="jaxrpc/samples/wsaddr/replyto/wstools-config.xml"/>
 
   </target>
 
@@ -67,12 +65,6 @@
     <mkdir dir="${tests.output.dir}/wstools/java"/>
     <move todir="${tests.output.dir}/wstools/java">
       <fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/docstyle/wrapped/WEB-INF" includes="org/**"/>
-    </move>
-    <move todir="${tests.output.dir}/wstools/java">
-      <fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/hello/WEB-INF" includes="org/**"/>
-    </move>
-    <move todir="${tests.output.dir}/wstools/java">
-      <fileset dir="${tests.output.dir}/wstools/resources/jaxrpc/samples/wsaddr/replyto/WEB-INF" includes="org/**"/>
     </move>
 
     <!--

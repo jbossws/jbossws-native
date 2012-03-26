@@ -26,7 +26,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.StringReader;
 
-import javax.xml.soap.SOAPEnvelope;
 import javax.xml.transform.stream.StreamSource;
 
 import junit.framework.TestCase;

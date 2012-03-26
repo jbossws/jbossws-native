@@ -29,15 +29,11 @@ import javax.xml.ws.BindingProvider;
 import javax.xml.ws.RespectBindingFeature;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
-import javax.xml.ws.handler.Handler;
-import javax.xml.ws.soap.AddressingFeature;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.core.StubExt;
-import org.jboss.ws.core.jaxws.binding.BindingExt;
-import org.jboss.ws.extensions.addressing.jaxws.WSAddressingClientHandler;
 import org.jboss.ws.feature.ChunkedEncodingFeature;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FeatureAwareEndpointMetaData;
@@ -49,7 +45,6 @@ import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLService;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
  * Process WebServiceFeature provided on client side
@@ -66,7 +61,6 @@ public class ClientFeatureProcessor
    private static FeatureSet supportedFeatures = new FeatureSet();
    static
    {
-      supportedFeatures.addFeature(new AddressingFeature());
       supportedFeatures.addFeature(new RespectBindingFeature());
       supportedFeatures.addFeature(new ChunkedEncodingFeature());
    }
@@ -77,61 +71,12 @@ public class ClientFeatureProcessor
       {
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_FEATURE",  feature));
       }
-      processAddressingFeature(feature, epMetaData, stub);
       processRespectBindingFeature(feature, epMetaData, stub);
       processChunkedEncodingFeature(feature, epMetaData, stub);
 
       // overriding feature for this stub
       FeatureAwareEndpointMetaData featureOverridableMetaData = (FeatureAwareEndpointMetaData)stub;
       featureOverridableMetaData.setFeature(feature);
-   }
-   
-   /**
-    * Setup addressing
-    * 
-    * @param <T>
-    * @param feature
-    * @param epMetaData
-    * @param stub
-    * @return
-    */
-   @SuppressWarnings("unchecked")
-   private static <T> void processAddressingFeature(WebServiceFeature feature, EndpointMetaData epMetaData, T stub)
-   {
-      if (feature instanceof AddressingFeature)
-      {
-         BindingExt bindingExt = (BindingExt) ((BindingProvider) stub).getBinding();
-         List<Handler> handlers = bindingExt.getHandlerChain(HandlerType.POST);
-         int addressingHandlerIndex = getAddressingHandlerIndex(handlers);
-
-         if (feature.isEnabled())
-         {
-            if (addressingHandlerIndex == -1)
-            {
-               handlers.add(new WSAddressingClientHandler());
-               bindingExt.setHandlerChain(handlers, HandlerType.POST);
-            }
-         }
-         else if (addressingHandlerIndex != -1)
-         {
-            handlers.remove(addressingHandlerIndex);
-            bindingExt.setHandlerChain(handlers, HandlerType.POST);
-         }
-      }
-   }
-   
-   private static int getAddressingHandlerIndex(final List<Handler> handlers)
-   {
-      if (handlers != null)
-      {
-         for (int i = 0; i < handlers.size(); i++)
-         {
-            if (handlers.get(i) instanceof WSAddressingClientHandler)
-               return i;
-         }
-      }
-      
-      return -1;
    }
    
    /**

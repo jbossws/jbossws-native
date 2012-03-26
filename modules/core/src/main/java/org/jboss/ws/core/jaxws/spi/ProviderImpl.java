@@ -32,7 +32,6 @@ import javax.xml.transform.Source;
 import javax.xml.ws.BindingType;
 import javax.xml.ws.Endpoint;
 import javax.xml.ws.EndpointReference;
-import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.soap.SOAPBinding;
@@ -44,8 +43,6 @@ import javax.xml.ws.wsaddressing.W3CEndpointReference;
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
-import org.jboss.ws.core.jaxws.wsaddressing.EndpointReferenceUtil;
-import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
 import org.w3c.dom.Element;
 
 /**
@@ -135,21 +132,7 @@ public final class ProviderImpl extends Provider
          final QName serviceName, final QName portName, final List<Element> metadata, final String wsdlDocumentLocation, 
          final List<Element> referenceParameters, final List<Element> elements, final Map<QName, String> attributes)
    {
-      if ((serviceName == null) && (address == null) && (portName == null))
-         throw new IllegalStateException();
-      if ((portName != null) && (serviceName == null))
-         throw new IllegalStateException();
-      
-      final NativeEndpointReference epr = new NativeEndpointReference();
-      epr.setAddress(address);
-      epr.setServiceName(serviceName);
-      epr.setEndpointName(portName);
-      epr.setInterfaceName(interfaceName);
-      epr.setMetadata(metadata);
-      epr.setWsdlLocation(wsdlDocumentLocation);
-      epr.setReferenceParameters(referenceParameters);
-
-      return EndpointReferenceUtil.transform(W3CEndpointReference.class, epr);
+      throw new UnsupportedOperationException();
    }
 
    public W3CEndpointReference createW3CEndpointReference(final String address, final QName serviceName, 
@@ -161,29 +144,12 @@ public final class ProviderImpl extends Provider
 
    public <T> T getPort(final EndpointReference epr, final Class<T> sei, final WebServiceFeature... features)
    {
-      final NativeEndpointReference nepr = EndpointReferenceUtil.transform(NativeEndpointReference.class, epr);
-      final URL wsdlLocation = nepr.getWsdlLocation();
-      final QName serviceName = nepr.getServiceName();
-      final ServiceDelegate delegate = createServiceDelegate(wsdlLocation, serviceName, Service.class);
-
-      return delegate.getPort(epr, sei, features);
+      throw new UnsupportedOperationException();
    }
 
    public EndpointReference readEndpointReference(final Source eprInfoset)
    {
-      if (eprInfoset == null)
-         throw new NullPointerException(BundleUtils.getMessage(bundle, "PROVIDED_EPRINFOSET_CANNOT_BE_NULL"));
-
-      try
-      {
-         final NativeEndpointReference nativeEPR = new NativeEndpointReference(eprInfoset);
-         final Source source = EndpointReferenceUtil.getSourceFromEndpointReference(nativeEPR);
-         return new W3CEndpointReference(source);
-      }
-      catch (Exception e)
-      {
-         throw new WebServiceException(e);
-      }
+      throw new UnsupportedOperationException();
    }
 
    private String getBindingFromAddress(final String address)

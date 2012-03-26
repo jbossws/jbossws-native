@@ -48,10 +48,7 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
-import javax.xml.ws.addressing.AddressingProperties;
-import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.http.HTTPBinding;
-import javax.xml.ws.soap.AddressingFeature;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.common.Constants;
@@ -76,10 +73,8 @@ import org.jboss.ws.core.server.ServletRequestContext;
 import org.jboss.ws.core.server.WSDLRequestHandler;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
-import org.jboss.ws.core.soap.SOAPConnectionImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
-import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
@@ -390,7 +385,6 @@ public class RequestHandlerImpl implements RequestHandler
    private void sendResponse(Endpoint endpoint, OutputStream output, boolean isFault) throws SOAPException, IOException
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
       MessageAbstraction resMessage = msgContext.getMessageAbstraction();
       
       if (resMessage == null)
@@ -399,30 +393,7 @@ public class RequestHandlerImpl implements RequestHandler
          return;
       }
 
-      String wsaTo = null;
-
-      // Get the destination from the AddressingProperties
-      AddressingProperties outProps = (AddressingProperties)msgContext.get(JAXWSAConstants.SERVER_ADDRESSING_PROPERTIES_OUTBOUND);
-      if (outProps != null && outProps.getTo() != null)
-      {
-         AddressingConstantsImpl ADDR = new AddressingConstantsImpl();
-         wsaTo = outProps.getTo().getURI().toString();
-         final AddressingFeature addressing = epMetaData.getFeature(AddressingFeature.class);
-         final boolean onlyAnonymousAllowed = addressing != null && addressing.getResponses() == AddressingFeature.Responses.ANONYMOUS;
-         if (wsaTo.equals(ADDR.getAnonymousURI()) || onlyAnonymousAllowed)
-            wsaTo = null;
-      }
-      if (wsaTo != null)
-      {
-         if (log.isDebugEnabled())
-            log.debug("Sending response to addressing destination: " + wsaTo);
-         SOAPMessage soapMessage = (SOAPMessage)resMessage;
-         new SOAPConnectionImpl().callOneWay(soapMessage, wsaTo);
-      }
-      else
-      {
-         resMessage.writeTo(output);
-      }
+      resMessage.writeTo(output);
    }
 
    /**

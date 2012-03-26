@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -39,8 +37,6 @@ import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPException;
 import javax.xml.ws.ProtocolException;
 import javax.xml.ws.WebServiceException;
-import javax.xml.ws.addressing.AddressingProperties;
-import javax.xml.ws.addressing.JAXWSAConstants;
 import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
@@ -58,7 +54,6 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.utils.HolderUtils;
-import org.jboss.ws.extensions.addressing.AddressingConstantsImpl;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
@@ -322,29 +317,6 @@ public abstract class CommonClient implements StubExt, HeaderSource
          if (handlerPass)
          {
             String targetAddress = getTargetEndpointAddress();
-
-            // Fall back to wsa:To
-            AddressingProperties addrProps = (AddressingProperties)msgContext.get(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND);
-            if (targetAddress == null && addrProps != null && addrProps.getTo() != null)
-            {
-               AddressingConstantsImpl ADDR = new AddressingConstantsImpl();
-               String wsaTo = addrProps.getTo().getURI().toString();
-               if (wsaTo.equals(ADDR.getAnonymousURI()) == false)
-               {
-                  try
-                  {
-                     URL wsaToURL = new URL(wsaTo);
-                     if (log.isDebugEnabled())
-                        log.debug("Sending request to addressing destination: " + wsaToURL);
-                     targetAddress = wsaToURL.toExternalForm();
-                  }
-                  catch (MalformedURLException ex)
-                  {
-                     if (log.isDebugEnabled())
-                        log.debug("Not a valid URL: " + wsaTo);
-                  }
-               }
-            }
 
             // The endpoint address must be known beyond this point
             if (targetAddress == null)

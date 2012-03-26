@@ -54,8 +54,6 @@ import org.jboss.ws.api.binding.JAXBBindingCustomization;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.JavaUtils;
-import org.jboss.ws.core.CommonBindingProvider;
-import org.jboss.ws.core.CommonSOAPBinding;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
@@ -66,7 +64,6 @@ import org.jboss.ws.core.jaxws.JAXBContextFactory;
 import org.jboss.ws.core.jaxws.JAXBDeserializerFactory;
 import org.jboss.ws.core.jaxws.JAXBSerializerFactory;
 import org.jboss.ws.core.jaxws.client.DispatchBinding;
-import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.metadata.accessor.AccessorFactory;
@@ -147,8 +144,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private FeatureSet features = new FeatureSet();
    // The documentation edfined through the @Documentation annotation
    private String documentation;
-   
-   private NativeEndpointReference epr;
 
    private ConfigObservable configObservable = new ConfigObservable();
 
@@ -186,16 +181,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void setPortName(QName portName)
    {
       this.portName = portName;
-   }
-
-   public NativeEndpointReference getEndpointReference()
-   {
-      return epr;
-   }
-
-   public void setEndpointReference(final NativeEndpointReference epr)
-   {
-      this.epr = epr;
    }
 
    public QName getPortTypeName()

@@ -144,8 +144,6 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
 
    protected void setupOperationsFromWSDL(EndpointMetaData epMetaData, WSDLEndpoint wsdlEndpoint, ServiceEndpointInterfaceMapping seiMapping)
    {
-      WSDLDefinitions wsdlDefinitions = wsdlEndpoint.getInterface().getWsdlDefinitions();
-
       // For every WSDL interface operation build the OperationMetaData
       WSDLInterface wsdlInterface = wsdlEndpoint.getInterface();
       for (WSDLInterfaceOperation wsdlOperation : wsdlInterface.getOperations())
@@ -213,9 +211,6 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
 
          // Build operation faults
          buildFaultMetaData(opMetaData, wsdlOperation);
-
-         // process further operation extensions
-         processOpMetaExtensions(opMetaData, wsdlOperation);
       }
    }
 

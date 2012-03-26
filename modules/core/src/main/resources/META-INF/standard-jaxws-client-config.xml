@@ -17,30 +17,4 @@
     <feature><feature-name>http://org.jboss.ws/dispatch/validate</feature-name></feature>
   </client-config>
   
-  <client-config>
-    <config-name>Standard WSAddressing Client</config-name>
-    <post-handler-chains>
-      <javaee:handler-chain>
-        <javaee:protocol-bindings>##SOAP11_HTTP</javaee:protocol-bindings>
-        <javaee:handler>
-          <javaee:handler-name>WSAddressing Handler</javaee:handler-name>
-          <javaee:handler-class>org.jboss.ws.extensions.addressing.jaxws.WSAddressingClientHandler</javaee:handler-class>
-        </javaee:handler>
-      </javaee:handler-chain>
-    </post-handler-chains>
-  </client-config>
-  
-  <client-config>
-    <config-name>Standard SOAP 1.2 WSAddressing Client</config-name>
-    <post-handler-chains>
-      <javaee:handler-chain>
-        <javaee:protocol-bindings>##SOAP12_HTTP</javaee:protocol-bindings>
-        <javaee:handler>
-          <javaee:handler-name>WSAddressing Handler</javaee:handler-name>
-          <javaee:handler-class>org.jboss.ws.extensions.addressing.jaxws.WSAddressingClientHandler</javaee:handler-class>
-        </javaee:handler>
-      </javaee:handler-chain>
-    </post-handler-chains>
-  </client-config>
-  
 </jaxws-config>

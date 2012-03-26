@@ -7,15 +7,4 @@
     <config-name>Standard Client</config-name>
   </client-config>
   
-  <client-config>
-    <config-name>Standard WSAddressing Client</config-name>
-    <post-handler-chain>
-      <handler-chain-name>WSAddressing Handlers</handler-chain-name>
-      <handler>
-        <j2ee:handler-name>WSAddressingClientHandler</j2ee:handler-name>
-        <j2ee:handler-class>org.jboss.ws.extensions.addressing.jaxrpc.WSAddressingClientHandler</j2ee:handler-class>
-      </handler>
-    </post-handler-chain>
-  </client-config>
-  
 </jaxrpc-config>

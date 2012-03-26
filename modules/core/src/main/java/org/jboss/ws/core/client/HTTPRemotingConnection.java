@@ -29,9 +29,7 @@ import java.util.ResourceBundle;
 
 import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
-import javax.xml.ws.addressing.EndpointReference;
 
-import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.MessageTrace;
@@ -55,8 +53,6 @@ import org.jboss.ws.core.client.transport.NettyClient;
 public abstract class HTTPRemotingConnection implements RemoteConnection
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(HTTPRemotingConnection.class);
-   // provide logging
-   private static Logger log = Logger.getLogger(HTTPRemotingConnection.class);
    
    private boolean closed;
    private Integer chunkSize;
@@ -107,11 +103,6 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
          EndpointInfo epInfo = (EndpointInfo)endpoint;
          targetAddress = epInfo.getTargetAddress();
          callProps = epInfo.getProperties();
-      }
-      else if (endpoint instanceof EndpointReference)
-      {
-         EndpointReference epr = (EndpointReference)endpoint;
-         targetAddress = epr.getAddress().toString();
       }
       else
       {

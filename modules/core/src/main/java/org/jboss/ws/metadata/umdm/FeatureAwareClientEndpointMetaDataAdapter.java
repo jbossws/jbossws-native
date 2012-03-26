@@ -36,7 +36,6 @@ import javax.xml.ws.Service.Mode;
 import javax.xml.ws.handler.PortInfo;
 
 import org.jboss.ws.core.jaxws.JAXBContextCache;
-import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.metadata.config.Configurable;
@@ -247,12 +246,6 @@ public final class FeatureAwareClientEndpointMetaDataAdapter extends ClientEndpo
    }
 
    @Override
-   public NativeEndpointReference getEndpointReference()
-   {
-      return this.delegee.getEndpointReference();
-   }
-
-   @Override
    public List<HandlerMetaData> getHandlerMetaData(HandlerType type)
    {
       return this.delegee.getHandlerMetaData(type);
@@ -418,12 +411,6 @@ public final class FeatureAwareClientEndpointMetaDataAdapter extends ClientEndpo
    public void setEncodingStyle(Use value)
    {
       this.delegee.setEncodingStyle(value);
-   }
-
-   @Override
-   public void setEndpointReference(NativeEndpointReference epr)
-   {
-      this.delegee.setEndpointReference(epr);
    }
 
    @Override

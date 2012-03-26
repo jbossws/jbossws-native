@@ -41,7 +41,6 @@ import javax.wsdl.extensions.http.HTTPAddress;
 import javax.wsdl.extensions.soap.SOAPAddress;
 import javax.wsdl.extensions.soap12.SOAP12Address;
 import javax.xml.namespace.QName;
-import javax.xml.ws.addressing.AddressingProperties;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -50,8 +49,6 @@ import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.ObjectNameFactory;
 import org.jboss.ws.core.jaxrpc.UnqualifiedFaultException;
 import org.jboss.ws.core.soap.Use;
-import org.jboss.ws.extensions.addressing.AddressingPropertiesImpl;
-import org.jboss.ws.extensions.addressing.metadata.AddressingOpMetaExt;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -66,7 +63,6 @@ import org.jboss.ws.metadata.wsdl.WSDLInterface;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceFault;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperation;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperationOutfault;
-import org.jboss.ws.metadata.wsdl.WSDLProperty;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
@@ -475,158 +471,6 @@ public abstract class MetaDataBuilder
       }
    }
 
-   /** Process operation meta data extensions. */
-   protected void processOpMetaExtensions(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation)
-   {
-      final AddressingProperties ADDR = new AddressingPropertiesImpl();
-      final AddressingOpMetaExt addrExt = new AddressingOpMetaExt(ADDR.getNamespaceURI());
-      final boolean isOneWay = Constants.WSDL20_PATTERN_IN_ONLY.equals(wsdlOperation.getPattern());
-
-      final String inputAction = this.getInputAction(wsdlOperation, isOneWay);
-      addrExt.setInboundAction(inputAction);
-      
-      if (!isOneWay)
-      {
-         final String outputAction = this.getOutputAction(wsdlOperation, isOneWay);
-         addrExt.setOutboundAction(outputAction);
-         
-         setFaultActions(opMetaData, wsdlOperation, addrExt);
-      }
-
-      opMetaData.addExtension(addrExt);
-   }
-   
-   private void setFaultActions(final OperationMetaData opMetaData, final WSDLInterfaceOperation wsdlOperation, final AddressingOpMetaExt addrExt)
-   {
-      for (WSDLInterfaceOperationOutfault fault : wsdlOperation.getOutfaults())
-      {
-         final QName faultQName = wsdlOperation.getWsdlInterface().getFault(fault.getRef()).getElement();
-         final String action = this.getFaultAction(wsdlOperation, fault);
-         
-         addrExt.setFaultAction(faultQName, action);
-      }
-   }
-   
-   /* 
-   Copy/paste from http://www.w3.org/TR/wsdl#_names
-
-   2.4.5 Names of Elements within an Operation
-
-   The name attribute of the input and output elements provides a unique name among all
-   input and output elements within the enclosing port type.
-
-   In order to avoid having to name each input and output element within an operation,
-   WSDL provides some default values based on the operation name. If the name attribute
-   is not specified on a one-way or notification message, it defaults to the name of the operation.
-   If the name attribute is not specified on the input or output messages of a
-   request-response or solicit-response operation, the name defaults to the name of
-   the operation with "Request"/"Solicit" or "Response" appended, respectively.
-
-   Each fault element must be named to allow a binding to specify the concrete format of the fault message.
-   The name of the fault element is unique within the set of faults defined for the operation.
-   */
-
-   private String getInputAction(final WSDLInterfaceOperation wsdlOperation, final boolean oneWay)
-   {
-      WSDLProperty wsaInAction = wsdlOperation.getProperty(Constants.WSDL_PROPERTY_ACTION_IN);
-      if (wsaInAction != null && wsaInAction.getValue() != null && !"".equals(wsaInAction.getValue()))
-      {
-         return wsaInAction.getValue();
-      }
-
-      final String prefix = this.getActionPrefix(wsdlOperation);
-      String operationName = wsdlOperation.getName().getLocalPart();
-
-      WSDLProperty inputName = wsdlOperation.getProperty(Constants.WSDL_PROPERTY_MESSAGE_NAME_IN);
-      if (inputName != null && inputName.getValue() != null && !"".equals(inputName.getValue()))
-      {
-         return prefix + inputName.getValue();
-      }
-      else
-      {
-         return prefix + operationName + (oneWay ? "" : "Request");
-      }
-   }
-   
-   private String getOutputAction(final WSDLInterfaceOperation wsdlOperation, final boolean oneWay)
-   {
-      WSDLProperty wsaOutAction = wsdlOperation.getProperty(Constants.WSDL_PROPERTY_ACTION_OUT);
-      if (wsaOutAction != null && wsaOutAction.getValue() != null && !"".equals(wsaOutAction.getValue()))
-      {
-         return wsaOutAction.getValue();
-      }
-
-      final String prefix = this.getActionPrefix(wsdlOperation);
-      String operationName = wsdlOperation.getName().getLocalPart();
-
-      WSDLProperty outputName = wsdlOperation.getProperty(Constants.WSDL_PROPERTY_MESSAGE_NAME_OUT);
-      if (outputName != null && outputName.getValue() != null && !"".equals(outputName.getValue()))
-      {
-         return prefix + outputName.getValue();
-      }
-      else
-      {
-         return prefix + operationName + (oneWay ? "" : "Response");
-      }
-   }
-   
-   /*
-    Copy/paste from http://www.w3.org/TR/2007/REC-ws-addr-metadata-20070904/#defactionwsdl11
-
-    4.4.4 Default Action Pattern for WSDL 1.1
-
-    A default pattern is also defined for backwards compatibility with WSDL 1.1. In the absence of an explicitly specified value
-    for the [action] property (see section 4.4.1 Explicit Association), the following pattern is used to construct a default action
-    for inputs and outputs. The general form of an action IRI is as follows:
-
-    Example 4-6. Structure of defaulted wsa:Action IRI.
-
-    [target namespace][delimiter][port type name][delimiter][input|output name]
-
-    For fault messages, the general form of an action IRI is as follows:
-
-    Example 4-7. Structure of default wsa:Action IRI for faults
-
-    [target namespace][delimiter][port type name][delimiter][operation name][delimiter]Fault[delimiter][fault name]
-    */
-   private String getFaultAction(final WSDLInterfaceOperation wsdlOperation, final WSDLInterfaceOperationOutfault fault)
-   {
-      final WSDLProperty wsaFaultAction = fault.getProperty(Constants.WSDL_PROPERTY_ACTION_FAULT);
-      if (wsaFaultAction != null && wsaFaultAction.getValue() != null && !"".equals(wsaFaultAction.getValue()))
-      {
-         return wsaFaultAction.getValue();
-      }
-
-      final String prefix = this.getActionPrefix(wsdlOperation);
-      String operationName = wsdlOperation.getName().getLocalPart();
-
-      final WSDLProperty faultName = fault.getProperty(Constants.WSDL_PROPERTY_MESSAGE_NAME_FAULT);
-      final String delimeter = this.getDelimeter(prefix);
-      if (faultName != null && faultName.getValue() != null && !"".equals(faultName.getValue()))
-      {
-         return prefix + operationName + delimeter + "Fault" + delimeter + faultName.getValue();
-      }
-      
-      throw new IllegalStateException();
-   }
-   
-   private String getActionPrefix(final WSDLInterfaceOperation wsdlOperation)
-   {
-      final String portTypeName = wsdlOperation.getWsdlInterface().getName().getLocalPart();
-      String namespace = wsdlOperation.getName().getNamespaceURI();
-      final String delimeter = this.getDelimeter(namespace);
-
-      if (!namespace.endsWith(delimeter))
-         namespace += delimeter;
-      
-      return namespace + portTypeName + delimeter;
-   }
-   
-   private String getDelimeter(final String namespace)
-   {
-      return namespace.toLowerCase().startsWith("urn:") ? ":" : "/";
-   }
-   
    protected void buildFaultMetaData(OperationMetaData opMetaData, WSDLInterfaceOperation wsdlOperation)
    {
       TypesMetaData typesMetaData = opMetaData.getEndpointMetaData().getServiceMetaData().getTypesMetaData();

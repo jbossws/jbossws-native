@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Proxy;
 import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -47,10 +46,6 @@ import javax.xml.ws.Service;
 import javax.xml.ws.Service.Mode;
 import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
-import javax.xml.ws.addressing.AddressingBuilder;
-import javax.xml.ws.addressing.AddressingProperties;
-import javax.xml.ws.addressing.JAXWSAConstants;
-import javax.xml.ws.addressing.ReferenceParameters;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.spi.ServiceDelegate;
 
@@ -66,8 +61,6 @@ import org.jboss.ws.core.jaxws.client.ClientProxy;
 import org.jboss.ws.core.jaxws.client.DispatchImpl;
 import org.jboss.ws.core.jaxws.client.serviceref.NativeServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
-import org.jboss.ws.core.jaxws.wsaddressing.EndpointReferenceUtil;
-import org.jboss.ws.core.jaxws.wsaddressing.NativeEndpointReference;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
@@ -87,7 +80,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
-import org.w3c.dom.Element;
 
 /**
  * Service delegates are used internally by Service objects to allow pluggability of JAX-WS implementations.
@@ -244,11 +236,6 @@ public class ServiceDelegateImpl extends ServiceDelegate
       }
 
       T port = (T)createProxy(seiClass, epMetaData);
-      EndpointReference epr = epMetaData.getEndpointReference();
-      if (epr != null)
-      {
-         initAddressingProperties((BindingProvider)port, epr);
-      }
       initWebserviceFeatures(port, epMetaData.getFeatures().getFeatures());
       
       //initialize webserviceFeature in service for getPort(Class<T> seiClass) and getPort(QName portName, Class<T> seiClass)
@@ -492,19 +479,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    @Override
    public <T> Dispatch<T> createDispatch(EndpointReference epr, Class<T> type, Mode mode, WebServiceFeature... features)
    {
-      QName portName = null;
-      NativeEndpointReference nepr = EndpointReferenceUtil.transform(NativeEndpointReference.class, epr);
-      portName = nepr.getEndpointName();
-      //From the JAXWS dispacth api, EPR's address MUST be used for invocations on the endpoint
-      if (getEndpointMetaData(portName) != null && nepr.getAddress() != null  && nepr.getAddress().length() > 0)
-      {
-         getEndpointMetaData(portName).setEndpointAddress(nepr.getAddress());
-      }
-      Dispatch<T> dispatch = createDispatch(portName, type, mode);
-      initAddressingProperties(dispatch, epr);
-      initWebserviceFeatures(dispatch, this.features);
-      initWebserviceFeatures(dispatch, features);
-      return dispatch;
+      throw new UnsupportedOperationException();
    }
 
    @Override
@@ -519,15 +494,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    @Override
    public Dispatch<Object> createDispatch(EndpointReference epr, JAXBContext context, Mode mode, WebServiceFeature... features)
    {
-      QName portName = null;
-      NativeEndpointReference nepr = EndpointReferenceUtil.transform(NativeEndpointReference.class, epr);
-      portName = nepr.getEndpointName();
-
-      Dispatch<Object> dispatch = createDispatch(portName, context, mode);
-      initAddressingProperties(dispatch, epr);
-      initWebserviceFeatures(dispatch, this.features);
-      initWebserviceFeatures(dispatch, features);
-      return dispatch;
+      throw new UnsupportedOperationException();
    }
 
    @Override
@@ -543,7 +510,6 @@ public class ServiceDelegateImpl extends ServiceDelegate
    public <T> T getPort(EndpointReference epr, Class<T> sei, WebServiceFeature... features)
    {
       T port = getPort(sei);
-      initAddressingProperties((BindingProvider)port, epr);
       initWebserviceFeatures(port, features);
       return port;
    }
@@ -637,36 +603,6 @@ public class ServiceDelegateImpl extends ServiceDelegate
          {
             ClientFeatureProcessor.processFeature(feature, epMetaData, stub);
          }
-      }
-   }
-
-   // Workaround for [JBWS-2015] Modify addressing handlers to work with the JAXWS-2.1 API
-   private void initAddressingProperties(BindingProvider bindingProvider, EndpointReference epr)
-   {
-      Map<String, Object> reqContext = bindingProvider.getRequestContext();
-      AddressingBuilder builder = AddressingBuilder.getAddressingBuilder();
-      AddressingProperties addrProps = builder.newAddressingProperties();
-      reqContext.put(JAXWSAConstants.CLIENT_ADDRESSING_PROPERTIES_OUTBOUND, addrProps);
-      
-      NativeEndpointReference nepr = EndpointReferenceUtil.transform(NativeEndpointReference.class, epr);
-      try
-      {
-         if (nepr.getAddress() != null)
-            addrProps.setTo(builder.newURI(nepr.getAddress()));
-
-         List<Element> w3cRefParams = nepr.getReferenceParameters();
-         if (w3cRefParams != null)
-         {
-            ReferenceParameters refParams = addrProps.getReferenceParameters();
-            for (Element w3cRefParam : w3cRefParams)
-            {
-               refParams.addElement(w3cRefParam);
-            }
-         }
-      }
-      catch (URISyntaxException ex)
-      {
-         throw new IllegalArgumentException(ex);
       }
    }
 }

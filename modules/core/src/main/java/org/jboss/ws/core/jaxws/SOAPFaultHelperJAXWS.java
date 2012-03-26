@@ -38,8 +38,6 @@ import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.ws.WebServiceException;
-import javax.xml.ws.addressing.AddressingException;
-import javax.xml.ws.addressing.MapRequiredException;
 import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.soap.SOAPFaultException;
 
@@ -59,14 +57,12 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
-import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 /**
  * Helper methods to translate between SOAPFault and SOAPFaultException
@@ -267,38 +263,7 @@ public class SOAPFaultHelperJAXWS
 
       SOAPBody soapBody = soapMessage.getSOAPBody();
 
-      SOAPFault soapFault  = null;
-      if(ex instanceof MapRequiredException) 
-      {  
-         MapRequiredException addrException = (MapRequiredException)ex;
-         soapFault = soapBody.addFault(addrException.getSubcode(), addrException.getMessage());
-      } 
-      else if (ex instanceof AddressingException)
-      {
-         try
-         {
-            AddressingException addrException = (AddressingException) ex;
-            SOAPFault fault = new SOAPFaultImpl();
-            fault.setFaultCode(addrException.getCode());
-            fault.setFaultString(addrException.getReason());
-            Detail detail = fault.addDetail();
-            Object detailElement = addrException.getDetail();
-            if (detailElement instanceof Node)
-            {
-               detail.appendChild((Node)detailElement);
-            }
-
-            return toSOAPMessage(new SOAPFaultException(fault));
-         }
-         catch (SOAPException e)
-         {
-            log.warn(BundleUtils.getMessage(bundle, ""));
-         }
-      }
-      else 
-      {
-         soapFault = soapBody.addFault(getFallbackFaultCode(), getFallbackFaultString(ex));
-      }
+      SOAPFault soapFault  = soapBody.addFault(getFallbackFaultCode(), getFallbackFaultString(ex));
       
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       SerializationContext serContext = msgContext.getSerializationContext();
