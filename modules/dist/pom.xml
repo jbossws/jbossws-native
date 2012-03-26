@@ -5,12 +5,12 @@
   <name>JBoss Web Services - Stack Native Distribution</name>
   <artifactId>jbossws-native-dist</artifactId>
   <packaging>pom</packaging>
-  <version>4.0.3-SNAPSHOT</version>
+  <version>4.0.3.GA</version>
 
   <parent>
     <groupId>org.jboss.ws.native</groupId>
     <artifactId>jbossws-native</artifactId>
-    <version>4.0.3-SNAPSHOT</version>
+    <version>4.0.3.GA</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
