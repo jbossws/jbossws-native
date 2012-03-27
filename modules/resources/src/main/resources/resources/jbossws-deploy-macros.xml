@@ -25,29 +25,6 @@
 <project>
 
   <!-- ================================================================== -->
-  <!-- Deploy JUDDI Service                                               -->
-  <!-- ================================================================== -->
-
-  <macrodef name="macro-deploy-juddi-sar">
-    <attribute name="thirdpartydir"/>
-    <attribute name="targetdir"/>
-    <sequential>
-      <mkdir dir="@{targetdir}"/>
-      <unzip dest="@{targetdir}">
-        <fileset dir="@{thirdpartydir}">
-          <include name="**/juddi-service.sar"/>
-        </fileset>
-      </unzip>
-      <copy todir="@{targetdir}" flatten="true" overwrite="true">
-        <fileset dir="@{thirdpartydir}">
-          <include name="**/juddi.jar"/>
-          <include name="**/scout.jar"/>
-        </fileset>
-      </copy>
-    </sequential>
-  </macrodef>
-
-  <!-- ================================================================== -->
   <!-- Modules                                                            -->
   <!-- ================================================================== -->
 	
@@ -58,11 +35,6 @@
   	<attribute name="modules-jbossid"/>
     <sequential>
       <!-- libraries -->
-      <copy todir="@{targetdir}/org/jboss/ws/jaxws-client/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/jbossws-native-client.jar"/>
-        </fileset>
-      </copy>
       <copy todir="@{targetdir}/org/jboss/ws/native/jbossws-native-core/main" flatten="false" overwrite="true">
         <fileset dir="@{thirdpartydir}/lib">
           <include name="**/jbossws-native-core.jar"/>
@@ -111,11 +83,6 @@
       <copy todir="@{targetdir}/org/jvnet/staxex/main" flatten="false" overwrite="true">
         <fileset dir="@{thirdpartydir}/lib">
           <include name="**/stax-ex.jar"/>
-        </fileset>
-      </copy>
-      <copy todir="@{targetdir}/org/jboss/jaxbintros/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/jboss-jaxb-intros.jar"/>
         </fileset>
       </copy>
       <copy todir="@{targetdir}/org/apache/commons/beanutils/main" flatten="false" overwrite="true">

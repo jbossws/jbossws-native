@@ -41,7 +41,6 @@
         <include>com.sun.xml.bind:jaxb-xjc:jar</include>
         <include>com.sun.xml.ws:jaxws-tools:jar</include>
         <include>com.sun.xml.ws:jaxws-rt:jar</include>
-        <include>jboss.jaxbintros:jboss-jaxb-intros:jar</include>
         <include>org.jboss.ws:jbossws-api:jar</include>
         <include>org.jboss.ws:jbossws-common:jar</include>
         <include>org.jboss.ws:jbossws-spi:jar</include>
