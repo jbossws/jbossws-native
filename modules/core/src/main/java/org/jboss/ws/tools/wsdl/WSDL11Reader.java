@@ -75,7 +75,6 @@ import javax.wsdl.extensions.soap12.SOAP12Operation;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.addressing.AddressingConstants;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMUtils;
@@ -320,47 +319,11 @@ public class WSDL11Reader
          if (extElement instanceof UnknownExtensibilityElement)
          {
             UnknownExtensibilityElement uee = (UnknownExtensibilityElement)extElement;
-            boolean understood = false;
-            understood = understood || processEPR(uee, dest);
-            //add processing of further extensibility element types below
-            
-            if (!understood)
-            {
-               processNotUnderstoodExtesibilityElement(uee, dest);
-            }
+            processNotUnderstoodExtesibilityElement(uee, dest);
          }
       }
    }
 
-   /**
-    * Process the provided extensibility element looking for UsingAddressing.
-    * Returns true if the provided element is UsingAddressing, false otherwise.
-    * 
-    * @param extElement
-    * @param dest
-    * @return
-    */
-   private boolean processEPR(UnknownExtensibilityElement extElement, Extendable dest)
-   {
-      final Element srcElement = extElement.getElement();
-      final boolean isWSANamespace = AddressingConstants.Core.NS.equals(srcElement.getNamespaceURI());
-      final boolean isEPRLocalName = AddressingConstants.Core.Elements.ENDPOINTREFERENCE.equals(srcElement.getLocalName());
-      boolean result = false;
-
-      if (isWSANamespace && isEPRLocalName)
-      {
-         Element element = (Element) srcElement.cloneNode(true);
-         copyMissingNamespaceDeclarations(element, srcElement);
-
-         WSDLExtensibilityElement el = new WSDLExtensibilityElement(Constants.WSDL_ELEMENT_EPR, element);
-         el.setRequired(true);
-         dest.addExtensibilityElement(el);
-         result = true;
-      }
-
-      return result;
-   }
-   
    private void processNotUnderstoodExtesibilityElement(UnknownExtensibilityElement extElement, Extendable dest)
    {
       Element element = (Element)extElement.getElement().cloneNode(true);
@@ -709,13 +672,6 @@ public class WSDL11Reader
       {
          WSDLInterface destInterface = new WSDLInterface(destWsdl, qname);
 
-         // documentation
-         Element documentationElement = srcPortType.getDocumentationElement();
-         if (documentationElement != null && documentationElement.getTextContent() != null)
-         {
-            destInterface.setDocumentationElement(new WSDLDocumentation(documentationElement.getTextContent()));
-         }
-
          destWsdl.addInterface(destInterface);
 
          processPortTypeOperations(srcWsdl, destInterface, srcPortType, destBinding);
@@ -765,13 +721,6 @@ public class WSDL11Reader
 
          log.trace("processOperationInput: " + srcMessage.getQName());
 
-         QName wsaAction = (QName)wsdlOperationInput.getExtensionAttribute(Constants.WSDL_ATTRIBUTE_WSA_ACTION);
-         if (wsaAction != null)
-            umdmOperation.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_ACTION_IN, wsaAction.getLocalPart()));
-         wsaAction = (QName)wsdlOperationInput.getExtensionAttribute(AddressingConstants.Metadata.Attributes.ACTION_QNAME);
-         if (wsaAction != null)
-            umdmOperation.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_ACTION_IN, wsaAction.getLocalPart()));
-         
          List<String> paramOrder = (List<String>)wsdlOperation.getParameterOrdering();
          if (paramOrder != null)
          {
@@ -867,12 +816,6 @@ public class WSDL11Reader
       log.trace("processOperationOutput: " + wsdlMessage.getQName());
 
       umdmOperation.setPattern(Constants.WSDL20_PATTERN_IN_OUT);
-      QName wsaAction = (QName)wsdlOperationOutput.getExtensionAttribute(Constants.WSDL_ATTRIBUTE_WSA_ACTION);
-      if (wsaAction != null)
-         umdmOperation.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_ACTION_OUT, wsaAction.getLocalPart()));
-      wsaAction = (QName)wsdlOperationOutput.getExtensionAttribute(AddressingConstants.Metadata.Attributes.ACTION_QNAME);
-      if (wsaAction != null)
-         umdmOperation.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_ACTION_OUT, wsaAction.getLocalPart()));
 
       List<String> paramOrder = (List<String>)wsdlOperation.getParameterOrdering();
       if (paramOrder != null)
@@ -958,12 +901,6 @@ public class WSDL11Reader
       QName messageName = wsdlMessage.getQName();
 
       WSDLInterfaceOperationOutfault opOutFault = new WSDLInterfaceOperationOutfault(umdmOperation);
-      QName wsaAction = (QName)wsdlFault.getExtensionAttribute(Constants.WSDL_ATTRIBUTE_WSA_ACTION);
-      if (wsaAction != null)
-         opOutFault.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_ACTION_FAULT, wsaAction.getLocalPart()));
-      wsaAction = (QName)wsdlFault.getExtensionAttribute(AddressingConstants.Metadata.Attributes.ACTION_QNAME);
-      if (wsaAction != null)
-         opOutFault.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_ACTION_FAULT, wsaAction.getLocalPart()));
 
       opOutFault.addProperty(new WSDLProperty(Constants.WSDL_PROPERTY_MESSAGE_NAME_FAULT, faultName));
       

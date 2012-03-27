@@ -64,7 +64,6 @@
         <include>org.jboss.ws:jbossws-common-tools:jar</include>
         <include>org.jboss.ws:jbossws-jboss*:jar</include>
         <include>org.jboss:jbossxb:jar</include>
-        <include>org.jboss.as:jboss-as-webservices-tests-integration:jar</include>
       </includes>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
       <scope>provided</scope>
@@ -75,7 +74,7 @@
        <outputDirectory>deploy-artifacts/lib</outputDirectory>
        <unpack>false</unpack>           
        <includes>
-         <include>org.jboss.ws:jbossws-jboss*:jar:*:tests-integration</include>
+         <include>org.jboss.ws:jbossws-jboss*:jar</include>
        </includes>
        <outputFileNameMapping>${artifact.artifactId}${dashClassifier}.${artifact.extension}</outputFileNameMapping>
        <scope>provided</scope>

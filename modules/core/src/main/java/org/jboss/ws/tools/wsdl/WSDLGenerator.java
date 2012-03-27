@@ -33,7 +33,6 @@ import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
-import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
@@ -46,9 +45,7 @@ import org.jboss.ws.metadata.wsdl.WSDLBindingOperation;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperationInput;
 import org.jboss.ws.metadata.wsdl.WSDLBindingOperationOutput;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
-import org.jboss.ws.metadata.wsdl.WSDLDocumentation;
 import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
-import org.jboss.ws.metadata.wsdl.WSDLExtensibilityElement;
 import org.jboss.ws.metadata.wsdl.WSDLImport;
 import org.jboss.ws.metadata.wsdl.WSDLInterface;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceFault;
@@ -61,7 +58,6 @@ import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem;
 import org.jboss.ws.metadata.wsdl.WSDLRPCSignatureItem.Direction;
 import org.jboss.ws.metadata.wsdl.WSDLSOAPHeader;
 import org.jboss.ws.metadata.wsdl.WSDLService;
-import org.w3c.dom.Element;
 
 /**
  * Generates a WSDL object model.
@@ -71,8 +67,6 @@ import org.w3c.dom.Element;
 public abstract class WSDLGenerator
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLGenerator.class);
-   public static final String WSU_NS = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd";
-   public static final String WSP_NS = "http://www.w3.org/ns/ws-policy";
    protected WSDLDefinitions wsdl;
    
    protected boolean extension;
@@ -111,27 +105,6 @@ public abstract class WSDLGenerator
       wsdl.addBinding(wsdlBinding);
       wsdlEndpoint.setBinding(bindingQName);
 
-      if (endpoint.getDocumentation() != null)
-      {
-         String prefix = wsdl.getPrefix(Constants.URI_JAXWS_WSDL_CUSTOMIZATIONS);
-         if (prefix == null)
-         {
-            prefix = "jaxws";
-            wsdl.registerNamespaceURI(Constants.URI_JAXWS_WSDL_CUSTOMIZATIONS, prefix);
-         }
-         
-         Element javadocElement = DOMUtils.createElement(Constants.WSDL_ELEMENT_JAXWS_JAVADOC.getLocalPart(), prefix);
-         javadocElement.setTextContent(endpoint.getDocumentation());
-         Element classElement = DOMUtils.createElement(Constants.WSDL_ELEMENT_JAXWS_CLASS.getLocalPart(), prefix);
-         classElement.setAttribute("name", interfaceQName.getLocalPart());
-         classElement.appendChild(javadocElement);
-         Element bindingsElement = DOMUtils.createElement(Constants.WSDL_ELEMENT_JAXWS_BINDINGS.getLocalPart(), prefix);
-         bindingsElement.appendChild(classElement);
-         WSDLExtensibilityElement ext = new WSDLExtensibilityElement(Constants.URI_JAXWS_WSDL_CUSTOMIZATIONS, bindingsElement);
-         wsdlInterface.addExtensibilityElement(ext);
-         wsdlInterface.setDocumentationElement(new WSDLDocumentation(endpoint.getDocumentation()));
-      }
-      
       for (OperationMetaData operation : endpoint.getOperations())
       {
          processOperation(wsdlInterface, wsdlBinding, operation);
@@ -172,28 +145,6 @@ public abstract class WSDLGenerator
          wsdlBinding.addFault(bindingFault);
       }
 
-      // process optional documentation
-      if (operation.getDocumentation() != null)
-      {
-         String prefix = wsdl.getPrefix(Constants.URI_JAXWS_WSDL_CUSTOMIZATIONS);
-         if (prefix == null)
-         {
-            prefix = "jaxws";
-            wsdl.registerNamespaceURI(Constants.URI_JAXWS_WSDL_CUSTOMIZATIONS, prefix);
-         }
-         
-         Element javadocElement = DOMUtils.createElement(Constants.WSDL_ELEMENT_JAXWS_JAVADOC.getLocalPart(), prefix);
-         javadocElement.setTextContent(operation.getDocumentation());
-         Element methodElement = DOMUtils.createElement(Constants.WSDL_ELEMENT_JAXWS_METHOD.getLocalPart(), prefix);
-         methodElement.setAttribute("name", operation.getQName().getLocalPart());
-         methodElement.appendChild(javadocElement);
-         Element bindingsElement = DOMUtils.createElement(Constants.WSDL_ELEMENT_JAXWS_BINDINGS.getLocalPart(), prefix);
-         bindingsElement.appendChild(methodElement);
-         WSDLExtensibilityElement ext = new WSDLExtensibilityElement(Constants.URI_JAXWS_WSDL_CUSTOMIZATIONS, bindingsElement);
-         interfaceOperation.addExtensibilityElement(ext);
-         interfaceOperation.setDocumentationElement(new WSDLDocumentation(operation.getDocumentation()));
-      }
-      
       wsdlInterface.addOperation(interfaceOperation);
       wsdlBinding.addOperation(bindingOperation);
    }

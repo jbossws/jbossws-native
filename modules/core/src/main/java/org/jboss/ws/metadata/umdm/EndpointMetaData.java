@@ -142,8 +142,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private List<Class> registeredTypes = new ArrayList<Class>();
    // The features defined for this endpoint
    private FeatureSet features = new FeatureSet();
-   // The documentation edfined through the @Documentation annotation
-   private String documentation;
 
    private ConfigObservable configObservable = new ConfigObservable();
 
@@ -381,16 +379,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void addFeature(WebServiceFeature feature)
    {
       this.features.addFeature(feature);
-   }
-
-   public String getDocumentation()
-   {
-      return documentation;
-   }
-
-   public void setDocumentation(String documentation)
-   {
-      this.documentation = documentation;
    }
 
    public List<OperationMetaData> getOperations()

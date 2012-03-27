@@ -57,7 +57,6 @@ import javax.xml.ws.WebFault;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.annotation.Documentation;
 import org.jboss.ws.api.binding.BindingCustomization;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
@@ -592,11 +591,6 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
          if (anBinding.style() != SOAPBinding.Style.DOCUMENT || epMetaData.getStyle() != Style.DOCUMENT)
             throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SOAPBINDING_MUST_BE_SPECIFIED"));
          opMetaData.setParameterStyle(anBinding.parameterStyle());
-      }
-
-      if (method.isAnnotationPresent(Documentation.class))
-      {
-         opMetaData.setDocumentation(method.getAnnotation(Documentation.class).content());
       }
 
       Class<?>[] parameterTypes = method.getParameterTypes();
