@@ -51,7 +51,6 @@
   <modules>
     <module>modules/endorsed</module>
     <module>modules/core</module>
-    <module>modules/client</module>
     <module>modules/resources</module>
     <module>modules/services</module>
   </modules>
