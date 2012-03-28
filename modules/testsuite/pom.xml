@@ -9,7 +9,7 @@
   <parent>
     <groupId>org.jboss.ws.native</groupId>
     <artifactId>jbossws-native</artifactId>
-    <version>4.1.0-SNAPSHOT</version>
+    <version>4.0.3.GA</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -399,139 +399,6 @@
     </profile>
 
     <!--
-    Name:  jboss711
-    Descr: JBoss-7.1.1 specific options
-    -->
-    <profile>
-      <id>jboss711</id>
-      <properties>
-        <jboss.version>${jboss711.version}</jboss.version>
-        <jbossws.integration.target>jboss711</jbossws.integration.target>
-        <endorsed.dirs>${project.build.directory}/endorsed</endorsed.dirs>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>org.jboss.as</groupId>
-          <artifactId>jboss-as-webservices-tests-integration</artifactId>
-          <version>${jboss.version}</version>
-          <exclusions>
-            <exclusion>
-              <groupId>org.jboss.as</groupId>
-              <artifactId>jboss-as-transactions</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.jboss.remoting3</groupId>
-              <artifactId>jboss-remoting</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.jboss</groupId>
-              <artifactId>jboss-remote-naming</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss</groupId>
-          <artifactId>jboss-remote-naming</artifactId>
-          <version>1.0.2.Final</version>
-        </dependency>
-        <dependency>
-          <groupId>javax.mail</groupId>
-          <artifactId>mail</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss</groupId>
-          <artifactId>jboss-ejb-client</artifactId>
-          <version>1.0.4.Final</version>
-          <exclusions>
-            <exclusion>
-              <groupId>org.jboss.remoting3</groupId>
-              <artifactId>jboss-remoting</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.jboss.xnio</groupId>
-              <artifactId>xnio-api</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency>
-        <dependency>
-          <groupId>org.picketbox</groupId>
-          <artifactId>jbosssx-client</artifactId>
-          <version>3.0.0.CR2</version>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss</groupId>
-          <artifactId>jboss-common-core</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss</groupId>
-          <artifactId>jbossxb</artifactId>
-        </dependency>
-        <!-- provides org.jboss.ejb3.annotation.SecurityDomain annotation -->
-        <dependency>
-          <groupId>org.jboss.ejb3</groupId>
-          <artifactId>jboss-ejb3-ext-api</artifactId>
-          <version>2.0.0-beta-1</version>
-        </dependency>
-        <!-- Apache XML security depends on Xalan impl classes :( -->
-        <dependency>
-          <groupId>apache-xalan</groupId>
-          <artifactId>serializer</artifactId>
-          <version>2.7.1.patch01-brew</version>
-        </dependency>
-        <dependency>
-          <groupId>apache-xalan</groupId>
-          <artifactId>xalan</artifactId>
-          <version>2.7.1.patch01-brew</version>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss.remotingjmx</groupId>
-          <artifactId>remoting-jmx</artifactId>
-          <version>1.0.2.Final</version>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss.remoting3</groupId>
-          <artifactId>jboss-remoting</artifactId>
-          <version>3.2.2.GA</version>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <compilerArgument>-Djava.endorsed.dirs=${endorsed.dirs}</compilerArgument>
-            </configuration>
-          </plugin>
-          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} ${surefire.default-mgmt-serurity.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
-              <excludes>
-                 <!-- # [JBWS-3150] This test causes hudson to freeze -->
-                 <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
-
-                 <!-- # [JBWS-3308] Extends AS7 RemoteDeployer for supporting deployment of different security domains -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
-
-                 <!-- # exploaded EAR deployment failure - should JBoss AS7 support it? -->
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase*</exclude>
-
-                 <!-- # TODO: rewrite tests using AS6 internals -->
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1179/JBWS1179TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws331/JBWS331TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws772/JBWS772TestCase*</exclude>
-              </excludes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    
-    <!--
     Name:  jboss712
     Descr: JBoss-7.1.2 specific options
     -->
@@ -644,11 +511,6 @@
               <excludes>
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
-
-                 <!-- # [JBWS-3308] Extends AS7 RemoteDeployer for supporting deployment of different security domains -->
-                 <exclude>org/jboss/test/ws/jaxws/jbws2116/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws3182/**</exclude>
-                 <exclude>org/jboss/test/ws/jaxws/jbws1988/UsernameAuthTestCase*</exclude>
 
                  <!-- # exploaded EAR deployment failure - should JBoss AS7 support it? -->
                  <exclude>org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase*</exclude>
