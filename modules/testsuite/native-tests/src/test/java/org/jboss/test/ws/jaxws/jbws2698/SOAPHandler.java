@@ -28,10 +28,10 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
+import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
 
-import org.jboss.ws.WSException;
 import org.jboss.ws.api.handler.GenericSOAPHandler;
 
 /**
@@ -65,7 +65,7 @@ public class SOAPHandler extends GenericSOAPHandler
       }
       catch (SOAPException se)
       {
-         throw new WSException(se);
+         throw new WebServiceException(se);
       }
       return true;
    }
@@ -85,7 +85,7 @@ public class SOAPHandler extends GenericSOAPHandler
       }
       catch (SOAPException se)
       {
-         throw new WSException(se);
+         throw new WebServiceException(se);
       }
 
       return true;
@@ -96,7 +96,7 @@ public class SOAPHandler extends GenericSOAPHandler
       String prefix = element.getPrefix();
       if (PREFIX.equals(prefix) == false)
       {
-         throw new WSException("Expected prefix '" + PREFIX + "' found prefix '" + prefix + "' for element '" + element.getElementName());
+         throw new WebServiceException("Expected prefix '" + PREFIX + "' found prefix '" + prefix + "' for element '" + element.getElementName());
       }
 
    }
