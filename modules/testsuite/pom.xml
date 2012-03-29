@@ -42,11 +42,6 @@
       <artifactId>xercesImpl</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.jboss.ws.native</groupId>
-      <artifactId>jbossws-native-client</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-common-tools</artifactId>
     </dependency>
