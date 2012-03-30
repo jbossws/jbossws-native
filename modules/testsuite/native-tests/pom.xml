@@ -43,24 +43,6 @@
             <artifactId>maven-antrun-plugin</artifactId>
             <executions>
               <execution>
-                <id>wstools</id>
-                <phase>test-compile</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <configuration>
-                  <tasks>
-                    <property name="maven.test.classpath" refid="maven.test.classpath" />
-                    <property name="tests.resources.dir" value="${test.resources.directory}" />
-                    <property name="tests.output.dir" value="${project.build.directory}" />
-                    <property name="jboss.bind.address" value="${jboss.bind.address}" />
-                    <property name="log4j.output.dir" value="${log4j.output.dir}"/>
-                    <property name="jboss.home" value="${jboss.home}"/>
-                    <ant antfile="scripts/antrun-wstools.xml" target="wstools" />
-                  </tasks>
-                </configuration>
-              </execution>
-              <execution>
                 <id>build-jars</id>
                 <phase>test-compile</phase>
                 <goals>
@@ -73,8 +55,6 @@
                     <property name="log4j.output.dir" value="${log4j.output.dir}"/>
                     <property name="jboss.home" value="${jboss.home}"/>
                     <ant antfile="scripts/build-jars-jaxrpc.xml" target="build-jars-jaxrpc" />
-                    <ant antfile="scripts/build-samples-jaxrpc.xml" target="build-samples-jaxrpc" />
-                    <ant antfile="scripts/build-jars-jaxws.xml" target="build-jars-jaxws" />
                   </tasks>
                 </configuration>
               </execution>
