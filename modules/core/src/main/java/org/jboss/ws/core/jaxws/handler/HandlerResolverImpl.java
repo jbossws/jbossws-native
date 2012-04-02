@@ -39,8 +39,6 @@ import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.handler.GenericHandler;
-import org.jboss.ws.api.handler.GenericSOAPHandler;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.injection.InjectionHelper;
 import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
@@ -156,21 +154,12 @@ public class HandlerResolverImpl implements HandlerResolver
    private void addHandler(ClassLoader classLoader, HandlerType type, HandlerMetaData handlerMetaData)
    {
       HandlerMetaDataJAXWS jaxwsMetaData = (HandlerMetaDataJAXWS)handlerMetaData;
-      String handlerName = jaxwsMetaData.getHandlerName();
       String className = jaxwsMetaData.getHandlerClassName();
-      Set<QName> soapHeaders = jaxwsMetaData.getSoapHeaders();
 
       try
       {
          // Load the handler class using the deployments top level CL
          Handler<?> handler = getInstance(classLoader, className);
-
-         if (handler instanceof GenericHandler)
-            ((GenericHandler)handler).setHandlerName(handlerName);
-
-         if (handler instanceof GenericSOAPHandler)
-            ((GenericSOAPHandler<?>)handler).setHeaders(soapHeaders);
-
          addHandler(jaxwsMetaData, handler, type);
       }
       catch (RuntimeException rte)

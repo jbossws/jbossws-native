@@ -26,7 +26,6 @@ import java.util.Collection;
 import javax.xml.bind.JAXBContext;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.binding.BindingCustomization;
 import org.jboss.ws.api.util.ServiceLoader;
 
 import com.sun.xml.bind.api.JAXBRIContext;
@@ -44,14 +43,11 @@ public abstract class JAXBContextFactory
    
    private static ThreadLocal<Integer> threadContextCount = new ThreadLocal<Integer>(); 
 
-   public abstract JAXBContext createContext(Class[] clazzes, BindingCustomization bindingCustomization) throws WSException;
-
    public abstract JAXBContext createContext(Class[] clazzes) throws WSException;
 
    public abstract JAXBContext createContext(Class clazz) throws WSException;
 
-   public abstract JAXBRIContext createContext(Class[] classes, Collection<TypeReference> typeReferences, String defaultNamespaceRemap, boolean c14nSupport,
-         BindingCustomization bindingCustomization);
+   public abstract JAXBRIContext createContext(Class[] classes, Collection<TypeReference> typeReferences, String defaultNamespaceRemap, boolean c14nSupport);
 
    protected void incrementContextCount()
    {

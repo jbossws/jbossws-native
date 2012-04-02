@@ -34,7 +34,6 @@ import javax.xml.ws.BindingType;
 import javax.xml.ws.RespectBindingFeature;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.annotation.EndpointConfig;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.ResourceLoaderAdapter;
@@ -258,7 +257,6 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
          processSOAPBinding(epMetaData, wsClass);
 
       // process config, this will as well setup the handler
-      processEndpointConfig(epMetaData, wsClass);
       epMetaData.initEndpointConfig();
 
       // Process @WebMethod
@@ -282,19 +280,5 @@ public class JAXWSClientMetaDataBuilder extends JAXWSMetaDataBuilder
 
       if (log.isDebugEnabled())
          log.debug("END: rebuildMetaData\n" + epMetaData.getServiceMetaData());
-   }
-
-   /**
-    * Process config contribution through service endpoint interfaces
-    * @param epMetaData
-    * @param wsClass -  the service endpoint interface
-    */
-   private void processEndpointConfig(EndpointMetaData epMetaData, Class<?> wsClass)
-   {
-      if (wsClass.isAnnotationPresent(EndpointConfig.class))
-      {
-         EndpointConfig anConfig = wsClass.getAnnotation(EndpointConfig.class);
-         epMetaData.setConfigName(anConfig.configName(), anConfig.configFile());
-      }
    }
 }

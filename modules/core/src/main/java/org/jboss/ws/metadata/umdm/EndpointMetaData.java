@@ -27,7 +27,6 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,7 +40,6 @@ import java.util.Set;
 
 import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.ws.Service.Mode;
@@ -49,8 +47,6 @@ import javax.xml.ws.WebServiceFeature;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.binding.BindingCustomization;
-import org.jboss.ws.api.binding.JAXBBindingCustomization;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.JavaUtils;
@@ -149,8 +145,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    private JAXBContextCache jaxbCache = new JAXBContextCache();
 
-   private List<BindingCustomization> bindingCustomization = new ArrayList<BindingCustomization>();
-   
    EndpointMetaData()
    {
    }
@@ -332,11 +326,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public Type getType()
    {
       return type;
-   }
-
-   public Collection<BindingCustomization> getBindingCustomizations()
-   {
-      return bindingCustomization;
    }
 
    public String getAuthMethod()
@@ -680,37 +669,10 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       if ("true".equalsIgnoreCase(System.getProperty(Constants.EAGER_INITIALIZE_JAXB_CONTEXT_CACHE)))
       {
          log.debug("Initializing JAXBContext cache...");
-         BindingCustomization bindingCustomization = null;
-         if (this instanceof ServerEndpointMetaData)
-         {
-            bindingCustomization = ((ServerEndpointMetaData)this).getEndpoint().getAttachment(BindingCustomization.class);
-         }
          try
          {
             Class[] classes = getRegisteredTypes().toArray(new Class[0]);
-            String defaultNS = portTypeName.getNamespaceURI();
-            for (Class<?> clz : classes)
-            {
-               if (clz.getName().endsWith("ObjectFactory"))
-               {
-                  for (Method method : clz.getMethods())
-                  {
-                     XmlElementDecl elementDecl = method.getAnnotation(XmlElementDecl.class);
-                     if (elementDecl != null && XmlElementDecl.GLOBAL.class.equals(elementDecl.scope())
-                           && elementDecl.namespace() != null && elementDecl.namespace().length() > 0)
-                     {
-                        defaultNS = null;
-                     }
-                  }
-               }
-            }
-            if (defaultNS != null)
-            {
-               if (bindingCustomization == null)
-                  bindingCustomization = new JAXBBindingCustomization();
-               bindingCustomization.put("com.sun.xml.bind.defaultNamespaceRemap", defaultNS);
-            }
-            JAXBContext context = JAXBContextFactory.newInstance().createContext(classes, bindingCustomization);
+            JAXBContext context = JAXBContextFactory.newInstance().createContext(classes);
             jaxbCache.add(classes, context);
          }
          catch (Exception e)

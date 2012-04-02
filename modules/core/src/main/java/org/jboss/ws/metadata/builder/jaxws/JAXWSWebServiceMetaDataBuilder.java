@@ -128,9 +128,6 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
          serviceMetaData.getTypesMetaData().setSchemaModel(schemaModel);
 
-         // Note, that @WebContext needs to be defined on the endpoint not the SEI
-         processWebContext(dep, sepClass, linkName, sepMetaData);
-
          // setup handler chain from config
          sepMetaData.initEndpointConfig();
 

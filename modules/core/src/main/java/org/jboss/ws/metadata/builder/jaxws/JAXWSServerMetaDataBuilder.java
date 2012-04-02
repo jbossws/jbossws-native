@@ -21,17 +21,10 @@
  */
 package org.jboss.ws.metadata.builder.jaxws;
 
-import static org.jboss.ws.common.integration.WSHelper.isJaxwsJseDeployment;
-
-import java.util.ResourceBundle;
-
 import javax.jws.WebService;
 import javax.xml.ws.RespectBindingFeature;
 import javax.xml.ws.WebServiceProvider;
 
-import org.jboss.ws.api.annotation.EndpointConfig;
-import org.jboss.ws.api.annotation.WebContext;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
@@ -56,7 +49,6 @@ import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
  */
 public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(JAXWSServerMetaDataBuilder.class);
    static void setupProviderOrWebService(ArchiveDeployment dep, UnifiedMetaData umd, Class<?> beanClass, String beanName) throws Exception
    {
       if (beanClass.isAnnotationPresent(WebService.class))
@@ -75,16 +67,6 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
    {
       String configName = null;
       String configFile = null;
-      
-      EndpointConfig anEndpointConfig = wsClass.getAnnotation(EndpointConfig.class);
-      if (anEndpointConfig != null)
-      {
-         if (anEndpointConfig.configName().length() > 0)
-            configName = anEndpointConfig.configName();
-
-         if (anEndpointConfig.configFile().length() > 0)
-            configFile = anEndpointConfig.configFile();
-      }
       
       JSEArchiveMetaData jseMetaData = dep.getAttachment(JSEArchiveMetaData.class);
       if (jseMetaData != null)
@@ -108,78 +90,6 @@ public abstract class JAXWSServerMetaDataBuilder extends JAXWSMetaDataBuilder
          sepMetaData.setConfigName(configName, configFile);
    }
 
-   protected void processWebContext(Deployment dep, Class<?> wsClass, String linkName, ServerEndpointMetaData sepMetaData)
-   {
-      WebContext anWebContext = wsClass.getAnnotation(WebContext.class);
-
-      if (anWebContext == null)
-         return;
-
-      boolean isJSEEndpoint = isJaxwsJseDeployment(dep);
-
-      // context-root
-      if (anWebContext.contextRoot().length() > 0)
-      {
-         if (isJSEEndpoint)
-         {
-            log.warn(BundleUtils.getMessage(bundle, "CONTEXTROOT_IS_ONLY_VALID_ON_EJB_ENDPOINTS"));
-         }
-         else
-         {
-            String contextRoot = anWebContext.contextRoot();
-            if (contextRoot.startsWith("/") == false)
-               contextRoot = "/" + contextRoot;
-
-            sepMetaData.setContextRoot(contextRoot);
-         }
-      }
-
-      // url-pattern
-      if (anWebContext.urlPattern().length() > 0)
-      {
-         if (isJSEEndpoint)
-         {
-            log.warn(BundleUtils.getMessage(bundle, "URLPATTERN_IS_ONLY_VALID_ON_EJB_ENDPOINTS"));
-         }
-         else
-         {
-            String urlPattern = anWebContext.urlPattern();
-            sepMetaData.setURLPattern(urlPattern);
-         }
-      }
-
-      // auth-method
-      if (anWebContext.authMethod().length() > 0)
-      {
-         if (isJSEEndpoint)
-         {
-            log.warn(BundleUtils.getMessage(bundle, "AUTHMETHOD_IS_ONLY_VALID_ON_EJB_ENDPOINTS"));
-         }
-         else
-         {
-            String authMethod = anWebContext.authMethod();
-            sepMetaData.setAuthMethod(authMethod);
-         }
-      }
-
-      // transport-guarantee
-      if (anWebContext.transportGuarantee().length() > 0)
-      {
-         if (isJSEEndpoint)
-         {
-            log.warn(BundleUtils.getMessage(bundle, "TRANSPORTGUARANTEE_IS_ONLY_VALID_ON_EJB_ENDPOINTS"));
-         }
-         else
-         {
-            String transportGuarantee = anWebContext.transportGuarantee();
-            sepMetaData.setTransportGuarantee(transportGuarantee);
-         }
-      }
-
-      // secure wsdl access
-      sepMetaData.setSecureWSDLAccess(anWebContext.secureWSDLAccess());
-   }
-   
    /**
     * With JAX-WS the use of webservices.xml is optional since the annotations can be used
     * to specify most of the information specified in this deployment descriptor file.

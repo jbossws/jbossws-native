@@ -57,7 +57,6 @@ import javax.xml.ws.WebFault;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.binding.BindingCustomization;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.JavaUtils;
@@ -74,7 +73,6 @@ import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.ws.metadata.umdm.TypeMappingMetaData;
 import org.jboss.ws.metadata.umdm.TypesMetaData;
 import org.jboss.ws.metadata.umdm.WrappedParameter;
@@ -87,7 +85,6 @@ import org.jboss.ws.metadata.wsdl.WSDLInterface;
 import org.jboss.ws.metadata.wsdl.WSDLInterfaceOperation;
 import org.jboss.ws.metadata.wsdl.WSDLMIMEPart;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
-import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainsMetaDataParser;
@@ -886,16 +883,7 @@ public class JAXWSMetaDataBuilder extends MetaDataBuilder
 
          JAXBContextFactory factory = JAXBContextFactory.newInstance();
 
-         // JAXBIntros may mofiy the WSDL being generated
-         // only true for server side invocation, tooling (WSProvide) doesnt support this
-         BindingCustomization bindingCustomization = null;
-         if (epMetaData instanceof ServerEndpointMetaData)
-         {
-            Endpoint endpoint = ((ServerEndpointMetaData)epMetaData).getEndpoint();
-            bindingCustomization = endpoint != null ? endpoint.getAttachment(BindingCustomization.class) : null;
-         }
-
-         jaxbCtx = factory.createContext(javaTypes.toArray(new Class[0]), typeRefs, targetNS, false, bindingCustomization);
+         jaxbCtx = factory.createContext(javaTypes.toArray(new Class[0]), typeRefs, targetNS, false);
       }
       catch (WSException ex)
       {

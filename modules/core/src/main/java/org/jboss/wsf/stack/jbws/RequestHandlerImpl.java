@@ -65,7 +65,6 @@ import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
-import org.jboss.ws.core.jaxws.spi.http.AbstractNettyMessage;
 import org.jboss.ws.core.server.MimeHeaderSource;
 import org.jboss.ws.core.server.ServiceEndpointInvoker;
 import org.jboss.ws.core.server.ServletHeaderSource;
@@ -268,7 +267,6 @@ public class RequestHandlerImpl implements RequestHandler
       // Set servlet specific properties
       HttpServletResponse httpResponse = null;
       ServletHeaderSource headerSource = null;
-      AbstractNettyMessage nettyMessage = this.getNettyHeadersSource(invContext);
       if (invContext instanceof ServletRequestContext)
       {
          ServletRequestContext reqContext = (ServletRequestContext)invContext;
@@ -302,7 +300,7 @@ public class RequestHandlerImpl implements RequestHandler
       try
       {
          msgContext.setEndpointMetaData(sepMetaData);
-         MessageAbstraction resMessage = processRequest(endpoint, nettyMessage == null ? headerSource : nettyMessage, invContext, inStream);
+         MessageAbstraction resMessage = processRequest(endpoint, headerSource, invContext, inStream);
          CommonMessageContext reqMsgContext = msgContext;
          // Replace the message context with the response context
          msgContext = MessageContextAssociation.peekMessageContext();
@@ -322,10 +320,6 @@ public class RequestHandlerImpl implements RequestHandler
             if (httpResponse != null)
             {
                httpResponse.setStatus(code.intValue());
-            }
-            else if (nettyMessage != null)
-            {
-               nettyMessage.setStatus(code.intValue());
             }
          }
 
@@ -349,10 +343,6 @@ public class RequestHandlerImpl implements RequestHandler
                {
                   httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                }
-               else if (nettyMessage != null)
-               {
-                  nettyMessage.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-               }
             }
          }
 
@@ -375,11 +365,6 @@ public class RequestHandlerImpl implements RequestHandler
          // clear thread local storage
          ThreadLocalAssociation.clear();
       }
-   }
-
-   private AbstractNettyMessage getNettyHeadersSource(final InvocationContext invContext)
-   {
-      return (AbstractNettyMessage)invContext.getProperty(Constants.NETTY_MESSAGE);
    }
 
    private void sendResponse(Endpoint endpoint, OutputStream output, boolean isFault) throws SOAPException, IOException
