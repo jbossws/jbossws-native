@@ -23,11 +23,11 @@ package org.jboss.ws.tools.helpers;
 
 import java.util.Map;
 import java.util.ResourceBundle;
-import org.jboss.ws.api.util.BundleUtils;
 
 import javax.xml.namespace.QName;
 
 import org.apache.xerces.xs.XSModel;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;

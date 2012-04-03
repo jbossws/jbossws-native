@@ -21,15 +21,15 @@
  */
 package org.jboss.ws.tools.wsdl;
 
-import com.ibm.wsdl.DefinitionImpl;
-import com.ibm.wsdl.extensions.PopulatedExtensionRegistry;
-import com.ibm.wsdl.xml.WSDLWriterImpl;
-
 import javax.wsdl.Definition;
 import javax.wsdl.extensions.ExtensionRegistry;
 import javax.wsdl.factory.WSDLFactory;
 import javax.wsdl.xml.WSDLReader;
 import javax.wsdl.xml.WSDLWriter;
+
+import com.ibm.wsdl.DefinitionImpl;
+import com.ibm.wsdl.extensions.PopulatedExtensionRegistry;
+import com.ibm.wsdl.xml.WSDLWriterImpl;
 
 /**
  * A fork of the original wsdl4j 1.6.2 package

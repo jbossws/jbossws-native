@@ -21,12 +21,12 @@
  */
 package org.jboss.ws.core.server;
 
-import org.jboss.wsf.spi.invocation.InvocationContext;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.jboss.wsf.spi.invocation.InvocationContext;
 
 /**
  * Implementation of ServletEndpointContext

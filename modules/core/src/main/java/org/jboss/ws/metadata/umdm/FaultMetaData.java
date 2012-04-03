@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.metadata.umdm;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -31,7 +29,6 @@ import java.util.ResourceBundle;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceException;
 
@@ -39,11 +36,9 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.JavaUtils;
-import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.metadata.accessor.AccessorFactory;
 import org.jboss.ws.metadata.accessor.ReflectiveFieldAccessorFactoryCreator;
 import org.jboss.ws.metadata.accessor.ReflectiveMethodAccessorFactoryCreator;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 
 /**
  * A Fault component describes a fault that a given operation supports.
@@ -208,16 +203,6 @@ public class FaultMetaData implements InitalizableMetaData
 
    public void eagerInitialize()
    {
-      Type epType = getOperationMetaData().getEndpointMetaData().getType();
-      if (epType == EndpointMetaData.Type.JAXWS && faultBeanName != null)
-      {
-         if (loadFaultBean() == null)
-         {
-            ClassLoader loader = opMetaData.getEndpointMetaData().getClassLoader();
-            new DynamicWrapperGenerator(loader).generate(this);
-         }
-      }
-
       // Initialize the cache
       javaType = getJavaType();
       if (javaType == null)
@@ -225,99 +210,7 @@ public class FaultMetaData implements InitalizableMetaData
 
       if (JavaUtils.isAssignableFrom(Exception.class, javaType) == false)
          throw new WSException(BundleUtils.getMessage(bundle, "FAULT_JAVA_TYPE_NOT_EXCEPTION",  javaTypeName));
-
-      if (epType == EndpointMetaData.Type.JAXWS)
-      {
-         faultBean = getFaultBean();
-         if (faultBean != null)
-            initializeFaultBean();
-      }
    }
-
-   private void initializeFaultBean()
-   {
-      /* JAX-WS 3.7: For exceptions that match the pattern described in section
-       * 2.5 (i.e. exceptions that have a getFaultInfo method), the FaultBean
-       * is used as input to JAXB */
-      try
-      {
-         /* JAX-WS 2.5: A wsdl:fault element refers to a wsdl:message that contains
-          * a single part. The global element declaration referred to by that part
-          * is mapped to a Java bean. A wrapper exception class contains the
-          * following methods:
-          * . WrapperException(String message, FaultBean faultInfo)
-          * . WrapperException(String message, FaultBean faultInfo, Throwable cause)
-          * . FaultBean getFaultInfo() */
-         serviceExceptionConstructor = javaType.getConstructor(String.class, faultBean);
-         faultInfoMethod = javaType.getMethod("getFaultInfo");
-      }
-      /* JAX-WS 3.7: For exceptions that do not match the pattern described in
-       * section 2.5, JAX-WS maps those exceptions to Java beans and then uses
-       * those Java beans as input to the JAXB mapping. */
-      catch (NoSuchMethodException nsme)
-      {
-         /* For each getter in the exception and its superclasses, a property of
-          * the same type and name is added to the bean. */
-         XmlType xmlType = (XmlType)faultBean.getAnnotation(XmlType.class);
-         if (xmlType == null)
-            throw new WebServiceException(BundleUtils.getMessage(bundle, "XMLTYPE_MISSING",  faultBeanName));
-
-         AccessorFactory accessorFactory = getAccessorFactory(faultBean);
-
-         String[] propertyNames = xmlType.propOrder();
-         int propertyCount = propertyNames.length;
-         propertyTypes = new Class[propertyCount];
-         faultBeanProperties = new WrappedParameter[propertyCount];
-         serviceExceptionGetters = new Method[propertyCount];
-
-         for (int i = 0; i < propertyCount; i++)
-         {
-            String propertyName = propertyNames[i];
-            // extract property metadata from the fault bean
-            try
-            {
-               PropertyDescriptor propertyDescriptor = new PropertyDescriptor(propertyName, faultBean);
-               Class propertyType = propertyDescriptor.getPropertyType();
-
-               WrappedParameter faultBeanProperty = new WrappedParameter(null, propertyType.getName(), propertyName, i);
-               faultBeanProperty.setAccessor(accessorFactory.create(faultBeanProperty));
-               faultBeanProperties[i] = faultBeanProperty;
-
-               propertyTypes[i] = propertyType;
-            }
-            catch (IntrospectionException ie)
-            {
-               throw new WSException(BundleUtils.getMessage(bundle, "PROPERTY_NOT_FOUND_IN_BEAN", new Object[]{ propertyName, faultBeanName }),  ie);
-            }
-
-            // extract property metadata from the service exception
-            try
-            {
-               /* use PropertyDescriptor(String, Class, String, String) instead
-                * of PropertyDescriptor(String, Class) because the latter requires
-                * the setter method to be present */
-               PropertyDescriptor propertyDescriptor = new PropertyDescriptor(propertyName, javaType, "is" + JavaUtils.capitalize(propertyName), null);
-               serviceExceptionGetters[i] = propertyDescriptor.getReadMethod();
-            }
-            catch (IntrospectionException ie)
-            {
-               throw new WSException(BundleUtils.getMessage(bundle, "PROPERTY_NOT_FOUND_IN_EXCEPTION", new Object[]{ propertyName ,  javaTypeName}),  ie);
-            }
-         }
-
-         try
-         {
-            // Attempt to locate a usable constructor
-            serviceExceptionConstructor = javaType.asSubclass(Exception.class).getConstructor(propertyTypes);
-         }
-         catch (NoSuchMethodException e)
-         {
-            // Only needed for client side. The spec does not clarify this, and the TCK makes use of non matching constructors,
-            // so we allow them for server side usage and only fail when used by the client.
-         }
-      }
-   }
-
    private AccessorFactory getAccessorFactory(Class faultBean)
    {
       // This should catch all cases due to the constraints that JAX-WS puts on the fault bean

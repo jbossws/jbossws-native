@@ -22,25 +22,23 @@
 package org.jboss.ws.core.client;
 
 import org.jboss.ws.core.jaxrpc.client.serviceref.NativeServiceRefBinderJAXRPC;
-import org.jboss.ws.core.jaxws.client.serviceref.NativeServiceRefBinderJAXWS;
 import org.jboss.wsf.spi.serviceref.ServiceRefBinder;
 import org.jboss.wsf.spi.serviceref.ServiceRefBinderFactory;
 import org.jboss.wsf.spi.serviceref.ServiceRefHandler.Type;
 
 /**
- * Binds a JAXWS Service object in the client's ENC
- *
- * @author Thomas.Diesler@jboss.org
  * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
 public final class NativeServiceRefBinderFactoryImpl implements ServiceRefBinderFactory
 {
    private static final ServiceRefBinder JAXRPC_BINDER = new NativeServiceRefBinderJAXRPC();
 
-   private static final ServiceRefBinder JAXWS_BINDER = new NativeServiceRefBinderJAXWS();
-
    public ServiceRefBinder newServiceRefBinder(final Type type)
    {
-      return type == Type.JAXRPC ? JAXRPC_BINDER : JAXWS_BINDER;
+	  if (type == Type.JAXRPC)
+	  {
+		 return JAXRPC_BINDER;
+	  }
+	  throw new UnsupportedOperationException();
    }
 }

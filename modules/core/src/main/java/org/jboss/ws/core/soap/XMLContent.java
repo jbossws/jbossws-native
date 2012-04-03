@@ -23,7 +23,6 @@ package org.jboss.ws.core.soap;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
@@ -42,7 +41,6 @@ import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.TypeMappingImpl;
-import org.jboss.ws.core.jaxws.SerializationContextJAXWS;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.Comment;
@@ -162,8 +160,6 @@ class XMLContent extends SOAPContent
       OperationMetaData opMetaData = pmd.getOperationMetaData();
       serContext.setProperty(ParameterMetaData.class.getName(), pmd);
       serContext.setJavaType(javaType);
-      List<Class> registeredTypes = opMetaData.getEndpointMetaData().getRegisteredTypes();
-      serContext.setProperty(SerializationContextJAXWS.JAXB_CONTEXT_TYPES, registeredTypes.toArray(new Class[0]));
 
       try
       {

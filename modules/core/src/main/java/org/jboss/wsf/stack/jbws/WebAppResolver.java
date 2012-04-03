@@ -21,11 +21,12 @@
  */
 package org.jboss.wsf.stack.jbws;
 
-import org.jboss.wsf.spi.management.EndpointResolver;
-import org.jboss.wsf.spi.deployment.Endpoint;
+import java.util.Iterator;
 
 import javax.management.ObjectName;
-import java.util.Iterator;
+
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.management.EndpointResolver;
 
 /**
  * Resolves Endpoints by Servlet name and web context path.

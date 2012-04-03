@@ -68,17 +68,13 @@ public class ServerEndpointMetaData extends EndpointMetaData
    // The optional secure wsdl access 
    private boolean secureWSDLAccess;
 
-   public ServerEndpointMetaData(ServiceMetaData service, Endpoint endpoint, QName portName, QName portTypeName, Type type)
+   public ServerEndpointMetaData(ServiceMetaData service, Endpoint endpoint, QName portName, QName portTypeName)
    {
-      super(service, portName, portTypeName, type);
+      super(service, portName, portTypeName);
       this.endpoint = endpoint;
 
       String configName = ConfigurationProvider.DEFAULT_ENDPOINT_CONFIG_NAME;
-      String configFile;
-      if (type == Type.JAXRPC)
-         configFile = ConfigurationProvider.DEFAULT_JAXRPC_ENDPOINT_CONFIG_FILE;
-      else
-         configFile = ConfigurationProvider.DEFAULT_JAXWS_ENDPOINT_CONFIG_FILE;
+      String configFile = ConfigurationProvider.DEFAULT_JAXRPC_ENDPOINT_CONFIG_FILE;
 
       EndpointConfigMetaData ecmd = getEndpointConfigMetaData();
       ecmd.setConfigName(configName);
@@ -199,7 +195,6 @@ public class ServerEndpointMetaData extends EndpointMetaData
    public String toString()
    {
       StringBuilder buffer = new StringBuilder("\nServerEndpointMetaData:");
-      buffer.append("\n type=").append(getType());
       buffer.append("\n qname=").append(getPortName());
       buffer.append("\n id=").append(getServiceEndpointID().getCanonicalName());
       buffer.append("\n address=").append(getEndpointAddress());

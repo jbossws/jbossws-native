@@ -36,7 +36,6 @@ import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPException;
 import javax.xml.ws.ProtocolException;
-import javax.xml.ws.WebServiceException;
 import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
@@ -56,7 +55,6 @@ import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
@@ -211,7 +209,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
 
          QName anonQName = new QName(Constants.NS_JBOSSWS_URI, "Anonymous");
          QName anonPort = new QName(Constants.NS_JBOSSWS_URI, "AnonymousPort");
-         epMetaData = new ClientEndpointMetaData(serviceMetaData, anonPort, anonQName, Type.JAXRPC);
+         epMetaData = new ClientEndpointMetaData(serviceMetaData, anonPort, anonQName);
          epMetaData.setStyle(Style.RPC);
 
          serviceMetaData.addEndpoint(epMetaData);
@@ -282,20 +280,6 @@ public abstract class CommonClient implements StubExt, HeaderSource
          // Create the invocation and sync the input parameters
          EndpointInvocation epInv = createEndpointInvocation(opMetaData);
          epInv.initInputParams(inputParams);
-         
-         if (opMetaData.getEndpointMetaData().getType() != Type.JAXRPC && opMetaData.isRPCLiteral()
-                 && epInv.getRequestParamNames() != null)
-           {
-              for (QName qname : epInv.getRequestParamNames())
-              {
-                 ParameterMetaData paramMetaData = opMetaData.getParameter(qname);
-                 if ((paramMetaData.getMode().equals(ParameterMode.IN) || paramMetaData.getMode().equals(ParameterMode.INOUT)) 
-              		   && epInv.getRequestParamValue(qname) == null)
-                 {
-                    throw new WebServiceException(BundleUtils.getMessage(bundle, "RPC_LITERAL_OPERATION_PARAMS_IS_NULL"));
-                 }
-              }
-           }
 
          // Set the required outbound properties
          setOutboundContextProperties();
@@ -549,8 +533,6 @@ public abstract class CommonClient implements StubExt, HeaderSource
          retValue = epInv.getReturnValue();
          if (opMetaData.isDocumentWrapped() && retMetaData.isMessageType() == false)
             retValue = ParameterWrapping.unwrapResponseParameters(retMetaData, retValue, inParams);
-         if (opMetaData.getEndpointMetaData().getType() != Type.JAXRPC && opMetaData.isRPCLiteral() && retValue == null)
-            throw new WebServiceException(BundleUtils.getMessage(bundle, "RPC_LITERAL_OPERATION_RETURN_IS_NULL", opMetaData.getQName()));
       }
 
       // Set the holder values for INOUT parameters
@@ -563,15 +545,6 @@ public abstract class CommonClient implements StubExt, HeaderSource
          {
             QName xmlName = paramMetaData.getXmlName();
             Object value = epInv.getResponseParamValue(xmlName);
-            //JBWS-2969:Check if reponse parameter or return value is null
-            if (opMetaData.getEndpointMetaData().getType() != Type.JAXRPC && opMetaData.isRPCLiteral()) 
-            {
-            	if (value == null) 
-            	{
-                    throw new WebServiceException(BundleUtils.getMessage(bundle, "RPC_LITERAL_OPERATION_RETURN_IS_NULL", 
-                          opMetaData.getQName()));
-            	}
-            }
             // document/literal wrapped return value header
             if (index == -1)
             {

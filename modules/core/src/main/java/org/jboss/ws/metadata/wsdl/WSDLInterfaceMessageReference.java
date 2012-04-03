@@ -22,15 +22,15 @@
 package org.jboss.ws.metadata.wsdl;
 
 import java.util.Collection;
-import java.util.ResourceBundle;
-import org.jboss.ws.api.util.BundleUtils;
 import java.util.LinkedHashMap;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
 
 /**
  * A Message Reference component associates a defined type with a message

@@ -51,12 +51,9 @@ import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.wsf.test.JBossWSTest;
 
 /**
- * TODO
- *
  * @author <a href="mailto:jason@stacksmash.com">Jason T. Greene</a>
  */
 public class GenericAttachmentTestCase extends JBossWSTest
@@ -149,7 +146,7 @@ public class GenericAttachmentTestCase extends JBossWSTest
          MessageContextAssociation.pushMessageContext(messageContext);
          messageContext.setOperationMetaData(opMetaData);
    
-         CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP11HTTP_BINDING, Type.JAXRPC);
+         CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP11HTTP_BINDING);
          CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
    
          EndpointInvocation epInv = new EndpointInvocation(opMetaData);

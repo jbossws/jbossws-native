@@ -38,12 +38,10 @@ import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
-import org.jboss.ws.core.jaxws.DynamicWrapperGenerator;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.metadata.accessor.AccessorFactoryCreator;
 import org.jboss.ws.metadata.accessor.ReflectiveMethodAccessorFactoryCreator;
 import org.jboss.ws.metadata.config.EndpointFeature;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 
 /**
  * A request/response parameter that a given operation supports.
@@ -441,15 +439,11 @@ public class ParameterMetaData implements InitalizableMetaData
       javaType = null;
 
       // TODO - Remove messageType hack
-      Type epType = getOperationMetaData().getEndpointMetaData().getType();
       if (getOperationMetaData().isDocumentWrapped() && !isInHeader() && !isSwA() && !isMessageType())
       {
          if (loadWrapperBean() == null)
          {
-            if (epType == EndpointMetaData.Type.JAXRPC)
-               throw new WSException(BundleUtils.getMessage(bundle, "WRAPPER_BEANS_AUTOGEN_NOT_SUPPORTED"));
-
-            new DynamicWrapperGenerator(getClassLoader()).generate(this);
+            throw new WSException(BundleUtils.getMessage(bundle, "WRAPPER_BEANS_AUTOGEN_NOT_SUPPORTED"));
          }
       }
 

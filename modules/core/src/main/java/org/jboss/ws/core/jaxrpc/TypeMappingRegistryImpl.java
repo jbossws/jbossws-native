@@ -22,15 +22,15 @@
 package org.jboss.ws.core.jaxrpc;
 
 import java.util.HashMap;
-import java.util.ResourceBundle;
-import org.jboss.ws.api.util.BundleUtils;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.encoding.TypeMapping;
 import javax.xml.rpc.encoding.TypeMappingRegistry;
 
 import org.jboss.util.NotImplementedException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 

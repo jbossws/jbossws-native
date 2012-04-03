@@ -22,10 +22,9 @@
 package org.jboss.ws.core.soap;
 
 import java.util.ArrayList;
-import java.util.ResourceBundle;
-import org.jboss.ws.api.util.BundleUtils;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Detail;
@@ -36,6 +35,7 @@ import javax.xml.soap.SOAPException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;

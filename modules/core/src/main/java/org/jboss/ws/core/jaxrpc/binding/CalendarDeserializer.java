@@ -23,12 +23,12 @@ package org.jboss.ws.core.jaxrpc.binding;
 
 import java.util.Calendar;
 import java.util.ResourceBundle;
-import org.jboss.ws.api.util.BundleUtils;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.DeserializerSupport;
