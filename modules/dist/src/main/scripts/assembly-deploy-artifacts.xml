@@ -36,17 +36,11 @@
         <include>org.jboss.ws.native:jbossws-native-services:jar</include>
         <include>org.jboss.ws.native:jbossws-native-core</include>
         <include>javax.jws:jsr181-api:jar</include>
-        <include>com.sun.xml.bind:jaxb-impl:jar</include>
-        <include>com.sun.xml.bind:jaxb-xjc:jar</include>
-        <include>com.sun.xml.ws:jaxws-tools:jar</include>
-        <include>com.sun.xml.ws:jaxws-rt:jar</include>
         <include>org.jboss.ws:jbossws-api:jar</include>
         <include>org.jboss.ws:jbossws-common:jar</include>
         <include>org.jboss.ws:jbossws-spi:jar</include>
-        <include>com.sun.xml.ws:policy:jar</include>
         <include>javax.xml.stream:stax-api:jar</include>
         <include>org.jvnet.staxex:stax-ex:jar</include>
-        <include>com.sun.xml.stream.buffer:streambuffer:jar</include>
         <include>wsdl4j:wsdl4j:jar</include>
         <include>org.jboss.netty:netty:jar</include>
         <include>commons-beanutils:commons-beanutils:jar</include>
@@ -109,18 +103,6 @@
       </includes>
       <useProjectArtifact>false</useProjectArtifact>
     </dependencySet>
-
-
-    <dependencySet>
-      <outputDirectory>deploy-artifacts/lib</outputDirectory>
-      <unpack>false</unpack>
-      <outputFileNameMapping>jaxb-api.jar</outputFileNameMapping>
-      <includes>
-        <include>org.jboss.spec.javax.xml.bind:jboss-jaxb-api_2.2_spec:jar</include>
-      </includes>
-      <useProjectArtifact>false</useProjectArtifact>
-    </dependencySet>
-
 
     <dependencySet>
       <outputDirectory>deploy-artifacts/lib</outputDirectory>

@@ -27,8 +27,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceException;
 
@@ -36,9 +34,6 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.JavaUtils;
-import org.jboss.ws.metadata.accessor.AccessorFactory;
-import org.jboss.ws.metadata.accessor.ReflectiveFieldAccessorFactoryCreator;
-import org.jboss.ws.metadata.accessor.ReflectiveMethodAccessorFactoryCreator;
 
 /**
  * A Fault component describes a fault that a given operation supports.
@@ -210,16 +205,6 @@ public class FaultMetaData implements InitalizableMetaData
 
       if (JavaUtils.isAssignableFrom(Exception.class, javaType) == false)
          throw new WSException(BundleUtils.getMessage(bundle, "FAULT_JAVA_TYPE_NOT_EXCEPTION",  javaTypeName));
-   }
-   private AccessorFactory getAccessorFactory(Class faultBean)
-   {
-      // This should catch all cases due to the constraints that JAX-WS puts on the fault bean
-      // However, if issues arrise then switch this to a full jaxb reflection library
-      XmlAccessorType type = (XmlAccessorType)faultBean.getAnnotation(XmlAccessorType.class);
-      if (type != null && type.value() == XmlAccessType.FIELD)
-         return new ReflectiveFieldAccessorFactoryCreator().create(this);
-
-      return new ReflectiveMethodAccessorFactoryCreator().create(this);
    }
 
    public Object toFaultBean(Exception serviceException)

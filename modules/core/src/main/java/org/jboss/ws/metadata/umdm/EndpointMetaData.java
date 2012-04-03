@@ -27,7 +27,6 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -58,7 +57,6 @@ import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.metadata.accessor.AccessorFactory;
 import org.jboss.ws.metadata.accessor.AccessorFactoryCreator;
-import org.jboss.ws.metadata.accessor.JAXBAccessorFactoryCreator;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
@@ -118,8 +116,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private List<OperationMetaData> operations = new ArrayList<OperationMetaData>();
    // Maps the java method to the operation meta data
    private Map<Method, OperationMetaData> opMetaDataCache = new HashMap<Method, OperationMetaData>();
-   // All of the registered types
-   private List<Class> registeredTypes = new ArrayList<Class>();
    // The features defined for this endpoint
    private FeatureSet features = new FeatureSet();
 
@@ -527,7 +523,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    {
       TypeMappingImpl typeMapping = serviceMetaData.getTypeMapping();
       List<TypeMappingMetaData> typeMappings = serviceMetaData.getTypesMetaData().getTypeMappings();
-      registeredTypes = new ArrayList<Class>(typeMappings.size());
       for (TypeMappingMetaData tmMetaData : typeMappings)
       {
          String javaTypeName = tmMetaData.getJavaTypeName();
@@ -536,44 +531,26 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          {
             List<Class> types = typeMapping.getJavaTypes(xmlType);
 
-            // TODO: Clarification. In which cases is the type already registered?
-            boolean registered = false;
-            for (Class current : types)
+            try
             {
-               if (current.getName().equals(javaTypeName))
+               ClassLoader classLoader = getClassLoader();
+               Class javaType = JavaUtils.loadJavaType(javaTypeName, classLoader);
+
+               if (JavaUtils.isPrimitive(javaTypeName))
+                  javaType = JavaUtils.getWrapperType(javaType);
+
+               if (getEncodingStyle() == Use.ENCODED && javaType.isArray())
                {
-                  registeredTypes.add(current);
-                  registered = true;
-                  break;
+                  typeMapping.register(javaType, xmlType, new SOAPArraySerializerFactory(), new SOAPArrayDeserializerFactory());
+               }
+               else
+               {
+                  typeMapping.register(javaType, xmlType, new JBossXBSerializerFactory(), new JBossXBDeserializerFactory());
                }
             }
-
-            if (registered == false)
+            catch (ClassNotFoundException e)
             {
-               try
-               {
-                  ClassLoader classLoader = getClassLoader();
-                  Class javaType = JavaUtils.loadJavaType(javaTypeName, classLoader);
-
-                  if (JavaUtils.isPrimitive(javaTypeName))
-                     javaType = JavaUtils.getWrapperType(javaType);
-
-                  // Needed for runtime JAXB context
-                  registeredTypes.add(javaType);
-
-                  if (getEncodingStyle() == Use.ENCODED && javaType.isArray())
-                  {
-                     typeMapping.register(javaType, xmlType, new SOAPArraySerializerFactory(), new SOAPArrayDeserializerFactory());
-                  }
-                  else
-                  {
-                     typeMapping.register(javaType, xmlType, new JBossXBSerializerFactory(), new JBossXBDeserializerFactory());
-                  }
-               }
-               catch (ClassNotFoundException e)
-               {
-                  log.warn(BundleUtils.getMessage(bundle, "CANNOT_LOAD_CLASS", new Object[]{ xmlType,  javaTypeName}));
-               }
+               log.warn(BundleUtils.getMessage(bundle, "CANNOT_LOAD_CLASS", new Object[]{ xmlType,  javaTypeName}));
             }
          }
       }
@@ -582,26 +559,17 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private void eagerInitializeAccessors()
    {
       // Collect the list of all used types
-      boolean useJAXBAccessorFactory = false;
       List<Class> types = new ArrayList<Class>();
       for (OperationMetaData opMetaData : operations)
       {
          for (ParameterMetaData paramMetaData : opMetaData.getParameters())
          {
-            AccessorFactoryCreator factoryCreator = paramMetaData.getAccessorFactoryCreator();
-            if (factoryCreator instanceof JAXBAccessorFactoryCreator)
-               useJAXBAccessorFactory = true;
-
             types.add(paramMetaData.getJavaType());
          }
 
          ParameterMetaData retParam = opMetaData.getReturnParameter();
          if (retParam != null)
          {
-            AccessorFactoryCreator factoryCreator = retParam.getAccessorFactoryCreator();
-            if (factoryCreator instanceof JAXBAccessorFactoryCreator)
-               useJAXBAccessorFactory = true;
-
             types.add(retParam.getJavaType());
          }
       }
@@ -760,11 +728,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       toInitialise.setConfig(config);
 
       toInitialise.configHandlerMetaData();
-   }
-
-   public List<Class> getRegisteredTypes()
-   {
-      return Collections.unmodifiableList(registeredTypes);
    }
 
    class ConfigObservable extends Observable

@@ -131,7 +131,6 @@ public class SOAPFaultHelperJAXRPC
                if (desFactory == null)
                   throw new JAXRPCException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_DESERIALIZER_FACTORY",  xmlType));
 
-               // Try jaxb deserialization
                try
                {
                   // http://jira.jboss.org/jira/browse/JBWS-955
