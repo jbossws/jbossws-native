@@ -23,7 +23,6 @@ package org.jboss.ws.core;
 
 import java.util.Observable;
 
-import javax.xml.ws.EndpointReference;
 import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
@@ -84,11 +83,6 @@ public class CommonBindingProvider implements Configurable
    public CommonBinding getCommonBinding()
    {
       return binding;
-   }
-
-   public EndpointReference getEndpointReference()
-   {
-      throw new UnsupportedOperationException();
    }
 
    public void update(Observable observable, Object object)

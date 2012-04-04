@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
-import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -228,7 +227,7 @@ public class FaultMetaData implements InitalizableMetaData
             }
             catch (InstantiationException e)
             {
-               throw new WebServiceException(BundleUtils.getMessage(bundle, "FAULT_BEAN_CLASS_IS_NOT_INSTANTIABLE"),  e);
+               throw new WSException(BundleUtils.getMessage(bundle, "FAULT_BEAN_CLASS_IS_NOT_INSTANTIABLE"),  e);
             }
 
             // copy the properties from the service exception to the fault bean
@@ -247,11 +246,11 @@ public class FaultMetaData implements InitalizableMetaData
       }
       catch (IllegalAccessException e)
       {
-         throw new WebServiceException(e);
+         throw new WSException(e);
       }
       catch (InvocationTargetException e)
       {
-         throw new WebServiceException(e.getTargetException());
+         throw new WSException(e.getTargetException());
       }
       return faultBeanInstance;
    }
@@ -288,15 +287,15 @@ public class FaultMetaData implements InitalizableMetaData
       }
       catch (InstantiationException e)
       {
-         throw new WebServiceException(BundleUtils.getMessage(bundle, "EXCEPTION_IS_NOT_INSTANTIABLE"),  e);
+         throw new WSException(BundleUtils.getMessage(bundle, "EXCEPTION_IS_NOT_INSTANTIABLE"),  e);
       }
       catch (IllegalAccessException e)
       {
-         throw new WebServiceException(e);
+         throw new WSException(e);
       }
       catch (InvocationTargetException e)
       {
-         throw new WebServiceException(e.getTargetException());
+         throw new WSException(e.getTargetException());
       }
       return serviceException;
    }

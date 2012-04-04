@@ -38,8 +38,6 @@ import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.Service.Mode;
-import javax.xml.ws.WebServiceFeature;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
@@ -48,7 +46,6 @@ import org.jboss.ws.common.IOUtils;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedDecoder;
-import org.jboss.ws.metadata.umdm.FeatureSet;
 
 /**
  * MessageFactory implementation
@@ -63,12 +60,8 @@ public class MessageFactoryImpl extends MessageFactory
    // The envelope namespace used by the MessageFactory
    private String envNamespace;
 
-   // The JAXWS ServiceMode
-   private Mode serviceMode;
    // The style used by this MessageFactory
    private Style style;
-   // The features used by this MessageFactory
-   private FeatureSet features = new FeatureSet();
    // Used if the style is dynamic
    private boolean dynamic;
 
@@ -127,26 +120,6 @@ public class MessageFactoryImpl extends MessageFactory
       this.style = style;
    }
 
-   public Mode getServiceMode()
-   {
-      return serviceMode;
-   }
-
-   public void setServiceMode(Mode serviceMode)
-   {
-      this.serviceMode = serviceMode;
-   }
-
-   public void addFeature(WebServiceFeature feature)
-   {
-      this.features.addFeature(feature);
-   }
-   
-   public void setFeatures(FeatureSet features)
-   {
-      this.features = features;
-   }
-   
    /**
     * Creates a new SOAPMessage object with the default SOAPPart, SOAPEnvelope,
     * SOAPBody, and SOAPHeader objects. Profile-specific message factories can

@@ -363,9 +363,7 @@ public class RequestHandlerImpl implements RequestHandler
          }
          else
          {
-            msgFactory.setServiceMode(sepMetaData.getServiceMode());
             msgFactory.setStyle(sepMetaData.getStyle());
-            msgFactory.setFeatures(sepMetaData.getFeatures());
 
             reqMessage = (SOAPMessageImpl)msgFactory.createMessage(headers, inputStream);
          }

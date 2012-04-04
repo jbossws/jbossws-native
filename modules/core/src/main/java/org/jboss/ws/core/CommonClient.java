@@ -35,8 +35,6 @@ import javax.xml.rpc.ParameterMode;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPException;
-import javax.xml.ws.ProtocolException;
-import javax.xml.ws.handler.MessageContext;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -312,12 +310,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
             if (maintainSession)
                addSessionInfo(reqMessage, callProps);
             
-            propagateRequestHeaders(reqMessage, msgContext);
-
             RemoteConnection remoteConnection = new RemoteConnectionFactory().getRemoteConnection(epInfo);
             MessageAbstraction resMessage = remoteConnection.invoke(reqMessage, epInfo, oneway);
-
-            propagateResponseHeaders(callProps, msgContext);
 
             if (maintainSession)
                saveSessionInfo(callProps, requestCtx);
@@ -374,25 +368,16 @@ public abstract class CommonClient implements StubExt, HeaderSource
       }
       catch (Exception ex)
       {
-         Boolean isOutbound = (Boolean)msgContext.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
-         if (oneway && isOutbound && ex instanceof ProtocolException)
-         {
-            //swallow the outbound SOAPException threw in hanlders
-            return null;
-         }
-         else
-         {
-            log.error(BundleUtils.getMessage(bundle, "EXCEPTION_CAUGHT_WHILE_(PREPARING_FOR)_PERFORMING_THE_INVOCATION"),  ex);
-            // Reverse the message direction
-            processPivotInternal(msgContext, direction);
-            if (faultType[2] != null)
-               callFaultHandlerChain(portName, faultType[2], ex);
-            if (faultType[1] != null)
-               callFaultHandlerChain(portName, faultType[1], ex);
-            if (faultType[0] != null)
-               callFaultHandlerChain(portName, faultType[0], ex);
-            throw ex;
-         } 
+    	  log.error(BundleUtils.getMessage(bundle, "EXCEPTION_CAUGHT_WHILE_(PREPARING_FOR)_PERFORMING_THE_INVOCATION"),  ex);
+    	  // Reverse the message direction
+    	  processPivotInternal(msgContext, direction);
+    	  if (faultType[2] != null)
+    		  callFaultHandlerChain(portName, faultType[2], ex);
+    	  if (faultType[1] != null)
+    		  callFaultHandlerChain(portName, faultType[1], ex);
+    	  if (faultType[0] != null)
+    		  callFaultHandlerChain(portName, faultType[0], ex);
+    	  throw ex;
       }
       finally
       {
@@ -402,11 +387,6 @@ public abstract class CommonClient implements StubExt, HeaderSource
       }
    }
    
-   private void propagateResponseHeaders(Map<String, Object> remotingMetadata, Map<String, Object> responseContext)
-   {
-      responseContext.put(MessageContext.HTTP_RESPONSE_HEADERS, remotingMetadata.get(NettyClient.RESPONSE_HEADERS));
-   }
-
    @SuppressWarnings({"unchecked", "rawtypes"})
    private void saveSessionInfo(Map<String, Object> remotingMetadata, Map<String, Object> requestContext)
    {
@@ -463,35 +443,6 @@ public abstract class CommonClient implements StubExt, HeaderSource
       }
    }
    
-   @SuppressWarnings("unchecked")
-   private void propagateRequestHeaders(MessageAbstraction reqMessage, CommonMessageContext callProperties)
-   {
-      Map<String, List<String>> requestHeaders = (Map<String, List<String>>)callProperties.get(MessageContext.HTTP_REQUEST_HEADERS);
-      if (requestHeaders != null)
-      {
-         for (Map.Entry<String, List<String>> header : requestHeaders.entrySet())
-         {
-            final String key = header.getKey();
-            final List<String> values = header.getValue();
-            
-            if (key != null)
-            {
-               final StringBuilder sb = new StringBuilder();
-               for (int i = 0; i < values.size(); i++)
-               {
-                  boolean addLWS = (i != (values.size() - 1)); 
-                  sb.append(values.get(i));
-                  if (addLWS)
-                  {
-                     sb.append("\r\n ");
-                  }
-               }
-               reqMessage.getMimeHeaders().addHeader(key, sb.toString());
-            }
-         }
-      }
-   }
-
    private CommonMessageContext processPivotInternal(CommonMessageContext msgContext, DirectionHolder direction)
    {
       if (direction.getDirection() == Direction.OutBound)

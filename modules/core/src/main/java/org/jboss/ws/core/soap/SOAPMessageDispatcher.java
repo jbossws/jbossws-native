@@ -55,13 +55,6 @@ public class SOAPMessageDispatcher
       OperationMetaData opMetaData = null;
 
       boolean debugEnabled = log.isDebugEnabled();
-      // Dispatch to JAXWS Provider
-      if (opMetaData == null && epMetaData.getServiceMode() != null)
-      {
-         QName xmlName = new QName(epMetaData.getPortName().getNamespaceURI(), "invoke");
-         opMetaData = epMetaData.getOperation(xmlName);
-      }
-
       // Dispatch based on SOAPBodyElement name
       if (opMetaData == null)
       {

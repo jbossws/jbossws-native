@@ -58,13 +58,10 @@ import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.wsf.spi.SPIProvider;
-import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.invocation.Invocation;
 import org.jboss.wsf.spi.invocation.InvocationContext;
 import org.jboss.wsf.spi.invocation.InvocationHandler;
-import org.jboss.wsf.spi.invocation.WebServiceContextFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /** An implementation handles invocations on the endpoint
@@ -81,14 +78,6 @@ public class ServiceEndpointInvoker
    protected Endpoint endpoint;
    protected CommonBindingProvider bindingProvider;
    protected ServerHandlerDelegate delegate;
-
-   private WebServiceContextFactory contextFactory;
-
-   public ServiceEndpointInvoker()
-   {
-      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      contextFactory = spiProvider.getSPI(WebServiceContextFactory.class);
-   }
 
    /** Initialize the service endpoint */
    public void init(Endpoint endpoint)

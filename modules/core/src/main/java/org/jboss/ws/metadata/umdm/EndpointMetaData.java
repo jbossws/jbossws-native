@@ -39,8 +39,6 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
-import javax.xml.ws.Service.Mode;
-import javax.xml.ws.WebServiceFeature;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -109,14 +107,10 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private Use use;
    // The SOAPBinding parameter style
    private Boolean wrappedParameterStyle;
-   // The JAXWS ServiceMode
-   private Mode serviceMode;
    // The list of service meta data
    private List<OperationMetaData> operations = new ArrayList<OperationMetaData>();
    // Maps the java method to the operation meta data
    private Map<Method, OperationMetaData> opMetaDataCache = new HashMap<Method, OperationMetaData>();
-   // The features defined for this endpoint
-   private FeatureSet features = new FeatureSet();
 
    private ConfigObservable configObservable = new ConfigObservable();
 
@@ -283,16 +277,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       this.wrappedParameterStyle = value;
    }
 
-   public Mode getServiceMode()
-   {
-      return serviceMode;
-   }
-
-   public void setServiceMode(Mode serviceMode)
-   {
-      this.serviceMode = serviceMode;
-   }
-
    public String getAuthMethod()
    {
       return authMethod;
@@ -313,26 +297,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void setProperties(Properties properties)
    {
       this.properties = properties;
-   }
-
-   public <T extends WebServiceFeature> T getFeature(Class<T> key)
-   {
-      return features.getFeature(key);
-   }
-
-   public <T extends WebServiceFeature> boolean isFeatureEnabled(Class<T> key)
-   {
-      return features.isFeatureEnabled(key);
-   }
-
-   public FeatureSet getFeatures()
-   {
-      return features;
-   }
-
-   public void addFeature(WebServiceFeature feature)
-   {
-      this.features.addFeature(feature);
    }
 
    public List<OperationMetaData> getOperations()
