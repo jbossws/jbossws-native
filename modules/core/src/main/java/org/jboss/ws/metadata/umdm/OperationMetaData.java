@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 
@@ -63,7 +62,6 @@ public class OperationMetaData extends ExtensibleMetaData implements Initalizabl
    private Method javaMethod;
    private boolean oneWay;
    private String soapAction;
-   private ParameterStyle parameterStyle;
    private List<ParameterMetaData> parameters = new ArrayList<ParameterMetaData>();
    private List<FaultMetaData> faults = new ArrayList<FaultMetaData>();
    private ParameterMetaData returnParam;
@@ -125,14 +123,9 @@ public class OperationMetaData extends ExtensibleMetaData implements Initalizabl
       return epMetaData.getEncodingStyle();
    }
 
-   public ParameterStyle getParameterStyle()
+   public boolean isWrappedParameterStyle()
    {
-      return (parameterStyle != null) ? parameterStyle : epMetaData.getParameterStyle();
-   }
-
-   public void setParameterStyle(ParameterStyle parameterStyle)
-   {
-      this.parameterStyle = parameterStyle;
+      return epMetaData.isWrappedParameterStyle();
    }
 
    public boolean isRPCLiteral()
@@ -145,14 +138,9 @@ public class OperationMetaData extends ExtensibleMetaData implements Initalizabl
       return getStyle() == Style.RPC && getUse() == Use.ENCODED;
    }
 
-   public boolean isDocumentBare()
-   {
-      return getStyle() == Style.DOCUMENT && getParameterStyle() == ParameterStyle.BARE;
-   }
-
    public boolean isDocumentWrapped()
    {
-      return getStyle() == Style.DOCUMENT && getParameterStyle() == ParameterStyle.WRAPPED;
+      return getStyle() == Style.DOCUMENT && isWrappedParameterStyle();
    }
 
    public void setJavaName(String javaName)
@@ -414,33 +402,6 @@ return false;
       }
    }
 
-   public void assertDocumentBare()
-   {
-      if (isDocumentBare())
-      {
-         int in = 0;
-         int out = 0;
-
-         for (ParameterMetaData paramMetaData : parameters)
-         {
-            if (paramMetaData.isInHeader())
-               continue;
-
-            ParameterMode mode = paramMetaData.getMode();
-            if (mode != ParameterMode.OUT)
-               in++;
-            if (mode != ParameterMode.IN)
-               out++;
-         }
-
-         if (returnParam != null && !returnParam.isInHeader())
-            out++;
-
-         if (in > 1 || out > (oneWay ? 0 : 1))
-            throw new WSException(BundleUtils.getMessage(bundle, "DOC_LIT_BARE_REQUIRE",  new Object[]{javaName, in, out}));
-      }
-   }
-
    public void validate()
    {
       for (ParameterMetaData parameter : parameters)
@@ -502,10 +463,6 @@ return false;
       buffer.append("\n qname=" + qname);
       buffer.append("\n javaName=" + javaName);
       buffer.append("\n style=" + getStyle() + "/" + getUse());
-      if (getStyle() == Style.DOCUMENT)
-      {
-         buffer.append("/" + getParameterStyle());
-      }
       buffer.append("\n oneWay=" + oneWay);
       buffer.append("\n soapAction=" + soapAction);
       for (ParameterMetaData param : parameters)

@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.encoding.TypeMappingRegistry;
@@ -590,7 +589,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
 
       // Check if we need to wrap the parameters
       boolean isWrapped = isWrapped(seiMethodMapping, javaTypeName);
-      operation.getEndpointMetaData().setParameterStyle(isWrapped ? ParameterStyle.WRAPPED : ParameterStyle.BARE);
+      operation.getEndpointMetaData().setWrappedParameterStyle(Boolean.valueOf(isWrapped));
 
       ParameterMetaData inMetaData = new ParameterMetaData(operation, xmlName, xmlType, javaTypeName);
       operation.addParameter(inMetaData);
@@ -852,7 +851,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       else
       {
          // Set the default to bare in case there isn't an input object, revisit this
-         opMetaData.getEndpointMetaData().setParameterStyle(ParameterStyle.BARE);
+         opMetaData.getEndpointMetaData().setWrappedParameterStyle(Boolean.FALSE);
       }
 
       if (wsdlOperation.getOutputs().length > 0)

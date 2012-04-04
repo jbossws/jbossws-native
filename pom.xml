@@ -71,7 +71,6 @@
     <jaxws.api.version>2.0.0.Final</jaxws.api.version>
     <jaxrpc.api.version>1.0.0.Final</jaxrpc.api.version>
     <saaj.api.version>1.0.1.Final</saaj.api.version>
-    <jsr181.api.version>1.0-MR1</jsr181.api.version>
     <jboss.common.core.version>2.2.16.GA</jboss.common.core.version>
     <jboss.logging.version>3.1.0.GA</jboss.logging.version>
     <netty.version>3.2.6.Final</netty.version>
@@ -172,11 +171,6 @@
         <groupId>commons-logging</groupId>
         <artifactId>commons-logging</artifactId>
         <version>${commons.logging.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>javax.jws</groupId>
-        <artifactId>jsr181-api</artifactId>
-        <version>${jsr181.api.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.spec.javax.xml.ws</groupId>

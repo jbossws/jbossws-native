@@ -37,7 +37,6 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.ws.Service.Mode;
@@ -109,7 +108,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    // The SOAPBinding use
    private Use use;
    // The SOAPBinding parameter style
-   private ParameterStyle parameterStyle;
+   private Boolean wrappedParameterStyle;
    // The JAXWS ServiceMode
    private Mode serviceMode;
    // The list of service meta data
@@ -267,25 +266,21 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       this.style = value;
    }
 
-   public ParameterStyle getParameterStyle()
+   public boolean isWrappedParameterStyle()
    {
-      if (parameterStyle == null)
+      if (wrappedParameterStyle == null)
       {
-         parameterStyle = ParameterStyle.WRAPPED;
-         if (log.isDebugEnabled())
-            log.debug("Using default parameter style: " + parameterStyle);
+    	  wrappedParameterStyle = Boolean.TRUE;
       }
-      return parameterStyle;
+      return wrappedParameterStyle;
    }
 
-   public void setParameterStyle(ParameterStyle value)
+   public void setWrappedParameterStyle(final Boolean value)
    {
-      if (value != null && parameterStyle != null && !parameterStyle.equals(value))
+      if (value != null && wrappedParameterStyle != null && !wrappedParameterStyle.equals(value))
          throw new WSException(BundleUtils.getMessage(bundle, "MIXED_SOAP_PARAMETER_STYLES_NOT_SUPPORTED"));
 
-      if (log.isDebugEnabled())
-         log.debug("setParameterStyle: " + value);
-      this.parameterStyle = value;
+      this.wrappedParameterStyle = value;
    }
 
    public Mode getServiceMode()

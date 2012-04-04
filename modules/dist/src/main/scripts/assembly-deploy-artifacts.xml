@@ -35,7 +35,6 @@
         <include>org.jboss.ws.native:jbossws-native-factories:jar</include>
         <include>org.jboss.ws.native:jbossws-native-services:jar</include>
         <include>org.jboss.ws.native:jbossws-native-core</include>
-        <include>javax.jws:jsr181-api:jar</include>
         <include>org.jboss.ws:jbossws-api:jar</include>
         <include>org.jboss.ws:jbossws-common:jar</include>
         <include>org.jboss.ws:jbossws-spi:jar</include>

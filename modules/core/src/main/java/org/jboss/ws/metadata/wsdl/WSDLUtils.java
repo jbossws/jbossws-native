@@ -40,8 +40,6 @@ import java.util.Stack;
 import java.util.StringTokenizer;
 
 import javax.ejb.SessionBean;
-import javax.jws.WebMethod;
-import javax.jws.WebService;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.holders.BigDecimalHolder;
 import javax.xml.rpc.holders.BigIntegerHolder;
@@ -96,7 +94,6 @@ public class WSDLUtils
    private final Map primitiveMap = new HashMap();
 
    private final static Map<String, Class> schemaBasicTypes = new HashMap<String, Class>();
-
    private final static Map<Class, Class> holderTypes = new HashMap<Class, Class>();
    private final static Map<Class, Class> reverseHolderTypes = new HashMap<Class, Class>();
 
@@ -273,52 +270,6 @@ public class WSDLUtils
       }
 
       return ignoredMethods.contains(method.getName());
-   }
-   
-   /**
-    * The public, non-static or non-final methods that satisfy one of the following conditions:
-    * 1. They are annotated with the javax.jws.WebMethod annotation with the exclude element set to
-    * false or missing (since false is the default for this annotation element).
-    * 2. They are not annotated with the javax.jws.WebMethod annotation but their declaring class has a
-    * javax.jws.WebService annotation.
-    * @param method to process
-    * @return true if webmethod, false otherwise
-    */
-   public static boolean isWebMethod(final Method method, final boolean definedInInterface)
-   {
-      if (!isWebMethodCandidate(method))
-         return false;
-         
-      final WebMethod webMethodAnnotation = method.getAnnotation(WebMethod.class);
-      
-      if (webMethodAnnotation != null)
-      {
-         return !webMethodAnnotation.exclude();
-      }
-      if (definedInInterface)
-      {
-         return true;
-      }
-      else
-      {
-         return method.getDeclaringClass().getAnnotation(WebService.class) != null;
-      }
-   }
-   
-   /**
-    * Only public, non-static and non-final methods are web method candidates.
-    *
-    * @param method to process
-    * @return true if satisfies modifier requirements, false otherwise
-    */
-   private static boolean isWebMethodCandidate(final Method method)
-   {
-      final int modifiers = method.getModifiers();
-      final boolean isPublic = Modifier.isPublic(modifiers);
-      final boolean isNotStatic = !Modifier.isStatic(modifiers);
-      final boolean isNotFinal = !Modifier.isFinal(modifiers);
-      
-      return isPublic && isNotStatic && isNotFinal;
    }
    
    /**

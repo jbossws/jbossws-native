@@ -80,10 +80,6 @@
       <artifactId>jboss-jaxws-api_2.2_spec</artifactId>
     </dependency>
     <dependency>
-      <groupId>javax.jws</groupId>
-      <artifactId>jsr181-api</artifactId>
-    </dependency>
-    <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
     </dependency>
