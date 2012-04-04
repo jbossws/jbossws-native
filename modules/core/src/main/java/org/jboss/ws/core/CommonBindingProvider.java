@@ -23,8 +23,6 @@ package org.jboss.ws.core;
 
 import java.util.Observable;
 
-import javax.xml.ws.soap.SOAPBinding;
-
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.SOAP11BindingJAXRPC;
 import org.jboss.ws.core.jaxrpc.SOAP12BindingJAXRPC;
@@ -41,6 +39,15 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
 public class CommonBindingProvider implements Configurable
 {
    private static Logger log = Logger.getLogger(CommonBindingProvider.class);
+   /**
+    * A constant representing the identity of the SOAP 1.1 over HTTP binding.
+    */
+   private static final String SOAP11HTTP_BINDING = "http://schemas.xmlsoap.org/wsdl/soap/http";
+
+   /**
+    * A constant representing the identity of the SOAP 1.2 over HTTP binding.
+    */
+   private static final String SOAP12HTTP_BINDING = "http://www.w3.org/2003/05/soap/bindings/HTTP/";
 
    protected EndpointMetaData epMetaData;
    protected CommonBinding binding;
@@ -70,11 +77,11 @@ public class CommonBindingProvider implements Configurable
 
    protected void initBinding(String bindingId)
    {
-      if (SOAPBinding.SOAP11HTTP_BINDING.equals(bindingId))
+      if (SOAP11HTTP_BINDING.equals(bindingId))
       {
          binding = new SOAP11BindingJAXRPC();
       }
-      else if (SOAPBinding.SOAP12HTTP_BINDING.equals(bindingId))
+      else if (SOAP12HTTP_BINDING.equals(bindingId))
       {
          binding = new SOAP12BindingJAXRPC();
       }

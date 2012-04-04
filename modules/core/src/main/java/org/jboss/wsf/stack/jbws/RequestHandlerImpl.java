@@ -43,7 +43,6 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
-import javax.xml.ws.http.HTTPBinding;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -55,7 +54,6 @@ import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPFaultException;
-import org.jboss.ws.core.HTTPMessageImpl;
 import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.core.binding.BindingException;
@@ -356,17 +354,8 @@ public class RequestHandlerImpl implements RequestHandler
 
          MessageAbstraction reqMessage;
 
-         String bindingID = sepMetaData.getBindingId();
-         if (HTTPBinding.HTTP_BINDING.equals(bindingID))
-         {
-            reqMessage = new HTTPMessageImpl(headers, inputStream);
-         }
-         else
-         {
-            msgFactory.setStyle(sepMetaData.getStyle());
-
-            reqMessage = (SOAPMessageImpl)msgFactory.createMessage(headers, inputStream);
-         }
+         msgFactory.setStyle(sepMetaData.getStyle());
+         reqMessage = (SOAPMessageImpl)msgFactory.createMessage(headers, inputStream);
 
          // Associate current message with message context
          msgContext.setMessageAbstraction(reqMessage);
