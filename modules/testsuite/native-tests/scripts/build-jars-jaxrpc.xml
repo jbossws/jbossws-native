@@ -2856,41 +2856,6 @@
       </manifest>
     </war>
     
-    <!-- jbossws-jbws1653 -->
-    <war warfile="${tests.output.dir}/test-libs/jaxrpc-jbws1653.war" webxml="${tests.output.dir}/test-resources/jaxrpc/jbws1653/WEB-INF/web.xml">
-      <classes dir="${tests.output.dir}/test-classes">
-        <include name="org/jboss/test/ws/jaxrpc/jbws1653/TestEndpoint.class"/>
-        <include name="org/jboss/test/ws/jaxrpc/jbws1653/TestEndpointImpl.class"/>
-      </classes>
-      <webinf dir="${tests.output.dir}/test-resources/jaxrpc/jbws1653/WEB-INF">
-        <include name="webservices.xml"/>
-        <include name="jaxrpc-mapping.xml"/>
-        <include name="wsdl/**"/>
-      </webinf>
-    </war>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws1653-appclient.jar">
-      <fileset dir="${tests.output.dir}/test-classes">
-        <include name="org/jboss/test/ws/jaxrpc/jbws1653/TestEndpoint.class"/>
-        <include name="org/jboss/test/ws/appclient/AppclientKiller.class"/>
-      </fileset>
-      <manifest>
-          <attribute name="main-class" value="org.jboss.test.ws.appclient.AppclientKiller"/>
-      </manifest>
-      <metainf dir="${tests.output.dir}/test-resources/jaxrpc/jbws1653/META-INF">
-        <include name="application-client.xml"/>
-        <include name="jboss-client.xml"/>
-      </metainf>
-      <metainf dir="${tests.output.dir}/test-resources/jaxrpc/jbws1653/WEB-INF">
-        <include name="jaxrpc-mapping.xml"/>
-        <include name="wsdl/**"/>
-      </metainf>
-    </jar>
-    <jar destfile="${tests.output.dir}/test-libs/jaxrpc-jbws1653-appclient.ear">
-      <fileset dir="${tests.output.dir}/test-libs">
-        <include name="jaxrpc-jbws1653-appclient.jar"/>
-      </fileset>
-    </jar>
-    
     <!-- jaxrpc-jbws1792 -->
     <war warfile="${tests.output.dir}/test-libs/jaxrpc-jbws1792.war" webxml="${tests.output.dir}/test-resources/jaxrpc/jbws1792/WEB-INF/web.xml">
       <classes dir="${tests.output.dir}/test-classes">
@@ -2901,7 +2866,6 @@
       <webinf dir="${tests.output.dir}/test-resources/jaxrpc/jbws1792/WEB-INF">
         <include name="webservices.xml"/>
         <include name="jaxrpc-mapping.xml"/>
-        <include name="custom-endpoint-config.xml"/>
         <include name="wsdl/**"/>
       </webinf>
     </war>

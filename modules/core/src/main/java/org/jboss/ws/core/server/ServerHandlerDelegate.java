@@ -22,7 +22,6 @@
 package org.jboss.ws.core.server;
 
 import org.jboss.ws.core.HeaderSource;
-import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
@@ -30,7 +29,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  * @author Thomas.Diesler@jboss.org
  * @since 19-Jan-2005
  */
-public abstract class ServerHandlerDelegate implements Configurable, HeaderSource 
+public abstract class ServerHandlerDelegate implements HeaderSource 
 {
    private ServerEndpointMetaData sepMetaData;
    

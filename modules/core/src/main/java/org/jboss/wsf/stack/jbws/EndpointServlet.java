@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -66,16 +65,6 @@ public final class EndpointServlet extends AbstractEndpointServlet implements Se
       return new WebAppResolver(contextPath, servletName);
    }
 
-   /**
-    * Post init phase hook using template method
-    * @param servletConfig servlet config
-    */
-   @Override
-   protected final void postInit(ServletConfig servletConfig)
-   {
-      ServletConfigHelper.initEndpointConfig(servletConfig, endpoint);
-   }
-   
    @Override
    protected final void postService()
    {

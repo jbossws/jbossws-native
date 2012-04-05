@@ -661,16 +661,6 @@ public class CallImpl extends CommonClient implements Call, RoleSource
       }
    }
 
-   @Override
-   public void setConfigName(String configName, String configFile)
-   {
-      EndpointMetaData epMetaData = getEndpointMetaData();
-      epMetaData.setConfigName(configName, configFile);
-
-      // Reinitialize the client handler chain
-      jaxrpcService.setupHandlerChain(epMetaData);
-   }
-
    public Set<QName> getHeaders()
    {
       HandlerChainBaseImpl handlerChain = (HandlerChainBaseImpl)jaxrpcService.getHandlerChain(epMetaData.getPortName());

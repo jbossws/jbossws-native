@@ -33,7 +33,7 @@ import javax.xml.soap.AttachmentPart;
  * @author Thomas.Diesler@jboss.org
  * @since 17-Jan-2007
  */
-public interface StubExt extends ConfigProvider, EndpointMetadataProvider
+public interface StubExt extends EndpointMetadataProvider
 {
    /** ClientTimeout property: org.jboss.ws.timeout */
    static final String PROPERTY_CLIENT_TIMEOUT = "org.jboss.ws.timeout";

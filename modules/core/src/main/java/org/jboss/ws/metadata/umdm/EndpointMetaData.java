@@ -21,9 +21,6 @@
  */
 package org.jboss.ws.metadata.umdm;
 
-import java.lang.ref.Reference;
-import java.lang.ref.ReferenceQueue;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,9 +28,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -54,11 +48,6 @@ import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.metadata.accessor.AccessorFactory;
 import org.jboss.ws.metadata.accessor.AccessorFactoryCreator;
-import org.jboss.ws.metadata.config.Configurable;
-import org.jboss.ws.metadata.config.ConfigurationProvider;
-import org.jboss.ws.metadata.config.JBossWSConfigFactory;
-import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
-import org.jboss.wsf.spi.metadata.config.CommonConfig;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 
@@ -68,7 +57,7 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaDat
  * @author Thomas.Diesler@jboss.org
  * @since 12-May-2005
  */
-public abstract class EndpointMetaData extends ExtensibleMetaData implements ConfigurationProvider, InitalizableMetaData
+public abstract class EndpointMetaData extends ExtensibleMetaData implements InitalizableMetaData
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(EndpointMetaData.class);
    // provide logging
@@ -99,8 +88,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private Class seiClass;
    // The optional authentication method
    private String authMethod;
-   // Arbitrary properties given by <call-property>
-   private Properties properties;
    // The SOAPBinding style
    private Style style;
    // The SOAPBinding use
@@ -112,13 +99,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    // Maps the java method to the operation meta data
    private Map<Method, OperationMetaData> opMetaDataCache = new HashMap<Method, OperationMetaData>();
 
-   private ConfigObservable configObservable = new ConfigObservable();
-
    private List<UnifiedPortComponentRefMetaData> serviceRefContrib = new ArrayList<UnifiedPortComponentRefMetaData>();
-
-   EndpointMetaData()
-   {
-   }
 
    public EndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName)
    {
@@ -285,18 +266,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void setAuthMethod(String authMethod)
    {
       this.authMethod = authMethod;
-   }
-
-   public Properties getProperties()
-   {
-      if (null == this.properties)
-         this.properties = new Properties();
-      return this.properties;
-   }
-
-   public void setProperties(Properties properties)
-   {
-      this.properties = properties;
    }
 
    public List<OperationMetaData> getOperations()
@@ -577,199 +546,12 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       }
    }
 
-   // ---------------------------------------------------------------
-   // Configuration provider impl
-
-   /**
-    * Callback for components that require configuration through jbossws-dd
-    */
-   public void configure(Configurable configurable)
-   {
-      CommonConfig config = getConfig();
-      // TODO: remove this method
-   }
-
-   public UnifiedVirtualFile getRootFile()
-   {
-      return getServiceMetaData().getUnifiedMetaData().getRootFile();
-   }
-
-   public void registerConfigObserver(Configurable observer)
-   {
-      configObservable.addObserver(observer);
-   }
-
-   public String getConfigFile()
-   {
-      return getEndpointConfigMetaData().getConfigFile();
-   }
-
-   public String getConfigName()
-   {
-      return getEndpointConfigMetaData().getConfigName();
-   }
-
    public EndpointConfigMetaData getEndpointConfigMetaData()
    {
       if (configMetaData == null)
          configMetaData = new EndpointConfigMetaData(this);
 
       return this.configMetaData;
-   }
-
-   public CommonConfig getConfig()
-   {
-      EndpointConfigMetaData ecmd = getEndpointConfigMetaData();
-      CommonConfig config = ecmd.getConfig();
-
-      // Make sure we have a configuration
-      if (config == null)
-      {
-         // No base configuration. 
-         initEndpointConfigMetaData(ecmd);
-         config = ecmd.getConfig();
-      }
-
-      return config;
-   }
-
-   public void setConfigName(String configName)
-   {
-      setConfigNameInternal(configName, null);
-   }
-
-   public void setConfigName(String configName, String configFile)
-   {
-      setConfigNameInternal(configName, configFile);
-   }
-
-   private void setConfigNameInternal(String configName, String configFile)
-   {
-      if (configName == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CONFIG_NAME_CANNOT_BE_NULL"));
-
-      if (configFile == null)
-      {
-         configFile = getEndpointConfigMetaData().getConfigFile();
-      }
-
-      if (configName.equals(getEndpointConfigMetaData().getConfigName()) == false || configFile.equals(getEndpointConfigMetaData().getConfigFile()) == false)
-      {
-         if (log.isDebugEnabled())
-            log.debug("Reconfiguration forced, new config is '" + configName + "' file is '" + configFile + "'");
-
-         this.configMetaData = createEndpointConfigMetaData(configName, configFile);
-         configObservable.doNotify(configName);
-      }
-   }
-
-   /**
-    * The factory method to create and initialise a new EndpointConfigMetaData, the current 
-    * EndpointConfigMetaData will be used as the base to backup the RMMD.
-    * 
-    * This method does not set the EndpointConfigMetaData as it can be used by clients to create 
-    * a local configuration not stored in the EndpointMetaData.
-    */
-   protected EndpointConfigMetaData createEndpointConfigMetaData(String configName, String configFile)
-   {
-      EndpointConfigMetaData ecmd = new EndpointConfigMetaData(this);
-      ecmd.setConfigName(configName);
-      ecmd.setConfigFile(configFile);
-
-      initEndpointConfigMetaData(ecmd);
-
-      return ecmd;
-   }
-
-   public void initEndpointConfig()
-   {
-      EndpointConfigMetaData ecmd = getEndpointConfigMetaData();
-      initEndpointConfigMetaData(ecmd);
-   }
-
-   /**
-    * Initialise the EndpointConfigMeta.
-    * 
-    * @param toInitialise - The EndpointConfigMetaData to initialise.
-    */
-   private void initEndpointConfigMetaData(EndpointConfigMetaData toInitialise)
-   {
-      String configName = toInitialise.getConfigName();
-      String configFile = toInitialise.getConfigFile();
-
-      if (log.isDebugEnabled())
-         log.debug("Create new config [name=" + configName + ",file=" + configFile + "]");
-
-      JBossWSConfigFactory factory = JBossWSConfigFactory.newInstance(getClassLoader());
-      CommonConfig config = factory.getConfig(getRootFile(), configName, configFile);
-      toInitialise.setConfig(config);
-
-      toInitialise.configHandlerMetaData();
-   }
-
-   class ConfigObservable extends Observable
-   {
-
-      private ReferenceQueue<WeakReference<Observer>> queue = new ReferenceQueue<WeakReference<Observer>>();
-      private List<WeakReference<Observer>> observer = new ArrayList<WeakReference<Observer>>();
-
-      public void doNotify(Object object)
-      {
-         setChanged();
-         notifyObservers(object);
-      }
-
-      public synchronized void addObserver(Observer o)
-      {
-         clearCollected();
-         observer.add(new WeakReference(o, queue));
-      }
-
-      public synchronized void deleteObserver(Observer o)
-      {
-         clearCollected();
-         for (WeakReference<Observer> w : observer)
-         {
-            Observer tmp = w.get();
-            if (tmp != null && tmp.equals(o))
-            {
-               observer.remove(o);
-               break;
-            }
-
-         }
-      }
-
-      public void notifyObservers()
-      {
-         notifyObservers(null);
-      }
-
-      public void notifyObservers(Object arg)
-      {
-         clearCollected();
-         if (hasChanged())
-         {
-            for (WeakReference<Observer> w : observer)
-            {
-               Observer tmp = w.get();
-               if (tmp != null)
-               {
-                  tmp.update(this, arg);
-               }
-            }
-         }
-      }
-
-      private void clearCollected()
-      {
-         Reference ref;
-         while ((ref = queue.poll()) != null)
-         {
-            observer.remove(ref);
-         }
-
-      }
    }
 
    public List<UnifiedPortComponentRefMetaData> getServiceRefContrib()

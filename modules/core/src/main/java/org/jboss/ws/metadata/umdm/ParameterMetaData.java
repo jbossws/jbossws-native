@@ -41,7 +41,6 @@ import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.metadata.accessor.AccessorFactoryCreator;
 import org.jboss.ws.metadata.accessor.ReflectiveMethodAccessorFactoryCreator;
-import org.jboss.ws.metadata.config.EndpointFeature;
 
 /**
  * A request/response parameter that a given operation supports.
@@ -410,14 +409,7 @@ public class ParameterMetaData implements InitalizableMetaData
 
    public String getPartName()
    {
-      // [JBWS-771] Use part names that are friendly to .NET
-      String auxPartName = partName;
-      if (opMetaData.getEndpointMetaData().getConfig().hasFeature(EndpointFeature.BINDING_WSDL_DOTNET))
-      {
-         if (opMetaData.isDocumentWrapped() && inHeader == false)
-            auxPartName = "parameters";
-      }
-      return auxPartName;
+      return partName;
    }
 
    public void setPartName(String partName)
