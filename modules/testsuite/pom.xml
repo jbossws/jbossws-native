@@ -15,16 +15,13 @@
 
   <!-- Properties -->
   <properties>
-    <surefire.security.args></surefire.security.args>
     <surefire.jdwp.args>-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005</surefire.jdwp.args>
-    <surefire.gc.args>-Xmx512m -XX:MaxPermSize=256m</surefire.gc.args>
-    <surefire.management.args>-Dcom.sun.management.jmxremote</surefire.management.args>
+    <surefire.gc.args>-Xmx256m -XX:MaxPermSize=128m</surefire.gc.args>
     <test.archive.directory>${project.build.directory}/test-libs</test.archive.directory>
     <test.classes.directory>${project.build.directory}/test-classes</test.classes.directory>
     <test.resources.directory>${project.build.directory}/test-resources</test.resources.directory>
     <wsdl.publish.location>${project.build.directory}/wsdl-publish</wsdl.publish.location>
     <jboss.javaee.version>5.0.0.GA</jboss.javaee.version>
-    <hornetq.version>2.1.0.BETA3</hornetq.version>
     <log4j.output.dir>${project.build.directory}</log4j.output.dir>
     <appclient.output.dir>${project.build.directory}/appclient-logs</appclient.output.dir>
   </properties>
@@ -37,10 +34,6 @@
   <!-- Dependencies -->
   <dependencies>
     <dependency>
-      <groupId>xerces</groupId>
-      <artifactId>xercesImpl</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-core</artifactId>
       <version>${project.version}</version>
@@ -48,16 +41,6 @@
     <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-shared-testsuite</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>gnu-getopt</groupId>
-      <artifactId>getopt</artifactId>
-      <version>1.0.13</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
@@ -74,11 +57,6 @@
       <groupId>org.jboss.javaee</groupId>
       <artifactId>jboss-javaee</artifactId>
       <version>${jboss.javaee.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.jboss.spec.javax.ejb</groupId>
-      <artifactId>jboss-ejb-api_3.1_spec</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -264,7 +242,7 @@
         </property>
       </activation>
       <properties>
-        <surefire.jvm.args>${surefire.security.args} ${surefire.jdwp.args} ${surefire.gc.args}</surefire.jvm.args>
+        <surefire.jvm.args>${surefire.jdwp.args} ${surefire.gc.args}</surefire.jvm.args>
       </properties>
     </profile>
     <profile>
@@ -275,34 +253,7 @@
         </property>
       </activation>
       <properties>
-        <surefire.jvm.args>${surefire.security.args} ${surefire.gc.args}</surefire.jvm.args>
-      </properties>
-    </profile>
-
-    <!--
-    Name:  management
-    Descr: Enable remote jmx management (useful to attach JConsole, for instance)
-    -->
-    <profile>
-      <id>management</id>
-      <activation>
-        <property>
-          <name>management</name>
-        </property>
-      </activation>
-      <properties>
-        <surefire.jvm.management.args>${surefire.management.args}</surefire.jvm.management.args>
-      </properties>
-    </profile>
-    <profile>
-      <id>no-management</id>
-      <activation>
-        <property>
-          <name>!management</name>
-        </property>
-      </activation>
-      <properties>
-        <surefire.jvm.management.args> </surefire.jvm.management.args>
+        <surefire.jvm.args>${surefire.gc.args}</surefire.jvm.args>
       </properties>
     </profile>
 
@@ -353,16 +304,16 @@
               <groupId>org.jboss</groupId>
               <artifactId>jboss-remote-naming</artifactId>
             </exclusion>
+            <exclusion>
+              <groupId>org.jboss.as</groupId>
+              <artifactId>jboss-as-security</artifactId>
+            </exclusion>
           </exclusions>
         </dependency>
         <dependency>
           <groupId>org.jboss</groupId>
           <artifactId>jboss-remote-naming</artifactId>
           <version>1.0.2.Final</version>
-        </dependency>
-        <dependency>
-          <groupId>javax.mail</groupId>
-          <artifactId>mail</artifactId>
         </dependency>
         <dependency>
           <groupId>org.jboss</groupId>
@@ -379,30 +330,11 @@
             </exclusion>
           </exclusions>
         </dependency>
-        <dependency>
-          <groupId>org.jboss</groupId>
-          <artifactId>jboss-common-core</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss</groupId>
-          <artifactId>jbossxb</artifactId>
-        </dependency>
         <!-- provides org.jboss.ejb3.annotation.SecurityDomain annotation -->
         <dependency>
           <groupId>org.jboss.ejb3</groupId>
           <artifactId>jboss-ejb3-ext-api</artifactId>
           <version>2.0.0-beta-1</version>
-        </dependency>
-        <!-- Apache XML security depends on Xalan impl classes :( -->
-        <dependency>
-          <groupId>apache-xalan</groupId>
-          <artifactId>serializer</artifactId>
-          <version>2.7.1.patch01-brew</version>
-        </dependency>
-        <dependency>
-          <groupId>apache-xalan</groupId>
-          <artifactId>xalan</artifactId>
-          <version>2.7.1.patch01-brew</version>
         </dependency>
         <dependency>
           <groupId>org.jboss.remotingjmx</groupId>
@@ -428,7 +360,7 @@
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} ${surefire.default-mgmt-serurity.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
+              <argLine>${surefire.jvm.args} ${surefire.default-mgmt-serurity.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
               <excludes>
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
@@ -468,16 +400,16 @@
               <groupId>org.jboss</groupId>
               <artifactId>jboss-remote-naming</artifactId>
             </exclusion>
+            <exclusion>
+              <groupId>org.jboss.as</groupId>
+              <artifactId>jboss-as-security</artifactId>
+            </exclusion>
           </exclusions>
         </dependency>
         <dependency>
           <groupId>org.jboss</groupId>
           <artifactId>jboss-remote-naming</artifactId>
           <version>1.0.2.Final</version>
-        </dependency>
-        <dependency>
-          <groupId>javax.mail</groupId>
-          <artifactId>mail</artifactId>
         </dependency>
         <dependency>
           <groupId>org.jboss</groupId>
@@ -494,30 +426,11 @@
             </exclusion>
           </exclusions>
         </dependency>
-        <dependency>
-          <groupId>org.jboss</groupId>
-          <artifactId>jboss-common-core</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss</groupId>
-          <artifactId>jbossxb</artifactId>
-        </dependency>
         <!-- provides org.jboss.ejb3.annotation.SecurityDomain annotation -->
         <dependency>
           <groupId>org.jboss.ejb3</groupId>
           <artifactId>jboss-ejb3-ext-api</artifactId>
           <version>2.0.0-beta-1</version>
-        </dependency>
-        <!-- Apache XML security depends on Xalan impl classes :( -->
-        <dependency>
-          <groupId>apache-xalan</groupId>
-          <artifactId>serializer</artifactId>
-          <version>2.7.1.patch01-brew</version>
-        </dependency>
-        <dependency>
-          <groupId>apache-xalan</groupId>
-          <artifactId>xalan</artifactId>
-          <version>2.7.1.patch01-brew</version>
         </dependency>
         <dependency>
           <groupId>org.jboss.remotingjmx</groupId>
@@ -543,7 +456,7 @@
           <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>${surefire.jvm.args} ${surefire.jvm.management.args} ${surefire.default-mgmt-serurity.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
+              <argLine>${surefire.jvm.args} ${surefire.default-mgmt-serurity.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
               <excludes>
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
