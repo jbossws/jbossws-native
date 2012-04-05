@@ -482,6 +482,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    {
       TypeMappingImpl typeMapping = serviceMetaData.getTypeMapping();
       List<TypeMappingMetaData> typeMappings = serviceMetaData.getTypesMetaData().getTypeMappings();
+      List<Class> registeredTypes = new ArrayList<Class>(typeMappings.size());
       for (TypeMappingMetaData tmMetaData : typeMappings)
       {
          String javaTypeName = tmMetaData.getJavaTypeName();
@@ -490,26 +491,43 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          {
             List<Class> types = typeMapping.getJavaTypes(xmlType);
 
-            try
+            // TODO: Clarification. In which cases is the type already registered?
+            boolean registered = false;
+            for (Class current : types)
             {
-               ClassLoader classLoader = getClassLoader();
-               Class javaType = JavaUtils.loadJavaType(javaTypeName, classLoader);
-
-               if (JavaUtils.isPrimitive(javaTypeName))
-                  javaType = JavaUtils.getWrapperType(javaType);
-
-               if (getEncodingStyle() == Use.ENCODED && javaType.isArray())
+               if (current.getName().equals(javaTypeName))
                {
-                  typeMapping.register(javaType, xmlType, new SOAPArraySerializerFactory(), new SOAPArrayDeserializerFactory());
-               }
-               else
-               {
-                  typeMapping.register(javaType, xmlType, new JBossXBSerializerFactory(), new JBossXBDeserializerFactory());
+                  registeredTypes.add(current);
+                  registered = true;
+                  break;
                }
             }
-            catch (ClassNotFoundException e)
+
+            if (registered == false)
             {
-               log.warn(BundleUtils.getMessage(bundle, "CANNOT_LOAD_CLASS", new Object[]{ xmlType,  javaTypeName}));
+               try
+               {
+                  ClassLoader classLoader = getClassLoader();
+                  Class javaType = JavaUtils.loadJavaType(javaTypeName, classLoader);
+
+                  if (JavaUtils.isPrimitive(javaTypeName))
+                     javaType = JavaUtils.getWrapperType(javaType);
+
+                  registeredTypes.add(javaType);
+
+                  if (getEncodingStyle() == Use.ENCODED && javaType.isArray())
+                  {
+                     typeMapping.register(javaType, xmlType, new SOAPArraySerializerFactory(), new SOAPArrayDeserializerFactory());
+                  }
+                  else
+                  {
+                     typeMapping.register(javaType, xmlType, new JBossXBSerializerFactory(), new JBossXBDeserializerFactory());
+                  }
+               }
+               catch (ClassNotFoundException e)
+               {
+                  log.warn(BundleUtils.getMessage(bundle, "CANNOT_LOAD_CLASS", new Object[]{ xmlType,  javaTypeName}));
+               }
             }
          }
       }
