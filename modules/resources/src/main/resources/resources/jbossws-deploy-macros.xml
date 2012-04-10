@@ -60,16 +60,6 @@
           <include name="**/jbossxb.jar"/>
         </fileset>
       </copy>
-      <copy todir="@{targetdir}/org/jvnet/staxex/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/stax-ex.jar"/>
-        </fileset>
-      </copy>
-      <copy todir="@{targetdir}/org/apache/commons/beanutils/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/commons-beanutils.jar"/>
-        </fileset>
-      </copy>
       <copy todir="@{targetdir}/org/jboss/ws/common/main" flatten="false" overwrite="true">
         <fileset dir="@{thirdpartydir}/lib">
           <include name="**/jbossws-common.jar"/>
