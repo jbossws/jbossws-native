@@ -24,7 +24,6 @@ package org.jboss.test.ws.jaxrpc.samples.message;
 import java.io.ByteArrayInputStream;
 import java.net.URL;
 
-import javax.naming.InitialContext;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -47,9 +46,9 @@ import javax.xml.transform.dom.DOMSource;
 
 import junit.framework.Test;
 
+import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
-import org.jboss.ws.api.util.DOMUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

@@ -30,59 +30,16 @@
 
 		<mkdir dir="${tests.output.dir}/test-libs" />
 
-		<!-- jaxws-jbws771 -->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws771.jar">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws771/*.class" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws771/*TestCase.class" />
-			</fileset>
-			<manifest>
-				<attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
-			</manifest>
-		</jar>
-
-		<!-- jaxws-jbws871 -->
-		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws871-rpc.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws871/WEB-INF-rpc/web.xml">
-			<classes dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws871/RpcArrayEndpoint.class" />
-				<include name="org/jboss/test/ws/jaxws/jbws871/RpcArrayEndpointImpl.class" />
-			</classes>
-            <manifest>
-                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
-            </manifest>
-		</war>
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws871-rpc-client.jar">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws871/IntegerArray.class" />
-				<include name="org/jboss/test/ws/jaxws/jbws871/RpcArrayEndpoint.class" />
-				<include name="org/jboss/test/ws/jaxws/jbws871/RpcArrayEndpointService.class" />
-			</fileset>
-			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws871/META-INF">
-				<include name="application-client.xml" />
-				<include name="jboss-client.xml" />
-				<include name="jaxrpc-mapping.xml" />
-				<include name="wsdl/**" />
-			</metainf>
-		</jar>
-
 		<!-- jaxws-jbws1909 -->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1909.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws1909/META-INF/MANIFEST.MF">
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1909.jar">
 			<fileset dir="${tests.output.dir}/test-classes">
 				<include name="org/jboss/test/ws/jaxws/jbws1909/*.class" />
 				<exclude name="org/jboss/test/ws/jaxws/jbws1909/*TestCase.class" />
 			</fileset>
+			<manifest>
+				<attribute name="Dependencies" value="org.jboss.logging,org.jboss.ws.common"/>
+			</manifest>
 		</jar>
-
-		<!-- jaxws-jbws2187 -->
-		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2187.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2187/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws2187/TestEndpoint.class" />
-				<include name="org/jboss/test/ws/jaxws/jbws2187/TestEndpointImpl.class" />
-			</classes>
-			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2187/WEB-INF">
-				<include name="jboss-web.xml" />
-			</webinf>
-		</war>
 
 		<!-- jaxws-jbws2221 -->
 		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2221.jar">
@@ -118,38 +75,6 @@
 			</webinf>
 		</war>
 
-		<!-- jaxws-jbws2285 -->
-		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2285.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2285/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws2285/*.class" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws2285/JBWS2285TestCase.class" />
-				<include name="org/jboss/test/ws/jaxws/jbws2285/server-handlers.xml" />
-				<include name="org/jboss/test/helper/DOMWriter.class" />
-			</classes>
-			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2285/WEB-INF">
-				<include name="jboss-web.xml" />
-			</webinf>
-            <manifest>
-                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
-            </manifest>
-		</war>
-
-		<!-- jaxws-jbws2319 -->
-		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2319.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2319/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws2319/*.class" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws2319/JBWS2285TestCase.class" />
-				<include name="org/jboss/test/ws/jaxws/jbws2319/server-handlers.xml" />
-				<include name="org/jboss/test/helper/DOMWriter.class" />
-			</classes>
-			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2319/WEB-INF">
-				<include name="jboss-web.xml" />
-			</webinf>
-            <manifest>
-                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
-            </manifest>
-		</war>
-
 		<!-- jaxws-jbws2437 -->
 		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws2437.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws2437/META-INF/MANIFEST.MF">
 			<fileset dir="${tests.output.dir}/test-classes">
@@ -157,21 +82,6 @@
 				<exclude name="org/jboss/test/ws/jaxws/jbws2437/*TestCase.class" />
 			</fileset>
 		</jar>
-
-		<!-- jaxws-jbws2526 -->
-		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2526.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2526/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws2526/*.class" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws2526/JBWS2526TestCase.class" />
-				<include name="org/jboss/test/ws/jaxws/jbws2526/server-handlers.xml" />
-			</classes>
-			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2526/WEB-INF">
-				<include name="wsdl/**" />
-			</webinf>
-            <manifest>
-                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
-            </manifest>
-		</war>
 
 		<!-- jaxws-jbws2565 -->
 		<jar jarfile="${tests.output.dir}/test-libs/jaxws-jbws2565.jar">
@@ -218,9 +128,6 @@
 			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2698/WEB-INF">
 				<include name="jboss-web.xml" />
 			</webinf>
-            <manifest>
-                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
-            </manifest>
 		</war>
 
 		<!-- jaxws-jbws2706 -->
@@ -255,21 +162,6 @@
 			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2845/WEB-INF">
 				<include name="jboss-web.xml" />
 			</webinf>
-		</war>
-
-		<!-- jaxws-jbws2949 -->
-		<war warfile="${tests.output.dir}/test-libs/jaxws-jbws2949.war" webxml="${tests.output.dir}/test-resources/jaxws/jbws2949/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws2949/*.class" />
-				<include name="org/jboss/test/ws/jaxws/jbws2949/server-handlers.xml" />
-				<exclude name="org/jboss/test/ws/jaxws/jbws2949/JBWS2949TestCase.class" />
-			</classes>
-			<webinf dir="${tests.output.dir}/test-resources/jaxws/jbws2949/WEB-INF">
-				<include name="jboss-web.xml" />
-			</webinf>
-            <manifest>
-                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
-            </manifest>
 		</war>
 
 		<!-- jaxws-jbws2969 -->
