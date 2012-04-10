@@ -75,9 +75,6 @@
     <jaxb.impl.version>2.2.4</jaxb.impl.version>
     <jboss.common.core.version>2.2.16.GA</jboss.common.core.version>
     <jboss.logging.version>3.1.0.GA</jboss.logging.version>
-    <jboss.jaxr.version>2.0.3</jboss.jaxr.version>
-    <apache.scout.version>1.1.1</apache.scout.version>
-    <juddi.version>0.9RC4</juddi.version>
     <netty.version>3.2.6.Final</netty.version>
     <sun.jaxws.version>2.2</sun.jaxws.version>
     <sun.policy.version>2.0-b01</sun.policy.version>
@@ -294,22 +291,6 @@
         <groupId>com.sun.xml.bind</groupId>
         <artifactId>jaxb-xjc</artifactId>
         <version>${jaxb.impl.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jboss.jaxr</groupId>
-        <artifactId>juddi-service</artifactId>
-        <version>${jboss.jaxr.version}</version>
-        <type>sar</type>
-      </dependency>
-      <dependency>
-        <groupId>apache-scout</groupId>
-        <artifactId>scout</artifactId>
-        <version>${apache.scout.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>juddi</groupId>
-        <artifactId>juddi</artifactId>
-        <version>${juddi.version}</version>
       </dependency>
       <dependency>
         <groupId>javax.xml.stream</groupId>

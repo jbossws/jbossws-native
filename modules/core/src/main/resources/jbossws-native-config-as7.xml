@@ -52,7 +52,7 @@
   </deploymentAspect>
 
   <deploymentAspect class="org.jboss.wsf.stack.jbws.PublishContractDeploymentAspect">
-    <property name="requires" class="java.lang.String">UnifiedMetaDataModel, JAXBIntros</property>
+    <property name="requires" class="java.lang.String">UnifiedMetaDataModel</property>
     <property name="provides" class="java.lang.String">PublishedContract</property>
   </deploymentAspect>
 
@@ -61,12 +61,8 @@
   </deploymentAspect>
 
   <deploymentAspect class="org.jboss.wsf.stack.jbws.UnifiedMetaDataDeploymentAspect">
-    <property name="requires" class="java.lang.String">ContainerMetaData, URLPattern, EndpointAddress, VFSRoot, JAXBIntros</property>
+    <property name="requires" class="java.lang.String">ContainerMetaData, URLPattern, EndpointAddress, VFSRoot</property>
     <property name="provides" class="java.lang.String">UnifiedMetaDataModel</property>
-  </deploymentAspect>
-
-  <deploymentAspect class="org.jboss.ws.common.deployment.JAXBIntroDeploymentAspect">
-    <property name="provides" class="java.lang.String">JAXBIntros</property>
   </deploymentAspect>
 
 </deploymentAspects>
