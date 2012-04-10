@@ -26,54 +26,9 @@
 
 	<description>JBossWS test archive builder</description>
 
-	<!-- ============================================================================== -->
-	<!-- Building                                                                       -->
-	<!--                                                                                -->
-	<!-- Where to create your tests                                                     -->
-	<!-- http://www.jboss.com/index.html?module=bb&op=viewtopic&p=4144172#4144172       -->
-	<!--                                                                                -->
-	<!-- ============================================================================== -->
-
 	<target name="build-jars-jaxws" description="Build the deployments.">
 
 		<mkdir dir="${tests.output.dir}/test-libs" />
-
-		<!-- jaxws-benchmark-doclit -->
-		<war warfile="${tests.output.dir}/test-libs/jaxws-benchmark-doclit.war" webxml="${tests.output.dir}/test-resources/benchmark/jaxws/doclit/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/benchmark/jaxws/**/*.class" />
-				<include name="org/jboss/test/ws/benchmark/jaxws/**/*.xml" />
-			</classes>
-			<webinf dir="${tests.output.dir}/test-resources/benchmark/jaxws/doclit/WEB-INF">
-				<include name="wsdl/**" />
-			</webinf>
-		</war>
-
-		<war warfile="${tests.output.dir}/test-libs/ri-benchmark-doclit.war" webxml="${tests.output.dir}/test-resources/benchmark/jaxws/doclit/ri/WEB-INF/web.xml">
-			<classes dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/benchmark/jaxws/**/*.class" />
-			</classes>
-			<webinf dir="${tests.output.dir}/test-resources/benchmark/jaxws/doclit/ri/WEB-INF">
-				<include name="wsdl/**" />
-			</webinf>
-			<webinf dir="${tests.output.dir}/test-resources/benchmark/jaxws/doclit/ri/WEB-INF">
-				<include name="handlers.xml" />
-				<include name="sun-jaxws.xml" />
-			</webinf>
-		</war>
-
-		<!-- esb adoption -->
-		<jar jarfile="${tests.output.dir}/test-libs/jaxws-benchmark-doclit.esb">
-			<metainf dir="${tests.output.dir}/test-resources/benchmark/jaxws/esb/META-INF">
-				<include name="*.xml" />
-			</metainf>
-			<fileset dir="${tests.output.dir}/test-libs">
-				<include name="jaxws-benchmark-doclit.war" />
-			</fileset>
-			<fileset dir="${tests.output.dir}/test-resources/benchmark/jaxws/esb">
-				<include name="*.xml" />
-			</fileset>
-		</jar>
 
 		<!-- jaxws-jaxbintros -->
 		<war warfile="${tests.output.dir}/test-libs/jaxws-jaxbintros.war" webxml="${tests.output.dir}/test-resources/jaxws/jaxbintros/WEB-INF/web.xml">
