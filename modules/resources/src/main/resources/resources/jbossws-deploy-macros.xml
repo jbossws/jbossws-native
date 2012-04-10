@@ -95,11 +95,6 @@
           <include name="**/jbossws-common.jar"/>
         </fileset>
       </copy>
-      <copy todir="@{targetdir}/org/jboss/ws/tools/common/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/jbossws-common-tools.jar"/>
-        </fileset>
-      </copy>
       <copy todir="@{targetdir}/org/jboss/ws/spi/main" flatten="false" overwrite="true">
         <fileset dir="@{thirdpartydir}/lib">
           <include name="**/jbossws-spi.jar"/>
