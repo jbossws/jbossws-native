@@ -90,16 +90,6 @@
 			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbws1809/META-INF" />
 		</jar>
 
-		<!-- jaxws-jbws1850 -->
-		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1850.jar">
-			<fileset dir="${tests.output.dir}/test-classes">
-				<include name="org/jboss/test/ws/jaxws/jbws1850/TestServiceImpl.class" />
-			</fileset>
-                        <manifest>
-                                <attribute name="Dependencies" value="org.jboss.ws.native.jbossws-native-core"/>
-                        </manifest>
-		</jar>
-
 		<!-- jaxws-jbws1909 -->
 		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbws1909.jar" manifest="${tests.output.dir}/test-resources/jaxws/jbws1909/META-INF/MANIFEST.MF">
 			<fileset dir="${tests.output.dir}/test-classes">

@@ -76,7 +76,6 @@
       <pathelement location="${thirdparty.dir}/jbossws-native-factories.jar"/>
       <fileset dir="${thirdparty.dir}">
         <exclude name="**/jbossws-jboss*.jar"/>
-        <exclude name="**/jboss-as-webservices-tests-integration.jar"/>
       </fileset>
     </path>
 

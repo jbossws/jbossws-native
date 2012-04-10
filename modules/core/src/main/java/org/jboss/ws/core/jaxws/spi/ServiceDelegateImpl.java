@@ -53,9 +53,7 @@ import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.ResourceLoaderAdapter;
 import org.jboss.ws.common.utils.DelegateClassLoader;
-import org.jboss.ws.core.EndpointMetadataProvider;
 import org.jboss.ws.core.StubExt;
-import org.jboss.ws.core.jaxws.client.ClientFeatureProcessor;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.core.jaxws.client.ClientProxy;
 import org.jboss.ws.core.jaxws.client.DispatchImpl;
@@ -235,15 +233,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
          }
       }
 
-      T port = (T)createProxy(seiClass, epMetaData);
-      initWebserviceFeatures(port, epMetaData.getFeatures().getFeatures());
-      
-      //initialize webserviceFeature in service for getPort(Class<T> seiClass) and getPort(QName portName, Class<T> seiClass)
-      // This will override the features from policy
-      
-      initWebserviceFeatures(port, this.features);
-      
-      return port; 
+      return (T)createProxy(seiClass, epMetaData);
    }
 
    private void assertSEIConstraints(Class seiClass)
@@ -470,10 +460,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    @Override
    public <T> Dispatch<T> createDispatch(QName portName, Class<T> type, Mode mode, WebServiceFeature... features)
    {
-      Dispatch<T> dispatch = createDispatch(portName, type, mode);
-      initWebserviceFeatures(dispatch, this.features);
-      initWebserviceFeatures(dispatch, features);
-      return dispatch;
+      return createDispatch(portName, type, mode);
    }
 
    @Override
@@ -485,10 +472,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
    @Override
    public Dispatch<Object> createDispatch(QName portName, JAXBContext context, Mode mode, WebServiceFeature... features)
    {
-      Dispatch<Object> dispatch = createDispatch(portName, context, mode);
-      initWebserviceFeatures(dispatch, this.features);
-      initWebserviceFeatures(dispatch, features);
-      return dispatch;
+      return createDispatch(portName, context, mode);
    }
 
    @Override
@@ -500,26 +484,19 @@ public class ServiceDelegateImpl extends ServiceDelegate
    @Override
    public <T> T getPort(QName portName, Class<T> sei, WebServiceFeature... features)
    {
-      T port = getPort(portName, sei);
-      initWebserviceFeatures(port, this.features);
-      initWebserviceFeatures(port, features);
-      return port;
+      return getPort(portName, sei);
    }
 
    @Override
    public <T> T getPort(EndpointReference epr, Class<T> sei, WebServiceFeature... features)
    {
-      T port = getPort(sei);
-      initWebserviceFeatures(port, features);
-      return port;
+      return getPort(sei);
    }
 
    @Override
    public <T> T getPort(Class<T> sei, WebServiceFeature... features)
    {
-      T port = getPort(sei);
-      initWebserviceFeatures(port, features);
-      return port;
+      return getPort(sei);
    }
 
    /**
@@ -592,17 +569,5 @@ public class ServiceDelegateImpl extends ServiceDelegate
          throw new WebServiceException(BundleUtils.getMessage(bundle, "CANNOT_GET_PORT_META_DATA",  seiClassName));
 
       return getPortInternal(epMetaData, seiClass);
-   }
-
-   private <T> void initWebserviceFeatures(T stub, WebServiceFeature... features)
-   {
-      if (features != null)
-      {
-         EndpointMetaData epMetaData = ((EndpointMetadataProvider)stub).getEndpointMetaData();
-         for (WebServiceFeature feature : features)
-         {
-            ClientFeatureProcessor.processFeature(feature, epMetaData, stub);
-         }
-      }
    }
 }
