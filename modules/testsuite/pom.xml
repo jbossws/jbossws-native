@@ -381,11 +381,6 @@
           </exclusions>
         </dependency>
         <dependency>
-          <groupId>org.picketbox</groupId>
-          <artifactId>jbosssx-client</artifactId>
-          <version>3.0.0.CR2</version>
-        </dependency>
-        <dependency>
           <groupId>org.jboss</groupId>
           <artifactId>jboss-common-core</artifactId>
         </dependency>
@@ -438,14 +433,6 @@
               <excludes>
                  <!-- # [JBWS-3150] This test causes hudson to freeze -->
                  <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
-
-                 <!-- # exploaded EAR deployment failure - should JBoss AS7 support it? -->
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws358/JBWS358TestCase*</exclude>
-
-                 <!-- # TODO: rewrite tests using AS6 internals -->
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws1179/JBWS1179TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws331/JBWS331TestCase*</exclude>
-                 <exclude>org/jboss/test/ws/jaxrpc/jbws772/JBWS772TestCase*</exclude>
               </excludes>
             </configuration>
           </plugin>

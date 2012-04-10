@@ -38,7 +38,6 @@ import java.util.regex.Pattern;
 
 import javax.net.ssl.SSLEngine;
 import javax.xml.rpc.Stub;
-import javax.xml.ws.BindingProvider;
 
 import org.jboss.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -398,11 +397,6 @@ public class NettyClient
          authType = StubExt.PROPERTY_AUTH_TYPE_BASIC;
       String username = (String)callProps.get(Stub.USERNAME_PROPERTY);
       String password = (String)callProps.get(Stub.PASSWORD_PROPERTY);
-      if (username == null || password == null)
-      {
-         username = (String)callProps.get(BindingProvider.USERNAME_PROPERTY);
-         password = (String)callProps.get(BindingProvider.PASSWORD_PROPERTY);
-      }
       if (username != null && password != null)
       {
          if (authType.equals(StubExt.PROPERTY_AUTH_TYPE_BASIC))

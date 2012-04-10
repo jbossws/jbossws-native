@@ -202,7 +202,6 @@ public class ServerEndpointMetaData extends EndpointMetaData
       buffer.append("\n linkName=").append(getLinkName());
       buffer.append("\n implName=").append(getServiceEndpointImplName());
       buffer.append("\n seiName=").append(getServiceEndpointInterfaceName());
-      buffer.append("\n serviceMode=").append(getServiceMode());
       buffer.append("\n portComponentName=").append(getPortComponentName());
       buffer.append("\n contextRoot=").append(getContextRoot());
       buffer.append("\n urlPattern=").append(getURLPattern());

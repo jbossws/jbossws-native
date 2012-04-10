@@ -37,11 +37,8 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
-import javax.xml.ws.Service.Mode;
-import javax.xml.ws.WebServiceFeature;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -109,15 +106,11 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    // The SOAPBinding use
    private Use use;
    // The SOAPBinding parameter style
-   private ParameterStyle parameterStyle;
-   // The JAXWS ServiceMode
-   private Mode serviceMode;
+   private Boolean wrappedParameterStyle;
    // The list of service meta data
    private List<OperationMetaData> operations = new ArrayList<OperationMetaData>();
    // Maps the java method to the operation meta data
    private Map<Method, OperationMetaData> opMetaDataCache = new HashMap<Method, OperationMetaData>();
-   // The features defined for this endpoint
-   private FeatureSet features = new FeatureSet();
 
    private ConfigObservable configObservable = new ConfigObservable();
 
@@ -267,35 +260,21 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       this.style = value;
    }
 
-   public ParameterStyle getParameterStyle()
+   public boolean isWrappedParameterStyle()
    {
-      if (parameterStyle == null)
+      if (wrappedParameterStyle == null)
       {
-         parameterStyle = ParameterStyle.WRAPPED;
-         if (log.isDebugEnabled())
-            log.debug("Using default parameter style: " + parameterStyle);
+    	  wrappedParameterStyle = Boolean.TRUE;
       }
-      return parameterStyle;
+      return wrappedParameterStyle;
    }
 
-   public void setParameterStyle(ParameterStyle value)
+   public void setWrappedParameterStyle(final Boolean value)
    {
-      if (value != null && parameterStyle != null && !parameterStyle.equals(value))
+      if (value != null && wrappedParameterStyle != null && !wrappedParameterStyle.equals(value))
          throw new WSException(BundleUtils.getMessage(bundle, "MIXED_SOAP_PARAMETER_STYLES_NOT_SUPPORTED"));
 
-      if (log.isDebugEnabled())
-         log.debug("setParameterStyle: " + value);
-      this.parameterStyle = value;
-   }
-
-   public Mode getServiceMode()
-   {
-      return serviceMode;
-   }
-
-   public void setServiceMode(Mode serviceMode)
-   {
-      this.serviceMode = serviceMode;
+      this.wrappedParameterStyle = value;
    }
 
    public String getAuthMethod()
@@ -318,26 +297,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void setProperties(Properties properties)
    {
       this.properties = properties;
-   }
-
-   public <T extends WebServiceFeature> T getFeature(Class<T> key)
-   {
-      return features.getFeature(key);
-   }
-
-   public <T extends WebServiceFeature> boolean isFeatureEnabled(Class<T> key)
-   {
-      return features.isFeatureEnabled(key);
-   }
-
-   public FeatureSet getFeatures()
-   {
-      return features;
-   }
-
-   public void addFeature(WebServiceFeature feature)
-   {
-      this.features.addFeature(feature);
    }
 
    public List<OperationMetaData> getOperations()
@@ -523,6 +482,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    {
       TypeMappingImpl typeMapping = serviceMetaData.getTypeMapping();
       List<TypeMappingMetaData> typeMappings = serviceMetaData.getTypesMetaData().getTypeMappings();
+      List<Class> registeredTypes = new ArrayList<Class>(typeMappings.size());
       for (TypeMappingMetaData tmMetaData : typeMappings)
       {
          String javaTypeName = tmMetaData.getJavaTypeName();
@@ -531,26 +491,43 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          {
             List<Class> types = typeMapping.getJavaTypes(xmlType);
 
-            try
+            // TODO: Clarification. In which cases is the type already registered?
+            boolean registered = false;
+            for (Class current : types)
             {
-               ClassLoader classLoader = getClassLoader();
-               Class javaType = JavaUtils.loadJavaType(javaTypeName, classLoader);
-
-               if (JavaUtils.isPrimitive(javaTypeName))
-                  javaType = JavaUtils.getWrapperType(javaType);
-
-               if (getEncodingStyle() == Use.ENCODED && javaType.isArray())
+               if (current.getName().equals(javaTypeName))
                {
-                  typeMapping.register(javaType, xmlType, new SOAPArraySerializerFactory(), new SOAPArrayDeserializerFactory());
-               }
-               else
-               {
-                  typeMapping.register(javaType, xmlType, new JBossXBSerializerFactory(), new JBossXBDeserializerFactory());
+                  registeredTypes.add(current);
+                  registered = true;
+                  break;
                }
             }
-            catch (ClassNotFoundException e)
+
+            if (registered == false)
             {
-               log.warn(BundleUtils.getMessage(bundle, "CANNOT_LOAD_CLASS", new Object[]{ xmlType,  javaTypeName}));
+               try
+               {
+                  ClassLoader classLoader = getClassLoader();
+                  Class javaType = JavaUtils.loadJavaType(javaTypeName, classLoader);
+
+                  if (JavaUtils.isPrimitive(javaTypeName))
+                     javaType = JavaUtils.getWrapperType(javaType);
+
+                  registeredTypes.add(javaType);
+
+                  if (getEncodingStyle() == Use.ENCODED && javaType.isArray())
+                  {
+                     typeMapping.register(javaType, xmlType, new SOAPArraySerializerFactory(), new SOAPArrayDeserializerFactory());
+                  }
+                  else
+                  {
+                     typeMapping.register(javaType, xmlType, new JBossXBSerializerFactory(), new JBossXBDeserializerFactory());
+                  }
+               }
+               catch (ClassNotFoundException e)
+               {
+                  log.warn(BundleUtils.getMessage(bundle, "CANNOT_LOAD_CLASS", new Object[]{ xmlType,  javaTypeName}));
+               }
             }
          }
       }

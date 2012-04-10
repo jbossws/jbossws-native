@@ -41,7 +41,6 @@ import javax.xml.soap.SOAPFault;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -79,6 +78,10 @@ public class SOAPFaultHelperJAXRPC
    private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPFaultHelperJAXRPC.class);
    // provide logging
    private static Logger log = Logger.getLogger(SOAPFaultHelperJAXRPC.class);
+   /**
+    * A constant representing the identity of the SOAP 1.2 over HTTP binding.
+    */
+   private static final String SOAP12HTTP_BINDING = "http://www.w3.org/2003/05/soap/bindings/HTTP/";
 
    private static List<QName> allowedFaultCodes = new ArrayList<QName>();
    static
@@ -326,7 +329,7 @@ public class SOAPFaultHelperJAXRPC
       {
          EndpointMetaData emd = msgContext.getEndpointMetaData();
          String bindingId = emd.getBindingId();
-         if (SOAPBinding.SOAP12HTTP_BINDING.equals(bindingId))
+         if (SOAP12HTTP_BINDING.equals(bindingId))
          {
             return true;
          }

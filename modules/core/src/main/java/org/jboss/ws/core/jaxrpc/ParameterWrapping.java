@@ -35,7 +35,6 @@ import javassist.CtNewMethod;
 import javassist.LoaderClassPath;
 import javassist.Modifier;
 
-import javax.jws.soap.SOAPBinding.ParameterStyle;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
@@ -73,8 +72,8 @@ public class ParameterWrapping
       if (opMetaData.getStyle() != Style.DOCUMENT)
          throw new WSException(BundleUtils.getMessage(bundle, "UNEXPECTED_STYLE",  opMetaData.getStyle()));
 
-      if (opMetaData.getParameterStyle() != ParameterStyle.WRAPPED)
-         throw new WSException(BundleUtils.getMessage(bundle, "UNEXPECTED_PARAMETER_STYLE",  opMetaData.getParameterStyle()));
+      if (!opMetaData.isWrappedParameterStyle())
+         throw new WSException(BundleUtils.getMessage(bundle, "UNEXPECTED_PARAMETER_STYLE"));
    }
 
    private static Object holderValue(Object holder)

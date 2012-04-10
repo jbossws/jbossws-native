@@ -33,7 +33,6 @@ import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
-import javax.xml.ws.http.HTTPBinding;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
@@ -58,13 +57,10 @@ import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.wsf.spi.SPIProvider;
-import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.invocation.Invocation;
 import org.jboss.wsf.spi.invocation.InvocationContext;
 import org.jboss.wsf.spi.invocation.InvocationHandler;
-import org.jboss.wsf.spi.invocation.WebServiceContextFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /** An implementation handles invocations on the endpoint
@@ -81,14 +77,6 @@ public class ServiceEndpointInvoker
    protected Endpoint endpoint;
    protected CommonBindingProvider bindingProvider;
    protected ServerHandlerDelegate delegate;
-
-   private WebServiceContextFactory contextFactory;
-
-   public ServiceEndpointInvoker()
-   {
-      SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      contextFactory = spiProvider.getSPI(WebServiceContextFactory.class);
-   }
 
    /** Initialize the service endpoint */
    public void init(Endpoint endpoint)
@@ -368,51 +356,39 @@ public class ServiceEndpointInvoker
    {
       OperationMetaData opMetaData;
 
-      String bindingID = epMetaData.getBindingId();
-      if (HTTPBinding.HTTP_BINDING.equals(bindingID))
+      SOAPMessageImpl soapMessage = (SOAPMessageImpl)reqMessage;
+      opMetaData = soapMessage.getOperationMetaData(epMetaData);
+      SOAPHeader soapHeader = soapMessage.getSOAPHeader();
+
+      // Report a MustUnderstand fault
+      if (opMetaData == null)
       {
-         if (epMetaData.getOperations().size() != 1)
-            throw new IllegalStateException(BundleUtils.getMessage(bundle, "MULTIPLE_OPERATIONS_NOT_SUPPORTED"));
+    	  String faultString;
 
-         opMetaData = epMetaData.getOperations().get(0);
-      }
-      else
-      {
-         SOAPMessageImpl soapMessage = (SOAPMessageImpl)reqMessage;
+    	  SOAPBodyImpl soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
+    	  SOAPBodyElement soapBodyElement = soapBody.getBodyElement();
+    	  if (soapBodyElement != null)
+    	  {
+    		  Name soapName = soapBodyElement.getElementName();
+    		  faultString = "Endpoint " + epMetaData.getPortName() + " does not contain operation meta data for: " + soapName;
+    	  }
+    	  else
+    	  {
+    		  faultString = "Endpoint " + epMetaData.getPortName() + " does not contain operation meta data for empty soap body";
+    	  }
 
-         opMetaData = soapMessage.getOperationMetaData(epMetaData);
-         SOAPHeader soapHeader = soapMessage.getSOAPHeader();
-
-         // Report a MustUnderstand fault
-         if (opMetaData == null)
-         {
-            String faultString;
-
-            SOAPBodyImpl soapBody = (SOAPBodyImpl)soapMessage.getSOAPBody();
-            SOAPBodyElement soapBodyElement = soapBody.getBodyElement();
-            if (soapBodyElement != null)
-            {
-               Name soapName = soapBodyElement.getElementName();
-               faultString = "Endpoint " + epMetaData.getPortName() + " does not contain operation meta data for: " + soapName;
-            }
-            else
-            {
-               faultString = "Endpoint " + epMetaData.getPortName() + " does not contain operation meta data for empty soap body";
-            }
-
-            // R2724 If an INSTANCE receives a message that is inconsistent with its WSDL description, it SHOULD generate a soap:Fault
-            // with a faultcode of "Client", unless a "MustUnderstand" or "VersionMismatch" fault is generated.
-            if (soapHeader != null && soapHeader.examineMustUnderstandHeaderElements(Constants.URI_SOAP11_NEXT_ACTOR).hasNext())
-            {
-               QName faultCode = Constants.SOAP11_FAULT_CODE_MUST_UNDERSTAND;
-               throw new CommonSOAPFaultException(faultCode, faultString);
-            }
-            else
-            {
-               QName faultCode = Constants.SOAP11_FAULT_CODE_CLIENT;
-               throw new CommonSOAPFaultException(faultCode, faultString);
-            }
-         }
+    	  // R2724 If an INSTANCE receives a message that is inconsistent with its WSDL description, it SHOULD generate a soap:Fault
+    	  // with a faultcode of "Client", unless a "MustUnderstand" or "VersionMismatch" fault is generated.
+    	  if (soapHeader != null && soapHeader.examineMustUnderstandHeaderElements(Constants.URI_SOAP11_NEXT_ACTOR).hasNext())
+    	  {
+    		  QName faultCode = Constants.SOAP11_FAULT_CODE_MUST_UNDERSTAND;
+    		  throw new CommonSOAPFaultException(faultCode, faultString);
+    	  }
+    	  else
+    	  {
+    		  QName faultCode = Constants.SOAP11_FAULT_CODE_CLIENT;
+    		  throw new CommonSOAPFaultException(faultCode, faultString);
+    	  }
       }
       return opMetaData;
    }

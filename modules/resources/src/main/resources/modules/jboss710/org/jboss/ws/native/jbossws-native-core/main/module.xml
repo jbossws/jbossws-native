@@ -31,12 +31,10 @@
     <dependencies>
         <module name="javax.api" />
         <module name="javax.servlet.api" />
-        <module name="javax.jws.api" />
         <module name="javax.mail.api" />
         <module name="javax.wsdl4j.api" />
         <module name="javax.xml.stream.api" />
         <module name="javax.xml.rpc.api" />
-        <module name="javax.xml.ws.api" />
         <module name="org.apache.xerces" services="import"/>
         <module name="org.javassist" />
         <module name="org.jboss.netty" />

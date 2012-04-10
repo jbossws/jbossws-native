@@ -13,13 +13,9 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
-  <properties>
-    <jboss.jbosssx.version>2.0.2.SP3</jboss.jbosssx.version>
-  </properties>
-
   <!-- Dependencies -->
   <dependencies>
-  
+
     <!-- jbossws dependencies -->
     <dependency>
       <groupId>org.jboss.ws</groupId>
@@ -74,15 +70,7 @@
       <artifactId>xercesImpl</artifactId>
       <scope>provided</scope>
     </dependency>
-    <!-- transitve dependencies -->
-    <dependency>
-      <groupId>org.jboss.spec.javax.xml.ws</groupId>
-      <artifactId>jboss-jaxws-api_2.2_spec</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.jws</groupId>
-      <artifactId>jsr181-api</artifactId>
-    </dependency>
+    <!-- transitive dependencies -->
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
@@ -116,37 +104,6 @@
   <!-- Build -->
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <showDeprecation>false</showDeprecation>
-          <compilerArguments>
-            <endorseddirs>${project.build.directory}/endorsed</endorseddirs>
-          </compilerArguments>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>copy</goal>
-            </goals>
-            <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>org.jboss.spec.javax.xml.ws</groupId>
-                  <artifactId>jboss-jaxws-api_2.2_spec</artifactId>
-                  <type>jar</type>
-                  <overWrite>true</overWrite>
-                  <outputDirectory>${project.build.directory}/endorsed</outputDirectory>
-                </artifactItem>
-              </artifactItems>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <!-- http://jira.codehaus.org/browse/MANTRUN-89 -->
       <plugin>
         <artifactId>maven-antrun-plugin</artifactId>

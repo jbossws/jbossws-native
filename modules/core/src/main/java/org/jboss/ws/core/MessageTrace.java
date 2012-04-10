@@ -73,13 +73,6 @@ public final class MessageTrace
             msgLog.error(BundleUtils.getMessage(bundle, "CANNOT_TRACE_SOAPMESSAGE"),  ex);
          }
       }
-      else if (message instanceof HTTPMessageImpl)
-      {
-         HTTPMessageImpl httpMessage = (HTTPMessageImpl)message;
-         Element root = httpMessage.getXmlFragment().toElement();
-         String xmlString = DOMWriter.printNode(root, true);
-         msgLog.trace(messagePrefix + "\n" + xmlString);
-      }
       else if (message instanceof byte[])
       {
          Element root = new XMLFragment(new StreamSource(new ByteArrayInputStream((byte[])message))).toElement();

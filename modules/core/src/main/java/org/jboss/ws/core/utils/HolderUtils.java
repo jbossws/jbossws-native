@@ -22,7 +22,6 @@
 package org.jboss.ws.core.utils;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -72,7 +71,7 @@ public class HolderUtils
    /** True if the given type is a holder. */
    public static boolean isHolderType(Class javaType)
    {
-      return javax.xml.rpc.holders.Holder.class.isAssignableFrom(javaType) || javax.xml.ws.Holder.class.isAssignableFrom(javaType);
+      return javax.xml.rpc.holders.Holder.class.isAssignableFrom(javaType);
    }
 
    /** True if the given type is a holder. */
@@ -154,12 +153,8 @@ public class HolderUtils
       Class holderClass = JavaUtils.erasure(holderType);
 
       boolean jaxrpcHolder = javax.xml.rpc.holders.Holder.class.isAssignableFrom(holderClass);
-      boolean jaxwsHolder = javax.xml.ws.Holder.class.isAssignableFrom(holderClass);
-      if (!jaxrpcHolder && !jaxwsHolder)
+      if (!jaxrpcHolder)
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "IS_NOT_A_HOLDER",  holderClass.getName()));
-
-      if (jaxwsHolder)
-         return JavaUtils.erasure(getGenericValueType(holderType));
 
       // Holder is supposed to have a public value field.
       Field field;
@@ -186,13 +181,8 @@ public class HolderUtils
    public static Class getValueType(Class holderClass)
    {
       boolean jaxrpcHolder = javax.xml.rpc.holders.Holder.class.isAssignableFrom(holderClass);
-      boolean jaxwsHolder = javax.xml.ws.Holder.class.isAssignableFrom(holderClass);
-      if (!jaxrpcHolder && !jaxwsHolder)
+      if (!jaxrpcHolder)
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "IS_NOT_A_HOLDER",  holderClass.getName()));
-
-      // No generic info
-      if (jaxwsHolder)
-         return Object.class;
 
       // Holder is supposed to have a public value field.
       Field field;
@@ -219,7 +209,7 @@ public class HolderUtils
       if (holder == null)
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_PARAMETER"));
 
-      if (!javax.xml.rpc.holders.Holder.class.isInstance(holder) && !javax.xml.ws.Holder.class.isInstance(holder))
+      if (!javax.xml.rpc.holders.Holder.class.isInstance(holder))
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "IS_NOT_A_HOLDER",  holder));
 
       try
@@ -251,7 +241,7 @@ public class HolderUtils
       if (holder == null)
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "HOLDER_INSTANCE_WAS_NULL"));
 
-      if (!javax.xml.rpc.holders.Holder.class.isInstance(holder) && !javax.xml.ws.Holder.class.isInstance(holder))
+      if (!javax.xml.rpc.holders.Holder.class.isInstance(holder))
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "IS_NOT_A_HOLDER",  holder));
 
       Class valueType = getValueType(holder.getClass());
@@ -277,24 +267,6 @@ public class HolderUtils
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_ACCESS_PUBLIC_VALUE_FIELD",  holder));
       }
    }
-
-   /**
-    * Gets the generic value type of a JAX-WS Holder.
-    * If there is no generic information, Object.class will be returned
-    *
-    * @param holder JAX-WS holder type
-    * @return generic value type
-    */
-   public static Type getGenericValueType(Type holder)
-   {
-      // For some reason the JDK 4 bytecode verifier trips up on this function if you use the ternary operator
-      // The only difference between it and the working form here is the use of a goto instruction. JDK bug perhaps?
-      if (holder instanceof ParameterizedType)
-        return ((ParameterizedType)holder).getActualTypeArguments()[0];
-
-      return Object.class;
-   }
-
 
    /**
     * Creates a JAX-WS or JAX-RPC holder instance.
