@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Observable;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -67,7 +66,6 @@ public class HandlerDelegateJAXRPC extends ServerHandlerDelegate implements Role
    public HandlerDelegateJAXRPC(ServerEndpointMetaData sepMetaData)
    {
       super(sepMetaData);
-      sepMetaData.registerConfigObserver(this);
    }
 
    /**
@@ -213,9 +211,5 @@ public class HandlerDelegateJAXRPC extends ServerHandlerDelegate implements Role
    public Set<QName> getHeaders()
    {
       return headers;
-   }
-
-   public void update(Observable observable, Object object)
-   {
    }
 }

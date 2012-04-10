@@ -613,23 +613,4 @@ public abstract class CommonClient implements StubExt, HeaderSource
          throw new JAXRPCException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_ATTACHMENT_PART"));
       }
    }
-
-   public String getConfigName()
-   {
-      EndpointMetaData epMetaData = getEndpointMetaData();
-      return epMetaData.getConfigName();
-   }
-
-   public void setConfigName(String configName)
-   {
-      setConfigName(configName, null);
-   }
-
-   public abstract void setConfigName(String configName, String configFile);
-
-   public String getConfigFile()
-   {
-      EndpointMetaData epMetaData = getEndpointMetaData();
-      return epMetaData.getConfigFile();
-   }
 }

@@ -54,17 +54,12 @@ import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.handler.ssl.SslHandler;
 import org.jboss.util.Base64;
 import org.jboss.ws.api.util.BundleUtils;
-import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.WSTimeoutException;
 import org.jboss.ws.core.client.Marshaller;
 import org.jboss.ws.core.client.UnMarshaller;
 import org.jboss.ws.core.client.ssl.SSLContextFactory;
 import org.jboss.ws.core.client.transport.WSResponseHandler.Result;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.metadata.config.EndpointProperty;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.wsf.spi.metadata.config.CommonConfig;
 
 /**
  * A http client using Netty
@@ -344,17 +339,6 @@ public class NettyClient
    {
       if (HttpMethod.POST.equals(message.getMethod()))
       {
-         CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-         //Overwrite, through endpoint config
-         if (msgContext != null)
-         {
-            EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
-            CommonConfig config = epMetaData.getConfig();
-
-            String sizeValue = config.getProperty(EndpointProperty.CHUNKED_ENCODING_SIZE);
-            if (sizeValue != null)
-               chunkSize = Integer.valueOf(sizeValue);
-         }
          //override using call props
          try
          {

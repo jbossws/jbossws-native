@@ -25,10 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.metadata.config.jaxrpc.CommonConfigJAXRPC;
-import org.jboss.wsf.spi.metadata.config.CommonConfig;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerChainMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
@@ -48,14 +44,6 @@ public class EndpointConfigMetaData
    private static Logger log = Logger.getLogger(EndpointConfigMetaData.class);
 
    private final EndpointMetaData epMetaData;
-   // The REQUIRED config-name
-   protected String configName;
-   // The REQUIRED config-file
-   protected String configFile;
-
-   // The REQUIRED endpoint config
-   private CommonConfig config;
-
    // The optional handlers
    private List<HandlerMetaData> handlers = new ArrayList<HandlerMetaData>();
    // True if the handlers are initialized
@@ -113,39 +101,7 @@ public class EndpointConfigMetaData
       List<HandlerMetaData> sepHandlers = getHandlerMetaData(HandlerType.ENDPOINT);
       clearHandlers();
 
-      List<HandlerMetaData> preHandlers = getHandlers(epMetaData, HandlerType.PRE);
-      List<HandlerMetaData> postHandlers = getHandlers(epMetaData, HandlerType.POST);
-
-      addHandlers(preHandlers);
       addHandlers(sepHandlers);
-      addHandlers(postHandlers);
-
-      if (log.isDebugEnabled())
-      {
-         log.debug("Added " + preHandlers.size() + " PRE handlers");
-         log.debug("Added " + sepHandlers.size() + " ENDPOINT handlers");
-         log.debug("Added " + postHandlers.size() + " POST handlers");
-      }
-   }
-   
-   private List<HandlerMetaData> getHandlers(EndpointMetaData epMetaData, HandlerType type)
-   {
-      List<UnifiedHandlerChainMetaData> handlerChains = config.getHandlers(type);
-      boolean isJAXRPCConfig = (config instanceof CommonConfigJAXRPC);
-      List<HandlerMetaData> handlers = new ArrayList<HandlerMetaData>();
-      if (handlerChains != null)
-      {
-         for (UnifiedHandlerChainMetaData handlerChain : handlerChains)
-         {
-            for (UnifiedHandlerMetaData uhmd : handlerChain.getHandlers())
-            {
-               HandlerMetaData hmd = isJAXRPCConfig ? HandlerMetaDataJAXRPC.newInstance(uhmd, type) : HandlerMetaDataJAXWS.newInstance(uhmd, type);
-               hmd.setEndpointMetaData(epMetaData);
-               handlers.add(hmd);
-            }
-         }
-      }
-      return handlers;
    }
 
    public EndpointMetaData getEndpointMetaData()
@@ -158,35 +114,5 @@ public class EndpointConfigMetaData
       // Initialize handlers
       for (HandlerMetaData handler : handlers)
          handler.eagerInitialize();
-   }
-
-   public CommonConfig getConfig()
-   {
-      return config;
-   }
-
-   void setConfig(CommonConfig config)
-   {
-      this.config = config;
-   }
-
-   public String getConfigName()
-   {
-      return configName;
-   }
-
-   public void setConfigName(String configName)
-   {
-      this.configName = configName;
-   }
-
-   public String getConfigFile()
-   {
-      return configFile;
-   }
-
-   public void setConfigFile(String configFile)
-   {
-      this.configFile = configFile;
    }
 }

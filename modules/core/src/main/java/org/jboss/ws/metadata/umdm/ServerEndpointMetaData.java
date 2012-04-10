@@ -28,7 +28,6 @@ import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
-import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
@@ -72,13 +71,6 @@ public class ServerEndpointMetaData extends EndpointMetaData
    {
       super(service, portName, portTypeName);
       this.endpoint = endpoint;
-
-      String configName = ConfigurationProvider.DEFAULT_ENDPOINT_CONFIG_NAME;
-      String configFile = ConfigurationProvider.DEFAULT_JAXRPC_ENDPOINT_CONFIG_FILE;
-
-      EndpointConfigMetaData ecmd = getEndpointConfigMetaData();
-      ecmd.setConfigName(configName);
-      ecmd.setConfigFile(configFile);
    }
 
    public Endpoint getEndpoint()
@@ -205,12 +197,9 @@ public class ServerEndpointMetaData extends EndpointMetaData
       buffer.append("\n portComponentName=").append(getPortComponentName());
       buffer.append("\n contextRoot=").append(getContextRoot());
       buffer.append("\n urlPattern=").append(getURLPattern());
-      buffer.append("\n configFile=").append(getConfigFile());
-      buffer.append("\n configName=").append(getConfigName());
       buffer.append("\n authMethod=").append(getAuthMethod());
       buffer.append("\n transportGuarantee=").append(getTransportGuarantee());
       buffer.append("\n secureWSDLAccess=").append(isSecureWSDLAccess());
-      buffer.append("\n properties=").append(getProperties());
 
       for (OperationMetaData opMetaData : getOperations())
       {

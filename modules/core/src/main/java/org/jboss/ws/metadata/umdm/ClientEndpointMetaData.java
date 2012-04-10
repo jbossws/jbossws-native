@@ -23,7 +23,6 @@ package org.jboss.ws.metadata.umdm;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
@@ -37,19 +36,9 @@ public class ClientEndpointMetaData extends EndpointMetaData
    // The endpoint address
    private String endpointAddress;
    
-   ClientEndpointMetaData()
-   {
-   }
-
    public ClientEndpointMetaData(ServiceMetaData service, QName qname, QName portTypeName)
    {
       super(service, qname, portTypeName);
-      String configName = ConfigurationProvider.DEFAULT_CLIENT_CONFIG_NAME;
-      String configFile = ConfigurationProvider.DEFAULT_JAXRPC_CLIENT_CONFIG_FILE;
-
-      EndpointConfigMetaData ecmd = getEndpointConfigMetaData();
-      ecmd.setConfigName(configName);
-      ecmd.setConfigFile(configFile);
    }
 
    public String getEndpointAddress()
@@ -62,11 +51,6 @@ public class ClientEndpointMetaData extends EndpointMetaData
       this.endpointAddress = endpointAddress;
    }
 
-   public EndpointConfigMetaData createEndpointConfigMetaData(String configName, String configFile)
-   {
-      return super.createEndpointConfigMetaData(configName, configFile);
-   }
-
    public String toString()
    {
       StringBuilder buffer = new StringBuilder("\nClientEndpointMetaData:");
@@ -74,10 +58,7 @@ public class ClientEndpointMetaData extends EndpointMetaData
       buffer.append("\n address=").append(getEndpointAddress());
       buffer.append("\n binding=").append(getBindingId());
       buffer.append("\n seiName=").append(getServiceEndpointInterfaceName());
-      buffer.append("\n configFile=").append(getConfigFile());
-      buffer.append("\n configName=").append(getConfigName());
       buffer.append("\n authMethod=").append(getAuthMethod());
-      buffer.append("\n properties=").append(getProperties());
 
       for (OperationMetaData opMetaData : getOperations())
       {

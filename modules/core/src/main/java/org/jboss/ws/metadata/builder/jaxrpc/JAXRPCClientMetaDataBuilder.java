@@ -174,15 +174,6 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
             epMetaData.setEndpointAddress(wsdlEndpoint.getAddress());
             serviceMetaData.addEndpoint(epMetaData);
 
-            // config-name, config-file
-            if (serviceRefMetaData != null)
-            {
-               String configName= serviceRefMetaData.getConfigName();
-               String configFile = serviceRefMetaData.getConfigFile();
-               if (configName != null || configFile != null)
-                  epMetaData.setConfigName(configName, configFile);
-            }
-
             // Init the endpoint binding
             initEndpointBinding(wsdlBinding, epMetaData);
 

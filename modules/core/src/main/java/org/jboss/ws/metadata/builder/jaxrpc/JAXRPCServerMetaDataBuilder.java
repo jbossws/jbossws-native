@@ -157,11 +157,6 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                   if (bmd == null)
                      throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_UNIFIEDBEANMETADATA",  linkName));
 
-                  String configName = apMetaData.getConfigName();
-                  String configFile = apMetaData.getConfigFile();
-                  if (configName != null || configFile != null)
-                     sepMetaData.setConfigName(configName, configFile);
-
                   EJBSecurityMetaData smd = bmd.getSecurityMetaData();
                   if (smd != null)
                   {
@@ -184,12 +179,6 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                   String wsdName = serviceMetaData.getWebserviceDescriptionName();
                   String wsdlPublishLocation = webMetaData.getWsdlPublishLocationByName(wsdName);
                   serviceMetaData.setWsdlPublishLocation(wsdlPublishLocation);
-
-                  String configName = webMetaData.getConfigName();
-                  String configFile = webMetaData.getConfigFile();
-                  if (configName != null || configFile != null)
-                     sepMetaData.setConfigName(configName, configFile);
-
                   initTransportGuaranteeJSE(dep, sepMetaData, linkName);
                }
 

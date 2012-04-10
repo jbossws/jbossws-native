@@ -21,12 +21,8 @@
  */
 package org.jboss.ws.core;
 
-import java.util.Observable;
-
-import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.SOAP11BindingJAXRPC;
 import org.jboss.ws.core.jaxrpc.SOAP12BindingJAXRPC;
-import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 
 /**
@@ -36,9 +32,8 @@ import org.jboss.ws.metadata.umdm.EndpointMetaData;
  * @author Heiko.Braun@jboss.com
  * @since 04-Jul-2006
  */
-public class CommonBindingProvider implements Configurable
+public class CommonBindingProvider
 {
-   private static Logger log = Logger.getLogger(CommonBindingProvider.class);
    /**
     * A constant representing the identity of the SOAP 1.1 over HTTP binding.
     */
@@ -56,23 +51,11 @@ public class CommonBindingProvider implements Configurable
    {
       this.epMetaData = epMetaData;
       initBinding(epMetaData.getBindingId());
-
-      this.epMetaData.registerConfigObserver(this);
-      configure();
    }
 
    public CommonBindingProvider(String bindingId)
    {
       initBinding(bindingId);
-      configure();
-   }
-
-   private void configure()
-   {
-      if (epMetaData != null)
-      {
-         epMetaData.configure(this);
-      }
    }
 
    protected void initBinding(String bindingId)
@@ -90,11 +73,5 @@ public class CommonBindingProvider implements Configurable
    public CommonBinding getCommonBinding()
    {
       return binding;
-   }
-
-   public void update(Observable observable, Object object)
-   {
-      if(log.isDebugEnabled()) log.debug("Update config: " + object);
-      configure();
    }
 }
