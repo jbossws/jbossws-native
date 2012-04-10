@@ -33,7 +33,6 @@ import javax.wsdl.factory.WSDLFactory;
 import javax.xml.namespace.QName;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.addressing.AddressingConstants;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMUtils;
@@ -347,7 +346,6 @@ public class WSDL11Writer extends WSDLWriter
    protected void appendPortOperations(StringBuilder buffer, WSDLInterface intf)
    {
       String prefix = wsdl.getPrefix(intf.getName().getNamespaceURI());
-      String wsamPrefix = wsdl.getPrefix(AddressingConstants.Metadata.NS);
 
       WSDLInterfaceOperation[] operations = intf.getSortedOperations();
       for (int i = 0; i < operations.length; i++)
@@ -374,10 +372,6 @@ public class WSDL11Writer extends WSDLWriter
          {
             buffer.append("<input message='" + msgEl + "'>").append("</input>");
          }
-         else
-         {
-            buffer.append("<input message='" + msgEl + "' " + wsamPrefix + ":" + AddressingConstants.Metadata.Attributes.ACTION + "='" + inputAction + "'/>");
-         }
 
          if (! Constants.WSDL20_PATTERN_IN_ONLY.equals(operation.getPattern()))
          {
@@ -385,10 +379,6 @@ public class WSDL11Writer extends WSDLWriter
             if (outputAction == null)
             {
                buffer.append("<output message='" + msgEl + "Response'>").append("</output>");
-            }
-            else
-            {
-               buffer.append("<output message='" + msgEl + "Response' " + wsamPrefix + ":" + AddressingConstants.Metadata.Attributes.ACTION + "='" + outputAction + "'/>");
             }
          }
 
@@ -401,12 +391,6 @@ public class WSDL11Writer extends WSDLWriter
             {
                buffer.append("<fault  message='" + prefix + ":" + element.getLocalPart());
                buffer.append("' name='" + element.getLocalPart() + "'/>");
-            }
-            else
-            {
-               buffer.append("<fault  message='" + prefix + ":" + element.getLocalPart());
-               buffer.append("' name='" + element.getLocalPart() + "' ");
-               buffer.append(wsamPrefix + ":" + AddressingConstants.Metadata.Attributes.ACTION + "='" + faultAction + "'/>");
             }
          }
 

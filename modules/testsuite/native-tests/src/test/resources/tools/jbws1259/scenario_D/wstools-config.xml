@@ -1,5 +1,0 @@
-<configuration>
-  <wsdl-java location="${test.resources.directory}/tools/jbws1259/scenario_D/PhoneBook.wsdl" parameter-style="bare">
-    <mapping file="jaxrpc-mapping.xml"/>
-  </wsdl-java>
-</configuration>

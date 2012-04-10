@@ -21,9 +21,6 @@
  */
 package org.jboss.ws.core.jaxws;
 
-import java.security.AccessController;
-import java.security.PrivilegedActionException;
-import java.security.PrivilegedExceptionAction;
 import java.util.Collection;
 import java.util.ResourceBundle;
 
@@ -32,15 +29,10 @@ import javax.xml.bind.JAXBException;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.binding.BindingCustomization;
-import org.jboss.ws.api.binding.JAXBBindingCustomization;
 import org.jboss.ws.api.util.BundleUtils;
-import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.invocation.EndpointAssociation;
 
 import com.sun.xml.bind.api.JAXBRIContext;
 import com.sun.xml.bind.api.TypeReference;
-import com.sun.xml.bind.v2.model.annotation.RuntimeAnnotationReader;
 
 /**
  * The default factory checks if a {@link JAXBBindingCustomization} exists
@@ -73,13 +65,8 @@ public class CustomizableJAXBContextFactory extends JAXBContextFactory
    {
       try
       {
-         BindingCustomization bcust = getCustomization();
-
-         JAXBContext jaxbCtx;
-         if (null == bcust)
-            jaxbCtx = JAXBContext.newInstance(clazzes);
-         else
-            jaxbCtx = createContext(clazzes, bcust);
+         JAXBContext jaxbCtx = JAXBContext.newInstance(clazzes);
+         jaxbCtx = createContext(clazzes);
 
          incrementContextCount();
          return jaxbCtx;
@@ -90,72 +77,11 @@ public class CustomizableJAXBContextFactory extends JAXBContextFactory
       }
    }
 
-   public JAXBContext createContext(final Class[] clazzes, final BindingCustomization bcust) throws WSException
-   {
-      JAXBContext jaxbCtx = null;
-      try
-      {
-         jaxbCtx = AccessController.doPrivileged(new PrivilegedExceptionAction<JAXBContext>() {
-            public JAXBContext run() throws PrivilegedActionException
-            {
-               try
-               {
-                  return JAXBContext.newInstance(clazzes, bcust);
-               }
-               catch (JAXBException e)
-               {
-                  throw new PrivilegedActionException(e);
-               }
-            }
-         });
-         incrementContextCount();
-      }
-      catch (Exception e)
-      {  
-         if (bcust != null && bcust.get("com.sun.xml.bind.defaultNamespaceRemap") != null)
-         {
-            String dns = (String) bcust.get("com.sun.xml.bind.defaultNamespaceRemap");
-            bcust.remove("com.sun.xml.bind.defaultNamespaceRemap");
-            bcust.put("com.sun.xml.internal.bind.defaultNamespaceRemap", dns);                       
-            try
-            {
-               jaxbCtx = AccessController.doPrivileged(new PrivilegedExceptionAction<JAXBContext>() {
-                  public JAXBContext run() throws PrivilegedActionException
-                  {
-                     try
-                     {
-                        return JAXBContext.newInstance(clazzes, bcust);
-                     }
-                     catch (JAXBException e)
-                     {
-                        throw new PrivilegedActionException(e);
-                     }
-                  }
-               });
-               incrementContextCount();
-            }
-            catch (Exception ex)
-            {
-               throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_CREATE_JAXBCONTEXT"),  ex);
-            }
-         }
-         else
-         {
-            throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_CREATE_JAXBCONTEXT"),  e);
-         }      
-      }
-      return jaxbCtx;
-   }
-
-   public JAXBRIContext createContext(Class[] classes, Collection<TypeReference> refs, String defaultNS, boolean c14n, BindingCustomization bcust)
+   public JAXBRIContext createContext(Class[] classes, Collection<TypeReference> refs, String defaultNS, boolean c14n)
    {
       try
       {
-         RuntimeAnnotationReader anReader = null;
-         if (bcust != null)
-            anReader = (RuntimeAnnotationReader)bcust.get(JAXBRIContext.ANNOTATION_READER);
-
-         JAXBRIContext jaxbCtx = JAXBRIContext.newInstance(classes, refs, null, defaultNS, c14n, anReader);
+         JAXBRIContext jaxbCtx = JAXBRIContext.newInstance(classes, refs, null, defaultNS, c14n, null);
          incrementContextCount();
          return jaxbCtx;
       }
@@ -163,11 +89,5 @@ public class CustomizableJAXBContextFactory extends JAXBContextFactory
       {
          throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_CREATE_JAXBCONTEXT"),  e);
       }
-   }
-
-   private BindingCustomization getCustomization()
-   {
-      Endpoint ep = EndpointAssociation.getEndpoint();
-      return ep != null ? ep.getAttachment(BindingCustomization.class) : null;
    }
 }

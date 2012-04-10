@@ -21,10 +21,8 @@
  */
 package org.jboss.ws.metadata.builder.jaxws;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +38,6 @@ import javax.xml.ws.WebServiceProvider;
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
-import org.jboss.ws.common.IOUtils;
 import org.jboss.ws.metadata.builder.MetaDataBuilder;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
@@ -52,11 +49,6 @@ import org.jboss.ws.metadata.wsdl.WSDLEndpoint;
 import org.jboss.ws.metadata.wsdl.WSDLService;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
-import org.jboss.ws.tools.ToolsUtils;
-import org.jboss.ws.tools.wsdl.JAXBWSDLGenerator;
-import org.jboss.ws.tools.wsdl.WSDLGenerator;
-import org.jboss.ws.tools.wsdl.WSDLWriter;
-import org.jboss.ws.tools.wsdl.WSDLWriterResolver;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
 import org.jboss.wsf.spi.deployment.Deployment;
 import org.jboss.wsf.spi.deployment.Endpoint;
@@ -75,10 +67,6 @@ import org.jboss.wsf.spi.deployment.Endpoint;
 public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(JAXWSWebServiceMetaDataBuilder.class);
-   private boolean generateWsdl = true;
-   private boolean extension;
-   private boolean toolMode = false;
-   private File wsdlDirectory = null;
    private PrintStream messageStream = null;
 
    private static class EndpointResult
@@ -87,16 +75,6 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       private ServerEndpointMetaData sepMetaData;
       private ServiceMetaData serviceMetaData;
       private URL wsdlLocation;
-   }
-
-   public void setGenerateWsdl(boolean generateWsdl)
-   {
-      this.generateWsdl = generateWsdl;
-   }
-   
-   public void setExtension(boolean extension)
-   {
-      this.extension = extension;
    }
 
    public ServerEndpointMetaData buildWebServiceMetaData(Deployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass, String linkName)
@@ -130,10 +108,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          // process config
          processEndpointConfig(dep, sepMetaData, sepClass, linkName);
 
-         if (!toolMode)
-         {
-            setupOperationsFromWSDL(serviceMetaData, sepMetaData);
-         }
+         setupOperationsFromWSDL(serviceMetaData, sepMetaData);
 
          // Process web methods
          processWebMethods(sepMetaData, seiClass);
@@ -147,22 +122,11 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          createJAXBContext(sepMetaData);
          populateXmlTypes(sepMetaData);
 
-         // The server must always generate WSDL
-         if (generateWsdl || !toolMode)
-            generateWSDL(seiClass, serviceMetaData, sepMetaData);
-
-         // No need to process endpoint items if we are in tool mode
-         if (toolMode)
-            return sepMetaData;
-
          // Sanity check: read the generated WSDL and initialize the schema model
          // Note, this should no longer be needed, look into removing it
          WSDLDefinitions wsdlDefinitions = serviceMetaData.getWsdlDefinitions();
          JBossXSModel schemaModel = WSDLUtils.getSchemaModel(wsdlDefinitions.getWsdlTypes());
          serviceMetaData.getTypesMetaData().setSchemaModel(schemaModel);
-
-         // Note, that @WebContext needs to be defined on the endpoint not the SEI
-         processWebContext(dep, sepClass, linkName, sepMetaData);
 
          // setup handler chain from config
          sepMetaData.initEndpointConfig();
@@ -344,89 +308,10 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       return result;
    }
 
-   private void generateWSDL(Class wsClass, ServiceMetaData serviceMetaData, EndpointMetaData epMetaData)
-   {
-      final URL wsdlLocation = serviceMetaData.getWsdlLocation();
-
-      if (wsdlLocation == null)
-      {
-         try
-         {
-            WSDLGenerator generator = new JAXBWSDLGenerator(jaxbCtx);
-            generator.setExtension(extension);
-
-            WSDLDefinitions wsdlDefinitions = generator.generate(serviceMetaData);
-            writeWsdl(serviceMetaData, wsdlDefinitions, epMetaData);
-         }
-         catch (IOException e)
-         {
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_WRITE_GENERATED_WSDL"),  e);
-         }
-      }
-   }
-
-   private void writeWsdl(ServiceMetaData serviceMetaData, WSDLDefinitions wsdlDefinitions, EndpointMetaData epMetaData) throws IOException
-   {
-      // The RI uses upper case, and the TCK expects it, so we just mimic this even though we don't really have to
-      String wsdlName = ToolsUtils.firstLetterUpperCase(serviceMetaData.getServiceName().getLocalPart());
-      // Ensure that types are only in the interface qname
-      wsdlDefinitions.getWsdlTypes().setNamespace(epMetaData.getPortTypeName().getNamespaceURI());
-
-      final File dir, wsdlFile;
-
-      if (wsdlDirectory != null)
-      {
-         dir = wsdlDirectory;
-         wsdlFile = new File(dir, wsdlName + ".wsdl");
-      }
-      else
-      {
-         dir = IOUtils.createTempDirectory();
-         wsdlFile = File.createTempFile(wsdlName, ".wsdl", dir);
-         wsdlFile.deleteOnExit();
-      }
-
-      message(wsdlFile.getName());
-      Writer writer = IOUtils.getCharsetFileWriter(wsdlFile, Constants.DEFAULT_XML_CHARSET);
-      new WSDLWriter(wsdlDefinitions).write(writer, Constants.DEFAULT_XML_CHARSET, new WSDLWriterResolver() {
-         public WSDLWriterResolver resolve(String suggestedFile) throws IOException
-         {
-            File file;
-            if (wsdlDirectory != null)
-            {
-               file = new File(dir, suggestedFile + ".wsdl");
-            }
-            else
-            {
-               file = File.createTempFile(suggestedFile, ".wsdl", dir);
-               file.deleteOnExit();
-            }
-            actualFile = file.getName();
-            message(actualFile);
-            charset = Constants.DEFAULT_XML_CHARSET;
-            writer = IOUtils.getCharsetFileWriter(file, Constants.DEFAULT_XML_CHARSET);
-            return this;
-         }
-      });
-      writer.close();
-
-      serviceMetaData.setWsdlLocation(wsdlFile.toURL());
-   }
-
    private void message(String msg)
    {
       if (messageStream != null)
          messageStream.println(msg);
-   }
-
-   public void setToolMode(boolean toolMode)
-   {
-      this.toolMode = toolMode;
-   }
-
-   public void setWsdlDirectory(File wsdlDirectory)
-   {
-      this.wsdlDirectory = wsdlDirectory;
    }
 
    public void setMessageStream(PrintStream messageStream)

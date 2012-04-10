@@ -56,7 +56,6 @@ import org.jboss.ws.common.utils.DelegateClassLoader;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.jaxws.client.ClientImpl;
 import org.jboss.ws.core.jaxws.client.ClientProxy;
-import org.jboss.ws.core.jaxws.client.DispatchImpl;
 import org.jboss.ws.core.jaxws.client.serviceref.NativeServiceObjectFactoryJAXWS;
 import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.metadata.builder.jaxws.JAXWSClientMetaDataBuilder;
@@ -64,8 +63,6 @@ import org.jboss.ws.metadata.builder.jaxws.JAXWSMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.ws.metadata.umdm.FeatureAwareClientEndpointMetaDataAdapter;
-import org.jboss.ws.metadata.umdm.FeatureAwareEndpointMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXWS;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
@@ -266,21 +263,13 @@ public class ServiceDelegateImpl extends ServiceDelegate
    @Override
    public <T> Dispatch<T> createDispatch(QName portName, Class<T> type, Mode mode)
    {
-      ExecutorService executor = (ExecutorService)getExecutor();
-      EndpointMetaData epMetaData = getEndpointMetaData(portName);
-      FeatureAwareClientEndpointMetaDataAdapter clientMetaDataAdapter = new FeatureAwareClientEndpointMetaDataAdapter((ClientEndpointMetaData)epMetaData);
-
-      return new DispatchImpl(executor, clientMetaDataAdapter, type, mode);
+	  throw new UnsupportedOperationException();
    }
 
    @Override
    public Dispatch<Object> createDispatch(QName portName, JAXBContext jbc, Mode mode)
    {
-      ExecutorService executor = (ExecutorService)getExecutor();
-      EndpointMetaData epMetaData = getEndpointMetaData(portName);
-      FeatureAwareClientEndpointMetaDataAdapter clientMetaDataAdapter = new FeatureAwareClientEndpointMetaDataAdapter((ClientEndpointMetaData)epMetaData);
-
-      return new DispatchImpl(executor, clientMetaDataAdapter, jbc, mode);
+		  throw new UnsupportedOperationException();
    }
 
    private EndpointMetaData getEndpointMetaData(QName portName)
@@ -376,8 +365,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
       try
       {
          ExecutorService executor = (ExecutorService)getExecutor();
-         FeatureAwareClientEndpointMetaDataAdapter clientMetaDataAdapter = new FeatureAwareClientEndpointMetaDataAdapter((ClientEndpointMetaData)epMetaData);
-         ClientProxy handler = new ClientProxy(executor, new ClientImpl(clientMetaDataAdapter, handlerResolver));
+         ClientProxy handler = new ClientProxy(executor, new ClientImpl(epMetaData, handlerResolver));
          ClassLoader cl = epMetaData.getClassLoader();
          try
          {
@@ -392,7 +380,7 @@ public class ServiceDelegateImpl extends ServiceDelegate
          T proxy;
          try
          {
-            proxy = (T)Proxy.newProxyInstance(cl, new Class[] { seiClass, BindingProvider.class, StubExt.class, FeatureAwareEndpointMetaData.class }, handler);
+            proxy = (T)Proxy.newProxyInstance(cl, new Class[] { seiClass, BindingProvider.class, StubExt.class }, handler);
          }
          catch (RuntimeException rte)
          {

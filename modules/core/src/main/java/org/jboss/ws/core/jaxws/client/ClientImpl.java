@@ -35,7 +35,6 @@ import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.EndpointReference;
 import javax.xml.ws.WebServiceException;
-import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.HandlerResolver;
 import javax.xml.ws.handler.MessageContext;
@@ -59,10 +58,9 @@ import org.jboss.ws.core.jaxws.handler.HandlerResolverImpl;
 import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.FeatureAwareClientEndpointMetaDataAdapter;
-import org.jboss.ws.metadata.umdm.FeatureAwareEndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
@@ -72,13 +70,13 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  * @author Thomas.Diesler@jboss.org
  * @since 04-Jul-2006
  */
-public class ClientImpl extends CommonClient implements BindingProvider, FeatureAwareEndpointMetaData
+public class ClientImpl extends CommonClient implements BindingProvider
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(ClientImpl.class);
    private static Logger log = Logger.getLogger(ClientImpl.class);
 
    // the associated endpoint meta data
-   private final FeatureAwareClientEndpointMetaDataAdapter epMetaData;
+   private final ClientEndpointMetaData epMetaData;
    private EndpointConfigMetaData epConfigMetaData;
 
    // Keep a handle on the resolver so that updateConfig calls may revisit the associated chains
@@ -92,7 +90,7 @@ public class ClientImpl extends CommonClient implements BindingProvider, Feature
       super(epMetaData);
       setTargetEndpointAddress(epMetaData.getEndpointAddress());
 
-      this.epMetaData = (FeatureAwareClientEndpointMetaDataAdapter)epMetaData;
+      this.epMetaData = (ClientEndpointMetaData)epMetaData;
       this.epConfigMetaData = epMetaData.getEndpointConfigMetaData();
 
       if (handlerResolver instanceof HandlerResolverImpl)
@@ -453,22 +451,6 @@ public class ClientImpl extends CommonClient implements BindingProvider, Feature
    {
       Object bool = getRequestContext().get(BindingProvider.SESSION_MAINTAIN_PROPERTY);
       return Boolean.TRUE.equals(bool);
-   }
-
-   //////////////////////////////////////////
-   // FeatureAwareEndpointMetaData support //
-   //////////////////////////////////////////
-   
-   @Override
-   public <T extends WebServiceFeature> T getFeature(Class<T> key)
-   {
-      return this.epMetaData.getFeature(key);
-   }
-
-   @Override
-   public void setFeature(WebServiceFeature feature)
-   {
-      this.epMetaData.setFeature(feature);
    }
 
 }

@@ -47,7 +47,6 @@ import javax.xml.ws.EndpointReference;
 import javax.xml.ws.Response;
 import javax.xml.ws.Service.Mode;
 import javax.xml.ws.WebServiceException;
-import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.handler.Handler;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.PortInfo;
@@ -75,8 +74,6 @@ import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.ws.metadata.umdm.EndpointConfigMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.FeatureAwareClientEndpointMetaDataAdapter;
-import org.jboss.ws.metadata.umdm.FeatureAwareEndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.w3c.dom.Node;
@@ -89,7 +86,7 @@ import org.w3c.dom.Node;
  * @author Thomas.Diesler@jboss.com
  * @since 04-Jul-2006
  */
-public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMetadataProvider, FeatureAwareEndpointMetaData
+public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMetadataProvider
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(DispatchImpl.class);
    // provide logging
@@ -97,7 +94,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
 
    private BindingProvider bindingProvider;
    private HandlerResolverImpl handlerResolver;
-   private FeatureAwareClientEndpointMetaDataAdapter epMetaData;
+   private EndpointMetaData epMetaData;
    private JAXBContext jaxbContext;
    private ExecutorService executor;
    private String securityConfig;
@@ -109,7 +106,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
    public DispatchImpl(ExecutorService executor, EndpointMetaData epMetaData, Class<T> type, Mode mode)
    {
       this.bindingProvider = new BindingProviderImpl(epMetaData);
-      this.epMetaData = (FeatureAwareClientEndpointMetaDataAdapter)epMetaData;
+      this.epMetaData = epMetaData;
       this.executor = executor;
       this.type = type;
       this.mode = mode;
@@ -119,7 +116,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
    public DispatchImpl(ExecutorService executor, EndpointMetaData epMetaData, JAXBContext jbc, Mode mode)
    {
       this.bindingProvider = new BindingProviderImpl(epMetaData);
-      this.epMetaData = (FeatureAwareClientEndpointMetaDataAdapter)epMetaData;
+      this.epMetaData = epMetaData;
       this.executor = executor;
       this.type = Object.class;
       this.jaxbContext = jbc;
@@ -158,11 +155,6 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
             handlerResolver.initHandlerChain(ecmd, HandlerType.PRE, true);
             handlerResolver.initHandlerChain(ecmd, HandlerType.ENDPOINT, true);
             handlerResolver.initHandlerChain(ecmd, HandlerType.POST, true);
-
-            PortInfo portInfo = epMetaData.getPortInfo();
-            this.appendHandlers(HandlerType.PRE, portInfo, binding);
-            this.appendHandlers(HandlerType.ENDPOINT, portInfo, binding);
-            this.appendHandlers(HandlerType.POST, portInfo, binding);
          }
 
          retObj = invokeInternalSOAP(obj);
@@ -644,21 +636,4 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
    {
       return epMetaData;
    }
-
-   //////////////////////////////////////////
-   // FeatureAwareEndpointMetaData support //
-   //////////////////////////////////////////
-   
-   @Override
-   public <T extends WebServiceFeature> T getFeature(Class<T> key)
-   {
-      return this.epMetaData.getFeature(key);
-   }
-
-   @Override
-   public void setFeature(WebServiceFeature feature)
-   {
-      this.epMetaData.setFeature(feature);
-   }
-
 }

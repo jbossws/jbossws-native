@@ -21,16 +21,12 @@
  */
 package org.jboss.ws.metadata.umdm;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.binding.BindingCustomization;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
 import org.jboss.wsf.spi.deployment.Endpoint;
@@ -198,21 +194,6 @@ public class ServerEndpointMetaData extends EndpointMetaData
          throw new IllegalStateException(BundleUtils.getMessage(bundle, "ENDPOINT_NOT_AVAILABLE"));
 
       endpoint.setAddress(endpointAddress);
-   }
-
-   /**
-    * Will be set through a deployment aspect
-    * @return List<BindingCustomization> of available customizations
-    */
-   public Collection<BindingCustomization> getBindingCustomizations()
-   {
-      List<BindingCustomization> list = new ArrayList<BindingCustomization>();
-      for (Object att : endpoint.getAttachments())
-      {
-         if (att instanceof BindingCustomization)
-            list.add((BindingCustomization)att);
-      }
-      return list;
    }
 
    public String toString()

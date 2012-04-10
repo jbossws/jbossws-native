@@ -31,7 +31,6 @@ import javax.xml.rpc.Stub;
 import junit.framework.Test;
 
 import org.jboss.ws.core.jaxrpc.client.ServiceFactoryImpl;
-import org.jboss.ws.tools.WSTools;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -48,14 +47,6 @@ public class JBWS1384TestCase extends JBossWSTest
    public static Test suite()
    {
       return new JBossWSTestSetup(JBWS1384TestCase.class, "jaxrpc-jbws1384.war");
-   }
-
-   public void testWsdlToJava() throws Exception
-   {
-      WSTools wstools = new WSTools();
-      String configPath = getResourceFile("jaxrpc/jbws1384/wstools-config.xml").getPath();
-      boolean ret = wstools.generate(configPath, "./wstools/jbws1384");
-      assertTrue("wstools success", ret);
    }
 
    public void testEndpoint() throws Exception

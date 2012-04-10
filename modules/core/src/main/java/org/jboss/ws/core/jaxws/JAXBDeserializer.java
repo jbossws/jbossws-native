@@ -21,28 +21,20 @@
  */
 package org.jboss.ws.core.jaxws;
 
-import java.lang.reflect.Method;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.ValidationEvent;
 import javax.xml.bind.ValidationEventHandler;
-import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 import javax.xml.ws.WebServiceException;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.binding.BindingException;
-import org.jboss.ws.core.binding.ComplexTypeDeserializer;
+import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.TypeMappingImpl;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.api.binding.BindingCustomization;
-import org.jboss.ws.api.binding.JAXBBindingCustomization;
 
 /**
  * A Deserializer that can handle complex types by delegating to JAXB.
@@ -50,7 +42,7 @@ import org.jboss.ws.api.binding.JAXBBindingCustomization;
  * @author Thomas.Diesler@jboss.org
  * @since 04-Dec-2004
  */
-public class JAXBDeserializer extends ComplexTypeDeserializer
+public class JAXBDeserializer extends DeserializerSupport
 {
    // provide logging
    private static final Logger log = Logger.getLogger(JAXBDeserializer.class);
@@ -109,32 +101,7 @@ public class JAXBDeserializer extends ComplexTypeDeserializer
       JAXBContext context = cache.get(types);
       if(null==context)
       {
-         CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-         EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
-         String defaultNS = epMetaData.getPortTypeName().getNamespaceURI();
-         BindingCustomization bindingCustomization = getBindingCustomization();
-         for (Class<?> clz : types)
-         {
-            if (clz.getName().endsWith("ObjectFactory"))
-            {
-               for (Method meth : clz.getMethods())
-               {
-                  XmlElementDecl elementDecl = meth.getAnnotation(XmlElementDecl.class);
-                  if (elementDecl != null && XmlElementDecl.GLOBAL.class.equals(elementDecl.scope())
-                        && elementDecl.namespace() != null && elementDecl.namespace().length() > 0)
-                  {
-                     defaultNS = null;
-                  }
-               }
-            }
-         }
-         if (defaultNS != null)
-         {
-            if (bindingCustomization == null)
-               bindingCustomization = new JAXBBindingCustomization();
-            bindingCustomization.put("com.sun.xml.bind.defaultNamespaceRemap", defaultNS);
-         }
-         context = JAXBContextFactory.newInstance().createContext(types, bindingCustomization);
+         context = JAXBContextFactory.newInstance().createContext(types);
          cache.add(types, context);
       }
       return context;

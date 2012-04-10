@@ -22,7 +22,6 @@
 package org.jboss.ws.core.jaxws.spi;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,6 @@ import javax.xml.transform.Source;
 import javax.xml.ws.Binding;
 import javax.xml.ws.Endpoint;
 import javax.xml.ws.EndpointReference;
-import javax.xml.ws.WebServiceException;
 import javax.xml.ws.WebServiceFeature;
 import javax.xml.ws.WebServicePermission;
 import javax.xml.ws.wsaddressing.W3CEndpointReference;
@@ -42,14 +40,7 @@ import javax.xml.ws.wsaddressing.W3CEndpointReference;
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
-import org.jboss.ws.core.jaxws.spi.http.HttpContext;
-import org.jboss.ws.core.jaxws.spi.http.HttpServer;
-import org.jboss.ws.core.jaxws.spi.http.NettyHttpServerFactory;
-import org.jboss.wsf.spi.SPIProvider;
-import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Deployment;
-import org.jboss.wsf.spi.management.ServerConfig;
-import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -70,9 +61,7 @@ public class EndpointImpl extends Endpoint
    private List<Source> metadata;
    private BindingProviderImpl bindingProvider;
    private Map<String, Object> properties = new HashMap<String, Object>();
-   private HttpContext serverContext;
    private boolean isPublished;
-   private boolean isDestroyed;
    private URI address;
    private Deployment dep;
 
@@ -109,25 +98,7 @@ public class EndpointImpl extends Endpoint
    @Override
    public void publish(final String addr)
    {
-      log.debug("publish: " + addr);
-
-      try
-      {
-         this.address = new URI(addr);
-      }
-      catch (URISyntaxException e)
-      {
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_ADDRESS",  addr));
-      }
-
-      // Check with the security manager
-      this.checkPublishEndpointPermission();
-
-      // Get HTTP server
-      final HttpServer httpServer = NettyHttpServerFactory.getHttpServer();
-      final HttpContext context = httpServer.createContext(this.getContextRoot());
-
-      this.publish(context);
+	  throw new UnsupportedOperationException();
    }
 
    /**
@@ -140,76 +111,12 @@ public class EndpointImpl extends Endpoint
    @Override
    public void publish(Object context)
    {
-      if (context == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NULL_CONTEXT"));
-      
-      if (log.isDebugEnabled())
-         log.debug("publishing endpoint " + this + " to " + context);
-
-      if (isDestroyed)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "ENDPOINT_ALREADY_DESTROYED"));
-
-      // Check with the security manager
-      checkPublishEndpointPermission();
-
-      if (context instanceof HttpContext)
-      {
-         this.serverContext = (HttpContext)context;
-         if (this.address == null)
-         {
-            this.address = getAddressFromConfigAndContext(serverContext); // TODO: is it necessary?
-         }
-         HttpServer httpServer = this.serverContext.getHttpServer();
-         httpServer.publish(this.serverContext, this);
-         this.isPublished = true;
-      }
-      else
-      {
-         throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "CANNOT_HANDLE_CONTEXTS",  context));
-      }
+      throw new UnsupportedOperationException();
    }
    
-   private static URI getAddressFromConfigAndContext(HttpContext context)
-   {
-      try
-      {
-         SPIProvider provider = SPIProviderResolver.getInstance().getProvider();
-         ServerConfigFactory spi = provider.getSPI(ServerConfigFactory.class);
-         ServerConfig serverConfig = spi.getServerConfig();
-         String host = serverConfig.getWebServiceHost();
-         int port = serverConfig.getWebServicePort();
-         String hostAndPort = host + (port > 0 ? ":" + port : ""); 
-         return new URI("http://" + hostAndPort + context.getContextRoot());
-      }
-      catch (URISyntaxException e)
-      {
-         throw new WebServiceException(BundleUtils.getMessage(bundle, "ERROR_GETTING_ENDPOINT_ADDRESS"),  e);
-      }
-   }
-
    @Override
    public void stop()
    {
-      log.debug("stop");
-
-      if (serverContext == null || isPublished == false)
-         log.error(BundleUtils.getMessage(bundle, "ENDPOINT_NOT_PUBLISHED"));
-
-      try
-      {
-         if (serverContext != null)
-         {
-            HttpServer httpServer = serverContext.getHttpServer();
-            httpServer.destroy(serverContext, this);
-         }
-      }
-      catch (Exception ex)
-      {
-         log.error(BundleUtils.getMessage(bundle, "CANNOT_STOP_ENDPOINT"),  ex);
-      }
-
-      isPublished = false;
-      isDestroyed = true;
    }
 
    @Override
