@@ -60,26 +60,6 @@
           <include name="**/jbossxb.jar"/>
         </fileset>
       </copy>
-      <copy todir="@{targetdir}/com/sun/tools/ws/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/jaxws-tools.jar"/>
-        </fileset>
-      </copy>
-      <copy todir="@{targetdir}/com/sun/xml/stream/buffer/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/streambuffer.jar"/>
-        </fileset>
-      </copy>
-      <copy todir="@{targetdir}/com/sun/xml/ws/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/jaxws-rt.jar"/>
-        </fileset>
-      </copy>
-      <copy todir="@{targetdir}/com/sun/xml/ws/policy/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/policy.jar"/>
-        </fileset>
-      </copy>
       <copy todir="@{targetdir}/org/jvnet/staxex/main" flatten="false" overwrite="true">
         <fileset dir="@{thirdpartydir}/lib">
           <include name="**/stax-ex.jar"/>

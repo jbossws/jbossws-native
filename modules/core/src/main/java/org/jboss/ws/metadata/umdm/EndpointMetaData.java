@@ -27,7 +27,6 @@ import java.lang.ref.WeakReference;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -39,7 +38,6 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.jws.soap.SOAPBinding.ParameterStyle;
-import javax.xml.bind.JAXBContext;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.ws.Service.Mode;
@@ -55,26 +53,17 @@ import org.jboss.ws.core.jaxrpc.binding.JBossXBDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPArrayDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.SOAPArraySerializerFactory;
-import org.jboss.ws.core.jaxws.JAXBContextCache;
-import org.jboss.ws.core.jaxws.JAXBContextFactory;
-import org.jboss.ws.core.jaxws.JAXBDeserializerFactory;
-import org.jboss.ws.core.jaxws.JAXBSerializerFactory;
-import org.jboss.ws.core.jaxws.client.DispatchBinding;
 import org.jboss.ws.core.soap.Style;
 import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.metadata.accessor.AccessorFactory;
 import org.jboss.ws.metadata.accessor.AccessorFactoryCreator;
-import org.jboss.ws.metadata.accessor.JAXBAccessorFactoryCreator;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.config.ConfigurationProvider;
-import org.jboss.ws.metadata.config.EndpointFeature;
 import org.jboss.ws.metadata.config.JBossWSConfigFactory;
 import org.jboss.wsf.spi.deployment.UnifiedVirtualFile;
 import org.jboss.wsf.spi.metadata.config.CommonConfig;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
-
-import com.sun.xml.bind.api.JAXBRIContext;
 
 /**
  * A Service component describes a set of endpoints.
@@ -87,11 +76,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private static final ResourceBundle bundle = BundleUtils.getBundle(EndpointMetaData.class);
    // provide logging
    private static Logger log = Logger.getLogger(EndpointMetaData.class);
-
-   public enum Type
-   {
-      JAXRPC, JAXWS
-   }
 
    public static final Set<String> SUPPORTED_BINDINGS = new HashSet<String>();
    static
@@ -128,14 +112,10 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private ParameterStyle parameterStyle;
    // The JAXWS ServiceMode
    private Mode serviceMode;
-   // Whether the endpoint was deployed from annotations
-   private Type type;
    // The list of service meta data
    private List<OperationMetaData> operations = new ArrayList<OperationMetaData>();
    // Maps the java method to the operation meta data
    private Map<Method, OperationMetaData> opMetaDataCache = new HashMap<Method, OperationMetaData>();
-   // All of the registered types
-   private List<Class> registeredTypes = new ArrayList<Class>();
    // The features defined for this endpoint
    private FeatureSet features = new FeatureSet();
 
@@ -143,20 +123,15 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
 
    private List<UnifiedPortComponentRefMetaData> serviceRefContrib = new ArrayList<UnifiedPortComponentRefMetaData>();
 
-   private JAXBContextCache jaxbCache = new JAXBContextCache();
-
    EndpointMetaData()
    {
    }
 
-   public EndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName, Type type)
+   public EndpointMetaData(ServiceMetaData service, QName portName, QName portTypeName)
    {
       this.serviceMetaData = service;
       this.portName = portName;
       this.portTypeName = portTypeName;
-      this.type = type;
-
-      // The default binding
       this.bindingId = Constants.SOAP11HTTP_BINDING;
    }
 
@@ -321,11 +296,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void setServiceMode(Mode serviceMode)
    {
       this.serviceMode = serviceMode;
-   }
-
-   public Type getType()
-   {
-      return type;
    }
 
    public String getAuthMethod()
@@ -526,7 +496,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       eagerInitializeOperations();
       eagerInitializeTypes();
       eagerInitializeAccessors();
-      eagerInitializeJAXBContextCache();
    }
 
    private void eagerInitializeOperations()
@@ -554,7 +523,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    {
       TypeMappingImpl typeMapping = serviceMetaData.getTypeMapping();
       List<TypeMappingMetaData> typeMappings = serviceMetaData.getTypesMetaData().getTypeMappings();
-      registeredTypes = new ArrayList<Class>(typeMappings.size());
       for (TypeMappingMetaData tmMetaData : typeMappings)
       {
          String javaTypeName = tmMetaData.getJavaTypeName();
@@ -563,51 +531,26 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
          {
             List<Class> types = typeMapping.getJavaTypes(xmlType);
 
-            // TODO: Clarification. In which cases is the type already registered?
-            boolean registered = false;
-            for (Class current : types)
+            try
             {
-               if (current.getName().equals(javaTypeName))
+               ClassLoader classLoader = getClassLoader();
+               Class javaType = JavaUtils.loadJavaType(javaTypeName, classLoader);
+
+               if (JavaUtils.isPrimitive(javaTypeName))
+                  javaType = JavaUtils.getWrapperType(javaType);
+
+               if (getEncodingStyle() == Use.ENCODED && javaType.isArray())
                {
-                  registeredTypes.add(current);
-                  registered = true;
-                  break;
+                  typeMapping.register(javaType, xmlType, new SOAPArraySerializerFactory(), new SOAPArrayDeserializerFactory());
+               }
+               else
+               {
+                  typeMapping.register(javaType, xmlType, new JBossXBSerializerFactory(), new JBossXBDeserializerFactory());
                }
             }
-
-            if (registered == false)
+            catch (ClassNotFoundException e)
             {
-               try
-               {
-                  ClassLoader classLoader = getClassLoader();
-                  Class javaType = JavaUtils.loadJavaType(javaTypeName, classLoader);
-
-                  if (JavaUtils.isPrimitive(javaTypeName))
-                     javaType = JavaUtils.getWrapperType(javaType);
-
-                  // Needed for runtime JAXB context
-                  registeredTypes.add(javaType);
-
-                  if (getEncodingStyle() == Use.ENCODED && javaType.isArray())
-                  {
-                     typeMapping.register(javaType, xmlType, new SOAPArraySerializerFactory(), new SOAPArrayDeserializerFactory());
-                  }
-                  else
-                  {
-                     if (getType() == Type.JAXWS)
-                     {
-                        typeMapping.register(javaType, xmlType, new JAXBSerializerFactory(), new JAXBDeserializerFactory());
-                     }
-                     else
-                     {
-                        typeMapping.register(javaType, xmlType, new JBossXBSerializerFactory(), new JBossXBDeserializerFactory());
-                     }
-                  }
-               }
-               catch (ClassNotFoundException e)
-               {
-                  log.warn(BundleUtils.getMessage(bundle, "CANNOT_LOAD_CLASS", new Object[]{ xmlType,  javaTypeName}));
-               }
+               log.warn(BundleUtils.getMessage(bundle, "CANNOT_LOAD_CLASS", new Object[]{ xmlType,  javaTypeName}));
             }
          }
       }
@@ -616,36 +559,19 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    private void eagerInitializeAccessors()
    {
       // Collect the list of all used types
-      boolean useJAXBAccessorFactory = false;
       List<Class> types = new ArrayList<Class>();
       for (OperationMetaData opMetaData : operations)
       {
          for (ParameterMetaData paramMetaData : opMetaData.getParameters())
          {
-            AccessorFactoryCreator factoryCreator = paramMetaData.getAccessorFactoryCreator();
-            if (factoryCreator instanceof JAXBAccessorFactoryCreator)
-               useJAXBAccessorFactory = true;
-
             types.add(paramMetaData.getJavaType());
          }
 
          ParameterMetaData retParam = opMetaData.getReturnParameter();
          if (retParam != null)
          {
-            AccessorFactoryCreator factoryCreator = retParam.getAccessorFactoryCreator();
-            if (factoryCreator instanceof JAXBAccessorFactoryCreator)
-               useJAXBAccessorFactory = true;
-
             types.add(retParam.getJavaType());
          }
-      }
-
-      // Create a JAXBContext for those types
-      JAXBRIContext jaxbCtx = null;
-      if (useJAXBAccessorFactory)
-      {
-         Class[] typeArr = new Class[types.size()];
-         jaxbCtx = (JAXBRIContext)JAXBContextFactory.newInstance().createContext(types.toArray(typeArr));
       }
 
       // Create the accessors using a shared JAXBContext 
@@ -653,41 +579,19 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       {
          for (ParameterMetaData paramMetaData : opMetaData.getParameters())
          {
-            createAccessor(paramMetaData, jaxbCtx);
+            createAccessor(paramMetaData);
          }
 
          ParameterMetaData retParam = opMetaData.getReturnParameter();
          if (retParam != null)
-            createAccessor(retParam, jaxbCtx);
+            createAccessor(retParam);
       }
 
    }
 
-   private void eagerInitializeJAXBContextCache()
-   {
-      //initialize jaxb context cache
-      if ("true".equalsIgnoreCase(System.getProperty(Constants.EAGER_INITIALIZE_JAXB_CONTEXT_CACHE)))
-      {
-         log.debug("Initializing JAXBContext cache...");
-         try
-         {
-            Class[] classes = getRegisteredTypes().toArray(new Class[0]);
-            JAXBContext context = JAXBContextFactory.newInstance().createContext(classes);
-            jaxbCache.add(classes, context);
-         }
-         catch (Exception e)
-         {
-            //ignore
-         }
-      }
-   }
-
-   private void createAccessor(ParameterMetaData paramMetaData, JAXBRIContext jaxbCtx)
+   private void createAccessor(ParameterMetaData paramMetaData)
    {
       AccessorFactoryCreator factoryCreator = paramMetaData.getAccessorFactoryCreator();
-      if (factoryCreator instanceof JAXBAccessorFactoryCreator)
-         ((JAXBAccessorFactoryCreator)factoryCreator).setJAXBContext(jaxbCtx);
-
       if (paramMetaData.getWrappedParameters() != null)
       {
          AccessorFactory factory = factoryCreator.create(paramMetaData);
@@ -705,12 +609,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void configure(Configurable configurable)
    {
       CommonConfig config = getConfig();
-
-      if (configurable instanceof DispatchBinding)
-      {
-         DispatchBinding dpb = (DispatchBinding)configurable;
-         dpb.setValidateDispatch(config.hasFeature(EndpointFeature.VALIDATE_DISPATCH));
-      }
+      // TODO: remove this method
    }
 
    public UnifiedVirtualFile getRootFile()
@@ -721,11 +620,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
    public void registerConfigObserver(Configurable observer)
    {
       configObservable.addObserver(observer);
-   }
-
-   public JAXBContextCache getJaxbCache()
-   {
-      return jaxbCache;
    }
 
    public String getConfigFile()
@@ -834,11 +728,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Con
       toInitialise.setConfig(config);
 
       toInitialise.configHandlerMetaData();
-   }
-
-   public List<Class> getRegisteredTypes()
-   {
-      return Collections.unmodifiableList(registeredTypes);
    }
 
    class ConfigObservable extends Observable

@@ -25,19 +25,19 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jboss.logging.Logger;
-import org.jboss.wsf.spi.deployment.Endpoint;
-import org.jboss.wsf.spi.deployment.ServletDelegate;
-import org.jboss.wsf.spi.management.EndpointResolver;
-import org.jboss.ws.common.injection.InjectionHelper;
-import org.jboss.ws.common.injection.PreDestroyHolder;
-import org.jboss.ws.common.servlet.AbstractEndpointServlet;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.jboss.logging.Logger;
+import org.jboss.ws.common.injection.InjectionHelper;
+import org.jboss.ws.common.injection.PreDestroyHolder;
+import org.jboss.ws.common.servlet.AbstractEndpointServlet;
+import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.deployment.ServletDelegate;
+import org.jboss.wsf.spi.management.EndpointResolver;
 
 /**
  * A Native endpoint servlet that is installed for every web service endpoint

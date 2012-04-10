@@ -21,27 +21,18 @@
  */
 package org.jboss.ws.core.server;
 
-import static org.jboss.ws.common.integration.WSHelper.isJaxwsEndpoint;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.ResourceBundle;
 
-import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
-import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.server.ServiceLifecycle;
 import javax.xml.rpc.server.ServletEndpointContext;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
-import javax.xml.ws.WebServiceContext;
-import javax.xml.ws.WebServiceException;
-import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.http.HTTPBinding;
 
 import org.jboss.logging.Logger;
@@ -61,16 +52,11 @@ import org.jboss.ws.core.jaxrpc.ServletEndpointContextImpl;
 import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
-import org.jboss.ws.core.jaxws.binding.BindingProviderImpl;
-import org.jboss.ws.core.jaxws.handler.HandlerDelegateJAXWS;
-import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
-import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
-import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
@@ -113,16 +99,8 @@ public class ServiceEndpointInvoker
       if (sepMetaData == null)
          throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINT_META_DATA"));
 
-      if (sepMetaData.getType() == EndpointMetaData.Type.JAXRPC)
-      {
-         bindingProvider = new CommonBindingProvider(sepMetaData);
-         delegate = new HandlerDelegateJAXRPC(sepMetaData);
-      }
-      else
-      {
-         bindingProvider = new BindingProviderImpl(sepMetaData);
-         delegate = new HandlerDelegateJAXWS(sepMetaData);
-      }
+      bindingProvider = new CommonBindingProvider(sepMetaData);
+      delegate = new HandlerDelegateJAXRPC(sepMetaData);
    }
 
    public boolean callRequestHandlerChain(ServerEndpointMetaData sepMetaData, HandlerType type)
@@ -158,9 +136,6 @@ public class ServiceEndpointInvoker
       // Get the order of pre/post handlerchains 
       HandlerType[] handlerType = delegate.getHandlerTypeOrder();
       HandlerType[] faultType = delegate.getHandlerTypeOrder();
-
-      // Set the required inbound context properties
-      setInboundContextProperties();
 
       try
       {
@@ -211,20 +186,6 @@ public class ServiceEndpointInvoker
                reqMessage = msgContext.getMessageAbstraction();
                sepInv = binding.unbindRequestMessage(opMetaData, reqMessage);
             }
-            //JBWS-2969:check if the RPC/Lit input paramter is null
-            if (opMetaData.getEndpointMetaData().getType() != EndpointMetaData.Type.JAXRPC
-                  && opMetaData.isRPCLiteral() && sepInv.getRequestParamNames() != null)
-            {  
-
-               for (QName qname : sepInv.getRequestParamNames())
-               {
-                  ParameterMetaData paramMetaData = opMetaData.getParameter(qname);
-                  if ((paramMetaData.getMode().equals(ParameterMode.IN) || paramMetaData.getMode().equals(ParameterMode.INOUT)) && sepInv.getRequestParamValue(qname) == null)
-                  {
-                     throw new WebServiceException(BundleUtils.getMessage(bundle, "RPC/LITERAL_PAPAMETERS_IS_NULL",  opMetaData.getQName()));
-                  }
-               }
-            }
 
             // Invoke an instance of the SEI implementation bean 
             Invocation inv = setupInvocation(endpoint, sepInv, invContext);
@@ -247,9 +208,6 @@ public class ServiceEndpointInvoker
             // Reverse the message direction
             msgContext = processPivotInternal(msgContext, direction);
 
-            // Set the required outbound context properties
-            setOutboundContextProperties();
-               
             // Bind the response message
             MessageAbstraction resMessage = binding.bindResponseMessage(opMetaData, sepInv);
             msgContext.setMessageAbstraction(resMessage);
@@ -311,22 +269,6 @@ public class ServiceEndpointInvoker
    protected Invocation setupInvocation(Endpoint ep, EndpointInvocation epInv, InvocationContext invContext) throws Exception
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      if (msgContext instanceof SOAPMessageContextJAXWS)
-      {
-         if (isJaxwsEndpoint(ep))
-         {
-            if (msgContext.get(MessageContext.SERVLET_REQUEST) != null)
-            {
-               WebServiceContext wsContext = contextFactory.newWebServiceContext((SOAPMessageContextJAXWS)msgContext);
-               invContext.addAttachment(WebServiceContext.class, wsContext);
-            }
-            else
-            {
-               log.warn(BundleUtils.getMessage(bundle, "CANNOT_PROVIDE_WEBSERVICECONTEXT"));
-            }
-         }
-         invContext.addAttachment(javax.xml.ws.handler.MessageContext.class, msgContext);
-      }
       if (msgContext instanceof SOAPMessageContextJAXRPC)
       {
          invContext.addAttachment(javax.xml.rpc.handler.MessageContext.class, msgContext);
@@ -378,7 +320,7 @@ public class ServiceEndpointInvoker
       Method seiMethod = sepInv.getJavaMethod();
       Method implMethod = null;
 
-      if (seiMethod != null) // RM hack
+      if (seiMethod != null)
       {
          String methodName = seiMethod.getName();
          Class[] paramTypes = seiMethod.getParameterTypes();
@@ -412,50 +354,11 @@ public class ServiceEndpointInvoker
       return implMethod;
    }
 
-   protected void setInboundContextProperties()
-   {
-      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      if (msgContext instanceof MessageContextJAXWS)
-      {
-         // Map of attachments to a message for the outbound message, key is the MIME Content-ID, value is a DataHandler
-         msgContext.put(MessageContextJAXWS.INBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
-      }
-   }
-
-   protected void setOutboundContextProperties()
-   {
-      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      if (msgContext instanceof MessageContextJAXWS)
-      {
-         Map<String, DataHandler> outboundAttachments = (Map<String, DataHandler>)msgContext.get(MessageContextJAXWS.OUTBOUND_MESSAGE_ATTACHMENTS);
-         Map<String, DataHandler> newAttachments = new HashMap<String, DataHandler>(); // to protect against attacks from endpoint
-         
-         // Map of attachments to a message for the outbound message, key is the MIME Content-ID, value is a DataHandler
-         msgContext.put(MessageContextJAXWS.OUTBOUND_MESSAGE_ATTACHMENTS, newAttachments);
-         
-         if (outboundAttachments != null)
-         {
-            for (final String key : outboundAttachments.keySet())
-            {
-               newAttachments.put(key, outboundAttachments.get(key));
-            }
-         }
-      }
-   }
-
    private CommonMessageContext processPivotInternal(CommonMessageContext msgContext, DirectionHolder direction)
    {
       if (direction.getDirection() == Direction.InBound)
       {
-         EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
-         if (epMetaData.getType() == EndpointMetaData.Type.JAXRPC)
-         {
-            msgContext = MessageContextJAXRPC.processPivot(msgContext);
-         }
-         else
-         {
-            msgContext = MessageContextJAXWS.processPivot(msgContext);
-         }
+         msgContext = MessageContextJAXRPC.processPivot(msgContext);
          direction.setDirection(Direction.OutBound);
       }
       return msgContext;

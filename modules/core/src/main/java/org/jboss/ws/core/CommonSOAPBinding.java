@@ -43,7 +43,6 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPHeaderElement;
 import javax.xml.soap.SOAPMessage;
-import javax.xml.ws.handler.MessageContext;
 
 import org.apache.xerces.xs.XSElementDeclaration;
 import org.apache.xerces.xs.XSTypeDefinition;
@@ -55,7 +54,6 @@ import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
-import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
@@ -176,14 +174,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
                CIDGenerator cidGenerator = reqMessage.getCidGenerator();
                AttachmentPart part = createAttachmentPart(paramMetaData, value, cidGenerator);
                reqMessage.addAttachmentPart(part);
-
-               // Add the attachment to the standard property
-               if (value instanceof DataHandler && msgContext instanceof MessageContextJAXWS)
-               {
-                  DataHandler dataHandler = (DataHandler)value;
-                  Map<String, DataHandler> attachments = (Map<String, DataHandler>)msgContext.get(MessageContext.OUTBOUND_MESSAGE_ATTACHMENTS);
-                  attachments.put(dataHandler.getContentType(), dataHandler);
-               }
             }
             else
             {
@@ -339,9 +329,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
             }
          }
 
-         // Add all attachments to the standard property
-         this.propagateAttachmentsToJAXWSMessageContext(reqMessage, msgContext);
-
          return epInv;
       }
       catch (Exception e)
@@ -401,8 +388,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
             }
          }
 
-         this.propagateAttachmentsFromJAXWSMessageContext(resMessage, msgContext);
-
          // Add the return to the message
          ParameterMetaData retMetaData = opMetaData.getReturnParameter();
          if (retMetaData != null)
@@ -419,14 +404,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
                AttachmentPart part = createAttachmentPart(retMetaData, value, cidGenerator);
                resMessage.addAttachmentPart(part);
                epInv.setReturnValue(part);
-
-               // Add the attachment to the standard property
-               if (part.getDataHandler() != null && msgContext instanceof MessageContextJAXWS)
-               {
-                  DataHandler dataHandler = part.getDataHandler();
-                  Map<String, DataHandler> attachments = (Map<String, DataHandler>)msgContext.get(MessageContext.OUTBOUND_MESSAGE_ATTACHMENTS);
-                  attachments.put(part.getContentId(), dataHandler);
-               }
             }
             else
             {
@@ -446,14 +423,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
                CIDGenerator cidGenerator = resMessage.getCidGenerator();
                AttachmentPart part = createAttachmentPart(paramMetaData, value, cidGenerator);
                resMessage.addAttachmentPart(part);
-
-               // Add the attachment to the standard property
-               if (value instanceof DataHandler && msgContext instanceof MessageContextJAXWS)
-               {
-                  DataHandler dataHandler = (DataHandler)value;
-                  Map<String, DataHandler> attachments = (Map<String, DataHandler>)msgContext.get(MessageContext.OUTBOUND_MESSAGE_ATTACHMENTS);
-                  attachments.put(dataHandler.getContentType(), dataHandler);
-               }
             }
             else
             {
@@ -477,31 +446,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
       }
    }
    
-   /**
-    * Propagates attachments from JAXWS message context to soap message.
-    *
-    * @param message soap message to bind attachments to
-    * @param msgContext message context to read attachments from
-    */
-   private void propagateAttachmentsFromJAXWSMessageContext(final SOAPMessage message, final CommonMessageContext msgContext)
-   {
-      if (msgContext instanceof MessageContextJAXWS)
-      {
-         @SuppressWarnings("unchecked")
-         final Map<String, DataHandler> attachments = (Map<String, DataHandler>)msgContext.get(MessageContext.OUTBOUND_MESSAGE_ATTACHMENTS);
-         final Iterator<?> attachmentsIterator = attachments.keySet().iterator();
-
-         AttachmentPart part = null;
-         while (attachmentsIterator.hasNext())
-         {
-            final String contentId = (String)attachmentsIterator.next();
-            final DataHandler handler = attachments.get(contentId);
-            part = this.createAttachmentPart(contentId, handler);
-            ((SOAPMessageImpl)message).addAttachmentPart(part);
-         }
-      }
-   }
-
    /** On the client side, extract the OUT parameters from the payload and return them to the client. */
    public void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction payload, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
          throws BindingException
@@ -607,9 +551,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
                epInv.setResponseParamValue(xmlName, value);
             }
          }
-         
-         // Add all attachments to the standard property
-         this.propagateAttachmentsToJAXWSMessageContext(resMessage, msgContext);
       }
       catch (Exception e)
       {
@@ -617,30 +558,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
       }
    }
    
-   /**
-    * Propagates all the attachments from SOAPMessage to JAXWS Message context standard property.
-    *
-    * @param message soap message to read attachments from
-    * @param msgContext to propagate attachments to
-    * @throws SOAPException if something went wrong
-    */
-   private void propagateAttachmentsToJAXWSMessageContext(final SOAPMessage message, final CommonMessageContext msgContext) throws SOAPException
-   {
-      if (msgContext instanceof MessageContextJAXWS)
-      {
-         final SOAPMessageImpl implMessage = (SOAPMessageImpl)message;
-         final Iterator<?> attachmentsIterator = implMessage.getAttachments();
-         final Map<String, DataHandler> attachments = (Map<String, DataHandler>)msgContext.get(MessageContext.INBOUND_MESSAGE_ATTACHMENTS);
-
-         AttachmentPart part = null;
-         while (attachmentsIterator.hasNext())
-         {
-            part = (AttachmentPart)attachmentsIterator.next();
-            attachments.put(part.getContentId(), part.getDataHandler()); // TODO: test on getDataHandler() == null?
-         }
-      }
-   }
-
    public MessageAbstraction bindFaultMessage(Exception ex)
    {
       SOAPMessageImpl faultMessage = (SOAPMessageImpl)createFaultMessageFromException(ex);

@@ -21,11 +21,14 @@
  */
 package org.jboss.ws.core.soap.attachment;
 
-import org.jboss.util.Base64;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
 import java.util.ResourceBundle;
-import org.jboss.ws.api.util.BundleUtils;
-import org.jboss.ws.common.IOUtils;
-import org.jboss.ws.WSException;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -33,8 +36,11 @@ import javax.mail.internet.MimeMultipart;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPException;
-import java.io.*;
-import java.util.Iterator;
+
+import org.jboss.util.Base64;
+import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.IOUtils;
 
 /**
  * Implementation of the <code>AttachmentPart</code> interface.

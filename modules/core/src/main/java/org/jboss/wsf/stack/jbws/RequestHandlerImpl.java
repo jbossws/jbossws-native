@@ -22,19 +22,14 @@
 package org.jboss.wsf.stack.jbws;
 
 import java.io.IOException;
-import java.util.ResourceBundle;
-import org.jboss.ws.api.util.BundleUtils;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.ResourceBundle;
 
-import javax.activation.DataHandler;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
@@ -51,8 +46,11 @@ import javax.xml.soap.SOAPPart;
 import javax.xml.ws.http.HTTPBinding;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.Constants;
 import org.jboss.ws.WSException;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.Constants;
+import org.jboss.ws.common.DOMWriter;
+import org.jboss.ws.common.IOUtils;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonMessageContext;
@@ -63,8 +61,6 @@ import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
-import org.jboss.ws.core.jaxws.handler.MessageContextJAXWS;
-import org.jboss.ws.core.jaxws.handler.SOAPMessageContextJAXWS;
 import org.jboss.ws.core.server.MimeHeaderSource;
 import org.jboss.ws.core.server.ServiceEndpointInvoker;
 import org.jboss.ws.core.server.ServletHeaderSource;
@@ -74,11 +70,7 @@ import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
-import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
-import org.jboss.ws.common.DOMWriter;
-import org.jboss.ws.common.IOUtils;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Endpoint;
@@ -246,23 +238,9 @@ public class RequestHandlerImpl implements RequestHandler
       if (sepMetaData == null)
          throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINTMD"));
 
-      Type type = sepMetaData.getType();
-
       // Build the message context
-      CommonMessageContext msgContext;
-      if (type == EndpointMetaData.Type.JAXRPC)
-      {
-         msgContext = new SOAPMessageContextJAXRPC();
-         invContext.addAttachment(javax.xml.rpc.handler.MessageContext.class, msgContext);
-      }
-      else
-      {
-         msgContext = new SOAPMessageContextJAXWS();
-         msgContext.put(MessageContextJAXWS.MESSAGE_OUTBOUND_PROPERTY, Boolean.valueOf(false));
-         msgContext.put(MessageContextJAXWS.INBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
-         msgContext.put(MessageContextJAXWS.OUTBOUND_MESSAGE_ATTACHMENTS, new HashMap<String, DataHandler>());
-         invContext.addAttachment(javax.xml.ws.handler.MessageContext.class, msgContext);
-      }
+      CommonMessageContext msgContext = new SOAPMessageContextJAXRPC();
+      invContext.addAttachment(javax.xml.rpc.handler.MessageContext.class, msgContext);
 
       // Set servlet specific properties
       HttpServletResponse httpResponse = null;
@@ -275,23 +253,9 @@ public class RequestHandlerImpl implements RequestHandler
          HttpServletRequest httpRequest = reqContext.getHttpServletRequest();
          httpResponse = reqContext.getHttpServletResponse();
          headerSource = new ServletHeaderSource(httpRequest, httpResponse);
-
-         if (type == EndpointMetaData.Type.JAXRPC)
-         {
-            msgContext.put(MessageContextJAXRPC.SERVLET_CONTEXT, servletContext);
-            msgContext.put(MessageContextJAXRPC.SERVLET_REQUEST, httpRequest);
-            msgContext.put(MessageContextJAXRPC.SERVLET_RESPONSE, httpResponse);
-         }
-         else
-         {
-            msgContext.put(MessageContextJAXWS.HTTP_REQUEST_HEADERS, headerSource.getHeaderMap());
-            msgContext.put(MessageContextJAXWS.HTTP_REQUEST_METHOD, httpRequest.getMethod());
-            msgContext.put(MessageContextJAXWS.QUERY_STRING, httpRequest.getQueryString());
-            msgContext.put(MessageContextJAXWS.PATH_INFO, httpRequest.getPathInfo());
-            msgContext.put(MessageContextJAXWS.SERVLET_CONTEXT, servletContext);
-            msgContext.put(MessageContextJAXWS.SERVLET_REQUEST, httpRequest);
-            msgContext.put(MessageContextJAXWS.SERVLET_RESPONSE, httpResponse);
-         }
+         msgContext.put(MessageContextJAXRPC.SERVLET_CONTEXT, servletContext);
+         msgContext.put(MessageContextJAXRPC.SERVLET_REQUEST, httpRequest);
+         msgContext.put(MessageContextJAXRPC.SERVLET_RESPONSE, httpResponse);
       }
 
       // Associate a message context with the current thread
@@ -302,26 +266,6 @@ public class RequestHandlerImpl implements RequestHandler
          msgContext.setEndpointMetaData(sepMetaData);
          MessageAbstraction resMessage = processRequest(endpoint, headerSource, invContext, inStream);
          CommonMessageContext reqMsgContext = msgContext;
-         // Replace the message context with the response context
-         msgContext = MessageContextAssociation.peekMessageContext();
-
-         Map<String, List<String>> headers = (Map<String, List<String>>)msgContext.get(MessageContextJAXWS.HTTP_RESPONSE_HEADERS);
-         if (headers != null)
-         {
-            if (headerSource != null)
-            {
-               headerSource.setHeaderMap(headers);
-            }
-         }
-
-         Integer code = (Integer)msgContext.get(MessageContextJAXWS.HTTP_RESPONSE_CODE);
-         if (code != null)
-         {
-            if (httpResponse != null)
-            {
-               httpResponse.setStatus(code.intValue());
-            }
-         }
 
          boolean isFault = false;
          if (resMessage instanceof SOAPMessage)

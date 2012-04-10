@@ -21,18 +21,19 @@
  */
 package org.jboss.ws.core.jaxrpc.binding;
 
-import javax.xml.namespace.QName;
 import java.util.ResourceBundle;
-import org.jboss.ws.api.util.BundleUtils;
+
+import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.SerializerSupport;
 import org.jboss.ws.util.xml.BufferedStreamResult;
-import org.jboss.ws.common.DOMWriter;
 import org.w3c.dom.NamedNodeMap;
 
 /**

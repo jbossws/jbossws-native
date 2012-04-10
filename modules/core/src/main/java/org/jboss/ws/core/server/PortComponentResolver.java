@@ -21,14 +21,14 @@
  */
 package org.jboss.ws.core.server;
 
-import org.jboss.logging.Logger;
+import java.util.Iterator;
 import java.util.ResourceBundle;
+
+import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.management.EndpointResolver;
-
-import java.util.Iterator;
 
 /**
  * @author Heiko.Braun@jboss.com

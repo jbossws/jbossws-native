@@ -31,8 +31,8 @@ import javax.xml.transform.Result;
 
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.common.Constants;
-import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.common.Normalizer;
+import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;

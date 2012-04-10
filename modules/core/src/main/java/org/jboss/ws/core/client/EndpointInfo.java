@@ -21,8 +21,6 @@
  */
 package org.jboss.ws.core.client;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;

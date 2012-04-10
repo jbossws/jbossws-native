@@ -48,7 +48,6 @@ import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.test.JBossWSTest;
 
@@ -180,7 +179,7 @@ public class SOAPBindingTestCase extends JBossWSTest
     */
    public void testBindRequestMessage() throws Exception
    {
-      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
+      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
 
       EndpointInvocation epInv = new EndpointInvocation(opMetaData);
@@ -199,7 +198,7 @@ public class SOAPBindingTestCase extends JBossWSTest
     */
    public void testBindRequestMessageWithBoundHeader() throws Exception
    {
-      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
+      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
 
       // Add bound header
@@ -225,7 +224,7 @@ public class SOAPBindingTestCase extends JBossWSTest
     */
    public void testBindRequestMessageWithUnboundHeader() throws Exception
    {
-      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
+      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
 
       // Add unbound header
@@ -252,7 +251,7 @@ public class SOAPBindingTestCase extends JBossWSTest
     */
    public void testUnbindRequestMessage() throws Exception
    {
-      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
+      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(reqEnvelope.getBytes());
@@ -290,7 +289,7 @@ public class SOAPBindingTestCase extends JBossWSTest
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.setSOAPMessage(reqMessage);
 
-      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
+      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
       EndpointInvocation epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
       assertNotNull(epInv);
@@ -313,7 +312,7 @@ public class SOAPBindingTestCase extends JBossWSTest
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.setSOAPMessage(reqMessage);
 
-      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
+      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
       EndpointInvocation epInv = binding.unbindRequestMessage(opMetaData, reqMessage);
       assertNotNull(epInv);
@@ -327,7 +326,7 @@ public class SOAPBindingTestCase extends JBossWSTest
     */
    public void testBindResponseMessage() throws Exception
    {
-      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
+      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
 
       EndpointInvocation epInv = new EndpointInvocation(opMetaData);
@@ -346,7 +345,7 @@ public class SOAPBindingTestCase extends JBossWSTest
     */
    public void testUnbindResponseMessage() throws Exception
    {
-      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
+      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(resEnvelope.getBytes());
@@ -366,7 +365,7 @@ public class SOAPBindingTestCase extends JBossWSTest
     */
    public void testUnbindResponseMessageWithBoundHeader() throws Exception
    {
-      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
+      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(resEnvelopeWithBoundHeader.getBytes());
@@ -397,7 +396,7 @@ public class SOAPBindingTestCase extends JBossWSTest
     */
    public void testUnbindResponseMessageWithUnboundHeader() throws Exception
    {
-      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
+      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(resEnvelopeWithUnboundHeader.getBytes());
@@ -425,7 +424,7 @@ public class SOAPBindingTestCase extends JBossWSTest
     */
    public void testUnbindFaultResponse() throws Exception
    {
-      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING, Type.JAXRPC);
+      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING);
       CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(resEnvelopeWithFault.getBytes());

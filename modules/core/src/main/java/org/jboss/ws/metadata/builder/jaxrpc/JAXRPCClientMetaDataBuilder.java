@@ -38,7 +38,6 @@ import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
 import org.jboss.ws.metadata.jaxrpcmapping.ServiceEndpointInterfaceMapping;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
@@ -171,7 +170,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
          {
             QName portName = wsdlEndpoint.getName();
             QName interfaceQName = wsdlEndpoint.getInterface().getName();
-            ClientEndpointMetaData epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, interfaceQName, Type.JAXRPC);
+            ClientEndpointMetaData epMetaData = new ClientEndpointMetaData(serviceMetaData, portName, interfaceQName);
             epMetaData.setEndpointAddress(wsdlEndpoint.getAddress());
             serviceMetaData.addEndpoint(epMetaData);
 

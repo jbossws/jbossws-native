@@ -24,18 +24,13 @@ package org.jboss.ws.core;
 import java.util.Observable;
 
 import javax.xml.ws.EndpointReference;
-import javax.xml.ws.http.HTTPBinding;
 import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.jaxrpc.SOAP11BindingJAXRPC;
 import org.jboss.ws.core.jaxrpc.SOAP12BindingJAXRPC;
-import org.jboss.ws.core.jaxws.binding.HTTPBindingJAXWS;
-import org.jboss.ws.core.jaxws.binding.SOAP11BindingJAXWS;
-import org.jboss.ws.core.jaxws.binding.SOAP12BindingJAXWS;
 import org.jboss.ws.metadata.config.Configurable;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
-import org.jboss.ws.metadata.umdm.EndpointMetaData.Type;
 
 /**
  * Provides access to the protocol binding.
@@ -54,15 +49,15 @@ public class CommonBindingProvider implements Configurable
    public CommonBindingProvider(EndpointMetaData epMetaData)
    {
       this.epMetaData = epMetaData;
-      initBinding(epMetaData.getBindingId(), epMetaData.getType());
+      initBinding(epMetaData.getBindingId());
 
       this.epMetaData.registerConfigObserver(this);
       configure();
    }
 
-   public CommonBindingProvider(String bindingId, Type type)
+   public CommonBindingProvider(String bindingId)
    {
-      initBinding(bindingId, type);
+      initBinding(bindingId);
       configure();
    }
 
@@ -74,19 +69,15 @@ public class CommonBindingProvider implements Configurable
       }
    }
 
-   protected void initBinding(String bindingId, Type type)
+   protected void initBinding(String bindingId)
    {
       if (SOAPBinding.SOAP11HTTP_BINDING.equals(bindingId))
       {
-         binding = (type == Type.JAXWS ? new SOAP11BindingJAXWS() : new SOAP11BindingJAXRPC());
+         binding = new SOAP11BindingJAXRPC();
       }
       else if (SOAPBinding.SOAP12HTTP_BINDING.equals(bindingId))
       {
-         binding = (type == Type.JAXWS ? new SOAP12BindingJAXWS() : new SOAP12BindingJAXRPC());
-      }
-      else if (HTTPBinding.HTTP_BINDING.equals(bindingId))
-      {
-         binding = new HTTPBindingJAXWS();
+         binding = new SOAP12BindingJAXRPC();
       }
    }
 

@@ -32,12 +32,9 @@
         <module name="javax.jws.api" export="true"/>
         <module name="javax.wsdl4j.api" export="true"/>
         <module name="javax.xml.ws.api" export="true"/>
-        <module name="com.sun.xml.bind" services="export" export="true"/>
-        <module name="com.sun.tools.javac" export="true"/>
         <module name="org.jboss.ws.api" export="true"/>
         <module name="org.jboss.ws.spi" export="true"/>
         <module name="org.jboss.ws.common" services="import" export="true"/>
-        <module name="org.jboss.ws.jaxws-client" services="export" export="true"/>
         <module name="org.jboss.ws.native.jbossws-native-factories" services="export" export="true"/>
         <module name="org.jboss.ws.native.jbossws-native-core" services="export" export="true">
           <imports>
