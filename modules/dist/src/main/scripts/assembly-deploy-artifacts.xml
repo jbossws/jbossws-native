@@ -31,7 +31,6 @@
       <outputDirectory>deploy-artifacts/lib</outputDirectory>
       <unpack>false</unpack>
       <includes>
-        <include>org.jboss.ws.native:jbossws-native-client</include>
         <include>org.jboss.ws.native:jbossws-native-factories:jar</include>
         <include>org.jboss.ws.native:jbossws-native-services:jar</include>
         <include>org.jboss.ws.native:jbossws-native-core</include>
