@@ -38,6 +38,7 @@ import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.SOAPContent.State;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;

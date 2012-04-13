@@ -28,7 +28,7 @@ import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.binding.BindingException;
-import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.Endpoint;
@@ -120,7 +120,7 @@ public class ServiceEndpointInvokerEJB21 extends ServiceEndpointInvoker
                   CommonBinding binding = bindingProvider.getCommonBinding();
                   
                   log.debug("Handler modified payload, unbind message and update invocation args");
-                  EndpointInvocation epInv = binding.unbindRequestMessage(opMetaData, messageContext.getMessageAbstraction());
+                  EndpointInvocation epInv = binding.unbindRequestMessage(opMetaData, messageContext.getSOAPMessage());
                   wsInv.getInvocationContext().addAttachment(EndpointInvocation.class, epInv);
                }
                catch (BindingException ex)

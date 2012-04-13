@@ -42,7 +42,6 @@ import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
-import javax.xml.soap.SOAPFault;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
@@ -52,13 +51,13 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.CommonMessageContext;
-import org.jboss.ws.core.SOAPMessageAbstraction;
 import org.jboss.ws.core.soap.SOAPContent.State;
 import org.jboss.ws.core.soap.attachment.AttachmentPartImpl;
-import org.jboss.ws.core.soap.attachment.CIDGenerator;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedEncoder;
 import org.jboss.ws.core.soap.attachment.MultipartRelatedSwAEncoder;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
+import org.jboss.ws.core.soap.utils.SOAPElementWriter;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.w3c.dom.Node;
@@ -71,7 +70,7 @@ import org.w3c.dom.NodeList;
  * @author Thomas.Diesler@jboss.org
  * @author <a href="mailto:jason@stacksmash.com">Jason T. Greene</a>
  */
-public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstraction
+public class SOAPMessageImpl extends SOAPMessage
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPMessageImpl.class);
    private static Logger log = Logger.getLogger(SOAPMessageImpl.class);
@@ -79,8 +78,6 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
    private boolean saveRequired = true;
    private MimeHeaders mimeHeaders = new MimeHeaders();
    private List<AttachmentPart> attachments = new LinkedList<AttachmentPart>();
-   private CIDGenerator cidGenerator = new CIDGenerator();
-   private boolean faultMessage;
    private SOAPPartImpl soapPart;   
    private MultipartRelatedEncoder multipartRelatedEncoder;
    private static final boolean writeXMLDeclaration = Boolean.getBoolean(WRITE_XML_DECLARATION);
@@ -133,23 +130,6 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
          }
       }
       throw new SOAPException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SOAPHEADER"));
-   }
-
-   public CIDGenerator getCidGenerator()
-   {
-      return cidGenerator;
-   }
-   
-   /**
-    * Marks this <code>SOAPMessage</code> as a fault. Otherwise, the message
-    * will be checked for a SOAPFault. The reason for this is to allow for
-    * faults to be encrypted, in which case there is no SOAPFault.
-    *
-    * @param faultMessage whether this message is a fault
-    */
-   public void setFaultMessage(boolean faultMessage)
-   {
-      this.faultMessage = faultMessage;
    }
 
    public void setAttachments(Collection<AttachmentPart> parts) throws SOAPException
@@ -413,22 +393,6 @@ public class SOAPMessageImpl extends SOAPMessage implements SOAPMessageAbstracti
          opMetaData = dispatcher.getDispatchDestination(epMetaData, this);
       }
       return opMetaData;
-   }
-
-   public boolean isFaultMessage()
-   {
-      if (faultMessage)
-         return true;
-      
-      SOAPFault soapFault = null;
-      try
-      {
-         soapFault = getSOAPBody().getFault();
-      }
-      catch (Exception ignore)
-      {
-      }
-      return soapFault != null;
    }
 
    private boolean isWriteXMLDeclaration() throws SOAPException

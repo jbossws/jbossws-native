@@ -19,28 +19,33 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core;
+package org.jboss.ws.core.soap.utils;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
-import javax.xml.soap.AttachmentPart;
-import javax.xml.soap.MimeHeaders;
+import org.jboss.ws.core.soap.attachment.MimeConstants;
 
 /**
- * A generic message independent of the underlying protocol 
- * 
- * @author Thomas.Diesler@jboss.com
- * @since 02-Apr-2007
+ * A common CID generator
+ *
+ * @author Thomas.Diesler@jboss.org
+ * @since 17-Jan-2006
  */
-public interface MessageAbstraction
+public final class CIDGenerator
 {
-   MimeHeaders getMimeHeaders();
+   private static int count = 0;
 
-   void writeTo(OutputStream outputStream) throws IOException;
+   private CIDGenerator() {
+	   // forbidden instantiation
+   }
 
-   boolean isFaultMessage();      
-   
-   void addAttachmentPart(AttachmentPart part);
+   public static synchronized String generateFromCount()
+   {
+	  if (count == 1000) count = 0;
+      StringBuilder cid = new StringBuilder();
+      long time = System.currentTimeMillis();
 
+      cid.append(count++).append("-").append(time).append("-")
+         .append(cid.hashCode()).append("@").append(MimeConstants.CID_DOMAIN);
+
+      return cid.toString();
+   }
 }

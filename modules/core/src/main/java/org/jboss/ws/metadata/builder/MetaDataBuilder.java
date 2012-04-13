@@ -48,7 +48,7 @@ import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.ObjectNameFactory;
 import org.jboss.ws.core.jaxrpc.UnqualifiedFaultException;
-import org.jboss.ws.core.soap.Use;
+import org.jboss.ws.core.soap.utils.Use;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;

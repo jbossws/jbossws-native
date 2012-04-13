@@ -44,6 +44,7 @@ import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.core.CommonSOAPFaultException;
+import org.jboss.ws.core.soap.utils.Style;
 import org.w3c.dom.Comment;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

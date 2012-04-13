@@ -39,7 +39,7 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
-import org.jboss.ws.core.soap.Style;
+import org.jboss.ws.core.soap.utils.Style;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;

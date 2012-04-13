@@ -33,6 +33,7 @@ import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBodyElement;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
+import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
@@ -46,14 +47,13 @@ import org.jboss.ws.core.CommonSOAPFaultException;
 import org.jboss.ws.core.DirectionHolder;
 import org.jboss.ws.core.DirectionHolder.Direction;
 import org.jboss.ws.core.EndpointInvocation;
-import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.jaxrpc.ServletEndpointContextImpl;
 import org.jboss.ws.core.jaxrpc.handler.HandlerDelegateJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
-import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
-import org.jboss.ws.core.soap.SOAPMessageImpl;
+import org.jboss.ws.core.soap.SOAPMessageDispatcher;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
@@ -116,7 +116,7 @@ public class ServiceEndpointInvoker
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       ServerEndpointMetaData sepMetaData = (ServerEndpointMetaData)msgContext.getEndpointMetaData();
-      MessageAbstraction reqMessage = msgContext.getMessageAbstraction();
+      SOAPMessage reqMessage = msgContext.getSOAPMessage();
 
       // The direction of the message
       DirectionHolder direction = new DirectionHolder(Direction.InBound);
@@ -171,7 +171,7 @@ public class ServiceEndpointInvoker
             if (msgContext.isModified())
             {
                log.debug("Handler modified payload, unbind message again");
-               reqMessage = msgContext.getMessageAbstraction();
+               reqMessage = msgContext.getSOAPMessage();
                sepInv = binding.unbindRequestMessage(opMetaData, reqMessage);
             }
 
@@ -197,15 +197,15 @@ public class ServiceEndpointInvoker
             msgContext = processPivotInternal(msgContext, direction);
 
             // Bind the response message
-            MessageAbstraction resMessage = binding.bindResponseMessage(opMetaData, sepInv);
-            msgContext.setMessageAbstraction(resMessage);
+            SOAPMessage resMessage = binding.bindResponseMessage(opMetaData, sepInv);
+            msgContext.setSOAPMessage(resMessage);
          }
          else
          {
             // Reverse the message direction without calling the endpoint
-            MessageAbstraction resMessage = msgContext.getMessageAbstraction();
+            SOAPMessage resMessage = msgContext.getSOAPMessage();
             msgContext = processPivotInternal(msgContext, direction);
-            msgContext.setMessageAbstraction(resMessage);
+            msgContext.setSOAPMessage(resMessage);
          }
 
          if (oneway == false)
@@ -352,12 +352,12 @@ public class ServiceEndpointInvoker
       return msgContext;
    }
 
-   private OperationMetaData getDispatchDestination(EndpointMetaData epMetaData, MessageAbstraction reqMessage) throws SOAPException
+   private OperationMetaData getDispatchDestination(EndpointMetaData epMetaData, SOAPMessage reqMessage) throws SOAPException
    {
       OperationMetaData opMetaData;
 
-      SOAPMessageImpl soapMessage = (SOAPMessageImpl)reqMessage;
-      opMetaData = soapMessage.getOperationMetaData(epMetaData);
+      SOAPMessage soapMessage = reqMessage;
+      opMetaData = getOperationMetaData(epMetaData, soapMessage);
       SOAPHeader soapHeader = soapMessage.getSOAPHeader();
 
       // Report a MustUnderstand fault
@@ -392,4 +392,14 @@ public class ServiceEndpointInvoker
       }
       return opMetaData;
    }
+
+   /** Get the operation meta data for this SOAP message
+    */
+   public OperationMetaData getOperationMetaData(EndpointMetaData epMetaData, SOAPMessage soapMsg) throws SOAPException
+   {
+      SOAPMessageDispatcher dispatcher = new SOAPMessageDispatcher();
+      return dispatcher.getDispatchDestination(epMetaData, soapMsg);
+   }
+
+
 }

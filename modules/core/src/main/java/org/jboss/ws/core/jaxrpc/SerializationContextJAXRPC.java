@@ -33,7 +33,7 @@ import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
-import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaXmlTypeMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.PackageMapping;

@@ -25,9 +25,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ResourceBundle;
 
+import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.client.Marshaller;
 
@@ -39,8 +39,6 @@ import org.jboss.ws.core.client.Marshaller;
 public class SOAPMessageMarshaller implements Marshaller
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPMessageMarshaller.class);
-   // Provide logging
-   private static Logger log = Logger.getLogger(SOAPMessageMarshaller.class);
 
    /**
     * Marshaller will need to take the dataObject and convert
@@ -56,7 +54,11 @@ public class SOAPMessageMarshaller implements Marshaller
       if ((dataObject instanceof SOAPMessage) == false)
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NOT_A_SOAPMESSAGE",  dataObject));
 
-      SOAPMessageImpl soapMessage = (SOAPMessageImpl)dataObject;
-      soapMessage.writeTo(output);
+      SOAPMessage soapMessage = (SOAPMessage)dataObject;
+      try {
+         soapMessage.writeTo(output);
+      } catch (SOAPException e) {
+    	 throw new IOException(e);
+      }
    }
 }

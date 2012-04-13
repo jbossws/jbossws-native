@@ -21,10 +21,6 @@
  */
 package org.jboss.ws.core;
 
-import java.util.Iterator;
-
-import javax.xml.namespace.QName;
-import javax.xml.rpc.ParameterMode;
 import javax.xml.soap.AttachmentPart;
 
 /**
@@ -74,53 +70,6 @@ public interface StubExt extends EndpointMetadataProvider
    
    /** Client ReceiveTimeout property: javax.xml.ws.client.receiveTimeout */
    static final String PROPERTY_RECEIVE_TIMEOUT = "javax.xml.ws.client.receiveTimeout";
-   
-   
-   
-
-   /**
-    * Add a header that is not bound to an input parameter.
-    * A propriatory extension, that is not part of JAXRPC.
-    *
-    * @param xmlName The XML name of the header element
-    * @param xmlType The XML type of the header element
-    */
-   void addUnboundHeader(QName xmlName, QName xmlType, Class javaType, ParameterMode mode);
-
-   /**
-    * Get the header value for the given XML name.
-    * A propriatory extension, that is not part of JAXRPC.
-    *
-    * @param xmlName The XML name of the header element
-    * @return The header value, or null
-    */
-   Object getUnboundHeaderValue(QName xmlName);
-
-   /**
-    * Set the header value for the given XML name.
-    * A propriatory extension, that is not part of JAXRPC.
-    *
-    * @param xmlName The XML name of the header element
-    */
-   void setUnboundHeaderValue(QName xmlName, Object value);
-
-   /**
-    * Clear all registered headers.
-    * A propriatory extension, that is not part of JAXRPC.
-    */
-   void clearUnboundHeaders();
-
-   /**
-    * Remove the header for the given XML name.
-    * A propriatory extension, that is not part of JAXRPC.
-    */
-   void removeUnboundHeader(QName xmlName);
-
-   /**
-    * Get an Iterator over the registered header XML names.
-    * A propriatory extension, that is not part of JAXRPC.
-    */
-   Iterator getUnboundHeaders();
    
    /**
     * Adds the given AttachmentPart object to the outgoing SOAPMessage.

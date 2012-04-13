@@ -32,12 +32,16 @@ import javax.xml.rpc.encoding.TypeMapping;
 import javax.xml.rpc.soap.SOAPFaultException;
 import javax.xml.soap.Detail;
 import javax.xml.soap.DetailEntry;
+import javax.xml.soap.MessageFactory;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPElement;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPFault;
+import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
@@ -54,13 +58,10 @@ import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.SerializerSupport;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
-import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
-import org.jboss.ws.core.soap.SOAPFactoryImpl;
-import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.XMLFragment;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
+import org.jboss.ws.core.soap.utils.SOAPUtils;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -177,7 +178,7 @@ public class SOAPFaultHelperJAXRPC
 
    /** Translate the request exception into a SOAPFault message.
     */
-   public static SOAPMessageImpl exceptionToFaultMessage(Exception reqEx)
+   public static SOAPMessage exceptionToFaultMessage(Exception reqEx)
    {
       // Get or create the SOAPFaultException
       SOAPFaultException faultEx;
@@ -215,7 +216,7 @@ public class SOAPFaultHelperJAXRPC
 
       try
       {
-         SOAPMessageImpl faultMessage = toSOAPMessage(faultEx);
+         SOAPMessage faultMessage = toSOAPMessage(faultEx);
          return faultMessage;
       }
       catch (RuntimeException rte)
@@ -229,7 +230,7 @@ public class SOAPFaultHelperJAXRPC
       }
    }
 
-   private static SOAPMessageImpl toSOAPMessage(SOAPFaultException faultEx) throws SOAPException
+   private static SOAPMessage toSOAPMessage(SOAPFaultException faultEx) throws SOAPException
    {
       assertFaultCode(faultEx.getFaultCode());
 
@@ -237,9 +238,9 @@ public class SOAPFaultHelperJAXRPC
       SerializationContext serContext = (msgContext != null ? msgContext.getSerializationContext() : new SerializationContextJAXRPC());
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
 
-      SOAPMessageImpl soapMessage = createSOAPMessage();
+      SOAPMessage soapMessage = createSOAPMessage();
 
-      SOAPEnvelopeImpl soapEnvelope = (SOAPEnvelopeImpl)soapMessage.getSOAPPart().getEnvelope();
+      SOAPEnvelope soapEnvelope = soapMessage.getSOAPPart().getEnvelope();
       SOAPBody soapBody = soapEnvelope.getBody();
 
       QName faultCode = faultEx.getFaultCode();
@@ -289,7 +290,7 @@ public class SOAPFaultHelperJAXRPC
                XMLFragment xmlFragment = new XMLFragment(result);
 
                Element domElement = xmlFragment.toElement();
-               SOAPFactoryImpl soapFactory = new SOAPFactoryImpl();
+               SOAPFactory soapFactory = SOAPUtils.newSOAP11Factory();
                SOAPElement soapElement = soapFactory.createElement(domElement);
 
                detail = soapFault.addDetail();
@@ -310,16 +311,10 @@ public class SOAPFaultHelperJAXRPC
       return soapMessage;
    }
 
-   private static SOAPMessageImpl createSOAPMessage() throws SOAPException
+   private static SOAPMessage createSOAPMessage() throws SOAPException
    {
-      MessageFactoryImpl factory = new MessageFactoryImpl();
-
-      if (isSOAP12() == true)
-      {
-         factory.setEnvNamespace(Constants.NS_SOAP12_ENV);
-      }
-
-      return (SOAPMessageImpl)factory.createMessage();
+	  final MessageFactory factory = isSOAP12() ? SOAPUtils.newSOAP12MessageFactory() : SOAPUtils.newSOAP11MessageFactory();
+	  return factory.createMessage();
    }
 
    private static boolean isSOAP12()

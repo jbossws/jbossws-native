@@ -54,7 +54,6 @@ import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPFaultException;
-import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
@@ -64,9 +63,9 @@ import org.jboss.ws.core.server.ServiceEndpointInvoker;
 import org.jboss.ws.core.server.ServletHeaderSource;
 import org.jboss.ws.core.server.ServletRequestContext;
 import org.jboss.ws.core.server.WSDLRequestHandler;
-import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
-import org.jboss.ws.core.soap.SOAPMessageImpl;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
+import org.jboss.ws.core.soap.utils.SOAPUtils;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.SPIProvider;
@@ -262,30 +261,27 @@ public class RequestHandlerImpl implements RequestHandler
       try
       {
          msgContext.setEndpointMetaData(sepMetaData);
-         MessageAbstraction resMessage = processRequest(endpoint, headerSource, invContext, inStream);
+         SOAPMessage resMessage = processRequest(endpoint, headerSource, invContext, inStream);
          CommonMessageContext reqMsgContext = msgContext;
 
          boolean isFault = false;
-         if (resMessage instanceof SOAPMessage)
-         {
-            SOAPPart part = ((SOAPMessage)resMessage).getSOAPPart();
-            if (part == null)
-               throw new SOAPException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SOAPPART"));
+         SOAPPart part = ((SOAPMessage)resMessage).getSOAPPart();
+         if (part == null)
+        	 throw new SOAPException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SOAPPART"));
 
-            // R1126 An INSTANCE MUST return a "500 Internal Server Error" HTTP status code
-            // if the response envelope is a Fault.
-            //
-            // Also, a one-way operation must show up as empty content, and can be detected
-            // by a null envelope.
-            SOAPEnvelope soapEnv = part.getEnvelope();
-            isFault = soapEnv != null && soapEnv.getBody().hasFault();
-            if (isFault)
-            {
-               if (httpResponse != null)
-               {
-                  httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-               }
-            }
+         // R1126 An INSTANCE MUST return a "500 Internal Server Error" HTTP status code
+         // if the response envelope is a Fault.
+         //
+         // Also, a one-way operation must show up as empty content, and can be detected
+         // by a null envelope.
+         SOAPEnvelope soapEnv = part.getEnvelope();
+         isFault = soapEnv != null && soapEnv.getBody().hasFault();
+         if (isFault)
+         {
+        	 if (httpResponse != null)
+        	 {
+        		 httpResponse.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        	 }
          }
 
          if (outStream != null)
@@ -312,7 +308,7 @@ public class RequestHandlerImpl implements RequestHandler
    private void sendResponse(Endpoint endpoint, OutputStream output, boolean isFault) throws SOAPException, IOException
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      MessageAbstraction resMessage = msgContext.getMessageAbstraction();
+      SOAPMessage resMessage = msgContext.getSOAPMessage();
       
       if (resMessage == null)
       {
@@ -326,7 +322,7 @@ public class RequestHandlerImpl implements RequestHandler
    /**
     * Handle a request to this web service endpoint
     */
-   private MessageAbstraction processRequest(Endpoint ep, MimeHeaderSource headerSource, InvocationContext reqContext, InputStream inputStream) throws BindingException
+   private SOAPMessage processRequest(Endpoint ep, MimeHeaderSource headerSource, InvocationContext reqContext, InputStream inputStream) throws BindingException
    {
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
 
@@ -352,13 +348,13 @@ public class RequestHandlerImpl implements RequestHandler
 
          MimeHeaders headers = (headerSource != null ? headerSource.getMimeHeaders() : null);
 
-         MessageAbstraction reqMessage;
+         SOAPMessage reqMessage;
 
          msgFactory.setStyle(sepMetaData.getStyle());
-         reqMessage = (SOAPMessageImpl)msgFactory.createMessage(headers, inputStream);
+         reqMessage = msgFactory.createMessage(headers, inputStream);
 
          // Associate current message with message context
-         msgContext.setMessageAbstraction(reqMessage);
+         msgContext.setSOAPMessage(reqMessage);
 
          // debug the incomming message
          MessageTrace.traceMessage("Incoming Request Message", reqMessage);
@@ -375,7 +371,7 @@ public class RequestHandlerImpl implements RequestHandler
          msgContext = MessageContextAssociation.peekMessageContext();
 
          // Get the response message
-         MessageAbstraction resMessage = msgContext.getMessageAbstraction();
+         SOAPMessage resMessage = msgContext.getSOAPMessage();
          if (resMessage != null)
             postProcessResponse(headerSource, resMessage);
 
@@ -383,11 +379,11 @@ public class RequestHandlerImpl implements RequestHandler
       }
       catch (Exception ex)
       {
-         MessageAbstraction resMessage = MessageContextAssociation.peekMessageContext().getMessageAbstraction();
+         SOAPMessage resMessage = MessageContextAssociation.peekMessageContext().getSOAPMessage();
 
          // In case we have an exception before the invoker is called
          // we create the fault message here.
-         if (resMessage == null || resMessage.isFaultMessage() == false)
+         if (resMessage == null || SOAPUtils.isFaultMessage(resMessage) == false)
          {
             CommonBindingProvider bindingProvider = new CommonBindingProvider(sepMetaData);
             CommonBinding binding = bindingProvider.getCommonBinding();
@@ -403,10 +399,10 @@ public class RequestHandlerImpl implements RequestHandler
       {
          try
          {
-            MessageAbstraction resMessage = MessageContextAssociation.peekMessageContext().getMessageAbstraction();
+            SOAPMessage resMessage = MessageContextAssociation.peekMessageContext().getSOAPMessage();
             if (resMessage != null)
             {
-               if (resMessage.isFaultMessage())
+               if (SOAPUtils.isFaultMessage(resMessage))
                {
                   processFaultMetrics(ep, beginProcessing);
                }
@@ -453,12 +449,12 @@ public class RequestHandlerImpl implements RequestHandler
 
    /** Set response mime headers
     */
-   private void postProcessResponse(MimeHeaderSource headerSource, MessageAbstraction resMessage)
+   private void postProcessResponse(MimeHeaderSource headerSource, SOAPMessage resMessage)
    {
       try
       {
          // Set the outbound headers
-         if (headerSource != null && resMessage instanceof SOAPMessage)
+         if (headerSource != null)
          {
             ((SOAPMessage)resMessage).saveChanges();
             headerSource.setMimeHeaders(resMessage.getMimeHeaders());

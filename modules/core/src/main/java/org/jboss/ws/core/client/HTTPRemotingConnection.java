@@ -29,9 +29,9 @@ import java.util.ResourceBundle;
 
 import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
+import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.api.util.BundleUtils;
-import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.client.transport.NettyClient;
@@ -87,7 +87,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
     * 
     * A null reqMessage signifies a HTTP GET request.
     */
-   public MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway) throws IOException
+   public SOAPMessage invoke(SOAPMessage reqMessage, Object endpoint, boolean oneway) throws IOException
    {
       if (endpoint == null)
          throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "GIVEN_ENDPOINT_CANNOT_BE_NULL"));
@@ -125,7 +125,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
       populateHeaders(reqMessage, additionalHeaders);
       //Trace the outgoing message
       MessageTrace.traceMessage("Outgoing Request Message", reqMessage);
-      MessageAbstraction resMessage = (MessageAbstraction)client.invoke(reqMessage, targetAddress, oneway, additionalHeaders, callProps);
+      SOAPMessage resMessage = (SOAPMessage)client.invoke(reqMessage, targetAddress, oneway, additionalHeaders, callProps);
       //Trace the incoming response message
       MessageTrace.traceMessage("Incoming Response Message", resMessage);
       return resMessage;
@@ -133,7 +133,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
    
    
 
-   protected void populateHeaders(MessageAbstraction reqMessage, Map<String, Object> metadata)
+   protected void populateHeaders(SOAPMessage reqMessage, Map<String, Object> metadata)
    {
       if (reqMessage != null)
       {

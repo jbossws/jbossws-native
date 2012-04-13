@@ -33,6 +33,7 @@ import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.utils.Style;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 

@@ -21,9 +21,7 @@
  */
 package org.jboss.ws.core;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
@@ -54,23 +52,20 @@ import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPBodyElementDoc;
 import org.jboss.ws.core.soap.SOAPBodyElementRpc;
 import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.SOAPElementImpl;
-import org.jboss.ws.core.soap.SOAPFactoryImpl;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.core.soap.SOAPHeaderElementImpl;
-import org.jboss.ws.core.soap.SOAPMessageImpl;
-import org.jboss.ws.core.soap.Style;
-import org.jboss.ws.core.soap.UnboundHeader;
-import org.jboss.ws.core.soap.Use;
 import org.jboss.ws.core.soap.attachment.AttachmentPartImpl;
-import org.jboss.ws.core.soap.attachment.CIDGenerator;
+import org.jboss.ws.core.soap.utils.CIDGenerator;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
+import org.jboss.ws.core.soap.utils.SOAPUtils;
+import org.jboss.ws.core.soap.utils.Style;
+import org.jboss.ws.core.soap.utils.Use;
 import org.jboss.ws.core.utils.MimeUtils;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
@@ -105,19 +100,19 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
    public MessageFactory getMessageFactory()
    {
-      return new MessageFactoryImpl();
+      return SOAPUtils.newSOAP11MessageFactory();
    }
 
    public SOAPFactory getSOAPFactory()
    {
-      return new SOAPFactoryImpl();
+      return SOAPUtils.newSOAP11Factory();
    }
 
    /** Create the message */
-   protected abstract MessageAbstraction createMessage(OperationMetaData opMetaData) throws SOAPException;
+   protected abstract SOAPMessage createMessage(OperationMetaData opMetaData) throws SOAPException;
 
    /** On the client side, generate the payload from IN parameters. */
-   public MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
+   public SOAPMessage bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv)
          throws BindingException
    {
       boolean debugEnabled = log.isDebugEnabled();
@@ -131,7 +126,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
             throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
 
          // Associate current message with message context
-         SOAPMessageImpl reqMessage = (SOAPMessageImpl)createMessage(opMetaData);
+         SOAPMessage reqMessage = createMessage(opMetaData);
          msgContext.setSOAPMessage(reqMessage);
 
          SOAPEnvelope soapEnvelope = reqMessage.getSOAPPart().getEnvelope();
@@ -171,43 +166,13 @@ public abstract class CommonSOAPBinding implements CommonBinding
             if (paramMetaData.isSwA())
             {
                // NOTE: swa:ref is handled by the AttachmentMarshaller callback
-               CIDGenerator cidGenerator = reqMessage.getCidGenerator();
-               AttachmentPart part = createAttachmentPart(paramMetaData, value, cidGenerator);
+               AttachmentPart part = createAttachmentPart(paramMetaData, value);
                reqMessage.addAttachmentPart(part);
             }
             else
             {
                SOAPElement soapElement = paramMetaData.isInHeader() ? (SOAPElement)soapHeader : soapBodyElement;
                addParameterToMessage(paramMetaData, value, soapElement);
-            }
-         }
-
-         // Add unbound headers
-         if (unboundHeaders != null)
-         {
-            Iterator it = unboundHeaders.values().iterator();
-            while (it.hasNext())
-            {
-               UnboundHeader unboundHeader = (UnboundHeader)it.next();
-               if (unboundHeader.getMode() != ParameterMode.OUT)
-               {
-                  QName xmlName = unboundHeader.getXmlName();
-                  Object value = unboundHeader.getHeaderValue();
-
-                  xmlName = namespaceRegistry.registerQName(xmlName);
-                  Name soapName = new NameImpl(xmlName.getLocalPart(), xmlName.getPrefix(), xmlName.getNamespaceURI());
-
-                  if (debugEnabled)
-                     log.debug("Add unboundHeader element: " + soapName);
-                  SOAPContentElement contentElement = new SOAPHeaderElementImpl(soapName);
-                  contentElement.setParamMetaData(unboundHeader.toParameterMetaData(opMetaData));
-
-                  if (soapHeader == null)
-                     soapHeader = soapEnvelope.addHeader();
-
-                  soapHeader.addChildElement(contentElement);
-                  contentElement.setObjectValue(value);
-               }
             }
          }
 
@@ -227,7 +192,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
    public abstract void setSOAPActionHeader(OperationMetaData opMetaData, SOAPMessage reqMessage);
 
    /** On the server side, extract the IN parameters from the payload and populate an Invocation object */
-   public EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, MessageAbstraction payload) throws BindingException
+   public EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, SOAPMessage payload) throws BindingException
    {
       if (log.isDebugEnabled())
          log.debug("unbindRequestMessage: " + opMetaData.getQName());
@@ -235,7 +200,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
       try
       {
          // Read the SOAPEnvelope from the reqMessage
-         SOAPMessageImpl reqMessage = (SOAPMessageImpl)payload;
+         SOAPMessage reqMessage = (SOAPMessage)payload;
          SOAPEnvelope soapEnvelope = reqMessage.getSOAPPart().getEnvelope();
          SOAPHeader soapHeader = soapEnvelope.getHeader();
          SOAPBody soapBody = soapEnvelope.getBody();
@@ -339,7 +304,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
    }
 
    /** On the server side, generate the payload from OUT parameters. */
-   public MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException
+   public SOAPMessage bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException
    {
       if (log.isDebugEnabled())
          log.debug("bindResponseMessage: " + opMetaData.getQName());
@@ -351,7 +316,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
             throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
 
          // Associate current message with message context
-         SOAPMessageImpl resMessage = (SOAPMessageImpl)createMessage(opMetaData);
+         SOAPMessage resMessage = (SOAPMessage)createMessage(opMetaData);
          msgContext.setSOAPMessage(resMessage);
 
          // R2714 For one-way operations, an INSTANCE MUST NOT return a HTTP response that contains a SOAP envelope.
@@ -400,8 +365,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
             if (retMetaData.isSwA())
             {
-               CIDGenerator cidGenerator = resMessage.getCidGenerator();
-               AttachmentPart part = createAttachmentPart(retMetaData, value, cidGenerator);
+               AttachmentPart part = createAttachmentPart(retMetaData, value);
                resMessage.addAttachmentPart(part);
                epInv.setReturnValue(part);
             }
@@ -420,8 +384,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
             Object value = epInv.getResponseParamValue(xmlName);
             if (paramMetaData.isSwA())
             {
-               CIDGenerator cidGenerator = resMessage.getCidGenerator();
-               AttachmentPart part = createAttachmentPart(paramMetaData, value, cidGenerator);
+               AttachmentPart part = createAttachmentPart(paramMetaData, value);
                resMessage.addAttachmentPart(part);
             }
             else
@@ -447,7 +410,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
    }
    
    /** On the client side, extract the OUT parameters from the payload and return them to the client. */
-   public void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction payload, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders)
+   public void unbindResponseMessage(OperationMetaData opMetaData, SOAPMessage payload, EndpointInvocation epInv)
          throws BindingException
    {
       if (log.isDebugEnabled())
@@ -463,7 +426,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
          }
 
          // WS-Addressing might redirect the response, which results in an empty envelope
-         SOAPMessageImpl resMessage = (SOAPMessageImpl)payload;
+         SOAPMessage resMessage = payload;
          SOAPEnvelope soapEnvelope = resMessage.getSOAPPart().getEnvelope();
          if (soapEnvelope == null)
          {
@@ -485,32 +448,6 @@ public abstract class CommonSOAPBinding implements CommonBinding
          // Translate the SOAPFault to an exception and throw it
          if (soapBodyElement instanceof SOAPFaultImpl)
             throwFaultException((SOAPFaultImpl)soapBodyElement);
-
-         // Extract unbound OUT headers
-         if (unboundHeaders != null && soapHeader != null)
-         {
-            Map<QName, UnboundHeader> outHeaders = new HashMap<QName, UnboundHeader>();
-            Iterator itHeaderElements = soapHeader.getChildElements();
-            while (itHeaderElements.hasNext())
-            {
-               SOAPContentElement soapHeaderElement = (SOAPHeaderElementImpl)itHeaderElements.next();
-               Name elName = soapHeaderElement.getElementName();
-               QName xmlName = new QName(elName.getURI(), elName.getLocalName());
-
-               UnboundHeader unboundHeader = (UnboundHeader)unboundHeaders.get(xmlName);
-               if (unboundHeader != null)
-               {
-                  soapHeaderElement.setParamMetaData(unboundHeader.toParameterMetaData(opMetaData));
-
-                  // Do the unmarshalling
-                  Object value = soapHeaderElement.getObjectValue();
-                  unboundHeader.setHeaderValue(value);
-                  outHeaders.put(xmlName, unboundHeader);
-               }
-            }
-            unboundHeaders.clear();
-            unboundHeaders.putAll(outHeaders);
-         }
 
          Style style = opMetaData.getStyle();
          SOAPElement soapElement = soapBody;
@@ -558,9 +495,9 @@ public abstract class CommonSOAPBinding implements CommonBinding
       }
    }
    
-   public MessageAbstraction bindFaultMessage(Exception ex)
+   public SOAPMessage bindFaultMessage(Exception ex)
    {
-      SOAPMessageImpl faultMessage = (SOAPMessageImpl)createFaultMessageFromException(ex);
+      SOAPMessage faultMessage = createFaultMessageFromException(ex);
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       if (msgContext != null)
       {
@@ -586,7 +523,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
          log.warn(BundleUtils.getMessage(bundle, "EXPECTED_SOAP12",  envNS));
    }
 
-   private AttachmentPart createAttachmentPart(ParameterMetaData paramMetaData, Object value, CIDGenerator cidGenerator) throws SOAPException, BindingException
+   private AttachmentPart createAttachmentPart(ParameterMetaData paramMetaData, Object value) throws SOAPException, BindingException
    {
       String partName = paramMetaData.getXmlName().getLocalPart();
       Set mimeTypes = paramMetaData.getMimeTypes();
@@ -625,18 +562,9 @@ public abstract class CommonSOAPBinding implements CommonBinding
 
       if (paramMetaData.isSwA())
       {
-         String swaCID = '<' + partName + "=" + cidGenerator.generateFromCount() + '>';
+         String swaCID = '<' + partName + "=" + CIDGenerator.generateFromCount() + '>';
          part.setContentId(swaCID);
       }
-
-      return part;
-   }
-
-   private AttachmentPart createAttachmentPart(final String contentId, final DataHandler value)
-   {
-      AttachmentPart part = new AttachmentPartImpl();
-      part.setContentId(contentId);
-      part.setDataHandler(value);
 
       return part;
    }
@@ -645,11 +573,24 @@ public abstract class CommonSOAPBinding implements CommonBinding
    {
       QName xmlName = paramMetaData.getXmlName();
 
-      AttachmentPart part = ((SOAPMessageImpl)message).getAttachmentByPartName(xmlName.getLocalPart());
+      AttachmentPart part = getAttachmentByPartName(xmlName.getLocalPart(), message);
       if (part == null)
          throw new BindingException(BundleUtils.getMessage(bundle, "COULD_NOT_LOCATE_ATTACHMENT",  paramMetaData.getXmlName()));
 
       return part;
+   }
+
+   private AttachmentPart getAttachmentByPartName(String partName, SOAPMessage soapMsg)
+   {
+	  final Iterator i = soapMsg.getAttachments();
+	  while (i.hasNext())
+      {
+    	 AttachmentPart part = (AttachmentPart)i.next();
+         String contentId = part.getContentId();
+         if (contentId.startsWith("<" + partName + "="))
+            return part;
+      }
+      return null;
    }
 
    /** Marshall the given parameter and add it to the SOAPMessage */
@@ -761,13 +702,13 @@ public abstract class CommonSOAPBinding implements CommonBinding
          OperationMetaData opMetaData = paramMetaData.getOperationMetaData();
          TypesMetaData typesMetaData = opMetaData.getEndpointMetaData().getServiceMetaData().getTypesMetaData();
          
-         SOAPElementImpl childElement = null;
+         SOAPElement childElement = null;
          while (childElement == null && childElements.hasNext())
          {
             Object current = childElements.next();
-            if (current instanceof SOAPElementImpl)
+            if (current instanceof SOAPElement)
             {
-               childElement = (SOAPElementImpl)current;
+               childElement = (SOAPElement)current;
             }
          }
 
@@ -809,7 +750,7 @@ public abstract class CommonSOAPBinding implements CommonBinding
       if (msgContext == null)
          throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
 
-      SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgContext.getSOAPMessage();
+      SOAPMessage soapMessage = (SOAPMessage)msgContext.getSOAPMessage();
       SOAPEnvelope soapEnvelope = soapMessage.getSOAPPart().getEnvelope();
       if (soapEnvelope == null || soapEnvelope.getHeader() == null)
          return;

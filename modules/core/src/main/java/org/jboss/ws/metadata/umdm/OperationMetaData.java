@@ -36,8 +36,8 @@ import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.JavaUtils;
-import org.jboss.ws.core.soap.Style;
-import org.jboss.ws.core.soap.Use;
+import org.jboss.ws.core.soap.utils.Style;
+import org.jboss.ws.core.soap.utils.Use;
 import org.w3c.dom.Element;
 
 /**

@@ -23,8 +23,7 @@ package org.jboss.ws.core.client;
 
 import java.io.IOException;
 
-import org.jboss.ws.core.MessageAbstraction;
-
+import javax.xml.soap.SOAPMessage;
 
 /**
  * A remote connection 
@@ -38,5 +37,5 @@ public interface RemoteConnection
 
    UnMarshaller getUnmarshaller();
    
-   MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway) throws IOException;
+   SOAPMessage invoke(SOAPMessage reqMessage, Object endpoint, boolean oneway) throws IOException;
 }

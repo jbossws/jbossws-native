@@ -30,6 +30,7 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
+import org.jboss.ws.core.soap.utils.Style;
 import org.w3c.dom.Element;
 
 

@@ -19,15 +19,47 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core;
+package org.jboss.ws.core.soap.utils;
 
-/**
- * A generic SOAP message 
- * 
- * @author Thomas.Diesler@jboss.com
- * @since 02-Apr-2007
+import java.util.ResourceBundle;
+
+import org.jboss.ws.api.util.BundleUtils;
+
+/** A type-safe enumeration for encoding style.
+ *  
+ * @author Thomas.Diesler@jboss.org
+ * @since 14-Oct-2004
  */
-public interface SOAPMessageAbstraction extends MessageAbstraction
+public class Style
 {
+   private static final ResourceBundle bundle = BundleUtils.getBundle(Style.class);
+   private String style;
 
+   public static final Style RPC = new Style("rpc");
+   public static final Style DOCUMENT = new Style("document");
+
+   private Style(String style)
+   {
+      this.style = style;
+   }
+
+   public static Style getDefaultStyle()
+   {
+      return DOCUMENT;
+   }
+
+   public static Style valueOf(String style)
+   {
+      if (RPC.style.equals(style))
+         return RPC;
+      if (DOCUMENT.style.equals(style))
+         return DOCUMENT;
+      
+      throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "UNSUPPORTED_STYLE",  style));
+   }
+
+   public String toString()
+   {
+      return style;
+   }
 }

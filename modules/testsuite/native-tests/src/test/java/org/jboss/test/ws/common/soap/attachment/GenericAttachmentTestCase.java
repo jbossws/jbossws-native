@@ -46,10 +46,10 @@ import org.jboss.ws.core.CommonSOAPBinding;
 import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.jaxrpc.client.CallImpl;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
-import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.wsf.test.JBossWSTest;
 
@@ -152,7 +152,7 @@ public class GenericAttachmentTestCase extends JBossWSTest
          EndpointInvocation epInv = new EndpointInvocation(opMetaData);
          epInv.initInputParams(new Object[]{"Hello World!", "hi"});
          
-         SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv, null);
+         SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv);
    
          ByteArrayOutputStream stream = new ByteArrayOutputStream();
    
@@ -187,7 +187,7 @@ public class GenericAttachmentTestCase extends JBossWSTest
          headers.addHeader(MimeConstants.CONTENT_TYPE, type);
          SOAPMessageImpl msg3 = (SOAPMessageImpl)new MessageFactoryImpl().createMessage(headers, in);
    
-         binding.unbindResponseMessage(opMetaData, msg3, epInv, null);
+         binding.unbindResponseMessage(opMetaData, msg3, epInv);
    
          assertEquals("test", epInv.getReturnValue());
       }

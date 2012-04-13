@@ -44,7 +44,7 @@ import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBDeserializerFactory;
 import org.jboss.ws.core.jaxrpc.binding.JBossXBSerializerFactory;
-import org.jboss.ws.core.soap.Style;
+import org.jboss.ws.core.soap.utils.Style;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;

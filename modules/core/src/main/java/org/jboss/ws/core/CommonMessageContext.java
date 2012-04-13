@@ -60,7 +60,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
    // The operation for this message ctx
    private OperationMetaData opMetaData;
    // The Message in this message context
-   private MessageAbstraction message;
+   private SOAPMessage message;
    // The map of scoped properties
    protected Map<String, Object> props = new HashMap<String, Object>();
 
@@ -112,18 +112,8 @@ public abstract class CommonMessageContext implements Map<String, Object>
 
    public void setSOAPMessage(SOAPMessage soapMessage)
    {
-      this.message = (MessageAbstraction)soapMessage;
+      this.message = soapMessage;
       this.setModified(true);
-   }
-
-   public MessageAbstraction getMessageAbstraction()
-   {
-      return message;
-   }
-
-   public void setMessageAbstraction(MessageAbstraction message)
-   {
-      this.message = message;
    }
 
    public SerializationContext getSerializationContext()
@@ -245,7 +235,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
    public static void cleanupAttachments(CommonMessageContext messageContext)
    {
       // cleanup attachments
-      MessageAbstraction msg = messageContext.getMessageAbstraction();
+      SOAPMessage msg = messageContext.getSOAPMessage();
 
       if(msg!=null && (msg instanceof SOAPMessage)) // in case of http binding
       {
