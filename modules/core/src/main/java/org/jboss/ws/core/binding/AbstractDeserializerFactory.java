@@ -26,8 +26,6 @@ import java.util.Iterator;
 import javax.xml.rpc.encoding.Deserializer;
 import javax.xml.rpc.encoding.DeserializerFactory;
 
-import org.jboss.util.NotImplementedException;
-
 /**
  * @author Thomas.Diesler@jboss.org
  * @since 04-Dec-2004
@@ -38,11 +36,11 @@ public abstract class AbstractDeserializerFactory implements DeserializerFactory
 
    public Deserializer getDeserializerAs(String mechanismType)
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 
    public Iterator getSupportedMechanismTypes()
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 }

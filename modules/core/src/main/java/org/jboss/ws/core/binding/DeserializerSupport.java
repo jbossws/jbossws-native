@@ -29,7 +29,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
@@ -118,6 +117,6 @@ public abstract class DeserializerSupport implements Deserializer
 
    public String getMechanismType()
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 }

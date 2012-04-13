@@ -25,7 +25,6 @@ import org.apache.xerces.xs.XSConstants;
 import org.apache.xerces.xs.XSObjectList;
 import org.apache.xerces.xs.XSParticle;
 import org.apache.xerces.xs.XSTerm;
-import org.jboss.util.NotImplementedException;
 
 /**
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
@@ -137,6 +136,6 @@ public class JBossXSParticle extends JBossXSObject implements XSParticle, Compar
 
    public XSObjectList getAnnotations()
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 }

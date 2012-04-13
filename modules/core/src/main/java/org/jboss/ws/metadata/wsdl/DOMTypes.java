@@ -23,7 +23,6 @@ package org.jboss.ws.metadata.wsdl;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.util.NotImplementedException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -56,6 +55,6 @@ public class DOMTypes extends WSDLTypes
 
    public QName getXMLType(QName name)
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 }

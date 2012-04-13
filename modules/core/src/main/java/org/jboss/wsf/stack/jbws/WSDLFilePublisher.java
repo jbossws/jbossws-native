@@ -33,7 +33,6 @@ import java.util.ResourceBundle;
 import javax.wsdl.Definition;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
@@ -107,7 +106,7 @@ public class WSDLFilePublisher extends AbstractWSDLFilePublisher
             }
             else
             {
-               throw new NotImplementedException(BundleUtils.getMessage(bundle, "NOT_SUPPORTED_WSDL20"));
+               throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "NOT_SUPPORTED_WSDL20"));
             }
          }
          catch (RuntimeException rte)

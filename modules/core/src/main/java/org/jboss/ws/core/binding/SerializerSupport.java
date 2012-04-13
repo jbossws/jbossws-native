@@ -29,7 +29,6 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.Serializer;
 import javax.xml.transform.Result;
 
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.Normalizer;
 import org.jboss.ws.core.soap.SOAPContentElement;
@@ -150,7 +149,7 @@ public abstract class SerializerSupport implements Serializer
 
    public String getMechanismType()
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 
 }

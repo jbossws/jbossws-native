@@ -23,8 +23,6 @@ package org.jboss.test.ws.common.binding;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
@@ -44,7 +42,6 @@ import org.jboss.ws.core.jaxrpc.client.CallImpl;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
-import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.core.soap.utils.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;

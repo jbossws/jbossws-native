@@ -58,10 +58,9 @@ import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.SerializerSupport;
-import org.jboss.ws.core.soap.NameImpl;
-import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.core.soap.utils.MessageContextAssociation;
 import org.jboss.ws.core.soap.utils.SOAPUtils;
+import org.jboss.ws.core.soap.utils.XMLFragment;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.FaultMetaData;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -101,7 +100,8 @@ public class SOAPFaultHelperJAXRPC
    /** Factory method for FaultException for a given SOAPFault */
    public static SOAPFaultException getSOAPFaultException(SOAPFault soapFault)
    {
-      QName faultCode = ((NameImpl)soapFault.getFaultCodeAsName()).toQName();
+	  Name faultCodeName = soapFault.getFaultCodeAsName();
+      QName faultCode = new QName(faultCodeName.getURI(), faultCodeName.getLocalName(), faultCodeName.getPrefix());
       String faultString = soapFault.getFaultString();
       String faultActor = soapFault.getFaultActor();
       Detail detail = soapFault.getDetail();
@@ -248,7 +248,8 @@ public class SOAPFaultHelperJAXRPC
          faultCode = nsRegistry.registerQName(faultCode);
 
       String faultString = getValidFaultString(faultEx);
-      SOAPFault soapFault = soapBody.addFault(new NameImpl(faultCode), faultString);
+      Name faultCodeName = SOAPUtils.newName(faultCode, soapEnvelope);
+      SOAPFault soapFault = soapBody.addFault(faultCodeName, faultString);
 
       String faultActor = faultEx.getFaultActor();
       if (faultActor != null)

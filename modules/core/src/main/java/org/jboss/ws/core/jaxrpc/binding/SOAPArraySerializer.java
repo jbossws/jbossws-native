@@ -36,9 +36,8 @@ import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.SerializerSupport;
 import org.jboss.ws.core.binding.TypeMappingImpl;
-import org.jboss.ws.core.soap.NameImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
-import org.jboss.ws.core.soap.XMLFragment;
+import org.jboss.ws.core.soap.utils.XMLFragment;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.util.xml.BufferedStreamResult;
 import org.w3c.dom.NamedNodeMap;
@@ -124,7 +123,7 @@ public class SOAPArraySerializer extends SerializerSupport
          if (JavaUtils.isPrimitive(value.getClass()))
             value = JavaUtils.getWrapperValueArray(value);
 
-         String nodeName = new NameImpl(compXmlName).getQualifiedName();
+         String nodeName = getQualifiedName(compXmlName);
 
          buffer = new StringBuilder("<" + nodeName + " xmlns:" + Constants.PREFIX_SOAP11_ENC + "='" + Constants.URI_SOAP11_ENC + "' ");
 
@@ -169,6 +168,15 @@ public class SOAPArraySerializer extends SerializerSupport
       {
          throw new BindingException(e);
       }
+   }
+
+   private String getQualifiedName(QName qname)
+   {
+      String prefix = qname.getPrefix();
+      if (prefix.length() > 0)
+         return prefix + ":" + qname.getLocalPart();
+      else
+         return qname.getLocalPart();
    }
 
    private void serializeArrayComponents(QName xmlName, QName xmlType, SerializationContext serContext, Object[] objArr) throws BindingException

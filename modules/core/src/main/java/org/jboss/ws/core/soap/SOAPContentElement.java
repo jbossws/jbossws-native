@@ -30,7 +30,6 @@ import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
-import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
@@ -39,6 +38,7 @@ import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.soap.SOAPContent.State;
 import org.jboss.ws.core.soap.utils.MessageContextAssociation;
+import org.jboss.ws.core.soap.utils.XMLFragment;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
@@ -151,14 +151,6 @@ public class SOAPContentElement extends SOAPElementImpl implements SOAPContentAc
 
    /** Get the payload as source.
     */
-   public Source getPayload()
-   {
-      if (soapContent.getState() == State.OBJECT_VALID)
-         transitionTo(State.DOM_VALID);
-
-      return soapContent.getPayload();
-   }
-
    public XMLFragment getXMLFragment()
    {
       transitionTo(State.XML_VALID);

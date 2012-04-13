@@ -21,7 +21,10 @@
  */
 package org.jboss.ws.core.soap.utils;
 
+import javax.xml.namespace.QName;
+import javax.xml.soap.Name;
 import javax.xml.soap.SOAPConstants;
+import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPFactory;
@@ -84,4 +87,7 @@ public final class SOAPUtils {
 		return false;
 	}
 
+	public static Name newName(final QName faultCode, final SOAPEnvelope soapEnvelope) throws SOAPException {
+		return soapEnvelope.createName(faultCode.getLocalPart(), faultCode.getPrefix(), faultCode.getNamespaceURI());
+	}
 }

@@ -32,8 +32,8 @@ import javax.xml.transform.stream.StreamSource;
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMWriter;
-import org.jboss.ws.core.soap.XMLFragment;
 import org.jboss.ws.core.soap.utils.SOAPElementWriter;
+import org.jboss.ws.core.soap.utils.XMLFragment;
 import org.w3c.dom.Element;
 
 /**
