@@ -5,12 +5,7 @@
   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
   version="2.4">
 
-   <context-param>
-      <param-name>jbossws-config-name</param-name>
-      <param-value>Standard Endpoint</param-value>
-   </context-param>
-
-   <servlet>
+  <servlet>
     <servlet-name>StandardTypes</servlet-name>
     <servlet-class>org.jboss.test.ws.jaxrpc.marshall.StandardTypesBean</servlet-class>
   </servlet>
