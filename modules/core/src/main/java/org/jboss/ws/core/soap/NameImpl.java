@@ -24,6 +24,8 @@ package org.jboss.ws.core.soap;
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 
+import org.jboss.ws.core.soap.utils.SOAPUtils;
+
 /**
  * An implementation of a Name
  * <p/>
@@ -107,10 +109,10 @@ public class NameImpl implements Name
 
    public boolean equals(Object obj)
    {
-      if (!(obj instanceof NameImpl)) return false;
+      if (!(obj instanceof Name)) return false;
       if (obj == this) return true;
-      NameImpl other = (NameImpl)obj;
-      return qname.equals(other.qname);
+      Name other = (Name)obj;
+      return qname.equals(SOAPUtils.toQName(other));
    }
 
    public QName toQName()
