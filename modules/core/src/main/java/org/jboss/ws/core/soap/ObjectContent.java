@@ -26,7 +26,6 @@ import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
-import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -39,6 +38,8 @@ import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.SerializerSupport;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.NullValueSerializer;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
+import org.jboss.ws.core.soap.utils.XMLFragment;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 
@@ -98,16 +99,6 @@ public class ObjectContent extends SOAPContent
       }
 
       return next;
-   }
-
-   public Source getPayload()
-   {
-      throw new IllegalStateException(BundleUtils.getMessage(bundle, "PAYLOAD_NOT_AVAILABLE"));
-   }
-
-   public void setPayload(Source source)
-   {
-      throw new IllegalStateException(BundleUtils.getMessage(bundle, "PAYLOAD_CANNOT_BE_SET_ON_OBJECT_CONTENT"));
    }
 
    public XMLFragment getXMLFragment()

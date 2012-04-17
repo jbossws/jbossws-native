@@ -28,7 +28,6 @@ import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.soap.SOAPMessageMarshaller;
 import org.jboss.ws.core.soap.SOAPMessageUnMarshallerHTTP;
 
@@ -52,12 +51,12 @@ public class SOAPProtocolConnectionHTTP extends HTTPRemotingConnection
    }
 
    @Override
-   public MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway) throws IOException
+   public SOAPMessage invoke(SOAPMessage reqMessage, Object endpoint, boolean oneway) throws IOException
    {
       try
       {
          // save object model changes
-         SOAPMessage soapMessage = (SOAPMessage)reqMessage;
+         SOAPMessage soapMessage = reqMessage;
          if (reqMessage != null && soapMessage.saveRequired())
             soapMessage.saveChanges();
 
@@ -71,7 +70,7 @@ public class SOAPProtocolConnectionHTTP extends HTTPRemotingConnection
       }
    }
 
-   protected void populateHeaders(MessageAbstraction reqMessage, Map<String, Object> metadata)
+   protected void populateHeaders(SOAPMessage reqMessage, Map<String, Object> metadata)
    {
       super.populateHeaders(reqMessage, metadata);
 

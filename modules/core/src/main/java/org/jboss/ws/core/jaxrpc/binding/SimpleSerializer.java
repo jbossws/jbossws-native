@@ -25,7 +25,6 @@ import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.SerializerSupport;
@@ -61,7 +60,7 @@ public class SimpleSerializer extends SerializerSupport
 
       if ("base64Binary".equals(typeName))
       {
-         throw new NotImplementedException();
+         throw new UnsupportedOperationException();
       }
       else
       {

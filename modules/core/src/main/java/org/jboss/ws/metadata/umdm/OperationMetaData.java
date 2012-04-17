@@ -32,12 +32,11 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.JavaUtils;
-import org.jboss.ws.core.soap.Style;
-import org.jboss.ws.core.soap.Use;
+import org.jboss.ws.core.soap.utils.Style;
+import org.jboss.ws.core.soap.utils.Use;
 import org.w3c.dom.Element;
 
 /**
@@ -413,8 +412,7 @@ return false;
 
    public void eagerInitialize()
    {
-      // Call eagerInitialize(List<Method> unsynchronizedMethods) instead
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
    
    /**

@@ -55,7 +55,6 @@ import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTerm;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
@@ -754,6 +753,6 @@ public class JBossXSModel implements XSModel, Cloneable
 
    public XSObjectList getSubstitutionGroup(XSElementDeclaration arg0)
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 }

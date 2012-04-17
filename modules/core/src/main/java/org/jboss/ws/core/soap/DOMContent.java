@@ -23,11 +23,11 @@ package org.jboss.ws.core.soap;
 
 import java.util.ResourceBundle;
 
-import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.utils.XMLFragment;
 
 /**
  * Represents the DOM_VALID state of an {@link SOAPContentElement}.<br>
@@ -39,8 +39,6 @@ public class DOMContent extends SOAPContent
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(DOMContent.class);
    private static Logger log = Logger.getLogger(DOMContent.class);
-
-   private Source payload;
 
    protected DOMContent(SOAPContentElement container)
    {
@@ -89,19 +87,6 @@ public class DOMContent extends SOAPContent
       }
 
       return next;
-   }
-
-   public Source getPayload()
-   {
-      return new DOMSource(container);
-   }
-
-   public void setPayload(Source source)
-   {
-      if (!(source instanceof DOMSource))
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "DOMSOURCE_EXPECTED",  source));
-      
-      this.payload = source;
    }
 
    public XMLFragment getXMLFragment()

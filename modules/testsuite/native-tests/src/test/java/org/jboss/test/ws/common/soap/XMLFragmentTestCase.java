@@ -22,7 +22,8 @@
 package org.jboss.test.ws.common.soap;
 
 import junit.framework.TestCase;
-import org.jboss.ws.core.soap.XMLFragment;
+
+import org.jboss.ws.core.soap.utils.XMLFragment;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
 import org.w3c.dom.Element;

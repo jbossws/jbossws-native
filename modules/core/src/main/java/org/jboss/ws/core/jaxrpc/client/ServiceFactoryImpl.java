@@ -30,7 +30,6 @@ import javax.xml.rpc.ServiceException;
 import javax.xml.rpc.ServiceFactory;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 
 /**
  * Service class acts as a factory for:
@@ -58,7 +57,7 @@ public class ServiceFactoryImpl extends ServiceFactory
     */
    public Service loadService(Class serviceInterface) throws ServiceException
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -75,7 +74,7 @@ public class ServiceFactoryImpl extends ServiceFactory
     */
    public Service loadService(URL wsdlDocumentLocation, Class serviceInterface, Properties props) throws ServiceException
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -92,7 +91,7 @@ public class ServiceFactoryImpl extends ServiceFactory
     */
    public Service loadService(URL wsdlDocumentLocation, QName serviceName, Properties props) throws ServiceException
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 
    /**

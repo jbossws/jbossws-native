@@ -42,6 +42,7 @@ import javax.xml.transform.stream.StreamSource;
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.api.util.ServiceLoader;
+import org.jboss.ws.core.soap.utils.Style;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;
 import org.w3c.dom.Comment;

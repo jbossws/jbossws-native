@@ -23,8 +23,6 @@ package org.jboss.test.ws.common.binding;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
@@ -42,10 +40,9 @@ import org.jboss.ws.core.CommonSOAPBinding;
 import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.jaxrpc.client.CallImpl;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
-import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
-import org.jboss.ws.core.soap.UnboundHeader;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.common.DOMUtils;
@@ -185,7 +182,7 @@ public class SOAPBindingTestCase extends JBossWSTest
       EndpointInvocation epInv = new EndpointInvocation(opMetaData);
       epInv.initInputParams(new Object[]{"Hello World!"});
 
-      SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv, null);
+      SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv);
 
       ByteArrayOutputStream outs = new ByteArrayOutputStream();
       reqMessage.writeTo(outs);
@@ -211,40 +208,13 @@ public class SOAPBindingTestCase extends JBossWSTest
       EndpointInvocation epInv = new EndpointInvocation(opMetaData);
       epInv.initInputParams(new Object[]{"Hello World!", "IN header message"});
 
-      SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv, null);
+      SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv);
 
       ByteArrayOutputStream outs = new ByteArrayOutputStream();
       reqMessage.writeTo(outs);
 
       String retString = new String(outs.toByteArray());
       assertEquals(DOMUtils.parse(reqEnvelopeWithBoundHeader), DOMUtils.parse(retString));
-   }
-
-   /** Test binding of the request message with header
-    */
-   public void testBindRequestMessageWithUnboundHeader() throws Exception
-   {
-      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING);
-      CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
-
-      // Add unbound header
-      QName xmlName = new QName("http://somens", "String_2");
-      UnboundHeader header = new UnboundHeader(xmlName, Constants.TYPE_LITERAL_STRING, String.class, ParameterMode.IN);
-      header.setHeaderValue("IN header message");
-
-      Map headers = new HashMap();
-      headers.put(xmlName, header);
-
-      EndpointInvocation epInv = new EndpointInvocation(opMetaData);
-      epInv.initInputParams(new Object[]{"Hello World!"});
-
-      SOAPMessage reqMessage = (SOAPMessage)binding.bindRequestMessage(opMetaData, epInv, headers);
-
-      ByteArrayOutputStream outs = new ByteArrayOutputStream();
-      reqMessage.writeTo(outs);
-
-      String retString = new String(outs.toByteArray());
-      assertEquals(DOMUtils.parse(reqEnvelopeWithUnboundHeader), DOMUtils.parse(retString));
    }
 
    /** Test unbinding of the request message
@@ -357,7 +327,7 @@ public class SOAPBindingTestCase extends JBossWSTest
       msgContext.setSOAPMessage(resMessage);
 
       EndpointInvocation epInv = new EndpointInvocation(opMetaData);     
-      binding.unbindResponseMessage(opMetaData, resMessage, epInv, null);
+      binding.unbindResponseMessage(opMetaData, resMessage, epInv);
       assertEquals("Hello World!", epInv.getReturnValue());
    }
 
@@ -385,39 +355,11 @@ public class SOAPBindingTestCase extends JBossWSTest
       opMetaData.addParameter(paramMetaData);
 
       EndpointInvocation epInv = new EndpointInvocation(opMetaData);
-      binding.unbindResponseMessage(opMetaData, resMessage, epInv, null);
+      binding.unbindResponseMessage(opMetaData, resMessage, epInv);
       assertEquals("Hello World!", epInv.getReturnValue());
 
       Object headerValue = epInv.getResponseParamValue(xmlName);
       assertEquals("OUT header message", headerValue);
-   }
-
-   /** Test unbinding of the response message with unbound header
-    */
-   public void testUnbindResponseMessageWithUnboundHeader() throws Exception
-   {
-      CommonBindingProvider bindingProvider = new CommonBindingProvider(CommonSOAPBinding.SOAP12HTTP_BINDING);
-      CommonBinding binding = (CommonBinding)bindingProvider.getCommonBinding();
-
-      ByteArrayInputStream inputStream = new ByteArrayInputStream(resEnvelopeWithUnboundHeader.getBytes());
-
-      MessageFactory factory = new MessageFactoryImpl();
-      SOAPMessageImpl resMessage = (SOAPMessageImpl)factory.createMessage(null, inputStream);
-
-      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      msgContext.setSOAPMessage(resMessage);
-
-      QName xmlName = new QName("http://somens", "OutHeader");
-      UnboundHeader header = new UnboundHeader(xmlName, Constants.TYPE_LITERAL_STRING, String.class, ParameterMode.OUT);
-
-      Map headers = new HashMap();
-      headers.put(xmlName, header);
-
-      EndpointInvocation epInv = new EndpointInvocation(opMetaData);
-      binding.unbindResponseMessage(opMetaData, resMessage, epInv, headers);
-      assertEquals("Hello World!", epInv.getReturnValue());
-
-      assertEquals("OUT header message", header.getHeaderValue());
    }
 
    /** Test unbinding of the response message with unbound header
@@ -438,7 +380,7 @@ public class SOAPBindingTestCase extends JBossWSTest
       try
       {
          EndpointInvocation epInv = new EndpointInvocation(opMetaData);
-         binding.unbindResponseMessage(opMetaData, resMessage, epInv, null);
+         binding.unbindResponseMessage(opMetaData, resMessage, epInv);
          fail("SOAPFaultException expected");
       }
       catch (SOAPFaultException faultEx)

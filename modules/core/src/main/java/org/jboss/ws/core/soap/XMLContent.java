@@ -28,7 +28,6 @@ import java.util.ResourceBundle;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
-import javax.xml.transform.Source;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -41,6 +40,8 @@ import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.DeserializerSupport;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.binding.TypeMappingImpl;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
+import org.jboss.ws.core.soap.utils.XMLFragment;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.w3c.dom.Comment;
@@ -108,16 +109,6 @@ class XMLContent extends SOAPContent
       }
 
       return next;
-   }
-
-   public Source getPayload()
-   {
-      return xmlFragment.getSource();
-   }
-
-   public void setPayload(Source source)
-   {
-      xmlFragment = new XMLFragment(source);
    }
 
    public XMLFragment getXMLFragment()

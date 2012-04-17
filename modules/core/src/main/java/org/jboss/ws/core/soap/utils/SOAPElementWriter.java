@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.soap;
+package org.jboss.ws.core.soap.utils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -30,12 +30,14 @@ import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ResourceBundle;
 
+import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
 
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
+import org.jboss.ws.core.soap.SOAPElementImpl;
 
 /**
  * Writes a SAAJ elements to an output stream.
@@ -99,7 +101,7 @@ public class SOAPElementWriter
     * Print a node with explicit prettyprinting.
     * The defaults for all other DOMWriter properties apply.
     */
-   public static String writeElement(SOAPElementImpl element, boolean pretty)
+   public static String writeElement(SOAPElement element, boolean pretty)
    {
       if (element == null)
          return null;
@@ -126,9 +128,9 @@ public class SOAPElementWriter
       return xmlStr;
    }
 
-   public void writeElement(SOAPElementImpl element)
+   public void writeElement(SOAPElement element)
    {
-      writeElementInternal(element);
+      writeElementInternal((SOAPElementImpl)element);
    }
 
    private void writeElementInternal(SOAPElementImpl element)

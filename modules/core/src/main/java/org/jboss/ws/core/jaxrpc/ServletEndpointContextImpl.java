@@ -31,7 +31,7 @@ import javax.xml.rpc.handler.MessageContext;
 import javax.xml.rpc.server.ServletEndpointContext;
 
 import org.jboss.ws.core.server.ServletRequestContext;
-import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
 
 /**
  * Implementation of <code>ServletEndpointContext</code>

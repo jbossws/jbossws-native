@@ -32,7 +32,6 @@ import org.apache.xerces.xs.XSException;
 import org.apache.xerces.xs.XSNamedMap;
 import org.apache.xerces.xs.XSObjectList;
 import org.apache.xerces.xs.XSTypeDefinition;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.api.util.BundleUtils;
 
 /**
@@ -243,6 +242,6 @@ public class JBossXSElementDeclaration extends JBossXSObject implements XSElemen
 
    public XSObjectList getAnnotations()
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 }

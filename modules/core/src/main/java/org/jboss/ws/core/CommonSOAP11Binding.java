@@ -24,15 +24,16 @@ package org.jboss.ws.core;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
+import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeaderElement;
+import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.common.Constants;
-import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
-import org.jboss.ws.core.soap.SOAPMessageImpl;
-import org.jboss.ws.core.soap.Use;
+import org.jboss.ws.core.soap.utils.SOAPUtils;
+import org.jboss.ws.core.soap.utils.Use;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 
 /**
@@ -43,18 +44,17 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
  */
 public abstract class CommonSOAP11Binding extends CommonSOAPBinding
 {
-   private MessageFactoryImpl msgFactory;
+   private MessageFactory msgFactory;
 
    public CommonSOAP11Binding()
    {
-      msgFactory = new MessageFactoryImpl();
-      msgFactory.setEnvNamespace(Constants.NS_SOAP11_ENV);
+      msgFactory = SOAPUtils.newSOAP11MessageFactory();
    }
 
    /** Create the SOAP-1.1 message */
-   protected MessageAbstraction createMessage(OperationMetaData opMetaData) throws SOAPException
+   protected SOAPMessage createMessage(OperationMetaData opMetaData) throws SOAPException
    {
-      SOAPMessageImpl soapMessage = (SOAPMessageImpl)msgFactory.createMessage();
+      SOAPMessage soapMessage = msgFactory.createMessage();
       
       Use encStyle = opMetaData.getEndpointMetaData().getEncodingStyle();
       if (Use.ENCODED.equals(encStyle))

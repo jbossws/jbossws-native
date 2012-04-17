@@ -35,6 +35,7 @@ import javax.xml.rpc.ParameterMode;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
@@ -47,9 +48,8 @@ import org.jboss.ws.core.client.RemoteConnection;
 import org.jboss.ws.core.client.RemoteConnectionFactory;
 import org.jboss.ws.core.client.transport.NettyClient;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
-import org.jboss.ws.core.soap.MessageContextAssociation;
-import org.jboss.ws.core.soap.Style;
-import org.jboss.ws.core.soap.UnboundHeader;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
+import org.jboss.ws.core.soap.utils.Style;
 import org.jboss.ws.core.utils.HolderUtils;
 import org.jboss.ws.metadata.umdm.ClientEndpointMetaData;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -80,8 +80,6 @@ public abstract class CommonClient implements StubExt, HeaderSource
    protected QName operationName;
    // The binding provider
    protected CommonBindingProvider bindingProvider;
-   // A Map<QName,UnboundHeader> of header entries
-   private Map<QName, UnboundHeader> unboundHeaders = new LinkedHashMap<QName, UnboundHeader>();
    // A List<AttachmentPart> of attachment parts set through the proxy
    private List<AttachmentPart> attachmentParts = new ArrayList<AttachmentPart>();
 
@@ -283,7 +281,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
          setOutboundContextProperties();
 
          // Bind the request message
-         MessageAbstraction reqMessage = binding.bindRequestMessage(opMetaData, epInv, unboundHeaders);
+         SOAPMessage reqMessage = binding.bindRequestMessage(opMetaData, epInv);
 
          // Add possible attachment parts
          addAttachmentParts(reqMessage);
@@ -294,7 +292,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
          handlerPass = handlerPass && callRequestHandlerChain(portName, handlerType[2]);
          
          // Handlers might have replaced the message
-         reqMessage = msgContext.getMessageAbstraction();
+         reqMessage = msgContext.getSOAPMessage();
 
          if (handlerPass)
          {
@@ -311,7 +309,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
                addSessionInfo(reqMessage, callProps);
             
             RemoteConnection remoteConnection = new RemoteConnectionFactory().getRemoteConnection(epInfo);
-            MessageAbstraction resMessage = remoteConnection.invoke(reqMessage, epInfo, oneway);
+            SOAPMessage resMessage = remoteConnection.invoke(reqMessage, epInfo, oneway);
 
             if (maintainSession)
                saveSessionInfo(callProps, requestCtx);
@@ -323,7 +321,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
             msgContext.put(CommonMessageContext.REMOTING_METADATA, callProps);
 
             // Associate response message with message context
-            msgContext.setMessageAbstraction(resMessage);
+            msgContext.setSOAPMessage(resMessage);
          }
 
          setInboundContextProperties();
@@ -344,8 +342,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
             if (handlerPass)
             {
                // unbind the return values
-               MessageAbstraction resMessage = msgContext.getMessageAbstraction();
-               binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
+               SOAPMessage resMessage = msgContext.getSOAPMessage();
+               binding.unbindResponseMessage(opMetaData, resMessage, epInv);
             }
 
             handlerPass = handlerPass && callResponseHandlerChain(portName, handlerType[1]);
@@ -357,8 +355,8 @@ public abstract class CommonClient implements StubExt, HeaderSource
             if (msgContext.isModified())
             {
                log.debug("Handler modified body payload, unbind message again");
-               MessageAbstraction resMessage = msgContext.getMessageAbstraction();
-               binding.unbindResponseMessage(opMetaData, resMessage, epInv, unboundHeaders);
+               SOAPMessage resMessage = msgContext.getSOAPMessage();
+               binding.unbindResponseMessage(opMetaData, resMessage, epInv);
             }
 
             retObj = syncOutputParams(inputParams, epInv);
@@ -431,7 +429,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
    }
 
    @SuppressWarnings("unchecked")
-   protected void addSessionInfo(MessageAbstraction reqMessage, Map<String, Object> callProperties)
+   protected void addSessionInfo(SOAPMessage reqMessage, Map<String, Object> callProperties)
    {
       Map<String, String> cookies = (Map<String, String>)callProperties.get(SESSION_COOKIES);
       if (cookies != null)
@@ -453,7 +451,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
       return msgContext;
    }
 
-   protected void addAttachmentParts(MessageAbstraction reqMessage)
+   protected void addAttachmentParts(SOAPMessage reqMessage)
    {
       boolean debugEnabled = log.isDebugEnabled();
       for (AttachmentPart part : attachmentParts)
@@ -511,74 +509,6 @@ public abstract class CommonClient implements StubExt, HeaderSource
       }
 
       return retValue;
-   }
-
-   /**
-    * Add a header that is not bound to an input parameter.
-    * A propriatory extension, that is not part of JAXRPC.
-    *
-    * @param xmlName The XML name of the header element
-    * @param xmlType The XML type of the header element
-    */
-   public void addUnboundHeader(QName xmlName, QName xmlType, Class javaType, ParameterMode mode)
-   {
-      UnboundHeader unboundHeader = new UnboundHeader(xmlName, xmlType, javaType, mode);
-      unboundHeaders.put(xmlName, unboundHeader);
-   }
-
-   /**
-    * Get the header value for the given XML name.
-    * A propriatory extension, that is not part of JAXRPC.
-    *
-    * @param xmlName The XML name of the header element
-    * @return The header value, or null
-    */
-   public Object getUnboundHeaderValue(QName xmlName)
-   {
-      UnboundHeader unboundHeader = unboundHeaders.get(xmlName);
-      return (unboundHeader != null ? unboundHeader.getHeaderValue() : null);
-   }
-
-   /**
-    * Set the header value for the given XML name.
-    * A propriatory extension, that is not part of JAXRPC.
-    *
-    * @param xmlName The XML name of the header element
-    */
-   public void setUnboundHeaderValue(QName xmlName, Object value)
-   {
-      UnboundHeader unboundHeader = unboundHeaders.get(xmlName);
-      if (unboundHeader == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_FIND_UNBOUND_HEADER",  xmlName));
-
-      unboundHeader.setHeaderValue(value);
-   }
-
-   /**
-    * Clear all registered headers.
-    * A propriatory extension, that is not part of JAXRPC.
-    */
-   public void clearUnboundHeaders()
-   {
-      unboundHeaders.clear();
-   }
-
-   /**
-    * Remove the header for the given XML name.
-    * A propriatory extension, that is not part of JAXRPC.
-    */
-   public void removeUnboundHeader(QName xmlName)
-   {
-      unboundHeaders.remove(xmlName);
-   }
-
-   /**
-    * Get an Iterator over the registered header XML names.
-    * A propriatory extension, that is not part of JAXRPC.
-    */
-   public Iterator getUnboundHeaders()
-   {
-      return unboundHeaders.keySet().iterator();
    }
 
    /**

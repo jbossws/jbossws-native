@@ -29,7 +29,6 @@ import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.encoding.TypeMapping;
 import javax.xml.rpc.encoding.TypeMappingRegistry;
 
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.binding.TypeMappingImpl;
@@ -83,7 +82,7 @@ public class TypeMappingRegistryImpl implements TypeMappingRegistry
     */
    public void registerDefault(TypeMapping mapping)
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -92,7 +91,7 @@ public class TypeMappingRegistryImpl implements TypeMappingRegistry
     */
    public TypeMapping createTypeMapping()
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -128,7 +127,7 @@ public class TypeMappingRegistryImpl implements TypeMappingRegistry
     */
    public TypeMapping register(String encodingStyleURI, TypeMapping mapping)
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -139,7 +138,7 @@ public class TypeMappingRegistryImpl implements TypeMappingRegistry
     */
    public TypeMapping unregisterTypeMapping(String encodingStyleURI)
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -154,7 +153,7 @@ public class TypeMappingRegistryImpl implements TypeMappingRegistry
     */
    public boolean removeTypeMapping(TypeMapping mapping)
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 
    /** Assert the literal encoding style */

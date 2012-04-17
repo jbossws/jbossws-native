@@ -81,7 +81,7 @@ import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.common.utils.JBossWSEntityResolver;
 import org.jboss.ws.common.utils.ResourceURL;
-import org.jboss.ws.core.soap.Style;
+import org.jboss.ws.core.soap.utils.Style;
 import org.jboss.ws.metadata.wsdl.Extendable;
 import org.jboss.ws.metadata.wsdl.WSDLBinding;
 import org.jboss.ws.metadata.wsdl.WSDLBindingMessageReference;

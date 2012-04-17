@@ -35,7 +35,7 @@ import javax.xml.rpc.handler.HandlerInfo;
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.RoleSource;
 import org.jboss.ws.core.server.ServerHandlerDelegate;
-import org.jboss.ws.core.soap.MessageContextAssociation;
+import org.jboss.ws.core.soap.utils.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.HandlerMetaData;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;

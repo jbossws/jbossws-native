@@ -21,12 +21,10 @@
  */
 package org.jboss.ws.core.jaxrpc;
 
-
 import javax.activation.DataHandler;
 import javax.mail.internet.MimeMultipart;
 import javax.xml.soap.SOAPElement;
 
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.ElementDeserializerFactory;
@@ -93,6 +91,6 @@ public class LiteralTypeMapping extends TypeMappingImpl
     */
    public void setSupportedEncodings(String[] encodingStyleURIs)
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 }

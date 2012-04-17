@@ -30,7 +30,6 @@ import java.util.ResourceBundle;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.JavaUtils;
@@ -159,7 +158,7 @@ public class JBossXBMarshallerImpl implements JBossXBMarshaller {
     */
    public void marshal(Object obj, ContentHandler handler)
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -167,7 +166,7 @@ public class JBossXBMarshallerImpl implements JBossXBMarshaller {
     */
    public void marshal(Object obj, Node node)
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 
    /**
@@ -208,7 +207,7 @@ public class JBossXBMarshallerImpl implements JBossXBMarshaller {
     */
    public Node getNode(Object contentTree)
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 
    /**

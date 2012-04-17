@@ -30,7 +30,6 @@ import java.util.Date;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 
-import org.jboss.util.NotImplementedException;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.binding.Base64DeserializerFactory;
@@ -180,6 +179,6 @@ public class EncodedTypeMapping extends TypeMappingImpl
     */
    public void setSupportedEncodings(String[] encodingStyleURIs)
    {
-      throw new NotImplementedException();
+      throw new UnsupportedOperationException();
    }
 }

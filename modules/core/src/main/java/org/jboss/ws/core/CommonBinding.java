@@ -21,12 +21,9 @@
  */
 package org.jboss.ws.core;
 
-import java.util.Map;
-
-import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.core.binding.BindingException;
-import org.jboss.ws.core.soap.UnboundHeader;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 
 /**
@@ -38,19 +35,19 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
 public interface CommonBinding
 {
    /** On the client side, generate the Object from IN parameters. */
-   MessageAbstraction bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException;
+   SOAPMessage bindRequestMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException;
 
    /** On the server side, extract the IN parameters from the Object and populate an Invocation object */
-   EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, MessageAbstraction reqMessage) throws BindingException;
+   EndpointInvocation unbindRequestMessage(OperationMetaData opMetaData, SOAPMessage reqMessage) throws BindingException;
 
    /** On the server side, generate the Object from OUT parameters in the Invocation object. */
-   MessageAbstraction bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException;
+   SOAPMessage bindResponseMessage(OperationMetaData opMetaData, EndpointInvocation epInv) throws BindingException;
 
    /** On the client side, extract the OUT parameters from the Object and return them to the client. */
-   void unbindResponseMessage(OperationMetaData opMetaData, MessageAbstraction resMessage, EndpointInvocation epInv, Map<QName, UnboundHeader> unboundHeaders) throws BindingException;
+   void unbindResponseMessage(OperationMetaData opMetaData, SOAPMessage resMessage, EndpointInvocation epInv) throws BindingException;
 
    /** bind an exception to a fault message */
-   MessageAbstraction bindFaultMessage(Exception ex);
+   SOAPMessage bindFaultMessage(Exception ex);
    
    void setHeaderSource(HeaderSource source);
 }

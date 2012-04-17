@@ -80,7 +80,7 @@ public class SAAJUtils
     * @param nsURI the URI of the namespace to search for
     * @return the prefix of the namespace or <code>null</code> if not found
     */
-   public static String getNamespacePrefix(SOAPElement element, String nsURI)
+   private static String getNamespacePrefix(SOAPElement element, String nsURI)
    {
       Iterator it = element.getVisibleNamespacePrefixes();
       while (it.hasNext())

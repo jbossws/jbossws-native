@@ -42,7 +42,7 @@ import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.TypeMappingRegistryImpl;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.SchemaBindingBuilder;
-import org.jboss.ws.core.soap.Use;
+import org.jboss.ws.core.soap.utils.Use;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMappingFactory;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;

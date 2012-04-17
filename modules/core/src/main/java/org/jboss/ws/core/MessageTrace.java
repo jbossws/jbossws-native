@@ -32,9 +32,8 @@ import javax.xml.transform.stream.StreamSource;
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMWriter;
-import org.jboss.ws.core.soap.SOAPElementImpl;
-import org.jboss.ws.core.soap.SOAPElementWriter;
-import org.jboss.ws.core.soap.XMLFragment;
+import org.jboss.ws.core.soap.utils.SOAPElementWriter;
+import org.jboss.ws.core.soap.utils.XMLFragment;
 import org.w3c.dom.Element;
 
 /**
@@ -64,7 +63,7 @@ public final class MessageTrace
             SOAPEnvelope soapEnv = ((SOAPMessage)message).getSOAPPart().getEnvelope();
             if (soapEnv != null)
             {
-               String envStr = SOAPElementWriter.writeElement((SOAPElementImpl)soapEnv, true);
+               String envStr = SOAPElementWriter.writeElement(soapEnv, true);
                msgLog.trace(messagePrefix + "\n" + envStr);
             }
          }
