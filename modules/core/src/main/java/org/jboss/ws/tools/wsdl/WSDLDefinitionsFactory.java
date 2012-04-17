@@ -44,6 +44,7 @@ import org.jboss.ws.common.utils.JBossWSEntityResolver;
 import org.jboss.ws.common.utils.ResourceURL;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLException;
+import org.jboss.wsf.spi.classloading.ClassLoaderProvider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.EntityResolver;
@@ -104,7 +105,7 @@ public class WSDLDefinitionsFactory
       if (log.isDebugEnabled())
          log.debug("parse: " + wsdlLocation.toExternalForm());
 
-      EntityResolver entityResolver = new JBossWSEntityResolver();
+      EntityResolver entityResolver = new JBossWSEntityResolver(ClassLoaderProvider.getDefaultProvider().getServerJAXRPCIntegrationClassLoader());
       WSDLDefinitions wsdlDefinitions = null;
       try
       {

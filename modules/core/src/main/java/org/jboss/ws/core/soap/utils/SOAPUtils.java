@@ -90,4 +90,9 @@ public final class SOAPUtils {
 	public static Name newName(final QName faultCode, final SOAPEnvelope soapEnvelope) throws SOAPException {
 		return soapEnvelope.createName(faultCode.getLocalPart(), faultCode.getPrefix(), faultCode.getNamespaceURI());
 	}
+
+	public static QName toQName(final Name name) {
+		return new QName(name.getURI(), name.getLocalName(), name.getPrefix());
+	}
+
 }

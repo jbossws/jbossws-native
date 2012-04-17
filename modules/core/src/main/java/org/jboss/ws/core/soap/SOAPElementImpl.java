@@ -41,6 +41,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMUtils;
+import org.jboss.ws.core.soap.utils.SOAPUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
@@ -532,7 +533,8 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
     */
    public Iterator<SOAPElement> getChildElements(Name name)
    {
-      return getChildElements(((NameImpl)name).toQName());
+	  QName qName = SOAPUtils.toQName(name);
+      return getChildElements(qName);
    }
 
    public Iterator<SOAPElement> getChildElements(QName qname)
