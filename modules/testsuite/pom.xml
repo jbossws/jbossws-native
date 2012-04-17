@@ -365,8 +365,7 @@
             <configuration>
               <argLine>${surefire.jvm.args} ${surefire.default-mgmt-serurity.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
               <excludes>
-                 <!-- # [JBWS-3150] This test causes hudson to freeze -->
-                 <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
+                 <!-- no excludes ATM -->
               </excludes>
             </configuration>
           </plugin>
@@ -461,8 +460,7 @@
             <configuration>
               <argLine>${surefire.jvm.args} ${surefire.default-mgmt-serurity.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
               <excludes>
-                 <!-- # [JBWS-3150] This test causes hudson to freeze -->
-                 <exclude>org/jboss/test/ws/common/soap/SOAPConnectionTestCase.*</exclude>
+                 <!-- no excludes ATM -->
               </excludes>
             </configuration>
           </plugin>
