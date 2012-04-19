@@ -29,6 +29,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.SOAPMessage;
 
+import org.jboss.ws.core.soap.utils.SOAPUtils;
 import org.jboss.wsf.test.JBossWSTest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -46,7 +47,7 @@ public class JBWS1692TestCase extends JBossWSTest
 {
    public void testImportNode() throws Exception
    {
-      MessageFactory factory = MessageFactory.newInstance();
+      MessageFactory factory = SOAPUtils.newSOAP11MessageFactory();
       File soapreqfile = getResourceFile("common/jbws1692/soap-request-template.xml");
       SOAPMessage msg = factory.createMessage(null, new FileInputStream(soapreqfile));
 

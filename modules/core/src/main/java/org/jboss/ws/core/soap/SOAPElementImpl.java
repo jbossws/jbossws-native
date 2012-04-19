@@ -60,7 +60,7 @@ import org.w3c.dom.TypeInfo;
  *
  * @author Thomas.Diesler@jboss.org
  */
-public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisitable
+public class SOAPElementImpl extends NodeImpl implements SOAPElement
 {
    private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPElementImpl.class);
    // The org.w3c.dom.Element
@@ -868,11 +868,6 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
       this.element.setIdAttributeNS(namespaceURI, localName, isId);
    }
 
-   public void accept(SAAJVisitor visitor)
-   {
-      visitor.visitSOAPElement(this);
-   }
-      
    @Override
    public void setPrefix(String prefix) throws DOMException
    {

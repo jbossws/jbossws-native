@@ -21,8 +21,13 @@
  */
 package org.jboss.ws.core.soap.utils;
 
+import java.util.Iterator;
+
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
+import javax.xml.soap.SOAPBody;
+import javax.xml.soap.SOAPBodyElement;
+import javax.xml.soap.SOAPConnectionFactory;
 import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPException;
@@ -31,6 +36,7 @@ import javax.xml.soap.SOAPFactory;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.core.soap.MessageFactoryImpl;
+import org.jboss.ws.core.soap.SOAPConnectionFactoryImpl;
 import org.jboss.ws.core.soap.SOAPFactoryImpl;
 
 /**
@@ -68,6 +74,24 @@ public final class SOAPUtils {
 	public static SOAPFactory newSOAP12Factory() {
 		return newSOAPFactory(SOAPConstants.SOAP_1_2_PROTOCOL);
 	}
+
+	public static SOAPConnectionFactory newSOAPConnectionFactory() throws SOAPException {
+		return new SOAPConnectionFactoryImpl();
+		// TODO: use standard SOAP API to create objects
+		//return SOAPConnectionFactory.newInstance();
+	}
+	
+    public static SOAPBodyElement getFirstSOAPBodyElement(final SOAPBody soapBody) {
+    	SOAPBodyElement bodyElement = null;
+    	final Iterator<?> it = soapBody.getChildElements();
+    	while (bodyElement == null && it.hasNext())
+    	{
+    		Object next = it.next();
+    		if (next instanceof SOAPBodyElement)
+    			bodyElement = (SOAPBodyElement)next;
+    	}
+    	return bodyElement;
+    }
 
 	private static SOAPFactory newSOAPFactory(final String protocol) {
 		try {

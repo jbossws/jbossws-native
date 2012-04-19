@@ -74,7 +74,6 @@
       <!-- Move the native API to the front of the classpath -->
       <pathelement location="${thirdparty.dir}/jaxrpc-api.jar"/>
       <pathelement location="${thirdparty.dir}/saaj-api.jar"/>
-      <pathelement location="${thirdparty.dir}/jbossws-native-factories.jar"/>
       <fileset dir="${thirdparty.dir}">
         <exclude name="**/jbossws-jboss*.jar"/>
       </fileset>

@@ -19,12 +19,6 @@
   <dependencies>
     <dependency>
       <groupId>org.jboss.ws.native</groupId>
-      <artifactId>jbossws-native-factories</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-services</artifactId>
       <version>${project.version}</version>
     </dependency>
