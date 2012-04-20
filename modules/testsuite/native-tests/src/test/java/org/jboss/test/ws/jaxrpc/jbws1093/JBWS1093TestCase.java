@@ -39,6 +39,7 @@ import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 import org.jboss.ws.common.DOMWriter;
+import org.jboss.ws.core.soap.utils.SOAPUtils;
 
 /**
  * Deploying a war that also contains normal servlets the web.xml is modified as if they are all endpoints
@@ -117,7 +118,7 @@ public class JBWS1093TestCase extends JBossWSTest
    {
       URL servletURL = new URL("http://" + getServerHost() + ":8080" + "/jaxrpc-jbws1093/ServletTest?type=soapMessage");
 
-      SOAPConnection con = SOAPConnectionFactory.newInstance().createConnection();
+      SOAPConnection con = SOAPUtils.newSOAPConnectionFactory().createConnection();
       SOAPMessage resMessage = con.get(servletURL);
       SOAPEnvelope env = resMessage.getSOAPPart().getEnvelope();
 

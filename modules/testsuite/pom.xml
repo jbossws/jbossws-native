@@ -98,35 +98,6 @@
       </testResource>
     </testResources>
     <plugins>
-      <plugin> <!-- This copies jbossws-native-factories jar to endorsed dir before the integration-tests are run -->
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>copy-factories-jar</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/endorsed</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${basedir}/../endorsed/target/</directory>
-                  <includes>
-                    <include>jbossws-native-factories-${project.version}.jar</include>
-                  </includes>
-                </resource>
-                <resource>
-                  <directory>${basedir}/../../endorsed/target/</directory>
-                  <includes>
-                    <include>jbossws-native-factories-${project.version}.jar</include>
-                  </includes>
-                </resource>
-              </resources>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
@@ -284,7 +255,6 @@
       <properties>
         <jboss.version>${jboss712.version}</jboss.version>
         <jbossws.integration.target>jboss712</jbossws.integration.target>
-        <endorsed.dirs>${project.build.directory}/endorsed</endorsed.dirs>
       </properties>
       <dependencies>
         <dependency>
@@ -352,15 +322,9 @@
       <build>
         <plugins>
           <plugin>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <compilerArgument>-Djava.endorsed.dirs=${endorsed.dirs}</compilerArgument>
-            </configuration>
-          </plugin>
-          <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
-              <argLine>${surefire.jvm.args} ${surefire.default-mgmt-serurity.args} -Djava.endorsed.dirs=${endorsed.dirs}</argLine>
+              <argLine>${surefire.jvm.args} ${surefire.default-mgmt-serurity.args}</argLine>
               <excludes>
                  <!-- no excludes ATM -->
               </excludes>

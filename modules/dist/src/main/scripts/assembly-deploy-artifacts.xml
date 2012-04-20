@@ -31,7 +31,6 @@
       <outputDirectory>deploy-artifacts/lib</outputDirectory>
       <unpack>false</unpack>
       <includes>
-        <include>org.jboss.ws.native:jbossws-native-factories:jar</include>
         <include>org.jboss.ws.native:jbossws-native-services:jar</include>
         <include>org.jboss.ws.native:jbossws-native-core</include>
         <include>org.jboss.ws:jbossws-api:jar</include>
@@ -59,7 +58,7 @@
 
     <dependencySet>
        <outputDirectory>deploy-artifacts/lib</outputDirectory>
-       <unpack>false</unpack>           
+       <unpack>false</unpack>
        <includes>
           <include>org.jboss.ws.native:jbossws-native-resources:jar:*:jboss*</include>
        </includes>

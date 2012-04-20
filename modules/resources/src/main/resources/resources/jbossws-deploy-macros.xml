@@ -40,11 +40,6 @@
           <include name="**/jbossws-native-core.jar"/>
         </fileset>
       </copy>
-      <copy todir="@{targetdir}/org/jboss/ws/native/jbossws-native-factories/main" flatten="false" overwrite="true">
-        <fileset dir="@{thirdpartydir}/lib">
-          <include name="**/jbossws-native-factories.jar"/>
-        </fileset>
-      </copy>
       <copy todir="@{targetdir}/org/jboss/ws/native/jbossws-native-services/main" flatten="false" overwrite="true">
         <fileset dir="@{thirdpartydir}/lib">
           <include name="**/jbossws-native-services.jar"/>

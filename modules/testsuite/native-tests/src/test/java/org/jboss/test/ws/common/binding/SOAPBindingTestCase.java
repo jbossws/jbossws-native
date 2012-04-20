@@ -40,9 +40,8 @@ import org.jboss.ws.core.CommonSOAPBinding;
 import org.jboss.ws.core.EndpointInvocation;
 import org.jboss.ws.core.jaxrpc.client.CallImpl;
 import org.jboss.ws.core.jaxrpc.handler.SOAPMessageContextJAXRPC;
-import org.jboss.ws.core.soap.MessageFactoryImpl;
-import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.utils.MessageContextAssociation;
+import org.jboss.ws.core.soap.utils.SOAPUtils;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ParameterMetaData;
 import org.jboss.ws.common.DOMUtils;
@@ -226,8 +225,8 @@ public class SOAPBindingTestCase extends JBossWSTest
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(reqEnvelope.getBytes());
 
-      MessageFactory factory = new MessageFactoryImpl();
-      SOAPMessageImpl reqMessage = (SOAPMessageImpl)factory.createMessage(null, inputStream);
+      MessageFactory factory = SOAPUtils.newSOAP12MessageFactory();
+      SOAPMessage reqMessage = (SOAPMessage)factory.createMessage(null, inputStream);
 
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.setSOAPMessage(reqMessage);
@@ -253,8 +252,8 @@ public class SOAPBindingTestCase extends JBossWSTest
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(reqEnvelopeWithBoundHeader.getBytes());
 
-      MessageFactory factory = new MessageFactoryImpl();
-      SOAPMessageImpl reqMessage = (SOAPMessageImpl)factory.createMessage(null, inputStream);
+      MessageFactory factory = SOAPUtils.newSOAP12MessageFactory();
+      SOAPMessage reqMessage = factory.createMessage(null, inputStream);
 
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.setSOAPMessage(reqMessage);
@@ -276,8 +275,8 @@ public class SOAPBindingTestCase extends JBossWSTest
    {
       ByteArrayInputStream inputStream = new ByteArrayInputStream(reqEnvelopeWithUnboundHeader.getBytes());
 
-      MessageFactory factory = new MessageFactoryImpl();
-      SOAPMessageImpl reqMessage = (SOAPMessageImpl)factory.createMessage(null, inputStream);
+      MessageFactory factory = SOAPUtils.newSOAP12MessageFactory();
+      SOAPMessage reqMessage = (SOAPMessage)factory.createMessage(null, inputStream);
 
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.setSOAPMessage(reqMessage);
@@ -320,8 +319,8 @@ public class SOAPBindingTestCase extends JBossWSTest
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(resEnvelope.getBytes());
 
-      MessageFactory factory = new MessageFactoryImpl();
-      SOAPMessageImpl resMessage = (SOAPMessageImpl)factory.createMessage(null, inputStream);
+      MessageFactory factory = SOAPUtils.newSOAP12MessageFactory();
+      SOAPMessage resMessage = factory.createMessage(null, inputStream);
 
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.setSOAPMessage(resMessage);
@@ -340,8 +339,8 @@ public class SOAPBindingTestCase extends JBossWSTest
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(resEnvelopeWithBoundHeader.getBytes());
 
-      MessageFactory factory = new MessageFactoryImpl();
-      SOAPMessageImpl resMessage = (SOAPMessageImpl)factory.createMessage(null, inputStream);
+      MessageFactory factory = SOAPUtils.newSOAP12MessageFactory();
+      SOAPMessage resMessage = factory.createMessage(null, inputStream);
 
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.setSOAPMessage(resMessage);
@@ -371,8 +370,8 @@ public class SOAPBindingTestCase extends JBossWSTest
 
       ByteArrayInputStream inputStream = new ByteArrayInputStream(resEnvelopeWithFault.getBytes());
 
-      MessageFactory factory = new MessageFactoryImpl();
-      SOAPMessageImpl resMessage = (SOAPMessageImpl)factory.createMessage(null, inputStream);
+      MessageFactory factory = SOAPUtils.newSOAP12MessageFactory();
+      SOAPMessage resMessage = factory.createMessage(null, inputStream);
 
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
       msgContext.setSOAPMessage(resMessage);

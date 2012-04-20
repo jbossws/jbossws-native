@@ -38,6 +38,7 @@ import javax.xml.soap.SOAPMessage;
 
 import junit.framework.Test;
 
+import org.jboss.ws.core.soap.utils.SOAPUtils;
 import org.jboss.wsf.test.CleanupOperation;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
@@ -120,7 +121,7 @@ public class JBWS425TestCase extends JBossWSTest
          "  </soapenv:Body>" +
          "</soapenv:Envelope>";
 
-      MessageFactory msgFactory = MessageFactory.newInstance();
+      MessageFactory msgFactory = SOAPUtils.newSOAP11MessageFactory();
       SOAPConnection con = SOAPConnectionFactory.newInstance().createConnection();
 
       MimeHeaders mimeHeaders = new MimeHeaders();

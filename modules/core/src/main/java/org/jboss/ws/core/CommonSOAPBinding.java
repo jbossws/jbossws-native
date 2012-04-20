@@ -54,7 +54,6 @@ import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
 import org.jboss.ws.core.soap.SOAPBodyElementDoc;
 import org.jboss.ws.core.soap.SOAPBodyElementRpc;
-import org.jboss.ws.core.soap.SOAPBodyImpl;
 import org.jboss.ws.core.soap.SOAPContentElement;
 import org.jboss.ws.core.soap.SOAPElementImpl;
 import org.jboss.ws.core.soap.SOAPFaultImpl;
@@ -439,8 +438,8 @@ public abstract class CommonSOAPBinding implements CommonBinding
             throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
 
          SOAPHeader soapHeader = soapEnvelope.getHeader();
-         SOAPBodyImpl soapBody = (SOAPBodyImpl)soapEnvelope.getBody();
-         SOAPBodyElement soapBodyElement = soapBody.getBodyElement();
+         SOAPBody soapBody = (SOAPBody)soapEnvelope.getBody();
+         SOAPBodyElement soapBodyElement = SOAPUtils.getFirstSOAPBodyElement(soapBody);
 
          // Translate the SOAPFault to an exception and throw it
          if (soapBodyElement instanceof SOAPFaultImpl)

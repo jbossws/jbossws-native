@@ -36,11 +36,6 @@
       <artifactId>jboss-saaj-api_1.3_spec</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.jboss.ws.native</groupId>
-      <artifactId>jbossws-native-factories</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.jboss.spec.javax.ejb</groupId>
       <artifactId>jboss-ejb-api_3.1_spec</artifactId>
     </dependency>
