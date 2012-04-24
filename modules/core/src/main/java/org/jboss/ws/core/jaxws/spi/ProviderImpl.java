@@ -24,6 +24,7 @@ package org.jboss.ws.core.jaxws.spi;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
@@ -118,23 +119,32 @@ public class ProviderImpl extends Provider
       return bindingId;
    }
 
-   @Override
-   public W3CEndpointReference createW3CEndpointReference(String address, QName serviceName, QName portName, List<Element> metadata, String wsdlDocumentLocation,
-         List<Element> referenceParameters)
+   public W3CEndpointReference createW3CEndpointReference(final String address, final QName interfaceName, 
+         final QName serviceName, final QName portName, final List<Element> metadata, final String wsdlDocumentLocation, 
+         final List<Element> referenceParameters, final List<Element> elements, final Map<QName, String> attributes)
    {
       if ((serviceName == null) && (address == null) && (portName == null))
          throw new IllegalStateException();
       if ((portName != null) && (serviceName == null))
          throw new IllegalStateException();
-
-      NativeEndpointReference epr = new NativeEndpointReference();
+      
+      final NativeEndpointReference epr = new NativeEndpointReference();
       epr.setAddress(address);
       epr.setServiceName(serviceName);
       epr.setEndpointName(portName);
+      epr.setInterfaceName(interfaceName);
       epr.setMetadata(metadata);
       epr.setWsdlLocation(wsdlDocumentLocation);
       epr.setReferenceParameters(referenceParameters);
+
       return EndpointReferenceUtil.transform(W3CEndpointReference.class, epr);
+   }
+
+   public W3CEndpointReference createW3CEndpointReference(final String address, final QName serviceName, 
+         final QName portName, final List<Element> metadata, final String wsdlDocumentLocation,
+         final List<Element> referenceParameters)
+   {
+      return createW3CEndpointReference(address, null, serviceName, portName, metadata, wsdlDocumentLocation, referenceParameters, null, null);
    }
 
    @Override
@@ -157,8 +167,9 @@ public class ProviderImpl extends Provider
          throw new NullPointerException("Provided eprInfoset cannot be null");
       try
       {
-         //we currently support W3CEndpointReference only
-         return new W3CEndpointReference(eprInfoset);
+         final NativeEndpointReference nativeEPR = new NativeEndpointReference(eprInfoset);
+         final Source source = EndpointReferenceUtil.getSourceFromEndpointReference(nativeEPR);
+         return new W3CEndpointReference(source);
       }
       catch (Exception e)
       {
