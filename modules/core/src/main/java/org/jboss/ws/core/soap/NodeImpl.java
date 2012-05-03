@@ -585,9 +585,9 @@ public class NodeImpl implements javax.xml.soap.Node
    {
       org.w3c.dom.Node domParent = domNode.getParentNode();
       if (domParent != null && soapParent == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "NO_SOAP_PARENT", new Object[]{ this ,  DOMWriter.printNode(this, false)}));
+         throw new WSException(BundleUtils.getMessage(bundle, "NO_SOAP_PARENT", new Object[]{ this }));
       if (domParent != null && soapParent != null && domParent != soapParent.domNode)
-         throw new WSException(BundleUtils.getMessage(bundle, "NOT_IDENTICAL_WITH_DOM_PARENT", new Object[]{ this ,  DOMWriter.printNode(this, false)}));
+         throw new WSException(BundleUtils.getMessage(bundle, "NOT_IDENTICAL_WITH_DOM_PARENT", new Object[]{ this }));
    }
 
    // END org.w3c.dom.Node *******************************************************************************************
