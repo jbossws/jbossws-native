@@ -22,23 +22,25 @@
   ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
   -->
 
-<project default="main">
+<module xmlns="urn:jboss:module:1.1" name="org.jboss.ws.common">
 
-  <property name="src.dir" value="${basedir}/src/main/resources"/>
-  <property name="dest.dir" value="${basedir}/target/resources"/>
+    <resources>
+        <!-- Insert resources here -->
+    </resources>
 
-  <target name="main">
-
-    <copy
-      file="${src.dir}/jbossws-native-config-as7.xml"
-      tofile="${dest.dir}/jbossws-jboss712/jbossws.beans/META-INF/stack-specific-deployment-aspects.xml"
-    />
-
-    <copy
-      file="${src.dir}/jbossws-native-config-as7.xml"
-      tofile="${dest.dir}/jbossws-jboss720/jbossws.beans/META-INF/stack-specific-deployment-aspects.xml"
-    />
-
-  </target>
-
-</project>
+    <dependencies>
+        <module name="javax.api"/>
+        <module name="javax.annotation.api"/>
+        <module name="javax.xml.stream.api"/>
+        <module name="javax.ejb.api"/>
+        <module name="javax.jws.api"/>
+        <module name="javax.servlet.api"/>
+        <module name="javax.wsdl4j.api" />
+        <module name="javax.xml.ws.api"/>
+        <module name="org.jboss.ws.api"/>
+        <module name="org.jboss.ws.spi"/>
+        <module name="org.jboss.logging"/>
+        <module name="org.jboss.common-core"/>
+        <module name="org.apache.xerces" services="import"/>
+    </dependencies>
+</module>

@@ -42,66 +42,30 @@
        <param name="installserver" value="${deploy.structure}"/>
        <param name="thirdpartydir" value="${deploy.artifacts.dir}"/>
        <param name="jbossid" value="${jbossws.integration.target}"/>
-       <param name="modules-jbossid" value="jboss710"/>
+       <param name="modules-jbossid" value="jboss712"/>
      </antcall>
    </target>
 
    <!-- ================================================================== -->
-   <!-- Deployment jboss710                                                -->
+   <!-- Prepare Deployment Structure JBoss-7.2.x                           -->
    <!-- ================================================================== -->
 
-   <target name="target-jboss710">
-     <property name="jbossws.integration.target" value="jboss710"/>
-     <echo message="jbossws.integration.target=${jbossws.integration.target}" file="${target.properties.file}"/>
-   </target>
+   <target name="deploy-structure-jboss72x" depends="prepare-deploy">
+     <delete dir="${deploy.structure}"/>
 
-   <target name="deploy-jboss710" depends="undeploy-jboss710,deploy-structure-jboss71x" description="Deploy jbossws to jboss710">
-     <fail message="Not available: ${jboss710.available.file}" unless="jboss710.available"/>
-     <copy todir="${jboss710.home}" overwrite="true" verbose="true">
-       <fileset dir="${deploy.structure}">
-         <exclude name="**/jboss/as/webservices/**/module.xml"/>
+     <path id="jbossws-common.path">
+       <fileset dir="${deploy.artifacts.dir}">
+         <include name="**/jbossws-common-tools.jar"/>
        </fileset>
-     </copy>
-     <!-- Install org/jboss/as/webservices module.xml separately since it needs to reference libs already on the AS -->
-     <installModules targetDir="${jboss710.home}/modules">
-       <fileset dir="${deploy.structure}/modules">
-         <include name="**/jboss/as/webservices/**/module.xml"/>
-       </fileset>
-     </installModules>
-   </target>
+     </path>
+     <taskdef name="installModules" classname="org.jboss.ws.tools.ant.InstallModulesTask" classpathref="jbossws-common.path"/>
 
-   <target name="undeploy-jboss710" depends="target-jboss710,init" description="Remove jbossws from jboss710">
-     <fail message="Not available: ${jboss710.available.file}" unless="jboss710.available"/>
-     <macro-undeploy-jbossws-modules targetdir="${jboss710.home}" defaultmodulesconf="${jbossws.default.modules.conf}"  modifyjbossintegration="true"/>
-   </target>
-
-   <!-- ================================================================== -->
-   <!-- Deployment jboss711                                                -->
-   <!-- ================================================================== -->
-
-   <target name="target-jboss711">
-     <property name="jbossws.integration.target" value="jboss711"/>
-     <echo message="jbossws.integration.target=${jbossws.integration.target}" file="${target.properties.file}"/>
-   </target>
-
-   <target name="deploy-jboss711" depends="undeploy-jboss711,deploy-structure-jboss71x" description="Deploy jbossws to jboss711">
-     <fail message="Not available: ${jboss711.available.file}" unless="jboss711.available"/>
-     <copy todir="${jboss711.home}" overwrite="true" verbose="true">
-       <fileset dir="${deploy.structure}">
-         <exclude name="**/jboss/as/webservices/**/module.xml"/>
-       </fileset>
-     </copy>
-     <!-- Install org/jboss/as/webservices module.xml separately since it needs to reference libs already on the AS -->
-     <installModules targetDir="${jboss711.home}/modules">
-       <fileset dir="${deploy.structure}/modules">
-         <include name="**/jboss/as/webservices/**/module.xml"/>
-       </fileset>
-     </installModules>
-   </target>
-
-   <target name="undeploy-jboss711" depends="target-jboss711,init" description="Remove jbossws from jboss711">
-     <fail message="Not available: ${jboss711.available.file}" unless="jboss711.available"/>
-     <macro-undeploy-jbossws-modules targetdir="${jboss711.home}" defaultmodulesconf="${jbossws.default.modules.conf}"  modifyjbossintegration="false"/>
+     <antcall target="deploy-jbossws-native-modules" inheritall="false">
+       <param name="installserver" value="${deploy.structure}"/>
+       <param name="thirdpartydir" value="${deploy.artifacts.dir}"/>
+       <param name="jbossid" value="${jbossws.integration.target}"/>
+       <param name="modules-jbossid" value="jboss720"/>
+     </antcall>
    </target>
 
    <!-- ================================================================== -->
@@ -131,6 +95,35 @@
    <target name="undeploy-jboss712" depends="target-jboss712,init" description="Remove jbossws from jboss712">
      <fail message="Not available: ${jboss712.available.file}" unless="jboss712.available"/>
      <macro-undeploy-jbossws-modules targetdir="${jboss712.home}" defaultmodulesconf="${jbossws.default.modules.conf}"  modifyjbossintegration="false"/>
+   </target>
+
+   <!-- ================================================================== -->
+   <!-- Deployment jboss720                                                -->
+   <!-- ================================================================== -->
+
+   <target name="target-jboss720">
+     <property name="jbossws.integration.target" value="jboss720"/>
+     <echo message="jbossws.integration.target=${jbossws.integration.target}" file="${target.properties.file}"/>
+   </target>
+
+   <target name="deploy-jboss720" depends="undeploy-jboss720,deploy-structure-jboss72x" description="Deploy jbossws to jboss720">
+     <fail message="Not available: ${jboss720.available.file}" unless="jboss720.available"/>
+     <copy todir="${jboss720.home}" overwrite="true" verbose="true">
+       <fileset dir="${deploy.structure}">
+         <exclude name="**/jboss/as/webservices/**/module.xml"/>
+       </fileset>
+     </copy>
+     <!-- Install org/jboss/as/webservices module.xml separately since it needs to reference libs already on the AS -->
+     <installModules targetDir="${jboss720.home}/modules">
+       <fileset dir="${deploy.structure}/modules">
+         <include name="**/jboss/as/webservices/**/module.xml"/>
+       </fileset>
+     </installModules>
+   </target>
+
+   <target name="undeploy-jboss720" depends="target-jboss720,init" description="Remove jbossws from jboss720">
+     <fail message="Not available: ${jboss720.available.file}" unless="jboss720.available"/>
+     <macro-undeploy-jbossws-modules targetdir="${jboss720.home}" defaultmodulesconf="${jbossws.default.modules.conf}"  modifyjbossintegration="false"/>
    </target>
 
 </project>

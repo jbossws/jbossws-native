@@ -250,88 +250,6 @@
     </profile>
 
     <!--
-    Name:  jboss711
-    Descr: JBoss-7.1.1 specific options
-    -->
-    <profile>
-      <id>jboss711</id>
-      <properties>
-        <jboss.version>${jboss711.version}</jboss.version>
-        <jbossws.integration.target>jboss711</jbossws.integration.target>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss711</artifactId>
-          <classifier>tests-integration</classifier>
-          <exclusions>
-            <exclusion>
-              <groupId>org.jboss.as</groupId>
-              <artifactId>jboss-as-transactions</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.jboss.remoting3</groupId>
-              <artifactId>jboss-remoting</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.jboss</groupId>
-              <artifactId>jboss-remote-naming</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.jboss.as</groupId>
-              <artifactId>jboss-as-security</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss</groupId>
-          <artifactId>jboss-remote-naming</artifactId>
-          <version>1.0.2.Final</version>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss</groupId>
-          <artifactId>jboss-ejb-client</artifactId>
-          <version>1.0.4.Final</version>
-          <exclusions>
-            <exclusion>
-              <groupId>org.jboss.remoting3</groupId>
-              <artifactId>jboss-remoting</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.jboss.xnio</groupId>
-              <artifactId>xnio-api</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss.remotingjmx</groupId>
-          <artifactId>remoting-jmx</artifactId>
-          <version>1.0.2.Final</version>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss.remoting3</groupId>
-          <artifactId>jboss-remoting</artifactId>
-          <version>3.2.2.GA</version>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <argLine>${surefire.jvm.args} ${surefire.default-mgmt-serurity.args}</argLine>
-              <excludes>
-                 <!-- no excludes ATM -->
-              </excludes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    
-    <!--
     Name:  jboss712
     Descr: JBoss-7.1.2 specific options
     -->
@@ -413,6 +331,87 @@
       </build>
     </profile>
 
+    <!--
+    Name:  jboss720
+    Descr: JBoss-7.2.0 specific options
+    -->
+    <profile>
+      <id>jboss720</id>
+      <properties>
+        <jboss.version>${jboss720.version}</jboss.version>
+        <jbossws.integration.target>jboss720</jbossws.integration.target>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>org.jboss.as</groupId>
+          <artifactId>jboss-as-webservices-tests-integration</artifactId>
+          <version>${jboss.version}</version>
+          <exclusions>
+            <exclusion>
+              <groupId>org.jboss.as</groupId>
+              <artifactId>jboss-as-transactions</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.jboss.remoting3</groupId>
+              <artifactId>jboss-remoting</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.jboss</groupId>
+              <artifactId>jboss-remote-naming</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.jboss.as</groupId>
+              <artifactId>jboss-as-security</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss</groupId>
+          <artifactId>jboss-remote-naming</artifactId>
+          <version>1.0.3.Final</version>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss</groupId>
+          <artifactId>jboss-ejb-client</artifactId>
+          <version>1.0.10.Final</version>
+          <exclusions>
+            <exclusion>
+              <groupId>org.jboss.remoting3</groupId>
+              <artifactId>jboss-remoting</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>org.jboss.xnio</groupId>
+              <artifactId>xnio-api</artifactId>
+            </exclusion>
+          </exclusions>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.remotingjmx</groupId>
+          <artifactId>remoting-jmx</artifactId>
+          <version>1.0.3.Final</version>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.remoting3</groupId>
+          <artifactId>jboss-remoting</artifactId>
+          <version>3.2.7.GA</version>
+          <scope>test</scope>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <configuration>
+              <argLine>${surefire.jvm.args} ${surefire.default-mgmt-serurity.args}</argLine>
+              <excludes>
+                 <!-- no excludes ATM -->
+              </excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
     <!--
     Name:  no-jboss-bind-address
     Descr: Set the default jboss.bind.address

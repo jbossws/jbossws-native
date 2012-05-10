@@ -33,14 +33,14 @@
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-resources</artifactId>
       <version>${project.version}</version>
-      <classifier>jboss711</classifier>
+      <classifier>jboss712</classifier>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-resources</artifactId>
       <version>${project.version}</version>
-      <classifier>jboss712</classifier>
+      <classifier>jboss720</classifier>
     </dependency>
 
     <dependency>
@@ -63,7 +63,7 @@
 
     <dependency>
       <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss711</artifactId>
+      <artifactId>jbossws-jboss712</artifactId>
       <scope>provided</scope>
     </dependency>
 
