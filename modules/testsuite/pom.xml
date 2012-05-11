@@ -283,12 +283,12 @@
         <dependency>
           <groupId>org.jboss</groupId>
           <artifactId>jboss-remote-naming</artifactId>
-          <version>1.0.2.Final</version>
+          <version>1.0.3.Final</version>
         </dependency>
         <dependency>
           <groupId>org.jboss</groupId>
           <artifactId>jboss-ejb-client</artifactId>
-          <version>1.0.4.Final</version>
+          <version>1.0.10.Final</version>
           <exclusions>
             <exclusion>
               <groupId>org.jboss.remoting3</groupId>
@@ -300,22 +300,16 @@
             </exclusion>
           </exclusions>
         </dependency>
-        <!-- provides org.jboss.ejb3.annotation.SecurityDomain annotation -->
-        <dependency>
-          <groupId>org.jboss.ejb3</groupId>
-          <artifactId>jboss-ejb3-ext-api</artifactId>
-          <version>2.0.0-beta-1</version>
-        </dependency>
         <dependency>
           <groupId>org.jboss.remotingjmx</groupId>
           <artifactId>remoting-jmx</artifactId>
-          <version>1.0.2.Final</version>
+          <version>1.0.3.Final</version>
           <scope>test</scope>
         </dependency>
         <dependency>
           <groupId>org.jboss.remoting3</groupId>
           <artifactId>jboss-remoting</artifactId>
-          <version>3.2.2.GA</version>
+          <version>3.2.7.GA</version>
           <scope>test</scope>
         </dependency>
       </dependencies>
