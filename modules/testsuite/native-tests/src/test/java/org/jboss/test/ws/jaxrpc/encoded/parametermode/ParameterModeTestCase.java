@@ -164,13 +164,9 @@ public class ParameterModeTestCase extends JBossWSTest
       }
    }
 
-   public void testEchoIn() throws Exception
+   public void testEchoIndependentHolders() throws Exception
    {
       port.echoIn("Kermit");
-   }
-
-   public void testEchoOut() throws Exception
-   {
       StringHolder varString = new StringHolder();
       port.echoOut(varString);
       assertEquals("Kermit", varString.value);
