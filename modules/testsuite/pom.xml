@@ -344,13 +344,6 @@
       <build>
         <plugins>
           <plugin>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <!-- http://jira.codehaus.org/browse/MCOMPILER-72 -->
-              <testExcludeFile>../test-excludes-jboss510.txt</testExcludeFile>
-            </configuration>
-          </plugin>
-          <plugin>
             <artifactId>maven-surefire-plugin</artifactId>
             <configuration>
               <argLine>${surefire.jvm.args} -Djava.endorsed.dirs=${jboss510.home}/lib/endorsed</argLine>
@@ -359,6 +352,16 @@
                 <additionalClasspathElement>${jboss.home}/client/jbossall-client.jar</additionalClasspathElement>
                 <additionalClasspathElement>${jboss.home}/common/lib/jboss-ejb3-core.jar</additionalClasspathElement>
               </additionalClasspathElements>
+              <excludes>
+                <!--# UsernameTokenHTTPSTestCase requires keystore & trustore in jboss-web tomcat configuration -->
+                <exclude>org/jboss/test/ws/interop/nov2007/wsse/UsernameTokenHTTPSTestCase.*</exclude>
+
+                <!--# [EJBTHREE-1152] service-ref in ejb-jar.xml is ignored -->
+                <exclude>org/jboss/test/ws/jaxws/samples/serviceref/ServiceRefEJBTestCase.*</exclude>
+
+                <!--# [JBWS-2217] Fix BPEL jaxrpc samples -->
+                <exclude>org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*</exclude>
+              </excludes>
             </configuration>
           </plugin>
         </plugins>
