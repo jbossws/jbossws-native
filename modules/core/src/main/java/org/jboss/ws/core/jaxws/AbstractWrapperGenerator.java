@@ -58,6 +58,7 @@ public abstract class AbstractWrapperGenerator implements WrapperGenerator
       excludedGetters.add("getClass");
       excludedGetters.add("getLocalizedMessage");
       excludedGetters.add("getStackTrace");
+      excludedGetters.add("getSuppressed");
    }
 
    protected SortedMap<String, ExceptionProperty> getExceptionProperties(Class<?> exception)
