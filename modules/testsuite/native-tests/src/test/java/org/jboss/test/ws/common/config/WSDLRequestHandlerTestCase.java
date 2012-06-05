@@ -33,6 +33,7 @@ import javax.xml.namespace.QName;
 import org.jboss.ws.core.server.WSDLRequestHandler;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.spi.management.ServerConfig;
+import org.jboss.wsf.spi.metadata.config.ClientConfig;
 import org.jboss.wsf.spi.metadata.config.EndpointConfig;
 import org.jboss.wsf.test.JBossWSTest;
 import org.w3c.dom.Document;
@@ -183,7 +184,17 @@ public class WSDLRequestHandlerTestCase extends JBossWSTest
          this.webServiceSecurePort = webServiceSecurePort;
       }
       
-      public String getWebServiceHost()
+	  public void addClientConfig(ClientConfig config)
+      {
+         // does nothing
+	  }
+
+	  public List<ClientConfig> getClientConfigs()
+      {
+         return null;
+	  }
+
+	  public String getWebServiceHost()
       {
          return webServiceHost;
       }
