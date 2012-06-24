@@ -46,10 +46,6 @@ import org.jboss.wsf.spi.management.EndpointResolver;
  */
 public final class EndpointServlet extends AbstractEndpointServlet implements ServletDelegate
 {
-   
-   // provide logging
-   protected static final Logger log = Logger.getLogger(EndpointServlet.class);
-
    private List<PreDestroyHolder> preDestroyRegistry = new LinkedList<PreDestroyHolder>();
    private final Object lock = new Object();
 
@@ -85,7 +81,7 @@ public final class EndpointServlet extends AbstractEndpointServlet implements Se
             }
             catch (Exception exception)
             {
-               log.error(exception.getLocalizedMessage(),  exception);
+               Logger.getLogger(EndpointServlet.class).error(exception.getLocalizedMessage(),  exception);
             }
          }
          this.preDestroyRegistry.clear();
