@@ -17,7 +17,7 @@
   <artifactId>jbossws-native</artifactId>
   <packaging>pom</packaging>
 
-  <version>3.1.2.SP12</version>
+  <version>3.1.2-SNAPSHOT</version>
 
   <!-- Parent -->
   <parent>
@@ -28,9 +28,9 @@
 
   <!-- Source Control Management -->
   <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossws/stack/native/tags/jbossws-native-3.1.2.SP12</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossws/stack/native/tags/jbossws-native-3.1.2.SP12</developerConnection>
-    <url>http://fisheye.jboss.com/viewrep/JBossWS/stack/native/tags/jbossws-native-3.1.2.SP12</url>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossws/stack/native/branches/jbossws-native-3.1.2</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossws/stack/native/branches/jbossws-native-3.1.2</developerConnection>
+    <url>http://fisheye.jboss.com/viewrep/JBossWS/stack/native/branches/jbossws-native-3.1.2</url>
   </scm>
 
   <!-- Modules -->
