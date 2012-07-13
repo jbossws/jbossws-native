@@ -132,6 +132,8 @@ public class SecurityStore
          String trustStoreType = conf.getTrustStoreType();
          String trustStorePassword = conf.getTrustStorePassword();
 
+         keyPasswords = conf.getKeyPasswords();
+
          loadKeyStore(keyStoreURL, keyStoreType, keyStorePassword);
          loadTrustStore(trustStoreURL, trustStoreType, trustStorePassword);
       }
