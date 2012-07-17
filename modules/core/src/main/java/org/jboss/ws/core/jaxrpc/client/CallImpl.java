@@ -69,7 +69,6 @@ import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.wsf.common.JavaUtils;
 
-import com.sun.corba.se.spi.orb.Operation;
 
 /** Provides support for the dynamic invocation of a service endpoint.
  * The javax.xml.rpc.Service interface acts as a factory for the creation of Call instances.

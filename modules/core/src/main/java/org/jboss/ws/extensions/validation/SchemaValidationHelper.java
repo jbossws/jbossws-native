@@ -21,93 +21,107 @@
  */
 package org.jboss.ws.extensions.validation;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
-import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Source;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
+import javax.xml.validation.Validator;
 
-import org.jboss.logging.Logger;
-import org.jboss.wsf.common.DOMWriter;
 import org.w3c.dom.Element;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * [JBWS-1172] Support schema validation for incoming messages
  * 
  * @author Thomas.Diesler@jboss.com
+ * @author ema@redhat.com
  * @since 28-Feb-2008
  */
-public class SchemaValidationHelper
-{
-   private URL xsdURL;
-   private InputStream[] xsdStreams;
+public class SchemaValidationHelper {
+
    private ErrorHandler errorHandler = new StrictlyValidErrorHandler();
 
-   private static Logger log = Logger.getLogger(SchemaValidationHelper.class);
-   
-   public SchemaValidationHelper(URL xsdURL)
+   private static SchemaFactory factory = null;
+
+   private Validator validator = null;
+
+   static
    {
-      this.xsdURL = xsdURL;
+      factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
    }
 
-   public SchemaValidationHelper(InputStream[] xsdStreams)
+   public SchemaValidationHelper(URL xsdURL) throws SAXException
    {
-      this.xsdStreams = xsdStreams;
+      Schema schema = factory.newSchema(new File(xsdURL.getFile()));
+      validator = schema.newValidator();
+      validator.setErrorHandler(errorHandler);
+   }
+
+   public SchemaValidationHelper(Map<String, byte[]> xsdStreams) throws SAXException
+   {
+      SchemaResourceResolver resolver = new SchemaResourceResolver(xsdStreams);
+      factory.setResourceResolver(resolver);
+
+      List<Source> schemas = new ArrayList<Source>();
+      for (byte[] ins : xsdStreams.values())
+      {
+         StreamSource source = new StreamSource(new ByteArrayInputStream(ins));
+         schemas.add(source);
+      }
+      Source[] sources = schemas.toArray(new Source[0]);
+      
+      Schema schema = factory.newSchema(sources);
+      validator = schema.newValidator();
+      validator.setErrorHandler(errorHandler);
+
    }
 
    public SchemaValidationHelper setErrorHandler(ErrorHandler errorHandler)
    {
-      this.errorHandler = errorHandler;
+      validator.setErrorHandler(errorHandler);
       return this;
    }
 
    public void validateDocument(String inxml) throws Exception
    {
-      validateDocument(new InputSource(new StringReader(inxml)));
+      StreamSource source = new StreamSource(new java.io.ByteArrayInputStream(inxml.getBytes()));
+      validateDocument(source);
+
+   }
+
+   public void validateDocument(Source xml) throws Exception
+   {
+      validator.validate(xml);
    }
 
    public void validateDocument(Element inxml) throws Exception
    {
-      String xmlStr = DOMWriter.printNode(inxml, false);
-      validateDocument(xmlStr);
+      DOMSource domSource = new DOMSource(inxml);
+      validator.validate(domSource);
    }
-   
+
    public void validateDocument(InputStream inxml) throws Exception
    {
-      DocumentBuilder builder = getDocumentBuilder();
-      builder.parse(inxml);
+      StreamSource source = new StreamSource(inxml);
+      validateDocument(source);
    }
-   
+
    public void validateDocument(InputSource inxml) throws Exception
    {
-      DocumentBuilder builder = getDocumentBuilder();
-      builder.parse(inxml);
+      StreamSource source = new StreamSource(inxml.getByteStream());
+      validateDocument(source);
    }
 
-   private DocumentBuilder getDocumentBuilder() throws ParserConfigurationException
-   {
-      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-      factory.setValidating(true);
-      factory.setNamespaceAware(true);
-      factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage", "http://www.w3.org/2001/XMLSchema");
-
-      if(xsdStreams != null)
-      {
-         factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", xsdStreams);
-      }
-      else //use xsdURL
-      {
-         factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaSource", xsdURL.toExternalForm());
-      }
-
-      factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      builder.setErrorHandler(errorHandler);
-      return builder;
-   }
 }

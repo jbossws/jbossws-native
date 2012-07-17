@@ -21,12 +21,13 @@
  */
 package org.jboss.test.ws.jaxws.jbws1172;
 
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 
 import junit.framework.Test;
@@ -47,6 +48,7 @@ import org.xml.sax.SAXParseException;
  * http://jira.jboss.org/jira/browse/JBWS-1172
  *
  * @author Thomas.Diesler@jboss.com
+ * @author ema@rehda.com
  * @since 28-Feb-2008
  */
 public class JBWS1172TestCase extends JBossWSTest
@@ -57,20 +59,21 @@ public class JBWS1172TestCase extends JBossWSTest
    {
       return new JBossWSTestSetup(JBWS1172TestCase.class, "jaxws-jbws1172.war");
    }
-
+  
+   
    public void testSchemaValidationPositive() throws Exception
    {
       URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
-      InputStream[] xsdStreams = new SchemaExtractor().getSchemas(wsdlURL);
-      String inxml = "<performTest xmlns='http://www.my-company.it/ws/my-test'><Code>1000</Code></performTest>";
+      Map<String, byte[]> xsdStreams = new SchemaExtractor().getSchemas(wsdlURL);
+      String inxml = "<tns:performTest xmlns:tns='http://www.my-company.it/ws/my-test'><Code>1000</Code></tns:performTest>";
       new SchemaValidationHelper(xsdStreams).validateDocument(inxml);
    }
-
+   
    public void testSchemaValidationNegative() throws Exception
    {
       URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
-      InputStream[] xsdStreams = new SchemaExtractor().getSchemas(wsdlURL);
-      String inxml = "<performTest xmlns='http://www.my-company.it/ws/my-test'><Code>2000</Code></performTest>";
+      Map<String, byte[]> xsdStreams = new SchemaExtractor().getSchemas(wsdlURL);
+      String inxml = "<tns:performTest xmlns:tns='http://www.my-company.it/ws/my-test'><Code>2000</Code></tns:performTest>";
       try
       {
          new SchemaValidationHelper(xsdStreams).validateDocument(inxml);
@@ -85,23 +88,21 @@ public class JBWS1172TestCase extends JBossWSTest
    public void testEndpointWsdlValidation() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1172/noval?wsdl");
-      InputStream[] xsdStreams = new SchemaExtractor().getSchemas(wsdlURL);
-      String inxml = "<performTest xmlns='http://www.my-company.it/ws/my-test'><Code>1000</Code></performTest>";
+      Map<String, byte[]> xsdStreams = new SchemaExtractor().getSchemas(wsdlURL);
+      String inxml = "<tns:performTest xmlns:tns='http://www.my-company.it/ws/my-test'><Code>1000</Code></tns:performTest>";
       new SchemaValidationHelper(xsdStreams).validateDocument(inxml);
    }
    
    public void testValidatingClientWithExplicitSchema() throws Exception
    {
-      URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
-      //URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
-      
+      URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");     
       Service service = Service.create(wsdlURL, SERVICE_NAME);
-      //SchemaValidationFeature feature = new SchemaValidationFeature(xsdURL.toString());
       SchemaValidationFeature feature = new SchemaValidationFeature();
       MyTest port = service.getPort(MyTest.class, feature);
+      ((BindingProvider)port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, "http://localhost:9090/jaxws-jbws1172/doval");
       try
       {
-         port.performTest(new Long(2000));
+         port.performTest(new Integer(2000));
       }
       catch (Exception ex)
       {
@@ -111,22 +112,26 @@ public class JBWS1172TestCase extends JBossWSTest
          assertTrue("Unexpectd message: " + ex.getMessage(), msg.indexOf("Value '2000' is not facet-valid with respect to maxInclusive '1000'") > 0);
       }
    }
+
    
    public void testValidatingClientWithErrorHandler() throws Exception
    {
-      URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
-      //URL xsdURL = new SchemaExtractor().getSchemaUrl(wsdlURL);
-      
+      URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");     
       Service service = Service.create(wsdlURL, SERVICE_NAME);
-      //SchemaValidationFeature feature = new SchemaValidationFeature(xsdURL.toString());
       SchemaValidationFeature feature = new SchemaValidationFeature();
       
       TestErrorHandler errorHandler = new TestErrorHandler();
       feature.setErrorHandler(errorHandler);
       
       MyTest port = service.getPort(MyTest.class, feature);
-      port.performTest(new Long(2000));
-      
+      try
+      {
+         port.performTest(new Integer(2000));
+      }
+      catch (Exception e)
+      {
+
+      }   
       String msg = errorHandler.getErrors();
       assertTrue("Unexpectd message: " + msg, msg.indexOf("Value '2000' is not facet-valid with respect to maxInclusive '1000'") > 0);
    }
@@ -137,8 +142,8 @@ public class JBWS1172TestCase extends JBossWSTest
       
       Service service = Service.create(wsdlURL, SERVICE_NAME);
       MyTest port = service.getPort(MyTest.class);
-      port.performTest(new Long(1000));
-      port.performTest(new Long(2000));
+      port.performTest(new Integer(1000));
+      port.performTest(new Integer(2000));
    }
    
    public void testValidatingEndpoint() throws Exception
@@ -147,17 +152,35 @@ public class JBWS1172TestCase extends JBossWSTest
       
       Service service = Service.create(wsdlURL, SERVICE_NAME);
       MyTest port = service.getPort(MyTest.class);
-      port.performTest(new Long(1000));
+      port.performTest(new Integer(1000));
       try
       {
-         port.performTest(new Long(2000));
+         port.performTest(new Integer(2000));
       }
       catch (Exception ex)
       {
          String msg = ex.getMessage();
          assertTrue("Unexpectd message: " + ex.getMessage(), msg.indexOf("Value '2000' is not facet-valid with respect to maxInclusive '1000'") > 0);
       }
-}
+   }
+   
+   public void testValidatingImportEndpoint() throws Exception
+   {
+      URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1172/doval-import?wsdl");
+      
+      Service service = Service.create(wsdlURL, SERVICE_NAME);
+      MyTest port = service.getPort(MyTest.class);
+      port.performTest(new Integer(1000));
+      try
+      {
+         port.performTest(new Integer(2000));
+      }
+      catch (Exception ex)
+      {
+         String msg = ex.getMessage();
+         assertTrue("Unexpectd message: " + ex.getMessage(), msg.indexOf("Value '2000' is not facet-valid with respect to maxInclusive '1000'") > 0);
+      }
+   }
    
    private static  class TestErrorHandler implements ErrorHandler
    {

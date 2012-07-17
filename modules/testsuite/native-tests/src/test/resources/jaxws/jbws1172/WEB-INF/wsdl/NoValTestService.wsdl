@@ -64,7 +64,7 @@
  </binding>
  <service name="MyTestService">
   <port binding="tns:MyTestBinding" name="MyTestPort">
-   <soap:address location="http://@jboss.bind.address@:9090/jaxws-jbws1172/doval"/>
+   <soap:address location="http://@jboss.bind.address@:9999/jaxws-jbws1172/noval"/>
   </port>
  </service>
 </definitions>

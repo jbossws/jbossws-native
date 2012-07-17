@@ -23,6 +23,8 @@ package org.jboss.ws.core.soap;
 
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
@@ -103,7 +105,7 @@ public class SOAPBodyElementDoc extends SOAPContentElement implements SOAPBodyEl
          EndpointMetaData epMetaData = msgContext.getEndpointMetaData();
          feature = epMetaData.getFeature(SchemaValidationFeature.class);
          URL xsdURL = feature.getSchemaLocation() != null ? new URL(feature.getSchemaLocation()) : null;
-         InputStream[] xsdStreams = null;
+         Map<String, byte[]> xsdStreams = new HashMap<String, byte[]>();
          if (xsdURL == null)
          {
             URL wsdlURL = epMetaData.getServiceMetaData().getWsdlFileOrLocation();

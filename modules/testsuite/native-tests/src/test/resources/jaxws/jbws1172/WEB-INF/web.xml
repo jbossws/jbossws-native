@@ -10,7 +10,12 @@
   
   <servlet>
     <servlet-name>ValidatingEndpoint</servlet-name>
-    <servlet-class>org.jboss.test.ws.jaxws.jbws1172.ValidatingEndpoint</servlet-class>
+    <servlet-class>org.jboss.test.ws.jaxws.jbws1172.NestedSchemaValidatingEndpoint</servlet-class>
+  </servlet>
+  
+  <servlet>
+    <servlet-name>ValidatingEndpointWithImportSchema</servlet-name>
+    <servlet-class>org.jboss.test.ws.jaxws.jbws1172.ImportedSchemaValidatingEndpoint</servlet-class>
   </servlet>
   
   <servlet-mapping>
@@ -22,4 +27,10 @@
     <servlet-name>ValidatingEndpoint</servlet-name>
     <url-pattern>/doval</url-pattern>
   </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>ValidatingEndpointWithImportSchema</servlet-name>
+    <url-pattern>/doval-import</url-pattern>
+  </servlet-mapping>
+  
 </web-app>

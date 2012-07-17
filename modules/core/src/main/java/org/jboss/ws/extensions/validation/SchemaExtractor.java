@@ -21,48 +21,61 @@
  */
 package org.jboss.ws.extensions.validation;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.net.URL;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.regex.Pattern;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.namespace.QName;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.jboss.logging.Logger;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
-import org.jboss.wsf.common.IOUtils;
-import org.w3c.dom.Element;
 import org.w3c.dom.Attr;
-import org.w3c.dom.Node;
+import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 
 /**
  * Extracts the schema from a given WSDL
  * 
  * @author Thomas.Diesler@jboss.com
+ * @author ema@redhat.com
  * @since 29-Feb-2008
  */
 public class SchemaExtractor
 {
    // provide logging
    private static Logger log = Logger.getLogger(SchemaExtractor.class);
+   private static Transformer transformer = null;
+   private String path; 
+   static {
+      try
+      {
+         transformer = TransformerFactory.newInstance().newTransformer();
+      }
+      catch (Exception e)
+      {
+         throw new RuntimeException(e);
+      }
 
-   private File xsdFile;
-   private String path;
-   
-   public InputStream[] getSchemas(URL wsdlURL) throws IOException
+   }
+   public Map<String, byte[]> getSchemas(URL wsdlURL) throws IOException
    {
+	   Map<String, byte[]> streams = new HashMap<String, byte[]>();
       //Get the path to the WSDL
       Pattern p = Pattern.compile("[a-zA-Z]+\\.[a-zA-Z]+$");
       Matcher m = p.matcher(wsdlURL.getFile());
@@ -90,36 +103,51 @@ public class SchemaExtractor
          log.warn("Cannot find element: " + schemaQName);
          return null;
       }
-      if (schemaElements.size() > 1)
-      {
-         log.warn("Multiple schema elements not supported.");
-      }
-      Element schemaElement = schemaElements.get(0);
 
-      //Add namespace declarations from root element
-      for(Attr nsAttr : nsAttrs)
+      for (Element schemaElement : schemaElements)
       {
-         Attr replacedAttr = schemaElement.setAttributeNodeNS(nsAttr);
-         if(replacedAttr != null) //then put it back
+
+         DOMSource domSource = new DOMSource(schemaElement);
+         ByteArrayOutputStream bout = new ByteArrayOutputStream();
+         StreamResult result = new StreamResult(bout);
+         Element newSchemeElement = null;
+         try
          {
-            schemaElement.setAttributeNodeNS(replacedAttr);
+            transformer.transform(domSource, result);
+            String content = new String(bout.toByteArray());
+            newSchemeElement = DOMUtils.parse(content);
          }
+         catch (Exception e)
+         {
+            log.error("Failed to parse schema with schemaElement with targetNamepace : "
+                  + schemaElement.getAttribute("targetNamespace"));
+         }
+
+
+         
+         for (Attr nsAttr : nsAttrs)
+         {  
+            
+            Attr newAttr = newSchemeElement.getOwnerDocument().createAttribute(nsAttr.getName());
+            newAttr.setNodeValue(nsAttr.getValue());
+            if (newSchemeElement.getAttribute(nsAttr.getName()).equals("")) {
+               newSchemeElement.setAttributeNodeNS(newAttr);
+            }
+         }
+
+         pullImportedSchemas(newSchemeElement, streams);
+
+         // Add the WSDL schema to the schema array
+         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+         OutputStreamWriter outwr = new OutputStreamWriter(outStream);
+         DOMWriter domWriter = new DOMWriter(outwr);
+         domWriter.setPrettyprint(true);
+         domWriter.print(newSchemeElement);
+         String tns = newSchemeElement.getAttribute("targetNamespace");
+         streams.put(tns, outStream.toByteArray());
       }
 
-      List<InputStream> streams = new ArrayList<InputStream>();
-
-      pullImportedSchemas(schemaElement, streams);
-
-      //Add the WSDL schema to the schema array
-      ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-      OutputStreamWriter outwr = new OutputStreamWriter( outStream );
-      DOMWriter domWriter = new DOMWriter(outwr);
-      domWriter.setPrettyprint(true);
-      domWriter.print(schemaElement);
-
-      streams.add(new ByteArrayInputStream(outStream.toByteArray()));
-
-      return streams.toArray(new InputStream[streams.size()]);
+      return streams;
    }
 
    private List<Attr> getNamespaceAttrs(Element element)
@@ -132,14 +160,14 @@ public class SchemaExtractor
       {
          Node node = nodes.item(i);
          Attr attr = (Attr)node;
-         if(attr.getName().startsWith("xmlns"))
+         if(attr.getName().startsWith("xmlns:"))
             nsAttrs.add((Attr)attr.cloneNode(true));
       }
 
       return nsAttrs;
    }
 
-   private void pullImportedSchemas(Element schemaElement, List<InputStream> streams)
+   private void pullImportedSchemas(Element schemaElement, Map<String, byte[]> streams)
    {
       QName importQName = new QName( "http://www.w3.org/2001/XMLSchema", "import" );
       List<Element> importElements = DOMUtils.getChildElementsAsList( schemaElement, importQName );
@@ -148,7 +176,10 @@ public class SchemaExtractor
       for( Element importElement : importElements )
       {
          String schemaLocation = importElement.getAttribute( "schemaLocation" );
-         schemaLocations.add( schemaLocation );
+         if (!"".equals(schemaLocation))
+         {
+            schemaLocations.add(schemaLocation);
+         }
       }
 
       ByteArrayOutputStream outStream = null;
@@ -175,7 +206,8 @@ public class SchemaExtractor
             pullImportedSchemas(root, streams);
  
             inputStream.reset();
-            streams.add(inputStream);
+            String tns = root.getAttribute("targetNamespace"); 
+            streams.put(tns , outStream.toByteArray());
          }
          catch(IOException ioe)
          {

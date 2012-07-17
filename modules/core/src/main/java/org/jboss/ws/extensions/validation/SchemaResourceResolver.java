@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2012, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,24 +19,35 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxws.jbws1172;
+package org.jboss.ws.extensions.validation;
 
-import javax.jws.WebService;
+import java.io.ByteArrayInputStream;
+import java.util.Map;
 
-import org.jboss.logging.Logger;
+import org.w3c.dom.ls.LSInput;
+import org.w3c.dom.ls.LSResourceResolver;
+/**
+ * SchemaResourceResolver
+ * 
+ * @author ema@redhat.com
+ */
 
-@WebService(serviceName = "MyTestService", portName = "MyTestPort",
-      targetNamespace = "http://www.my-company.it/ws/my-test", 
-      endpointInterface = "org.jboss.test.ws.jaxws.jbws1172.types.MyTest", 
-      wsdlLocation = "WEB-INF/wsdl/NoValTestService.wsdl")
-      
-public class NonValidatingEndpoint
-{
-   // provide logging
-   private static Logger log = Logger.getLogger(NonValidatingEndpoint.class);
-   
-   public void performTest(Integer code) 
-   {
-      log.info(code);
-   }
+public class SchemaResourceResolver implements LSResourceResolver {
+	private Map<String, byte[]> streamMap;
+	
+	public SchemaResourceResolver(Map<String, byte[]> map) {
+		streamMap = map;
+	}
+	
+	public LSInput resolveResource(String type, String namespaceURI,
+			String publicId, String systemId, String baseURI) {
+		LSInput lsInput = null;
+		if (streamMap.get(namespaceURI) != null) {
+			byte[] value = streamMap.get(namespaceURI);
+			lsInput = new LSInputImpl();
+			lsInput.setByteStream(new ByteArrayInputStream(value));
+		}
+ 		return lsInput;
+	}
+
 }

@@ -1,8 +1,8 @@
 <definitions name="MyTestService" targetNamespace="http://www.my-company.it/ws/my-test" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://www.my-company.it/ws/my-test" xmlns:type2="http://www.my-company.it/ws/my-test2" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
  <types>
-  <schema targetNamespace="http://www.my-company.it/ws/my-test" xmlns="http://www.w3.org/2001/XMLSchema"
+  <schema elementFormDefault="qualified" targetNamespace="http://www.my-company.it/ws/my-test" xmlns="http://www.w3.org/2001/XMLSchema"
     xmlns:tns="http://www.my-company.it/ws/my-test" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <import namespace="http://www.my-company.it/ws/my-test2"/>
+    <import namespace="http://www.my-company.it/ws/my-test2" schemaLocation = "type1.xsd"/>
     <complexType name="MyWSException">
       <sequence>
         <element name="message" nillable="true" type="string"/>
@@ -12,24 +12,7 @@
     <element name="performTest" type="type2:performTest"/>
     <element name="performTestResponse" type="type2:performTestResponse"/>
   </schema>
-    <schema  targetNamespace="http://www.my-company.it/ws/my-test2" xmlns="http://www.w3.org/2001/XMLSchema"
-    xmlns:tns="http://www.my-company.it/ws/my-test2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-    <complexType name="performTest">
-      <sequence>
-        <element name="Code" nillable="true" type="tns:CodeType"/>
-      </sequence>
-    </complexType>
-    <complexType name="performTestResponse">
-      <sequence/>
-    </complexType>
-    <simpleType name="CodeType">
-      <restriction base="integer">
-        <minInclusive value="0"/>
-        <maxInclusive value="1000"/>
-      </restriction>
-    </simpleType>
-  </schema>
  </types>
  <message name="MyTest_performTestResponse">
   <part element="tns:performTestResponse" name="result"/>
@@ -64,7 +47,7 @@
  </binding>
  <service name="MyTestService">
   <port binding="tns:MyTestBinding" name="MyTestPort">
-   <soap:address location="http://@jboss.bind.address@:9090/jaxws-jbws1172/doval"/>
+   <soap:address location="http://@jboss.bind.address@:8080/jaxws-jbws1172/noval"/>
   </port>
  </service>
 </definitions>

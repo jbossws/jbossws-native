@@ -24,18 +24,20 @@ package org.jboss.test.ws.jaxws.jbws1172;
 import javax.jws.WebService;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.annotation.SchemaValidation;
 
 @WebService(serviceName = "MyTestService", portName = "MyTestPort",
       targetNamespace = "http://www.my-company.it/ws/my-test", 
       endpointInterface = "org.jboss.test.ws.jaxws.jbws1172.types.MyTest", 
-      wsdlLocation = "WEB-INF/wsdl/NoValTestService.wsdl")
+      wsdlLocation = "WEB-INF/wsdl/TestService.wsdl")
       
-public class NonValidatingEndpoint
+@SchemaValidation
+public class NestedSchemaValidatingEndpoint
 {
    // provide logging
-   private static Logger log = Logger.getLogger(NonValidatingEndpoint.class);
-   
-   public void performTest(Integer code) 
+   private static Logger log = Logger.getLogger(NestedSchemaValidatingEndpoint.class);
+
+   public void performTest(Integer code)
    {
       log.info(code);
    }
