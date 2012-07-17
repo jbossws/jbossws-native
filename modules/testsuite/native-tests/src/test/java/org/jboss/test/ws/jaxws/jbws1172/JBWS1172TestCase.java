@@ -48,7 +48,7 @@ import org.xml.sax.SAXParseException;
  * http://jira.jboss.org/jira/browse/JBWS-1172
  *
  * @author Thomas.Diesler@jboss.com
- * @author ema@rehda.com
+ * @author ema@rehdat.com
  * @since 28-Feb-2008
  */
 public class JBWS1172TestCase extends JBossWSTest
