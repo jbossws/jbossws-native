@@ -27,6 +27,11 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.math.BigInteger;
 
 import javax.xml.namespace.QName;
 
@@ -508,7 +513,7 @@ public class SchemaUtils
 
    /** Get the temp file for a given namespace
     */
-   public static File getSchemaTempFile(String targetNS) throws IOException
+   public static File getSchemaTempFile(String targetNS, String fileName) throws IOException
    {
       if (targetNS.length() == 0)
          throw new IllegalArgumentException("Invalid null target namespace");
@@ -521,7 +526,8 @@ public class SchemaUtils
       try
       {
          SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-         ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();File tmpDir = serverConfig.getServerTempDir();
+         ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
+         File tmpDir = serverConfig.getServerTempDir();
          tmpdir = serverConfig.getServerTempDir();
          tmpdir = new File(tmpdir.getCanonicalPath() + "/jbossws");
          tmpdir.mkdirs();
@@ -537,7 +543,33 @@ public class SchemaUtils
       fname = fname.replace('?', '_');
       fname = fname.replace('#', '_');
       
-      return File.createTempFile("JBossWS_" + fname, ".xsd", tmpdir);
+      File file = null;
+      try
+      {
+         String fileNameHash = toHexString(MessageDigest.getInstance("MD5").digest(fileName.getBytes("UTF-8")));
+         if(tmpdir == null)
+         {
+            tmpdir = (File) AccessController.doPrivileged(new PrivilegedAction() {
+               public Object run()
+               {
+                  return new File(System.getProperty("java.io.tmpdir"));
+               }
+            });
+         }
+         file = new File(tmpdir + File.separator + "JBossWS_" + fname + "_" + fileNameHash + ".xsd");
+      }
+      catch(NoSuchAlgorithmException noAlgEx)
+      {
+         file = File.createTempFile("JBossWS_" + fname, ".xsd", tmpdir);
+      }
+
+      return file;
+   }
+
+   private static String toHexString(byte[] hash)
+   {
+      BigInteger bi = new BigInteger(1, hash);
+      return String.format("%0" + (hash.length << 1) + "x", bi);
    }
 
    /**

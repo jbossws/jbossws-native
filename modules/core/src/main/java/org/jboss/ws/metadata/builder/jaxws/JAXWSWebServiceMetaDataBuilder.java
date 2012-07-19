@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Writer;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.math.BigInteger;
 
 import javax.jws.HandlerChain;
 import javax.jws.WebService;
@@ -398,10 +401,11 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       }
    }
 
-   private void writeWsdl(ServiceMetaData serviceMetaData, WSDLDefinitions wsdlDefinitions, EndpointMetaData epMetaData) throws IOException
+   private void writeWsdl(final ServiceMetaData serviceMetaData, WSDLDefinitions wsdlDefinitions, EndpointMetaData epMetaData) throws IOException
    {
       // The RI uses upper case, and the TCK expects it, so we just mimic this even though we don't really have to
       String wsdlName = ToolsUtils.firstLetterUpperCase(serviceMetaData.getServiceName().getLocalPart());
+
       // Ensure that types are only in the interface qname
       wsdlDefinitions.getWsdlTypes().setNamespace(epMetaData.getPortTypeName().getNamespaceURI());
 
@@ -415,8 +419,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       else
       {
          dir = IOUtils.createTempDirectory();
-         wsdlFile = File.createTempFile(wsdlName, ".wsdl", dir);
-         wsdlFile.deleteOnExit();
+         wsdlFile = computeTempWsdlFile(serviceMetaData, dir, wsdlName);
       }
 
       message(wsdlFile.getName());
@@ -431,8 +434,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
             }
             else
             {
-               file = File.createTempFile(suggestedFile, ".wsdl", dir);
-               file.deleteOnExit();
+               file = computeTempWsdlFile(serviceMetaData, dir, suggestedFile);
             }
             actualFile = file.getName();
             message(actualFile);
@@ -444,6 +446,35 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       writer.close();
 
       serviceMetaData.setWsdlLocation(wsdlFile.toURL());
+   }
+
+   private File computeTempWsdlFile(ServiceMetaData serviceMetaData, File dir, String wsdlName) throws IOException
+   {
+      File wsdlFile = null;
+      try
+      {
+         byte[] deploymentName = serviceMetaData.getUnifiedMetaData().getDeploymentName().getBytes("UTF-8");
+         String deploymentNameHash = toHexString(MessageDigest.getInstance("MD5").digest(deploymentName));
+         wsdlFile = new File(dir + File.separator + wsdlName + "_" + deploymentNameHash + ".wsdl");
+      }
+      catch(NoSuchAlgorithmException ex)
+      {
+         if(log.isTraceEnabled())
+            log.trace("MD5 has of deployment name failed for WSDL file name.  Falling back to File.createTempFile()", ex);
+         else
+            log.debug("MD5 has of deployment name failed for WSDL file name.  Falling back to File.createTempFile()");
+
+         wsdlFile = File.createTempFile(wsdlName, ".wsdl", dir);
+      }
+
+      wsdlFile.deleteOnExit();
+      return wsdlFile;
+   }
+
+   private String toHexString(byte[] hash)
+   {
+      BigInteger bi = new BigInteger(1, hash);
+      return String.format("%0" + (hash.length << 1) + "x", bi);
    }
 
    private void message(String msg)

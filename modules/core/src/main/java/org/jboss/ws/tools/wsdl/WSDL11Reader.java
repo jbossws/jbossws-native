@@ -544,14 +544,14 @@ public class WSDL11Reader
       {
          log.trace("processSchemaInclude: [targetNS=" + targetNS + ",parentURL=" + wsdlLoc + "]");
 
-         tmpFile = SchemaUtils.getSchemaTempFile(targetNS);
+         tmpFile = SchemaUtils.getSchemaTempFile(targetNS, getFileName(wsdlLoc));
          tempFiles.add(tmpFile);
 
          publishedLocations.put(wsdlLoc, tmpFile.toURL());
       }
       else
       {
-         tmpFile = SchemaUtils.getSchemaTempFile("no_namespace");
+         tmpFile = SchemaUtils.getSchemaTempFile("no_namespace", getFileName(wsdlLoc));
          tempFiles.add(tmpFile);
 
          publishedLocations.put(wsdlLoc, tmpFile.toURL());
@@ -598,6 +598,22 @@ public class WSDL11Reader
       }
 
       handleSchemaImports(schemaEl, wsdlLoc);
+   }
+
+   private String getFileName(URL url)
+   {
+      String query = url.getQuery();
+      if(query != null)
+      {
+         if(query.contains("="))
+         {
+            return query.split("=")[1];
+         }
+      }
+
+      String exUrl = url.toExternalForm();
+      String[] paths = exUrl.split("/");
+      return paths[paths.length-1];
    }
 
    private void handleSchemaImports(Element schemaEl, URL parentURL) throws WSDLException, IOException
