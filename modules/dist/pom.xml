@@ -63,7 +63,7 @@
 
     <dependency>
       <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss712</artifactId>
+      <artifactId>jbossws-jboss712-server-integration</artifactId>
       <scope>provided</scope>
     </dependency>
 

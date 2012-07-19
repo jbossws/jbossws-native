@@ -114,14 +114,13 @@
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss712</artifactId>
+        <artifactId>jbossws-jboss712-server-integration</artifactId>
         <version>${jbossws.jboss712.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jboss.ws</groupId>
-        <artifactId>jbossws-jboss712</artifactId>
+        <artifactId>jbossws-jboss712-tests-integration</artifactId>
         <version>${jbossws.jboss712.version}</version>
-        <classifier>tests-integration</classifier>
       </dependency>
       <!-- provided apis -->
       <dependency>

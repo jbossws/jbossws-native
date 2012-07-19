@@ -261,59 +261,8 @@
       </properties>
       <dependencies>
         <dependency>
-          <groupId>org.jboss.as</groupId>
-          <artifactId>jboss-as-webservices-tests-integration</artifactId>
-          <version>${jboss.version}</version>
-          <exclusions>
-            <exclusion>
-              <groupId>org.jboss.as</groupId>
-              <artifactId>jboss-as-transactions</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.jboss.remoting3</groupId>
-              <artifactId>jboss-remoting</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.jboss</groupId>
-              <artifactId>jboss-remote-naming</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.jboss.as</groupId>
-              <artifactId>jboss-as-security</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss</groupId>
-          <artifactId>jboss-remote-naming</artifactId>
-          <version>1.0.3.Final</version>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss</groupId>
-          <artifactId>jboss-ejb-client</artifactId>
-          <version>1.0.10.Final</version>
-          <exclusions>
-            <exclusion>
-              <groupId>org.jboss.remoting3</groupId>
-              <artifactId>jboss-remoting</artifactId>
-            </exclusion>
-            <exclusion>
-              <groupId>org.jboss.xnio</groupId>
-              <artifactId>xnio-api</artifactId>
-            </exclusion>
-          </exclusions>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss.remotingjmx</groupId>
-          <artifactId>remoting-jmx</artifactId>
-          <version>1.0.3.Final</version>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.jboss.remoting3</groupId>
-          <artifactId>jboss-remoting</artifactId>
-          <version>3.2.7.GA</version>
-          <scope>test</scope>
+          <groupId>org.jboss.ws</groupId>
+          <artifactId>jbossws-jboss712-tests-integration</artifactId>
         </dependency>
       </dependencies>
       <build>

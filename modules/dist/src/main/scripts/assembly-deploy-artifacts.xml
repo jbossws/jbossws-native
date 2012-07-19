@@ -48,7 +48,6 @@
       <unpack>false</unpack>
       <includes>
         <include>org.jboss.ws:jbossws-common-tools:jar</include>
-        <include>org.jboss.ws:jbossws-jboss*:jar</include>
         <include>org.jboss:jbossxb:jar</include>
       </includes>
       <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
@@ -60,9 +59,9 @@
        <outputDirectory>deploy-artifacts/lib</outputDirectory>
        <unpack>false</unpack>
        <includes>
-         <include>org.jboss.ws:jbossws-jboss*:jar</include>
+         <include>org.jboss.ws:jbossws-jboss712-server-integration:jar</include>
        </includes>
-       <outputFileNameMapping>${artifact.artifactId}${dashClassifier}.${artifact.extension}</outputFileNameMapping>
+       <outputFileNameMapping>jbossws-jboss712.jar</outputFileNameMapping>
        <scope>provided</scope>
        <useProjectArtifact>false</useProjectArtifact>
     </dependencySet>
