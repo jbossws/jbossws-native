@@ -293,7 +293,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       }
    }
 
-   private EndpointResult processWebService(Deployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass, String linkName) throws ClassNotFoundException, IOException
+   private EndpointResult processWebService(Deployment dep, UnifiedMetaData wsMetaData, Class<?> sepClass, String linkName) throws IOException
    {
       WebService anWebService = sepClass.getAnnotation(WebService.class);
       WebServiceProvider anWebServiceProvider = sepClass.getAnnotation(WebServiceProvider.class);
@@ -332,7 +332,18 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
          if(null == runtimeClassLoader)
             throw new IllegalArgumentException("Runtime loader cannot be null");
          
-         seiClass = runtimeClassLoader.loadClass(seiName);
+         try
+         {
+            seiClass = runtimeClassLoader.loadClass(seiName);
+         }
+         catch(ClassNotFoundException cnfe)
+         {
+            String msg = "Cannot find class \"" + cnfe.getMessage() + "\" specified in @WebService.endpointInterface.";
+            if(cnfe.getMessage() != null && (!cnfe.getMessage().contains(".")))
+               msg += " Did you use the fully qualified class name?";
+            throw new WSException(msg);
+         }
+
          WebService seiAnnotation = seiClass.getAnnotation(WebService.class);
 
          if (seiAnnotation == null)
