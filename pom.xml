@@ -74,7 +74,7 @@
     <woodstox.version>3.2.9</woodstox.version>
     <wsdl4j.version>1.6.2</wsdl4j.version>
     <xmlsec.version>1.5.1</xmlsec.version>
-    <xalan.version>2.7.1.patch02</xalan.version>
+    <xalan.version>2.7.1-patch-05</xalan.version>
     <xerces.version>2.9.1</xerces.version>
   </properties>
 
