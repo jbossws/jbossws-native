@@ -89,7 +89,7 @@ public class XSDWriter
       log.trace("serialize:\n" + xsdString); 
       
       // Write updated xsd file
-      File xsdFile = SchemaUtils.getSchemaTempFile(ns);
+      File xsdFile = SchemaUtils.getSchemaTempFile(ns, null);
       FileWriter writer = new FileWriter(xsdFile);
       try
       {

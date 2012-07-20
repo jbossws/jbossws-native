@@ -542,28 +542,28 @@ public class SchemaUtils
       fname = fname.replace(':', '_');
       fname = fname.replace('?', '_');
       fname = fname.replace('#', '_');
-      
+
       File file = null;
-      try
+      if (fileName != null)
       {
-         String fileNameHash = toHexString(MessageDigest.getInstance("MD5").digest(fileName.getBytes("UTF-8")));
-         if(tmpdir == null)
+         try
          {
-            tmpdir = (File) AccessController.doPrivileged(new PrivilegedAction() {
-               public Object run()
-               {
-                  return new File(System.getProperty("java.io.tmpdir"));
-               }
-            });
+            String fileNameHash = toHexString(MessageDigest.getInstance("MD5").digest(fileName.getBytes("UTF-8")));
+            if(tmpdir == null)
+            {
+               tmpdir = (File) AccessController.doPrivileged(new PrivilegedAction() {
+                  public Object run()
+                  {
+                     return new File(System.getProperty("java.io.tmpdir"));
+                  }
+               });
+            }
+            return new File(tmpdir + File.separator + "JBossWS_" + fname + "_" + fileNameHash + ".xsd");
          }
-         file = new File(tmpdir + File.separator + "JBossWS_" + fname + "_" + fileNameHash + ".xsd");
-      }
-      catch(NoSuchAlgorithmException noAlgEx)
-      {
-         file = File.createTempFile("JBossWS_" + fname, ".xsd", tmpdir);
+         catch(NoSuchAlgorithmException ignore) {}
       }
 
-      return file;
+      return File.createTempFile("JBossWS_" + fname, ".xsd", tmpdir);
    }
 
    private static String toHexString(byte[] hash)
