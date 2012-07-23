@@ -49,6 +49,8 @@ public interface StubExt extends ConfigProvider, EndpointMetadataProvider
    static final String PROPERTY_KEY_STORE_TYPE = "org.jboss.ws.keyStoreType";
    /** SocketFactory property: org.jboss.ws.socketFactory */
    static final String PROPERTY_SOCKET_FACTORY = "org.jboss.ws.socketFactory";
+   /** DefaultSslSocketFactory property: org.jboss.ws.defaultSslSocketFactory */
+   static final String PROPERTY_DEFAULT_SSL_SOCKET_FACTORY = "org.jboss.ws.defaultSslSocketFactory";
    /** Remoting SSL Protocol property: org.jboss.ws.sslProtocol */
    static final String PROPERTY_SSL_PROTOCOL = "org.jboss.ws.sslProtocol";
    /** Remoting SSL Provider Name property: org.jboss.ws.sslProviderName */

@@ -97,6 +97,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
       configMap.put(StubExt.PROPERTY_KEY_STORE_PASSWORD, "org.jboss.remoting.keyStorePassword");
       configMap.put(StubExt.PROPERTY_KEY_STORE_TYPE, "org.jboss.remoting.keyStoreType");
       configMap.put(StubExt.PROPERTY_SOCKET_FACTORY, "socketFactoryClassName");
+      configMap.put(StubExt.PROPERTY_DEFAULT_SSL_SOCKET_FACTORY, "useDefaultSslSocketFactory");
       configMap.put(StubExt.PROPERTY_SSL_PROTOCOL, "org.jboss.remoting.sslProtocol");
       configMap.put(StubExt.PROPERTY_SSL_PROVIDER_NAME, "org.jboss.remoting.sslProviderName");
       configMap.put(StubExt.PROPERTY_TRUST_STORE, "org.jboss.remoting.trustStore");
