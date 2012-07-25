@@ -361,6 +361,11 @@
 
                 <!--# [JBWS-2217] Fix BPEL jaxrpc samples -->
                 <exclude>org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*</exclude>
+
+                <!--# JMS not supported in EAP51x -->
+                <exclude>org/jboss/test/ws/jaxrpc/samples/jmstransport/JMSTransportTestCase.*</exclude>
+                <exclude>org/jboss/test/ws/jaxws/samples/jmstransport/JMSTransportTestCase.*</exclude>
+                <exclude>org/jboss/test/ws/jaxws/samples/dar/JMSClientTestCase.*</exclude>
               </excludes>
             </configuration>
           </plugin>
