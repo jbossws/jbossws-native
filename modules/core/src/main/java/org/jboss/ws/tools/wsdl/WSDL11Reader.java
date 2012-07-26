@@ -651,8 +651,19 @@ public class WSDL11Reader
                      log.error(se.getMessage(), se);
                   }
                }
-               if (importedSchema == null)
+               if (importedSchema == null && entityResolver.getEntityMap().containsKey(currLoc.toExternalForm()))
                {
+                  try
+                  {
+                     importedSchema = DOMUtils.parse(entityResolver.resolveEntity(currLoc.toExternalForm(), currLoc.toExternalForm()).getByteStream());
+                  }
+                  catch (SAXException se)
+                  {
+                     log.error(se.getMessage(), se);
+                  }
+                  
+               }
+               if (importedSchema == null) {
                   importedSchema = DOMUtils.parse(currLoc.openStream());
                }
                handleSchemaImports(importedSchema, currLoc);

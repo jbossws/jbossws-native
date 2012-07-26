@@ -37,7 +37,8 @@ import org.jboss.wsf.test.JBossWSTestSetup;
 /**
  * [JBWS-2526] org.jboss.ws.core.soap.TextImpl does not implement
  * org.w3c.dom.Comment.
- *
+ * This testcase is also configured a jbossws-entity.properties 
+ * to test the ablitly to resolve a import schema 
  * @author <a href="mailto:gturner@unzane.com">Gerald Turner</a>
  */
 public class JBWS2526TestCase extends JBossWSTest

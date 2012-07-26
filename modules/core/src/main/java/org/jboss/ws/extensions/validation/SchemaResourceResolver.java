@@ -24,30 +24,52 @@ package org.jboss.ws.extensions.validation;
 import java.io.ByteArrayInputStream;
 import java.util.Map;
 
+import org.jboss.logging.Logger;
+import org.jboss.ws.core.utils.JBossWSEntityResolver;
 import org.w3c.dom.ls.LSInput;
 import org.w3c.dom.ls.LSResourceResolver;
+import org.xml.sax.InputSource;
 /**
  * SchemaResourceResolver
  * 
  * @author ema@redhat.com
  */
 
-public class SchemaResourceResolver implements LSResourceResolver {
-	private Map<String, byte[]> streamMap;
-	
-	public SchemaResourceResolver(Map<String, byte[]> map) {
-		streamMap = map;
-	}
-	
-	public LSInput resolveResource(String type, String namespaceURI,
-			String publicId, String systemId, String baseURI) {
-		LSInput lsInput = null;
-		if (streamMap.get(namespaceURI) != null) {
-			byte[] value = streamMap.get(namespaceURI);
-			lsInput = new LSInputImpl();
-			lsInput.setByteStream(new ByteArrayInputStream(value));
-		}
- 		return lsInput;
-	}
+public class SchemaResourceResolver implements LSResourceResolver
+{
+   private static Logger log = Logger.getLogger(SchemaResourceResolver.class);
+   private Map<String, byte[]> streamMap;
+
+   public SchemaResourceResolver(Map<String, byte[]> map)
+   {
+      streamMap = map;
+   }
+
+   public LSInput resolveResource(String type, String namespaceURI, String publicId, String systemId, String baseURI)
+   {
+      LSInput lsInput = null;
+      if (streamMap.get(namespaceURI) != null)
+      {
+         byte[] value = streamMap.get(namespaceURI);
+         lsInput = new LSInputImpl();
+         lsInput.setByteStream(new ByteArrayInputStream(value));
+      }
+      try
+      {
+         JBossWSEntityResolver entityResolver = new JBossWSEntityResolver();
+         InputSource ins = entityResolver.resolveEntity(publicId, systemId);
+         if (ins != null)
+         {
+            lsInput = new LSInputImpl();
+            lsInput.setByteStream(ins.getByteStream());
+         }
+      }
+      catch (Exception e)
+      {
+         log.warn("Failed to resolve the schema", e);
+         
+      }
+      return lsInput;
+   }
 
 }

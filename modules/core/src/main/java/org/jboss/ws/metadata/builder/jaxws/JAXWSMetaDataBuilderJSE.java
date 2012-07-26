@@ -52,15 +52,16 @@ public class JAXWSMetaDataBuilderJSE
          if(null == runtimeClassLoader)
             throw new IllegalArgumentException("Runtime classloader cannot be null");
          wsMetaData.setClassLoader(runtimeClassLoader);
-
+         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
+         Thread.currentThread().setContextClassLoader(runtimeClassLoader);
          // For every bean
          for (Endpoint ep : dep.getService().getEndpoints())
          {
             String shortName = ep.getShortName();
             Class beanClass = ep.getTargetBeanClass();
             JAXWSServerMetaDataBuilder.setupProviderOrWebService(dep, wsMetaData, beanClass, shortName);
-         }
-         
+         }         
+         Thread.currentThread().setContextClassLoader(oldClassLoader);
          log.debug("END buildMetaData: " + wsMetaData);
          return wsMetaData;
       }

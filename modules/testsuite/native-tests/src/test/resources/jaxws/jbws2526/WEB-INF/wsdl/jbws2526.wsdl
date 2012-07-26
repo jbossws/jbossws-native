@@ -10,7 +10,7 @@
   <types>
     <xs:schema>
       <xs:import namespace="urn:JBWS-2526-Schema"
-                 schemaLocation="jbws2526.xsd"/>
+                 schemaLocation="http://www.notexist.org/a.xsd"/>
     </xs:schema>
   </types>
 

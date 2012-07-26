@@ -59,8 +59,7 @@ public class JBWS1172TestCase extends JBossWSTest
    {
       return new JBossWSTestSetup(JBWS1172TestCase.class, "jaxws-jbws1172.war");
    }
-  
-   
+    
    public void testSchemaValidationPositive() throws Exception
    {
       URL wsdlURL = getResourceURL("jaxws/jbws1172/WEB-INF/wsdl/TestService.wsdl");
@@ -164,6 +163,7 @@ public class JBWS1172TestCase extends JBossWSTest
       }
    }
    
+      
    public void testValidatingImportEndpoint() throws Exception
    {
       URL wsdlURL = new URL("http://" + getServerHost() + ":8080/jaxws-jbws1172/doval-import?wsdl");
