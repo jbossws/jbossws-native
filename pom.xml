@@ -69,7 +69,7 @@
     <saaj.api.version>1.0.1.Final</saaj.api.version>
     <jboss.common.core.version>2.2.16.GA</jboss.common.core.version>
     <jboss.logging.version>3.1.0.GA</jboss.logging.version>
-    <netty.version>3.2.6.Final</netty.version>
+    <netty.version>3.4.5.Final</netty.version>
     <wsdl4j.version>1.6.2</wsdl4j.version>
     <xerces.version>2.9.1</xerces.version>
     <jbossxb.version>2.0.3.GA</jbossxb.version>
@@ -180,7 +180,7 @@
         <version>${xerces.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.jboss.netty</groupId>
+        <groupId>io.netty</groupId>
         <artifactId>netty</artifactId>
         <version>${netty.version}</version>
       </dependency>
