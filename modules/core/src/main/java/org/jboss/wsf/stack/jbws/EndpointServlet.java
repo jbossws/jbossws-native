@@ -31,9 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.common.injection.InjectionHelper;
-import org.jboss.ws.common.injection.PreDestroyHolder;
-import org.jboss.ws.common.servlet.AbstractEndpointServlet;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.ServletDelegate;
 import org.jboss.wsf.spi.management.EndpointResolver;
@@ -46,8 +43,6 @@ import org.jboss.wsf.spi.management.EndpointResolver;
  */
 public final class EndpointServlet extends AbstractEndpointServlet implements ServletDelegate
 {
-   private List<PreDestroyHolder> preDestroyRegistry = new LinkedList<PreDestroyHolder>();
-   private final Object lock = new Object();
 
    /**
     * Provides Native specific endpoint resolver
@@ -59,50 +54,6 @@ public final class EndpointServlet extends AbstractEndpointServlet implements Se
    protected final EndpointResolver newEndpointResolver(String contextPath, String servletName)
    {
       return new WebAppResolver(contextPath, servletName);
-   }
-
-   @Override
-   protected final void postService()
-   {
-      registerForPreDestroy(endpoint);
-   }
-
-   @Override
-   public final void destroy()
-   {
-      synchronized(this.lock)
-      {
-         for (final PreDestroyHolder holder : this.preDestroyRegistry)
-         {
-            try
-            {
-               final Object targetBean = holder.getObject();
-               InjectionHelper.callPreDestroyMethod(targetBean);
-            }
-            catch (Exception exception)
-            {
-               Logger.getLogger(EndpointServlet.class).error(exception.getLocalizedMessage(),  exception);
-            }
-         }
-         this.preDestroyRegistry.clear();
-      }
-      super.destroy();
-   }
-
-   private void registerForPreDestroy(Endpoint ep)
-   {
-      PreDestroyHolder holder = (PreDestroyHolder)ep.getAttachment(PreDestroyHolder.class);
-      if (holder != null)
-      {
-         synchronized(this.lock)
-         {
-            if (!this.preDestroyRegistry.contains(holder))
-            {
-               this.preDestroyRegistry.add(holder);
-            }
-         }
-         ep.removeAttachment(PreDestroyHolder.class);
-      }
    }
 
    @Override

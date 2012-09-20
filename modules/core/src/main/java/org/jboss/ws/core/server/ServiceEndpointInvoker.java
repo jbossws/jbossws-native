@@ -282,23 +282,15 @@ public class ServiceEndpointInvoker
    {
       synchronized(endpoint) 
       {
-         Object endpointImpl = endpoint.getAttachment(Object.class);
-         if (endpointImpl == null)
-         {
-            try
-            {
-               // create endpoint instance
-               final Class<?> endpointImplClass = endpoint.getTargetBeanClass();
-               endpointImpl = endpoint.getInstanceProvider().getInstance(endpointImplClass.getName()).getValue();
-               endpoint.addAttachment(Object.class, endpointImpl);
-            }
-            catch (Exception ex)
-            {
-               throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_ENDPOINT_INSTANCE"),  ex);
-            }
-         }
-
-         return endpointImpl;
+          try
+          {
+              final String endpointClassName = endpoint.getTargetBeanName();
+              return endpoint.getInstanceProvider().getInstance(endpointClassName).getValue();
+          }
+          catch (Exception ex)
+          {
+              throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_ENDPOINT_INSTANCE"),  ex);
+          }
       }
    }
 
