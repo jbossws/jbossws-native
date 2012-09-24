@@ -78,9 +78,6 @@ public class ServiceMetaData implements InitalizableMetaData, Serializable
    private String wsdlFile;
    private URL mappingLocation;
    private String wsdlPublishLocation;
-   
-   // The optional service handlers
-   private List<HandlerMetaDataJAXWS> handlers = new ArrayList<HandlerMetaDataJAXWS>();
 
    // The type mapping that is maintained by this service
    private TypesMetaData types;
@@ -181,16 +178,6 @@ public class ServiceMetaData implements InitalizableMetaData, Serializable
    public TypesMetaData getTypesMetaData()
    {
       return types;
-   }
-
-   public void addHandler(HandlerMetaDataJAXWS handler)
-   {
-      handlers.add(handler);
-   }
-   
-   public List<HandlerMetaDataJAXWS> getHandlerMetaData()
-   {
-      return Collections.unmodifiableList(handlers);
    }
 
    public List<EndpointMetaData> getEndpoints()
