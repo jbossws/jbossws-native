@@ -60,6 +60,11 @@
       <artifactId>jboss-logging</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.jboss.logging</groupId>
+      <artifactId>jboss-logging-processor</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>xerces</groupId>
       <artifactId>xercesImpl</artifactId>
     </dependency>
@@ -96,6 +101,15 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <showDeprecation>false</showDeprecation>
+          <compilerArguments>
+            <AgeneratedTranslationFilesPath>${project.basedir}/target/generated-translation-files</AgeneratedTranslationFilesPath>
+          </compilerArguments>
+        </configuration>
       </plugin>
     </plugins>
   </build>

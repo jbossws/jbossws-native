@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2012, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -21,6 +21,9 @@
  */
 package org.jboss.wsf.stack.jbws;
 
+import static org.jboss.ws.NativeLoggers.ROOT_LOGGER;
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
@@ -28,13 +31,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.wsdl.Definition;
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.IOUtils;
 import org.jboss.ws.common.utils.AbstractWSDLFilePublisher;
@@ -53,10 +52,6 @@ import org.w3c.dom.Document;
  */
 public class WSDLFilePublisher extends AbstractWSDLFilePublisher
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLFilePublisher.class);
-   // provide logging
-   private static final Logger log = Logger.getLogger(WSDLFilePublisher.class);
-
    public WSDLFilePublisher(ArchiveDeployment dep)
    {
       super(dep);
@@ -88,7 +83,7 @@ public class WSDLFilePublisher extends AbstractWSDLFilePublisher
             new WSDLWriter(wsdlDefinitions).write(fWriter, Constants.DEFAULT_XML_CHARSET);
 
             URL wsdlPublishURL = wsdlFile.toURI().toURL();
-            log.info("WSDL published to: " + wsdlPublishURL);
+            ROOT_LOGGER.wsdlFilePublished(wsdlPublishURL);
 
             // udpate the wsdl file location 
             serviceMD.setWsdlLocation(wsdlPublishURL);
@@ -106,7 +101,7 @@ public class WSDLFilePublisher extends AbstractWSDLFilePublisher
             }
             else
             {
-               throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "NOT_SUPPORTED_WSDL20"));
+               throw MESSAGES.wsdl20NotSupported();
             }
          }
          catch (RuntimeException rte)
@@ -115,7 +110,7 @@ public class WSDLFilePublisher extends AbstractWSDLFilePublisher
          }
          catch (Exception e)
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_PUBLISH_WSDL",  wsdlFile),  e);
+            throw MESSAGES.cannotPublishWSDLTo(wsdlFile, e);
          }
          finally
          {
@@ -142,12 +137,9 @@ public class WSDLFilePublisher extends AbstractWSDLFilePublisher
    {
       if (wsdlLocation == null)
       {
-         log.warn(BundleUtils.getMessage(bundle, "CANNOT_GET_WSDL_PUBLISH_LOCATION"));
+         ROOT_LOGGER.cannotGetWsdlPublishLocation();
          return null;
       }
-
-      if (log.isTraceEnabled())
-         log.trace("Publishing WSDL file: " + wsdlLocation);
 
       // Only file URLs are supported in <wsdl-publish-location>
       String publishLocation = wsdlPublishLocation;
@@ -171,7 +163,7 @@ public class WSDLFilePublisher extends AbstractWSDLFilePublisher
          }
          catch (MalformedURLException e)
          {
-            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_PUBLISH_LOCATION",  e.getMessage()));
+            throw MESSAGES.invalidPublishLocation(publishLocation, e);
          }
       }
 
@@ -190,7 +182,7 @@ public class WSDLFilePublisher extends AbstractWSDLFilePublisher
       }
       else
       {
-         throw new RuntimeException(BundleUtils.getMessage(bundle, "INVALID_WSDLFILE_", new Object[]{ wsdlLocation ,  expLocation}));
+         throw MESSAGES.invalidWsdlFile(wsdlLocation, expLocation);
       }
 
       return result;

@@ -70,7 +70,8 @@
     <servlet.api.version>1.0.1.Final</servlet.api.version>
     <saaj.api.version>1.0.1.Final</saaj.api.version>
     <jboss.common.core.version>2.2.16.GA</jboss.common.core.version>
-    <jboss.logging.version>3.1.0.GA</jboss.logging.version>
+    <jboss.logging.version>3.1.2.GA</jboss.logging.version>
+    <jboss-logging-processor.version>1.0.3.Final</jboss-logging-processor.version>
     <netty.version>3.4.5.Final</netty.version>
     <wsdl4j.version>1.6.2</wsdl4j.version>
     <xerces.version>2.9.1</xerces.version>
@@ -175,6 +176,11 @@
         <groupId>org.jboss.logging</groupId>
         <artifactId>jboss-logging</artifactId>
         <version>${jboss.logging.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jboss.logging</groupId>
+        <artifactId>jboss-logging-processor</artifactId>
+        <version>${jboss-logging-processor.version}</version>
       </dependency>
       <dependency>
         <groupId>wsdl4j</groupId>

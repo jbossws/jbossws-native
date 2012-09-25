@@ -21,6 +21,9 @@
  */
 package org.jboss.wsf.stack.jbws;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+import static org.jboss.ws.NativeLoggers.ROOT_LOGGER;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -28,7 +31,6 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ResourceBundle;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -44,9 +46,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.soap.SOAPPart;
 
-import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.common.IOUtils;
@@ -87,10 +87,6 @@ import org.w3c.dom.Document;
  */
 public class RequestHandlerImpl implements RequestHandler
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(RequestHandlerImpl.class);
-   // provide logging
-   private static final Logger log = Logger.getLogger(RequestHandlerImpl.class);
-
    protected ServerConfig serverConfig;
    protected MessageFactoryImpl msgFactory;
 
@@ -105,7 +101,7 @@ public class RequestHandlerImpl implements RequestHandler
    public RequestHandlerImpl(final ServerConfig serverConfig)
    {
       if (serverConfig == null) 
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SERVER_CONFIG_CANNOT_BE_NULL"));
+         throw MESSAGES.serverConfigCannotBeNull();
       
       this.init(serverConfig);
    }
@@ -129,7 +125,7 @@ public class RequestHandlerImpl implements RequestHandler
       }
       else
       {
-         throw new WSException(BundleUtils.getMessage(bundle, "UNSUPPORTED_METHOD",  method));
+         throw MESSAGES.unsupportedMethod(method);
       }
    }
 
@@ -157,13 +153,13 @@ public class RequestHandlerImpl implements RequestHandler
             }
             catch (IOException ioex)
             {
-               if (log.isTraceEnabled() == true)
+               if (ROOT_LOGGER.isTraceEnabled() == true)
                {
-                  log.trace("Cannot close output stream", ioex);
+                  ROOT_LOGGER.trace("Cannot close output stream", ioex);
                }
                else
                {
-                  log.debug("Cannot close output stream");
+                  ROOT_LOGGER.debug("Cannot close output stream");
                }
             }
          }
@@ -180,15 +176,15 @@ public class RequestHandlerImpl implements RequestHandler
 
    private void doPost(Endpoint endpoint, HttpServletRequest req, HttpServletResponse res, ServletContext context) throws ServletException, IOException
    {
-      if (log.isDebugEnabled())
-         log.debug("doPost: " + req.getRequestURI());
+      if (ROOT_LOGGER.isTraceEnabled())
+         ROOT_LOGGER.trace("doPost: " + req.getRequestURI());
 
       ServletInputStream in = req.getInputStream();
       ServletOutputStream out = res.getOutputStream();
 
       ClassLoader classLoader = endpoint.getService().getDeployment().getRuntimeClassLoader();
       if (classLoader == null)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "NO_CLASSLOADER_ASSOCIATED"));
+         throw MESSAGES.deploymentHasNoClassLoaderAssociated(endpoint.getService().getDeployment());
 
       // Set the thread context class loader
       ClassLoader ctxClassLoader = SecurityActions.getContextClassLoader();
@@ -213,13 +209,13 @@ public class RequestHandlerImpl implements RequestHandler
          }
          catch (IOException ioex)
          {
-            if (log.isTraceEnabled() == true)
+            if (ROOT_LOGGER.isTraceEnabled() == true)
             {
-               log.trace("Cannot close output stream", ioex);
+               ROOT_LOGGER.trace("Cannot close output stream", ioex);
             }
             else
             {
-               log.debug("Cannot close output stream");
+               ROOT_LOGGER.debug("Cannot close output stream");
             }
          }
       }
@@ -228,12 +224,12 @@ public class RequestHandlerImpl implements RequestHandler
    @SuppressWarnings("unchecked")
    public void handleRequest(Endpoint endpoint, InputStream inStream, OutputStream outStream, InvocationContext invContext)
    {
-      if (log.isDebugEnabled())
-         log.debug("handleRequest: " + endpoint.getName());
+      if (ROOT_LOGGER.isTraceEnabled())
+         ROOT_LOGGER.trace("handleRequest: " + endpoint.getName());
 
       ServerEndpointMetaData sepMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
       if (sepMetaData == null)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINTMD"));
+         throw MESSAGES.cannotObtainEndpointMetaData(endpoint.getName());
 
       // Build the message context
       CommonMessageContext msgContext = new SOAPMessageContextJAXRPC();
@@ -267,7 +263,7 @@ public class RequestHandlerImpl implements RequestHandler
          boolean isFault = false;
          SOAPPart part = ((SOAPMessage)resMessage).getSOAPPart();
          if (part == null)
-        	 throw new SOAPException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SOAPPART"));
+        	 throw MESSAGES.cannotObtainSoapPart();
 
          // R1126 An INSTANCE MUST return a "500 Internal Server Error" HTTP status code
          // if the response envelope is a Fault.
@@ -312,7 +308,7 @@ public class RequestHandlerImpl implements RequestHandler
       
       if (resMessage == null)
       {
-         log.debug("Null response message");
+         ROOT_LOGGER.debug("Null response message");
          return;
       }
 
@@ -328,10 +324,10 @@ public class RequestHandlerImpl implements RequestHandler
 
       ServerEndpointMetaData sepMetaData = ep.getAttachment(ServerEndpointMetaData.class);
       if (sepMetaData == null)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINTMD"));
+         throw MESSAGES.cannotObtainEndpointMetaData(ep.getName());
 
       long beginProcessing = 0;
-      boolean debugEnabled = log.isDebugEnabled();
+      boolean traceEnabled = ROOT_LOGGER.isTraceEnabled();
       try
       {
          EndpointState state = ep.getState();
@@ -342,8 +338,8 @@ public class RequestHandlerImpl implements RequestHandler
             throw new CommonSOAPFaultException(faultCode, faultString);
          }
 
-         if (debugEnabled)
-            log.debug("BEGIN handleRequest: " + ep.getName());
+         if (traceEnabled)
+            ROOT_LOGGER.trace("BEGIN handleRequest: " + ep.getName());
          beginProcessing = initRequestMetrics(ep);
 
          MimeHeaders headers = (headerSource != null ? headerSource.getMimeHeaders() : null);
@@ -362,7 +358,7 @@ public class RequestHandlerImpl implements RequestHandler
          // Get the Invoker
          ServiceEndpointInvoker epInvoker = ep.getAttachment(ServiceEndpointInvoker.class);
          if (epInvoker == null)
-            throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SEINVOKER"));
+            throw MESSAGES.cannotObtainServiceEndpointInvoker(ep.getName());
 
          // Invoke the service endpoint
          epInvoker.invoke(reqContext);
@@ -414,11 +410,11 @@ public class RequestHandlerImpl implements RequestHandler
          }
          catch (Exception ex)
          {
-            log.error(BundleUtils.getMessage(bundle, "CANNOT_PROCESS_METRICS"),  ex);
+            ROOT_LOGGER.cannotProcessMetrics(ex);
          }
 
-         if (debugEnabled)
-            log.debug("END handleRequest: " + ep.getName());
+         if (traceEnabled)
+            ROOT_LOGGER.trace("END handleRequest: " + ep.getName());
       }
    }
 
@@ -465,14 +461,14 @@ public class RequestHandlerImpl implements RequestHandler
       }
       catch (Exception ex)
       {
-         WSException.rethrow("Faild to post process response message", ex);
+         WSException.rethrow(MESSAGES.failedToPostProcessResponseMessage(), ex);
       }
    }
 
    public void handleWSDLRequest(Endpoint endpoint, OutputStream outStream, InvocationContext context)
    {
-      if (log.isDebugEnabled())
-         log.debug("handleWSDLRequest: " + endpoint.getName());
+      if (ROOT_LOGGER.isTraceEnabled())
+         ROOT_LOGGER.trace("handleWSDLRequest: " + endpoint.getName());
 
       try
       {
@@ -486,7 +482,7 @@ public class RequestHandlerImpl implements RequestHandler
          {
             final String epAddress = endpoint.getAddress();
             if (epAddress == null)
-               throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_ENDPOINT_ADDRESS",  epAddress));
+               throw MESSAGES.invalidEndpointAddress(epAddress);
 
             final URL wsdlUrl = new URL(epAddress + "?wsdl");
             IOUtils.copyStream(outStream, wsdlUrl.openStream());
@@ -554,7 +550,7 @@ public class RequestHandlerImpl implements RequestHandler
    {
       ServerEndpointMetaData epMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
       if (epMetaData == null)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINTMD"));
+         throw MESSAGES.cannotObtainEndpointMetaData(endpoint.getName());
       
       //The WSDLFilePublisher should set the location to an URL 
       URL wsdlLocation = epMetaData.getServiceMetaData().getWsdlLocation();
@@ -569,7 +565,7 @@ public class RequestHandlerImpl implements RequestHandler
 
    private void handleException(Exception ex) throws ServletException
    {
-      log.error(BundleUtils.getMessage(bundle, "ERROR_PROCESSING_WEB_SERVICE_REQUEST"),  ex);
+      ROOT_LOGGER.errorProcessingWebServiceRequest(ex);
 
       if (ex instanceof JAXRPCException)
          throw (JAXRPCException)ex;
