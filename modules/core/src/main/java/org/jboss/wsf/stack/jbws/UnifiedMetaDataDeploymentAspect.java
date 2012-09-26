@@ -23,7 +23,7 @@ package org.jboss.wsf.stack.jbws;
 
 import static org.jboss.ws.common.integration.WSHelper.isJaxrpcEjbDeployment;
 import static org.jboss.ws.common.integration.WSHelper.isJaxrpcJseDeployment;
-import static org.jboss.ws.common.integration.WSHelper.isJaxwsDeployment;
+import static org.jboss.ws.common.integration.WSHelper.isJaxrpcDeployment;
 
 import java.util.ResourceBundle;
 
@@ -50,15 +50,16 @@ public class UnifiedMetaDataDeploymentAspect extends AbstractDeploymentAspect
    @Override
    public void start(Deployment dep)
    {
+      if (!isJaxrpcDeployment(dep)) return;
       UnifiedMetaData umd = dep.getAttachment(UnifiedMetaData.class);
       if (umd == null)
       {
-         if (isJaxrpcJseDeployment(dep) && !isJaxwsDeployment(dep))
+         if (isJaxrpcJseDeployment(dep))
          {
             JAXRPCServerMetaDataBuilder builder = new JAXRPCServerMetaDataBuilder();
             umd = builder.buildMetaData((ArchiveDeployment)dep);
          }
-         else if (isJaxrpcEjbDeployment(dep) && !isJaxwsDeployment(dep))
+         else if (isJaxrpcEjbDeployment(dep))
          {
             JAXRPCServerMetaDataBuilder builder = new JAXRPCServerMetaDataBuilder();
             umd = builder.buildMetaData((ArchiveDeployment)dep);
