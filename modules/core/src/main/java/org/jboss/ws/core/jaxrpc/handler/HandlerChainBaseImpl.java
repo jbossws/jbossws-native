@@ -39,11 +39,13 @@ import javax.xml.rpc.handler.Handler;
 import javax.xml.rpc.handler.HandlerChain;
 import javax.xml.rpc.handler.HandlerInfo;
 import javax.xml.rpc.handler.MessageContext;
-import javax.xml.soap.SOAPPart;
+import javax.xml.soap.SOAPEnvelope;
+import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
+import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
 import org.jboss.ws.core.soap.utils.SOAPElementWriter;
 import org.jboss.wsf.spi.deployment.Endpoint;
@@ -289,16 +291,14 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
                   if (log.isTraceEnabled())
                   {
-                     SOAPPart soapPart = jaxrpcContext.getSOAPMessage().getSOAPPart();
-                     lastMessageTrace = traceSOAPPart("BEFORE handleRequest - " + currHandler, soapPart, lastMessageTrace);
+                     lastMessageTrace = traceSOAPPart("BEFORE handleRequest - " + currHandler, jaxrpcContext.getSOAPMessage(), lastMessageTrace);
                   }
 
                   doNext = currHandler.handleRequest(msgContext);
 
                   if (log.isTraceEnabled())
                   {
-                     SOAPPart soapPart = jaxrpcContext.getSOAPMessage().getSOAPPart();
-                     lastMessageTrace = traceSOAPPart("AFTER handleRequest - " + currHandler, soapPart, lastMessageTrace);
+                     lastMessageTrace = traceSOAPPart("AFTER handleRequest - " + currHandler, jaxrpcContext.getSOAPMessage(), lastMessageTrace);
                   }
                }
             }
@@ -368,16 +368,14 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
                   if (log.isTraceEnabled())
                   {
-                     SOAPPart soapPart = jaxrpcContext.getSOAPMessage().getSOAPPart();
-                     lastMessageTrace = traceSOAPPart("BEFORE handleResponse - " + currHandler, soapPart, lastMessageTrace);
+                     lastMessageTrace = traceSOAPPart("BEFORE handleResponse - " + currHandler, jaxrpcContext.getSOAPMessage(), lastMessageTrace);
                   }
 
                   doNext = currHandler.handleResponse(msgContext);
 
                   if (log.isTraceEnabled())
                   {
-                     SOAPPart soapPart = jaxrpcContext.getSOAPMessage().getSOAPPart();
-                     lastMessageTrace = traceSOAPPart("AFTER handleResponse - " + currHandler, soapPart, lastMessageTrace);
+                     lastMessageTrace = traceSOAPPart("AFTER handleResponse - " + currHandler, jaxrpcContext.getSOAPMessage(), lastMessageTrace);
                   }
                }
             }
@@ -449,22 +447,28 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
 
    /** Trace the SOAPPart, do nothing if the String representation is equal to the last one.
     */
-   protected String traceSOAPPart(String logMsg, SOAPPart soapPart, String lastMessageTrace)
+   protected String traceSOAPPart(String logMsg, SOAPMessage message, String lastMessageTrace)
    {
       try
       {
-         SOAPEnvelopeImpl soapEnv = (SOAPEnvelopeImpl)soapPart.getEnvelope();
-         String envStr = SOAPElementWriter.writeElement(soapEnv, true);
-         if (envStr.equals(lastMessageTrace))
-         {
-            log.trace(logMsg + ": unchanged");
+         SOAPEnvelope se = message.getSOAPPart().getEnvelope();
+         if (se instanceof SOAPEnvelopeImpl) {
+            SOAPEnvelopeImpl soapEnv = (SOAPEnvelopeImpl)se;
+            String envStr = SOAPElementWriter.writeElement(soapEnv, true);
+            if (envStr.equals(lastMessageTrace))
+            {
+               log.trace(logMsg + ": unchanged");
+            }
+            else
+            {
+               log.trace(logMsg + "\n" + envStr);
+               lastMessageTrace = envStr;
+            }
+            return lastMessageTrace;
+         } else {
+            MessageTrace.traceMessage(logMsg, message);
+            return null;
          }
-         else
-         {
-            log.trace(logMsg + "\n" + envStr);
-            lastMessageTrace = envStr;
-         }
-         return lastMessageTrace;
       }
       catch (Exception ex)
       {
