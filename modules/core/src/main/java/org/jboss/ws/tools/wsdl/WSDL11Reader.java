@@ -267,7 +267,7 @@ public class WSDL11Reader
    {
       for (File current : tempFiles)
       {
-         current.delete();
+         current.deleteOnExit();
       }
    }
 
@@ -580,7 +580,7 @@ public class WSDL11Reader
          }
       }
 
-      if (tmpFile != null)
+      if (tmpFile != null && !tmpFile.exists())
       {
          FileWriter fwrite = new FileWriter(tmpFile);
          new DOMWriter(fwrite).setPrettyprint(true).print(schemaEl);
