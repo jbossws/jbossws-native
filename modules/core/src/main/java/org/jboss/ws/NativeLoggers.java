@@ -28,6 +28,8 @@ import static org.jboss.logging.Logger.Level.TRACE;
 import static org.jboss.logging.Logger.Level.WARN;
 
 import java.net.URL;
+import java.util.Collection;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.handler.HandlerInfo;
@@ -71,5 +73,41 @@ public interface NativeLoggers extends BasicLogger
     @LogMessage(level = ERROR)
     @Message(id = 25017, value = "SOAP request exception")
     void soapRequestException(@Cause Throwable cause);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25022, value = "Failed to create inputstream from systemId: %s")
+    void failedToCreateInputStreamFromSystemID(String systemId);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25027, value = "JAX-RPC schema mapping does not allow collection types, skipping field: %s.%s")
+    void jaxrpcNotAllowCollectionSkippingFieldInSchemaMapping(String type, String field);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25028, value = "Indexed properties without non-indexed accessors are not supported, skipping: %s.%s")
+    void indexedPropNotSupportedSkippingInSchemaMapping(String type, String field);
+    
+    @LogMessage(level = ERROR)
+    @Message(id = 25043, value = "%s is not a valid url")
+    void notAValidUrl(String s);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25059, value = "WSDL parsing, unsupported fault message part in message: %s")
+    void unsupportedFaultMessagePartInMessage(QName qname);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25060, value = "WSDL parsing, unsupported binding: %s")
+    void unsupportedBinding(QName qname);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25061, value = "WSDL parsing, encoding style %s not supported for: %s")
+    void encodingStyleNotSupported(String s, QName q);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25062, value = "WSDL parsing, multiple encoding styles not supported: %s")
+    void multipleEncodingStyleNotSupported(Collection<?> list);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25063, value = "WSDL parsing, unprocessed extension element: %s")
+    void unprocessedWSDLExtensionElement(QName el);
     
 }

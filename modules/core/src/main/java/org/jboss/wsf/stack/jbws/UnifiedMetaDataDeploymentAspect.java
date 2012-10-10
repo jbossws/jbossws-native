@@ -21,13 +21,11 @@
  */
 package org.jboss.wsf.stack.jbws;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
 import static org.jboss.ws.common.integration.WSHelper.isJaxrpcEjbDeployment;
 import static org.jboss.ws.common.integration.WSHelper.isJaxrpcJseDeployment;
 import static org.jboss.ws.common.integration.WSHelper.isJaxrpcDeployment;
 
-import java.util.ResourceBundle;
-
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.integration.AbstractDeploymentAspect;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -46,7 +44,6 @@ import org.jboss.wsf.spi.deployment.Endpoint;
  */
 public class UnifiedMetaDataDeploymentAspect extends AbstractDeploymentAspect
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(UnifiedMetaDataDeploymentAspect.class);
    @Override
    public void start(Deployment dep)
    {
@@ -104,7 +101,7 @@ public class UnifiedMetaDataDeploymentAspect extends AbstractDeploymentAspect
       }
 
       if (epMetaData == null)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_FIND_ENDPOINTMD",  epName));
+         throw MESSAGES.cannotObtainEndpointMetaData(epName);
 
       return epMetaData;
    }

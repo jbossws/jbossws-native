@@ -31,7 +31,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Vector;
 
 import javax.wsdl.Binding;
@@ -67,7 +66,7 @@ import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.utils.JBossWSEntityResolver;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -91,7 +90,6 @@ import com.ibm.wsdl.util.xml.XPathUtils;
  */
 public class JBossWSDLReaderImpl implements WSDLReader
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(JBossWSDLReaderImpl.class);
 	// Used for determining the style of operations.
 	private static final List STYLE_ONE_WAY =
 			Arrays.asList(new String[]{Constants.ELEM_INPUT});
@@ -154,7 +152,7 @@ public class JBossWSDLReaderImpl implements WSDLReader
 	{
 		if (name == null)
 		{
-			throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "FEATURE_NAME_MUST_NOT_BE_NULL"));
+			throw NativeMessages.MESSAGES.featureNameMustNotBeNull();
 		}
 
 		if (name.equals(Constants.FEATURE_VERBOSE))
@@ -167,7 +165,7 @@ public class JBossWSDLReaderImpl implements WSDLReader
 		}
 		else
 		{
-			throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "FEATURE_NAME_NOT_RECOGNIZED",  name ));
+			throw NativeMessages.MESSAGES.featureNameNotRecognized(name);
 		}
 	}
 
@@ -183,7 +181,7 @@ public class JBossWSDLReaderImpl implements WSDLReader
 	{
 		if (name == null)
 		{
-			throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "FEATURE_NAME_MUST_NOT_BE_NULL"));
+			throw NativeMessages.MESSAGES.featureNameMustNotBeNull();
 		}
 
 		if (name.equals(Constants.FEATURE_VERBOSE))
@@ -196,7 +194,7 @@ public class JBossWSDLReaderImpl implements WSDLReader
 		}
 		else
 		{
-			throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "FEATURE_NAME_NOT_RECOGNIZED",  name ));
+			throw NativeMessages.MESSAGES.featureNameNotRecognized(name);
 		}
 	}
 

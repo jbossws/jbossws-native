@@ -27,7 +27,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
@@ -37,8 +36,7 @@ import org.apache.xerces.impl.xs.XSModelImpl;
 import org.apache.xerces.xni.parser.XMLInputSource;
 import org.apache.xerces.xs.XSModel;
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.utils.JBossWSEntityResolver;
 import org.jboss.ws.common.utils.ResourceURL;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
@@ -73,7 +71,6 @@ import org.xml.sax.InputSource;
  */
 public class JavaToXSD implements JavaToXSDIntf
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(JavaToXSD.class);
    // provide logging
    private static final Logger log = Logger.getLogger(JavaToXSD.class);
 
@@ -98,14 +95,14 @@ public class JavaToXSD implements JavaToXSDIntf
    /*
     * @see org.jboss.ws.tools.interfaces.JavaToXSDIntf#generateForSingleType()
     */
-   public JBossXSModel generateForSingleType(QName xmlType, Class javaType) throws IOException
+   public JBossXSModel generateForSingleType(QName xmlType, @SuppressWarnings("rawtypes") Class javaType) throws IOException
    {
       SchemaCreatorIntf creator = helper.getSchemaCreator();
       creator.generateType(xmlType, javaType);
       return creator.getXSModel();
    }
 
-   public JBossXSModel generateForSingleType(QName xmlType, Class javaType, Map<String, QName> elementNames) throws IOException
+   public JBossXSModel generateForSingleType(QName xmlType, @SuppressWarnings("rawtypes") Class javaType, Map<String, QName> elementNames) throws IOException
    {
       SchemaCreatorIntf creator = helper.getSchemaCreator();
       creator.generateType(xmlType, javaType, elementNames);
@@ -134,7 +131,7 @@ public class JavaToXSD implements JavaToXSDIntf
 
       XSModel xsmodel = loader.loadURI(xsdURL.toExternalForm());
       if (xsmodel == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_SCHEMA",  xsdURL));
+         throw NativeMessages.MESSAGES.cannotLoadSchema(xsdURL);
 
       WSSchemaUtils sutils = WSSchemaUtils.getInstance(null, null);
       JBossXSModel jbxs = new JBossXSModel();
@@ -150,7 +147,7 @@ public class JavaToXSD implements JavaToXSDIntf
    public JBossXSModel parseSchema(Map<String, URL> locs)
    {
       if (locs == null || locs.size() == 0)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_SCHEMA_LOCATION_MAP"));
+         throw NativeMessages.MESSAGES.javaToXSDMissingSchemaLocationMap();
 
       JBossXSErrorHandler xserr = new JBossXSErrorHandler();
       JBossWSEntityResolver resolver = new JBossWSEntityResolver();
@@ -168,7 +165,7 @@ public class JavaToXSD implements JavaToXSDIntf
          {
             String nsURI = it.next();
             URL orgURL = locs.get(nsURI); 
-            URL resURL = resolveNamespaceURI(resolver, nsURI);
+            URL resURL = resolveNamespaceURI(nsURI);
             URL url = resURL != null ? resURL : orgURL;
             
             if (debugEnabled)
@@ -181,7 +178,7 @@ public class JavaToXSD implements JavaToXSDIntf
             
             SchemaGrammar grammar = (SchemaGrammar)loader.loadGrammar(inputSource);
             if (grammar == null)
-               throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_GRAMMAR",  url));
+               throw NativeMessages.MESSAGES.cannotLoadGrammar(url);
             
             gs[index++] = grammar;
          }
@@ -191,7 +188,7 @@ public class JavaToXSD implements JavaToXSDIntf
          }
          catch (Exception ex)
          {
-            throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_PARSE_SCHEMA"),  ex);
+            throw new IllegalStateException(ex);
          }
          finally
          {
@@ -218,11 +215,11 @@ public class JavaToXSD implements JavaToXSDIntf
       return jbxs;
    }
 
-   private URL resolveNamespaceURI(JBossWSEntityResolver resolver, String nsURI)
+   private URL resolveNamespaceURI(String nsURI)
    {
       URL url = null;
 
-      String resource = (String)resolver.getEntityMap().get(nsURI);
+      String resource = (String)JBossWSEntityResolver.getEntityMap().get(nsURI);
       if (resource != null)
       {
          ClassLoader loader = SecurityActions.getContextClassLoader();

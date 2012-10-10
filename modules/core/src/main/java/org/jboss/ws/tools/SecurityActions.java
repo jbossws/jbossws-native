@@ -26,9 +26,6 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
-import java.util.ResourceBundle;
-
-import org.jboss.ws.api.util.BundleUtils;
 
 /**
  * Security actions for this package
@@ -39,7 +36,6 @@ import org.jboss.ws.api.util.BundleUtils;
  */
 class SecurityActions
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(SecurityActions.class);
    /**
     * Get context classloader.
     * 
@@ -103,14 +99,14 @@ class SecurityActions
                   }
                   catch (Throwable e)
                   {
-                     throw new RuntimeException(BundleUtils.getMessage(bundle, "ERROR_SETTING_CONTEXT_CLASSLOADER"),  e);
+                     throw new RuntimeException(e);
                   }
                }
             });
          }
          catch (PrivilegedActionException e)
          {
-            throw new RuntimeException(BundleUtils.getMessage(bundle, "ERROR_RUNNING_PRIVILEGED_ACTION"), e);
+            throw new RuntimeException(e);
          }
       }
    }

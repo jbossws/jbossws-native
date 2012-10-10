@@ -26,7 +26,6 @@ import static org.jboss.ws.common.integration.WSHelper.isJseDeployment;
 import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ResourceBundle;
 
 import javax.management.ObjectName;
 import javax.servlet.ServletConfig;
@@ -35,8 +34,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.ObjectNameFactory;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
@@ -57,8 +55,6 @@ import org.jboss.wsf.spi.management.EndpointResolver;
  */
 public abstract class AbstractEndpointServlet extends HttpServlet
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(AbstractEndpointServlet.class);
-
    protected Endpoint endpoint;
    private EndpointRegistry epRegistry;
    
@@ -158,7 +154,7 @@ public abstract class AbstractEndpointServlet extends HttpServlet
            Endpoint.SEPID_PROPERTY_CONTEXT + "=" + contextPath + "," +
            Endpoint.SEPID_PROPERTY_ENDPOINT + "=" + servletName
          );
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINT_FOR",  oname));
+         throw NativeMessages.MESSAGES.cannotObtainEndpoint(oname);
       }
    }
    

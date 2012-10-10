@@ -22,9 +22,8 @@
 package org.jboss.wsf.stack.jbws;
 
 import java.io.IOException;
-import java.util.ResourceBundle;
 
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.integration.AbstractDeploymentAspect;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
 import org.jboss.wsf.spi.deployment.ArchiveDeployment;
@@ -39,13 +38,12 @@ import org.jboss.wsf.spi.deployment.WSFDeploymentException;
  */
 public class PublishContractDeploymentAspect extends AbstractDeploymentAspect
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(PublishContractDeploymentAspect.class);
    @Override
    public void start(Deployment dep)
    {
       UnifiedMetaData umd = dep.getAttachment(UnifiedMetaData.class);
       if (umd == null)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_UNIFIEDMD"));
+         throw NativeMessages.MESSAGES.cannotObtainUnifiedMetaData(dep);
 
       try
       {

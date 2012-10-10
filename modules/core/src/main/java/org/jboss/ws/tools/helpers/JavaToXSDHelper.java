@@ -22,12 +22,11 @@
 package org.jboss.ws.tools.helpers;
 
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
 import org.apache.xerces.xs.XSModel;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.metadata.wsdl.WSDLUtils;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
@@ -42,7 +41,6 @@ import org.jboss.ws.tools.schema.SchemaTypeCreator;
  */
 public class JavaToXSDHelper
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(JavaToXSDHelper.class);
    protected WSDLUtils utils = WSDLUtils.getInstance();
    protected SchemaUtils schemautils = SchemaUtils.getInstance();
    private SchemaCreatorIntf creator = null;
@@ -68,7 +66,7 @@ public class JavaToXSDHelper
              String targetNamespace)
    {
       if(targetNamespace == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "IS_NULL", "targetNamespace"));
+         throw NativeMessages.MESSAGES.javaToXSDIsNull("targetNamespace");
 
       XSModel xsmodel = creator.getXSModel();
       if(xsmodel == null) creator.setXSModel(new JBossXSModel());

@@ -21,19 +21,18 @@
  */
 package org.jboss.ws.tools.wsdl;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.ResourceBundle;
 
 import javax.wsdl.Definition;
 import javax.wsdl.WSDLException;
 import javax.wsdl.factory.WSDLFactory;
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
@@ -65,7 +64,6 @@ import org.w3c.dom.Element;
  */
 public class WSDL11Writer extends WSDLWriter
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDL11Writer.class);
    //Used Internally
    private String wsdlStyle = Constants.RPC_LITERAL;
 
@@ -248,7 +246,7 @@ public class WSDL11Writer extends WSDLWriter
       String namespaceURI = name.getNamespaceURI();
       String prefix = wsdl.getPrefix(namespaceURI);
       if (prefix == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "PREFIX_NOT_BOUND",  namespaceURI));
+         throw MESSAGES.prefixNotBound(namespaceURI);
 
       return prefix + ":" + name.getLocalPart();
    }
@@ -303,7 +301,7 @@ public class WSDL11Writer extends WSDLWriter
          bindingReferences = bindingOperation.getOutputs();
 
       if (bindingReferences.length > 1)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "WSDL_1.1_ONLY_SUPPORTS_MEPS_BINDING_REF"));
+         throw MESSAGES.wsd11MultipleRefInput();
 
       if (bindingReferences.length == 1)
          return bindingReferences[0];
@@ -409,7 +407,7 @@ public class WSDL11Writer extends WSDLWriter
          buffer.append("<binding name='" + binding.getName().getLocalPart() + "' type='" + getQNameRef(binding.getInterfaceName()) + "'>");
          //TODO:Need to derive the WSDLStyle from the Style attribute of InterfaceOperation
          if (wsdlStyle == null)
-            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "WSDL_STYLE_IS_NULL"));
+            throw MESSAGES.wsdlStyleNull();
          String style = "rpc";
          if (wsdlStyle.equals(Constants.DOCUMENT_LITERAL))
             style = "document";
@@ -436,7 +434,7 @@ public class WSDL11Writer extends WSDLWriter
 
          WSDLInterface wsdlInterface = wsdl.getInterface(interfaceName);
          if (wsdlInterface == null)
-            throw new WSException(BundleUtils.getMessage(bundle, "WSDL_INTERFACE_SHOULD_NOT_BE_NULL"));
+            throw MESSAGES.wsdlInterfaceNull();
          WSDLInterfaceOperation interfaceOperation = wsdlInterface.getOperation(operation.getRef());
 
          buffer.append("<operation name='" + interfaceOperation.getName().getLocalPart() + "'>");
@@ -445,7 +443,7 @@ public class WSDL11Writer extends WSDLWriter
 
          WSDLBindingOperationInput[] inputs = operation.getInputs();
          if (inputs.length != 1)
-            throw new WSException(BundleUtils.getMessage(bundle, "WSDL11_SUPPORT_MEPS"));
+            throw MESSAGES.wsd11UnsupportedMEP();
 
          buffer.append("<input>");
          appendSOAPBinding(buffer, wsdlInterface, operation, inputs);
