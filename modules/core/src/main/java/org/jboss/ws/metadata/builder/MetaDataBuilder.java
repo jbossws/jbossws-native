@@ -21,6 +21,7 @@
  */
 package org.jboss.ws.metadata.builder;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
 import static org.jboss.ws.common.integration.WSHelper.isJseEndpoint;
 
 import java.io.IOException;
@@ -31,7 +32,6 @@ import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import javax.management.ObjectName;
 import javax.wsdl.Definition;
@@ -43,8 +43,8 @@ import javax.wsdl.extensions.soap12.SOAP12Address;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.NativeLoggers;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.ObjectNameFactory;
 import org.jboss.ws.core.jaxrpc.UnqualifiedFaultException;
@@ -83,7 +83,6 @@ import org.jboss.wsf.spi.metadata.j2ee.JSESecurityMetaData.JSEResourceCollection
  */
 public abstract class MetaDataBuilder
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(MetaDataBuilder.class);
    // provide logging
    private final static Logger log = Logger.getLogger(MetaDataBuilder.class);
 
@@ -119,7 +118,7 @@ public abstract class MetaDataBuilder
                QName bindQName = wsdlEndpoint.getBinding();
                WSDLBinding wsdlBinding = wsdlDefinitions.getBinding(bindQName);
                if (wsdlBinding == null)
-                  throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_BINDING",  bindQName));
+                  throw MESSAGES.cannotObtainBinding(bindQName);
 
                for (WSDLBindingOperation wsdlBindingOperation : wsdlBinding.getOperations())
                {
@@ -203,7 +202,7 @@ public abstract class MetaDataBuilder
    public static String getServiceEndpointAddress(String uriScheme, String servicePath, int servicePort, ServerConfig config)
    {
       if (servicePath == null || servicePath.length() == 0)
-         throw new WSException(BundleUtils.getMessage(bundle, "SERVICE_PATH_CANNOT_BE_NULL"));
+         throw MESSAGES.servicePathCannotBeNull();
 
       if (servicePath.endsWith("/*"))
          servicePath = servicePath.substring(0, servicePath.length() - 2);
@@ -253,7 +252,7 @@ public abstract class MetaDataBuilder
       }
       catch (MalformedURLException e)
       {
-         throw new WSException(BundleUtils.getMessage(bundle, "MALFORMED_URL_DETAIL", new Object[]{ uriScheme ,  host ,  port ,  servicePath }),  e);
+         throw new WSException(e);
       }
    }
 
@@ -270,7 +269,7 @@ public abstract class MetaDataBuilder
          String urlPattern = servletMappings.get(servletLink);
 
          if (urlPattern == null)
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_URL_PATTERN",  servletLink));
+            throw MESSAGES.cannotFindURLPatternForServletName(servletLink);
 
          List<JSESecurityMetaData> securityList = webMetaData.getSecurityMetaData();
          for (JSESecurityMetaData currentSecurity : securityList)
@@ -342,7 +341,7 @@ public abstract class MetaDataBuilder
                   }
                   catch (MalformedURLException e)
                   {
-                     log.warn(BundleUtils.getMessage(bundle, "MALFORMED_URL",  orgAddress));
+                     NativeLoggers.ROOT_LOGGER.malformedURL(orgAddress);
                      sepMetaData.setEndpointAddress(orgAddress);
                   }
                }
@@ -351,7 +350,7 @@ public abstract class MetaDataBuilder
       }
 
       if (endpointFound == false)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_PORT_IN_WSDL",  portName));
+         throw MESSAGES.cannotFindPortInWsdl(portName);
    }
    
    private static boolean requiresRewrite(String orgAddress, String uriScheme, ServerConfig config)
@@ -389,11 +388,11 @@ public abstract class MetaDataBuilder
       if (!wsdlOneOneDefinition.getImports().isEmpty())
       {
 
-         Iterator imports = wsdlOneOneDefinition.getImports().values().iterator();
+         Iterator<?> imports = wsdlOneOneDefinition.getImports().values().iterator();
          while (imports.hasNext())
          {
-            List l = (List)imports.next();
-            Iterator importsByNS = l.iterator();
+            List<?> l = (List<?>)imports.next();
+            Iterator<?> importsByNS = l.iterator();
             while (importsByNS.hasNext())
             {
                Import anImport = (Import)importsByNS.next();
@@ -405,7 +404,7 @@ public abstract class MetaDataBuilder
          }
       }
       
-      throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_FIND_PORT",  portQName ));
+      throw MESSAGES.cannotFindPortInWsdl2(portQName);
    }
 
    /**
@@ -487,7 +486,7 @@ public abstract class MetaDataBuilder
 
          if (xmlType == null)
          {
-            log.warn(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_FAULT_TYPE",  xmlName));
+            NativeLoggers.ROOT_LOGGER.cannotObtainFaultTypeForElement(xmlName);
             xmlType = xmlName;
          }
 
@@ -497,7 +496,7 @@ public abstract class MetaDataBuilder
 
          if (javaTypeName == null)
          {
-            log.warn(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_JAVA_TYPE_MAPPING",  xmlType));
+            NativeLoggers.ROOT_LOGGER.cannotObtainJavaTypeMappingFor(xmlType);
             javaTypeName = new UnqualifiedFaultException(xmlType).getClass().getName();
          }
 

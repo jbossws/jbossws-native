@@ -23,15 +23,14 @@ package org.jboss.ws.metadata.umdm;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeLoggers;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.core.jaxrpc.LiteralTypeMapping;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 
@@ -43,7 +42,6 @@ import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
  */
 public class TypesMetaData
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(TypesMetaData.class);
    // provide logging
    private static final Logger log = Logger.getLogger(TypesMetaData.class);
 
@@ -111,7 +109,7 @@ public class TypesMetaData
             if (tmMetaData != null)
             {
                log.error(tmMetaData + "\n" + aux);
-               throw new WSException(BundleUtils.getMessage(bundle, "AMBIGUOUS_TYPE_MAPPPING",  xmlType));
+               throw NativeMessages.MESSAGES.ambiguousTypeMapping(xmlType);
             }
             tmMetaData = aux;
          }
@@ -162,7 +160,7 @@ public class TypesMetaData
             }
             else
             {
-               log.warn(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_JAVATYPENAME",  xmlType));
+               NativeLoggers.ROOT_LOGGER.cannotObtainJavaTypeName(xmlType);
             }
          }
       }

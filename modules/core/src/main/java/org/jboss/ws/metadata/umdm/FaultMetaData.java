@@ -21,17 +21,18 @@
  */
 package org.jboss.ws.metadata.umdm;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.NativeLoggers;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.JavaUtils;
 
 /**
@@ -43,7 +44,6 @@ import org.jboss.ws.common.JavaUtils;
  */
 public class FaultMetaData implements InitalizableMetaData
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(FaultMetaData.class);
    // provide logging
    private final Logger log = Logger.getLogger(FaultMetaData.class);
 
@@ -54,16 +54,16 @@ public class FaultMetaData implements InitalizableMetaData
    private QName xmlType;
    private String javaTypeName;
    private String faultBeanName;
-   private Class javaType;
-   private Class faultBean;
+   private Class<?> javaType;
+   private Class<?> faultBean;
 
    private Method faultInfoMethod;
-   private Constructor serviceExceptionConstructor;
+   private Constructor<?> serviceExceptionConstructor;
    private Method[] serviceExceptionGetters;
 
    private WrappedParameter[] faultBeanProperties;
 
-   private Class[] propertyTypes;
+   private Class<?>[] propertyTypes;
 
    public FaultMetaData(OperationMetaData operation, QName xmlName, QName xmlType, String javaTypeName)
    {
@@ -74,9 +74,9 @@ public class FaultMetaData implements InitalizableMetaData
    public FaultMetaData(OperationMetaData operation, QName xmlName, String javaTypeName)
    {
       if (xmlName == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_NULL_XMLNAME_ARGUMENT"));
+         throw MESSAGES.illegalNullArgument("xmlName");
       if (javaTypeName == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_NULL_JAVATYPENAME_ARGUMENT",  xmlName));
+         throw MESSAGES.illegalNullArgument("javaTypeName");
 
       this.opMetaData = operation;
       this.xmlName = xmlName;
@@ -101,7 +101,7 @@ public class FaultMetaData implements InitalizableMetaData
    public void setXmlType(QName xmlType)
    {
       if (xmlType == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_NULL_XMLTYPE_ARGUMENT",  xmlName));
+         throw MESSAGES.illegalNullArgument("xmlType");
 
       this.xmlType = xmlType;
    }
@@ -119,7 +119,7 @@ public class FaultMetaData implements InitalizableMetaData
    /** Load the java type.
     *  It should only be cached during eager initialization.
     */
-   public Class getJavaType()
+   public Class<?> getJavaType()
    {
       if (javaType != null)
          return javaType;
@@ -130,20 +130,20 @@ public class FaultMetaData implements InitalizableMetaData
       try
       {
          ClassLoader loader = opMetaData.getEndpointMetaData().getClassLoader();
-         Class exceptionType = JavaUtils.loadJavaType(javaTypeName, loader);
+         Class<?> exceptionType = JavaUtils.loadJavaType(javaTypeName, loader);
          if (Exception.class.isAssignableFrom(exceptionType) == false)
-            throw new IllegalStateException(BundleUtils.getMessage(bundle, "NOT_ASSIGNABLE_TO_EXCEPTION",  exceptionType));
+            throw MESSAGES.notAssignableToException(exceptionType);
 
          if (opMetaData.getEndpointMetaData().getServiceMetaData().getUnifiedMetaData().isEagerInitialized())
          {
-            log.warn(BundleUtils.getMessage(bundle, "LOADING_JAVA_TYPE"));
+            NativeLoggers.ROOT_LOGGER.loadingJavaTypeAfterEagerInit();
             javaType = exceptionType;
          }
          return exceptionType;
       }
       catch (ClassNotFoundException ex)
       {
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_JAVA_TYPE",  javaTypeName),  ex);
+         throw new WSException(ex);
       }
    }
 
@@ -184,7 +184,7 @@ public class FaultMetaData implements InitalizableMetaData
          }
          catch (ClassNotFoundException ex)
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_FAULT_BEAN",  faultBeanName),  ex);
+            throw new WSException(ex);
          }
       }
       return tmpFaultBean;
@@ -200,10 +200,10 @@ public class FaultMetaData implements InitalizableMetaData
       // Initialize the cache
       javaType = getJavaType();
       if (javaType == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_JAVA_TYPE",  javaTypeName));
+         throw MESSAGES.cannotLoad(javaTypeName);
 
       if (JavaUtils.isAssignableFrom(Exception.class, javaType) == false)
-         throw new WSException(BundleUtils.getMessage(bundle, "FAULT_JAVA_TYPE_NOT_EXCEPTION",  javaTypeName));
+         throw MESSAGES.notAnException(javaTypeName);
    }
 
    public Object toFaultBean(Exception serviceException)
@@ -227,7 +227,7 @@ public class FaultMetaData implements InitalizableMetaData
             }
             catch (InstantiationException e)
             {
-               throw new WSException(BundleUtils.getMessage(bundle, "FAULT_BEAN_CLASS_IS_NOT_INSTANTIABLE"),  e);
+               throw new WSException(e);
             }
 
             // copy the properties from the service exception to the fault bean
@@ -270,8 +270,7 @@ public class FaultMetaData implements InitalizableMetaData
          else
          {
             if (serviceExceptionConstructor == null)
-               throw new WSException(BundleUtils.getMessage(bundle, "COULD_NOT_INSTANTIATE_SERVICE_EXCEPTION", 
-                     new Object[]{ javaType.getSimpleName(),  Arrays.toString(propertyTypes)}));
+               throw MESSAGES.couldNotInstanciateServiceException(javaType.getSimpleName(), Arrays.toString(propertyTypes));
 
             // extract the properties from the fault bean
             int propertyCount = faultBeanProperties.length;
@@ -287,7 +286,7 @@ public class FaultMetaData implements InitalizableMetaData
       }
       catch (InstantiationException e)
       {
-         throw new WSException(BundleUtils.getMessage(bundle, "EXCEPTION_IS_NOT_INSTANTIABLE"),  e);
+         throw new WSException(e);
       }
       catch (IllegalAccessException e)
       {

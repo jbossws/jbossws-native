@@ -22,9 +22,6 @@
 package org.jboss.ws.metadata.jaxrpcmapping;
 
 import java.io.Serializable;
-import java.util.ResourceBundle;
-
-import org.jboss.ws.api.util.BundleUtils;
 
 /**
  * XML mapping of the java-wsdl-mapping/service-endpoint-interface-mapping/service-endpoint-method-mapping/method-param-parts-mapping element.
@@ -34,7 +31,6 @@ import org.jboss.ws.api.util.BundleUtils;
  */
 public class MethodParamPartsMapping implements Serializable
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(MethodParamPartsMapping.class);
    private static final long serialVersionUID = -1351920471783503813L;
 
    // The parent <service-endpoint-method-mapping> element
@@ -92,8 +88,6 @@ public class MethodParamPartsMapping implements Serializable
       StringBuffer sb = new StringBuffer();
       sb.append("<method-param-parts-mapping><param-position>").append(paramPosition).append("</param-position>");
       sb.append("<param-type>").append(paramType).append("</param-type>");
-      if(wsdlMessageMapping == null)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "WSDLMESSAGEMAPPING_IS_NULL"));
       sb.append(wsdlMessageMapping.serialize()); 
       
       sb.append("</method-param-parts-mapping>");

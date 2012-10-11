@@ -126,4 +126,68 @@ public interface NativeLoggers extends BasicLogger
     @Message(id = 25097, value = "Cannot parse XSModel string: %s")
     void cannotParseXSModelString(String s, @Cause Throwable cause);
 
+    @LogMessage(level = WARN)
+    @Message(id = 25101, value = "Cannot obtain javaTypeName for xmlType: %s")
+    void cannotObtainJavaTypeName(QName qname);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25104, value = "Multiple possible endpoints implementing SEI: %s")
+    void multiplePossibleEndpointImplementingSEI(String seiName);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25112, value = "Set java type name after eager initialization: %s")
+    void setJavaTypeAfterEagerInit(String typeName);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25122, value = "Loading java type after eager initialization")
+    void loadingJavaTypeAfterEagerInit();
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25129, value = "Setting name of or loading SEI after eager initialization")
+    void loadingSettingSEIAfterEagerInit();
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25130, value = "Cannot load class for type %s %s")
+    void cannotLoadClassForType(QName q, String s, @Cause Throwable cause);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25131, value = "Loading java method after eager initialization")
+    void loadingJavaMethodAfterEagerInit();
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25135, value = "Cannot find jaxrpc-mapping for type: %s")
+    void cannotFindJAXRPCMappingForType(QName type);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25138, value = "Malformed URL: %s")
+    void malformedURL(String url);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25140, value = "Cannot obtain fault type for element: %s")
+    void cannotObtainFaultTypeForElement(QName qname);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25141, value = "Cannot obtain java type mapping for: %s")
+    void cannotObtainJavaTypeMappingFor(QName qname);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25144, value = "Cannot obtain SEI mapping for: %s")
+    void cannotObtainSEIMappingFor(String name);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25161, value = "Mime type %s not allowed for parameter %s allowed types are: %s")
+    void mimeTypeNotAllowed(String type, QName param, Collection<String> allowed);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25169, value = "Expected SOAP %s envelope, but got: %s")
+    void unexpectedSoapEnvelopeVersion(String expectedEnvelopeVersion, String envelopeNS);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25174, value = "Failed to cleanup attachment part")
+    void failedToCleanupAttachmentPart(@Cause Throwable cause);
+    
+    @LogMessage(level = ERROR)
+    @Message(id = 25177, value = "Exception caught while (preparing for) performing invocation")
+    void exceptionWhilePreparingForInvocation(@Cause Throwable cause);
+    
 }

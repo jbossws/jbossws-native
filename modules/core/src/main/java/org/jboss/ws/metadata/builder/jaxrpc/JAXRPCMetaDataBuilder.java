@@ -21,19 +21,18 @@
  */
 package org.jboss.ws.metadata.builder.jaxrpc;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 import javax.xml.rpc.encoding.TypeMappingRegistry;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.binding.TypeMappingImpl;
@@ -85,7 +84,6 @@ import org.jboss.ws.metadata.wsdl.WSDLUtils;
  */
 public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(JAXRPCMetaDataBuilder.class);
    // provide logging
    final Logger log = Logger.getLogger(JAXRPCMetaDataBuilder.class);
 
@@ -151,11 +149,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          String opName = opQName.getLocalPart();
 
          WSDLBindingOperation wsdlBindingOperation = wsdlOperation.getBindingOperation();
-         if (wsdlBindingOperation == null)
-         {
-            log.warn(BundleUtils.getMessage(bundle, "COULD_NOT_LOCATE_BP",  opQName));
-         }
-         else
+         if (wsdlBindingOperation != null)
          {
             // Change operation according namespace defined on binding 
             // <soap:body use="encoded" namespace="http://MarshallTestW2J.org/" encodingStyle="http://schemas.xmlsoap.org/soap/encoding/"/>
@@ -173,7 +167,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
 
             seiMethodMapping = seiMapping.getServiceEndpointMethodMappingByWsdlOperation(opName);
             if (seiMethodMapping == null)
-               throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_METHOD_MAPPING",  opName));
+               throw MESSAGES.cannotObtainMethodMappingFor(opQName);
 
             javaName = seiMethodMapping.getJavaMethodName();
          }
@@ -233,8 +227,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          }
          else if (!optional)
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_METHOD_PARAMETER_MAPPING", new Object[]{partName, seiMethodMapping.getWsdlOperation()}));
-
+            throw MESSAGES.cannotObtainMethodParameterMappingFor(partName, seiMethodMapping.getWsdlOperation());
          }
       }
 
@@ -249,12 +242,13 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          if (packageName != null)
          {
             javaTypeName = packageName + "." + xmlType.getLocalPart();
-            log.warn(BundleUtils.getMessage(bundle, "GUESS_JAVA_TYPE", new Object[]{ xmlType ,  javaTypeName }));
+            if (log.isDebugEnabled())
+               log.debug("Guess java type from package mapping: [xmlType=" + xmlType + " javaType=" + javaTypeName + "]");
          }
       }
 
       if (javaTypeName == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_JAVA_TYPE_MAPPING",  xmlType));
+         throw MESSAGES.cannotObtainJavaTypeMappingFor(xmlType);
 
       ParameterMetaData inMetaData = new ParameterMetaData(opMetaData, xmlName, xmlType, javaTypeName);
       inMetaData.setPartName(partName);
@@ -329,12 +323,13 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          if (packageName != null)
          {
             javaTypeName = packageName + "." + xmlType.getLocalPart();
-            log.warn(BundleUtils.getMessage(bundle, "GUESS_JAVA_TYPE", new Object[]{ xmlType, javaTypeName}));
+            if (log.isDebugEnabled())
+               log.debug("Guess java type from package mapping: [xmlType=" + xmlType + " javaType=" + javaTypeName + "]");
          }
       }
 
       if (javaTypeName == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_JAVA_TYPE_MAPPING",  xmlType));
+         throw MESSAGES.cannotObtainJavaTypeMappingFor(xmlType);
 
       ParameterMetaData outMetaData = new ParameterMetaData(opMetaData, xmlName, xmlType, javaTypeName);
       outMetaData.setPartName(partName);
@@ -515,7 +510,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
 
       WSDLBindingOperation bindingOperation = wsdlOperation.getBindingOperation();
       if (bindingOperation == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "COULD_NOT_LOCATE_BP",  opMetaData.getQName()));
+         throw MESSAGES.cannotLocateBindingOperationFor(opMetaData.getQName());
 
       // RPC has one input
       WSDLInterfaceOperationInput input = wsdlOperation.getInputs()[0];
@@ -563,7 +558,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       }
       else if (wsdlOperation.getPattern() != Constants.WSDL20_PATTERN_IN_ONLY)
       {
-         throw new WSException(BundleUtils.getMessage(bundle, "RPC_STYLE_WAS_MISSING_AN_OUTPUT"));
+         throw MESSAGES.rpcStyleMissingOutputAndNotAInOnlyMEP();
       }
    }
 
@@ -585,7 +580,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          javaTypeName = typeMetaData.getJavaTypeName();
 
       if (javaTypeName == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_JAVA_TYPE_MAPPING",  xmlType));
+         throw MESSAGES.cannotObtainJavaTypeMappingFor(xmlType);
 
       // Check if we need to wrap the parameters
       boolean isWrapped = isWrapped(seiMethodMapping, javaTypeName);
@@ -598,12 +593,12 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       if (inMetaData.getOperationMetaData().isDocumentWrapped())
       {
          if (seiMethodMapping == null)
-            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_WRAP_PARAMETERS"));
+            throw MESSAGES.cannotWrapParametersWithoutSEIMethodMapping();
 
          ServiceEndpointInterfaceMapping seiMapping = seiMethodMapping.getServiceEndpointInterfaceMapping();
          JavaXmlTypeMapping javaXmlTypeMapping = seiMapping.getJavaWsdlMapping().getTypeMappingForQName(xmlType);
          if (javaXmlTypeMapping == null)
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_JAVA/XML_TYPE_MAPPING",  xmlType));
+            throw MESSAGES.cannotObtainJavaXmlTypeMappingFor(xmlType);
 
          Map<String, String> variableMap = createVariableMappingMap(javaXmlTypeMapping.getVariableMappings());
          for (MethodParamPartsMapping partMapping : seiMethodMapping.getMethodParamPartsMappings())
@@ -611,9 +606,6 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
             WsdlMessageMapping wsdlMessageMapping = partMapping.getWsdlMessageMapping();
             if (wsdlMessageMapping.isSoapHeader())
                continue;
-
-            if (wsdlMessageMapping == null)
-               throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "M2M_MAPPING_REQUIRED"));
 
             String elementName = wsdlMessageMapping.getWsdlMessagePartName();
 
@@ -623,13 +615,13 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
 
             String variable = variableMap.get(elementName);
             if (variable == null)
-               throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "COULD_NOT_DETERMINE_VARIABLE_NAME",  elementName));
+               throw MESSAGES.couldNotDetermineVariableNameForElement(elementName);
 
             WrappedParameter wrapped = new WrappedParameter(new QName(elementName), partMapping.getParamType(), variable, partMapping.getParamPosition());
 
             String parameterMode = wsdlMessageMapping.getParameterMode();
             if (parameterMode == null || parameterMode.length() < 2)
-               throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_PARAMETER_MODE",  elementName));
+               throw MESSAGES.invalidParameterModeForElement(elementName);
 
             if (!"OUT".equals(parameterMode))
                wrappedParameters.add(wrapped);
@@ -735,7 +727,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
          javaTypeName = typesMetaData.getTypeMappingByXMLType(xmlType).getJavaTypeName();
 
       if (javaTypeName == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_JAVA/XML_TYPE_MAPPING",  xmlType));
+         throw MESSAGES.cannotObtainJavaXmlTypeMappingFor(xmlType);
 
       ParameterMetaData outMetaData = new ParameterMetaData(opMetaData, xmlName, xmlType, javaTypeName);
 
@@ -743,7 +735,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
       if (opMetaData.isDocumentWrapped())
       {
          if (seiMethodMapping == null)
-            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_WRAP_PARAMETERS"));
+            throw MESSAGES.cannotWrapParametersWithoutSEIMethodMapping();
 
          WsdlReturnValueMapping returnValueMapping = seiMethodMapping.getWsdlReturnValueMapping();
          if (returnValueMapping != null)
@@ -752,7 +744,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
             JavaWsdlMapping javaWsdlMapping = seiMapping.getJavaWsdlMapping();
             JavaXmlTypeMapping javaXmlTypeMapping = javaWsdlMapping.getTypeMappingForQName(xmlType);
             if (javaXmlTypeMapping == null)
-               throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_JAVA/XML_TYPE_MAPPING",  xmlType));
+               throw MESSAGES.cannotObtainJavaXmlTypeMappingFor(xmlType);
 
             Map<String, String> map = createVariableMappingMap(javaXmlTypeMapping.getVariableMappings());
             if (map.size() > 0)
@@ -760,7 +752,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
                String elementName = returnValueMapping.getWsdlMessagePartName();
                String variable = map.get(elementName);
                if (variable == null)
-                  throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "COULD_NOT_DETERMINE_VARIABLE_NAME",  elementName));
+                  throw MESSAGES.couldNotDetermineVariableNameForElement(elementName);
 
                String wrappedType = returnValueMapping.getMethodReturnValue();
                QName element = new QName(elementName);
@@ -791,7 +783,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
                   return wsdlPosition;
                }
 
-               throw new WSException(BundleUtils.getMessage(bundle, "COULD_NOT_UPDATE_IN_PARAMETER",  opOutput.getPartName()));
+               throw MESSAGES.couldNotUpdateInParameterAsIndicated(opOutput.getPartName());
             }
             // It's potentialy possible that an input parameter could exist with the same part name
             else if ("OUT".equals(mode))
@@ -836,7 +828,7 @@ public abstract class JAXRPCMetaDataBuilder extends MetaDataBuilder
 
       WSDLBindingOperation bindingOperation = wsdlOperation.getBindingOperation();
       if (bindingOperation == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "COULD_NOT_LOCATE_BP",  bindingOperation));
+         throw MESSAGES.cannotLocateBindingOperationFor(wsdlOperation.getName());
 
       List<WrappedParameter> wrappedParameters = new ArrayList<WrappedParameter>();
       List<WrappedParameter> wrappedResponseParameters = new ArrayList<WrappedParameter>();

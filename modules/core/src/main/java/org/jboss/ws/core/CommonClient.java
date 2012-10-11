@@ -21,13 +21,12 @@
  */
 package org.jboss.ws.core;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
@@ -38,8 +37,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeLoggers;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.ResourceLoaderAdapter;
 import org.jboss.ws.core.DirectionHolder.Direction;
@@ -68,7 +66,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public abstract class CommonClient implements StubExt, HeaderSource
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(CommonClient.class);
    // provide logging
    private static Logger log = Logger.getLogger(CommonClient.class);
 
@@ -118,7 +115,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
          {
             epMetaData = serviceMetaData.getEndpoint(portName);
             if (epMetaData == null)
-               throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_ENDPOINT_FOR_NAME",  portName));
+               throw MESSAGES.cannotObtainEndpoint(portName);
          }
 
          if (epMetaData != null)
@@ -163,9 +160,6 @@ public abstract class CommonClient implements StubExt, HeaderSource
     */
    public OperationMetaData getOperationMetaData()
    {
-      if (operationName == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "OPERATION_NAME_NOT_SET"));
-
       return getOperationMetaData(operationName);
    }
 
@@ -174,7 +168,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
    public OperationMetaData getOperationMetaData(QName opName)
    {
       if (opName == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_GET_OPERATIONMETADATA"));
+         throw MESSAGES.illegalNullArgument("opName");
 
       EndpointMetaData epMetaData = getEndpointMetaData();
       OperationMetaData opMetaData = epMetaData.getOperation(opName);
@@ -185,7 +179,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
       }
 
       if (opMetaData == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_OPERATION_META_DATA_FOR",  opName));
+         throw MESSAGES.cannotObtainOperationMetaData(opName);
 
       return opMetaData;
    }
@@ -300,7 +294,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
 
             // The endpoint address must be known beyond this point
             if (targetAddress == null)
-               throw new WSException(BundleUtils.getMessage(bundle, "TARGET_ENDPOINT_ADDRESS_NOT_SET"));
+               throw MESSAGES.targetEndpointAddressNotSet();
 
             Map<String, Object> callProps = new HashMap<String, Object>(requestCtx);
             EndpointInfo epInfo = new EndpointInfo(epMetaData, targetAddress, callProps);
@@ -366,7 +360,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
       }
       catch (Exception ex)
       {
-    	  log.error(BundleUtils.getMessage(bundle, "EXCEPTION_CAUGHT_WHILE_(PREPARING_FOR)_PERFORMING_THE_INVOCATION"),  ex);
+    	  NativeLoggers.ROOT_LOGGER.exceptionWhilePreparingForInvocation(ex);
     	  // Reverse the message direction
     	  processPivotInternal(msgContext, direction);
     	  if (faultType[2] != null)
@@ -540,7 +534,7 @@ public abstract class CommonClient implements StubExt, HeaderSource
       }
       catch (SOAPException ex)
       {
-         throw new JAXRPCException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_ATTACHMENT_PART"));
+         throw new JAXRPCException(ex);
       }
    }
 }

@@ -23,14 +23,13 @@ package org.jboss.ws.metadata.builder.jaxrpc;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.logging.Logger;
+import org.jboss.ws.NativeLoggers;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.ResourceLoaderAdapter;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
@@ -57,10 +56,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
  */
 public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(JAXRPCClientMetaDataBuilder.class);
-   // provide logging
-   private final Logger log = Logger.getLogger(JAXRPCClientMetaDataBuilder.class);
-
    /** Build from WSDL and jaxrpc-mapping.xml
     */
    public ServiceMetaData buildMetaData(QName serviceQName, URL wsdlURL, URL mappingURL,
@@ -83,7 +78,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
       }
       catch (Exception ex)
       {
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_BUILD_META_DATA",  ex.getMessage()),  ex);
+         throw new WSException(ex);
       }
    }
 
@@ -131,7 +126,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
       }
       catch (Exception ex)
       {
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_BUILD_META_DATA",  ex.getMessage()),  ex);
+         throw new WSException(ex);
       }
    }
 
@@ -144,9 +139,6 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
       WSDLService wsdlService = null;
       if (serviceQName == null)
       {
-         if (wsdlDefinitions.getServices().length != 1)
-            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "EXPECTED_A_SINGLE_SERVICE_ELEMENT"));
-
          wsdlService = wsdlDefinitions.getServices()[0];
          serviceMetaData.setServiceName(wsdlService.getName());
       }
@@ -155,7 +147,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
          wsdlService = wsdlDefinitions.getService(serviceQName);
       }
       if (wsdlService == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_WSDL_SERVICE",  serviceQName));
+         throw NativeMessages.MESSAGES.cannotObtainWSDLService(serviceQName);
 
       // Build type mapping meta data
       setupTypesMetaData(serviceMetaData);
@@ -191,7 +183,7 @@ public class JAXRPCClientMetaDataBuilder extends JAXRPCMetaDataBuilder
                }
                else
                {
-                  log.warn(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SEI_MAPPING",  portType));
+                  NativeLoggers.ROOT_LOGGER.cannotObtainSEIMappingFor(portType.toString());
                }
             }
 

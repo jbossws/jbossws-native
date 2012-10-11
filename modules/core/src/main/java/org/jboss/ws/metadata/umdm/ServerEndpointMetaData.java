@@ -21,13 +21,10 @@
  */
 package org.jboss.ws.metadata.umdm;
 
-import java.util.ResourceBundle;
-
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
@@ -40,9 +37,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public class ServerEndpointMetaData extends EndpointMetaData
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(ServerEndpointMetaData.class);
-   protected static final Logger log = Logger.getLogger(ServerEndpointMetaData.class);
-
    public static final String SEPID_DOMAIN = "jboss.ws";
    public static final String SEPID_PROPERTY_CONTEXT = "context";
    public static final String SEPID_PROPERTY_ENDPOINT = "endpoint";
@@ -131,7 +125,7 @@ public class ServerEndpointMetaData extends EndpointMetaData
    public void setContextRoot(String contextRoot)
    {
       if (contextRoot != null && !(contextRoot.startsWith("/")))
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CONTEXT_ROOT_START_WITH"));
+         throw NativeMessages.MESSAGES.contextRootShouldStartsWith(contextRoot);
 
       this.contextRoot = contextRoot;
    }
@@ -144,7 +138,7 @@ public class ServerEndpointMetaData extends EndpointMetaData
    public void setURLPattern(String urlPattern)
    {
       if (urlPattern != null && !urlPattern.startsWith("/"))
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "URL_PATTERN_START_WITH"));
+         throw NativeMessages.MESSAGES.urlPatternShouldStartsWith(urlPattern);
 
       this.urlPattern = urlPattern;
    }
@@ -179,7 +173,7 @@ public class ServerEndpointMetaData extends EndpointMetaData
    public void setEndpointAddress(String endpointAddress)
    {
       if (endpoint == null)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "ENDPOINT_NOT_AVAILABLE"));
+         throw NativeMessages.MESSAGES.endpointNotAvailable();
 
       endpoint.setAddress(endpointAddress);
    }

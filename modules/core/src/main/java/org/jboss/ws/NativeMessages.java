@@ -22,12 +22,14 @@
 package org.jboss.ws;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 
 import javax.management.ObjectName;
 import javax.wsdl.Part;
 import javax.xml.namespace.QName;
+import javax.xml.soap.Name;
 import javax.xml.soap.SOAPException;
 
 import org.apache.xerces.xni.XNIException;
@@ -35,6 +37,8 @@ import org.apache.xerces.xs.XSElementDeclaration;
 import org.jboss.logging.Cause;
 import org.jboss.logging.Message;
 import org.jboss.logging.MessageBundle;
+import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.soap.utils.Use;
 import org.jboss.ws.metadata.wsdl.WSDLException;
 import org.jboss.ws.metadata.wsdl.WSDLTypes;
 import org.jboss.wsf.spi.deployment.Deployment;
@@ -95,7 +99,7 @@ public interface NativeMessages {
     WSException cannotLoadClass(String className, @Cause Throwable cause);
     
     @Message(id = 25021, value = "Cannot obtain endpoint for: %s")
-    WSException cannotObtainEndpoint(ObjectName oname);
+    WSException cannotObtainEndpoint(Object oname);
     
     @Message(id = 25023, value = "Schema mapping, %s argument is null")
     IllegalArgumentException illegalNullArgumentInSchemaMapping(String argument);
@@ -288,5 +292,191 @@ public interface NativeMessages {
     
     @Message(id = 25099, value = "Parser should stop, the key value is %s")
     XNIException parserShouldStopKeyValueIs(String keyValue, @Cause Exception cause);
+    
+    @Message(id = 25100, value = "Classloader not available")
+    IllegalStateException classloaderNotAvailable();
+    
+    @Message(id = 25102, value = "Ambiguous type mappping for: %s")
+    WSException ambiguousTypeMapping(QName qname);
+    
+    @Message(id = 25103, value = "Invalid qname scope: %s")
+    IllegalArgumentException invalidQNameScope(String scope);
+    
+    @Message(id = 25105, value = "EndpointMetaData name must be unique: %s")
+    WSException endpointMetadataMustBeUnique(QName qname);
+    
+    @Message(id = 25106, value = "No type mapping for encoding style: %s")
+    WSException noTypeMapping(Use use);
+    
+    @Message(id = 25107, value = "Conflicting encoding styles not supported: %s, %s")
+    WSException conflictingEncodingStyles(Object obj1, Object obj2);
+    
+    @Message(id = 25108, value = "Requested namespace is not WSDL target namespace: %s")
+    WSException notWsdlTargetNamespace(String ns);
+    
+    @Message(id = 25109, value = "context root should start with '/': %s")
+    IllegalArgumentException contextRootShouldStartsWith(String ctxRoot);
+    
+    @Message(id = 25110, value = "URL pattern should start with '/': %s")
+    IllegalArgumentException urlPatternShouldStartsWith(String urlPattern);
+    
+    @Message(id = 25111, value = "Endpoint not available")
+    IllegalStateException endpointNotAvailable();
+    
+    @Message(id = 25113, value = "Invalid mode: %s")
+    IllegalArgumentException invalidMode(String mode);
+    
+    @Message(id = 25114, value = "Invalid mime type: %s")
+    IllegalArgumentException invalidMimeType(QName xmlType);
+    
+    @Message(id = 25115, value = "Autogeneration of wrapper beans not supported with JAXRPC")
+    WSException jaxrpcWrapperBeanAutogenNotSupported();
+    
+    @Message(id = 25116, value = "Cannot load: %s")
+    WSException cannotLoad(String className);
+    
+    @Message(id = 25117, value = "Cannot find java method: %s")
+    WSException cannotFindJavaMethod(String method);
+
+    @Message(id = 25118, value = "OneWay operations cannot have a return parameter")
+    WSException onewayOperationCannotHaveReturn();
+
+    @Message(id = 25119, value = "OneWay operations cannot have checked exceptions")
+    WSException onewayOperationCannotHaveCheckedExc();
+
+    @Message(id = 25120, value = "OneWay operations cannot have INOUT or OUT parameters")
+    WSException onewayOperationCannotHaveInOutPars();
+    
+    @Message(id = 25121, value = "Handler class name cannot be null")
+    IllegalStateException handlerClassNameCannotBeNull();
+    
+    @Message(id = 25123, value = "%s is not assignable to Exception")
+    IllegalStateException notAssignableToException(Class<?> clazz);
+    
+    @Message(id = 25124, value = "%s is not a java.lang.Exception")
+    WSException notAnException(String clazz);
+    
+    @Message(id = 25125, value = "Could not instantiate service exception (%s), since neither a faultInfo nor sorted constructor is present: %s")
+    WSException couldNotInstanciateServiceException(String exc, String s);
+    
+    @Message(id = 25126, value = "Unsupported binding: %s")
+    WSException unsupportedBinding(String bindingID);
+    
+    @Message(id = 25127, value = "Mixed SOAP parameter styles not supported: %s, %s")
+    WSException conflictingSOAPParameterStyles(Object obj1, Object obj2);
+    
+    @Message(id = 25128, value = "Cannot uniquely indentify operation: %s")
+    WSException cannotUniquelyIdentifyOp(QName op);
+    
+    @Message(id = 25132, value = "Invalid parameter mode: %s")
+    IllegalArgumentException invalidParameterMode(String mode);
+    
+    @Message(id = 25133, value = "Cannot parse: %s")
+    IOException cannotParse(URL url);
+    
+    @Message(id = 25134, value = "Invalid anonymous qname: %s")
+    IllegalArgumentException invalidAnonymousQName(String value);
+    
+    @Message(id = 25136, value = "Service path cannot be null")
+    WSException servicePathCannotBeNull();
+    
+    @Message(id = 25137, value = "Cannot find <url-pattern> for servlet-name: %s")
+    WSException cannotFindURLPatternForServletName(String s);
+    
+    @Message(id = 25139, value = "Cannot find port in wsdl: %s")
+    IllegalArgumentException cannotFindPortInWsdl2(QName port);
+    
+    @Message(id = 25142, value = "jaxrpc-mapping-file not configured from webservices.xml")
+    WSException mappingFileNotConfigured();
+    
+    @Message(id = 25143, value = "Cannot obtain UnifiedBeanMetaData for: %s")
+    WSException cannotObtainUnifiedBeanMetaData(String name);
+    
+    @Message(id = 25145, value = "Cannot find port in wsdl: %s")
+    WSException cannotFindPortInWsdl(QName port);
+    
+    @Message(id = 25146, value = "Cannot obtain java type mapping for: %s")
+    WSException cannotObtainJavaTypeMappingFor(QName qname);
+    
+    @Message(id = 25147, value = "Cannot obtain java/xml type mapping for: %s")
+    WSException cannotObtainJavaXmlTypeMappingFor(QName qname);
+    
+    @Message(id = 25148, value = "Cannot locate binding operation for: %s")
+    WSException cannotLocateBindingOperationFor(QName q);
+    
+    @Message(id = 25149, value = "Cannot obtain method mapping for: %s")
+    WSException cannotObtainMethodMappingFor(QName qname);
+    
+    @Message(id = 25150, value = "Cannot obtain method parameter mapping for message part '%s' in wsdl operation %s")
+    WSException cannotObtainMethodParameterMappingFor(String part, String wsdlOp);
+    
+    @Message(id = 25151, value = "RPC style was missing an output, and was not an IN-ONLY MEP.")
+    WSException rpcStyleMissingOutputAndNotAInOnlyMEP();
+    
+    @Message(id = 25152, value = "Cannot wrap parameters without SEI method mapping")
+    IllegalArgumentException cannotWrapParametersWithoutSEIMethodMapping();
+    
+    @Message(id = 25153, value = "Could not determine variable name for element: %s")
+    IllegalArgumentException couldNotDetermineVariableNameForElement(String elem);
+    
+    @Message(id = 25154, value = "Invalid parameter mode for element %s")
+    IllegalArgumentException invalidParameterModeForElement(String elem);
+    
+    @Message(id = 25155, value = "Could not update IN parameter to be INOUT, as indicated in the mapping: %s")
+    WSException couldNotUpdateInParameterAsIndicated(String part);
+    
+    @Message(id = 25156, value = "Cannot obtain wsdl service: %s")
+    IllegalArgumentException cannotObtainWSDLService(QName service);
+    
+    @Message(id = 25157, value = "Field cannot be static: %s")
+    WSException fieldCannotBeStatic(String field);
+    
+    @Message(id = 25158, value = "Unsupported message type: %s")
+    String unsupportedMessageType(Object obj);
+    
+    @Message(id = 25159, value = "Cannot trace SOAP Message")
+    String cannotTraceSOAPMessage();
+    
+    @Message(id = 25160, value = "Operation %s does not have a return value")
+    WSException operationDoesNotHaveReturnValue(QName op);
+    
+    @Message(id = 25162, value = "Mime type %s not allowed for parameter %s allowed types are: %s")
+    SOAPException mimeTypeNotAllowed(String type, QName param, Collection<String> allowed);
+    
+    @Message(id = 25163, value = "javaType [%s] is not assignable from attachment content: %s")
+    SOAPException javaTypeIsNotAssignable(String javaType, String contentType);
+    
+    @Message(id = 25164, value = "Parameter %s not assignable from %s")
+    WSException parameterNotAssignable(Object clazz1, Object clazz2);
+    
+    @Message(id = 25165, value = "javaType %s is not assignable from: %s")
+    BindingException javaTypeIsNotAssignableFrom(String s1, String s2);
+    
+    @Message(id = 25166, value = "Cannot find RPC element in %s")
+    SOAPException cannotFindRPCElement(Object parent);
+    
+    @Message(id = 25167, value = "Invalid number of payload elements: %s")
+    WSException invalidNumberOfPayloadElements(int n);
+    
+    @Message(id = 25168, value = "Cannot unbind response message with empty soap body")
+    WSException emptySOAPBody();
+    
+    @Message(id = 25170, value = "Could not determine mime type for attachment parameter: %s")
+    BindingException couldNotDetermineMimeType(String par);
+    
+    @Message(id = 25171, value = "Could not locate attachment for parameter: %s")
+    BindingException couldNotLocateAttachment(QName qname);
+    
+    @Message(id = 25172, value = "Cannot find child element: %s")
+    WSException cannotFindChildElement(Name name);
+    
+    @Message(id = 25173, value = "No SOAPMessage available. Current message context carries: %s")
+    UnsupportedOperationException noSoapMessageAvailable(Class<?> clazz);
+    
+    @Message(id = 25175, value = "Cannot obtain operation meta data for %s")
+    WSException cannotObtainOperationMetaData(QName opName);
+    
+    @Message(id = 25176, value = "Target endpoint address not set")
+    WSException targetEndpointAddressNotSet();
     
 }

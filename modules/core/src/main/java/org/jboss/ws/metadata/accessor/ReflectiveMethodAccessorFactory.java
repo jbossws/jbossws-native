@@ -28,9 +28,9 @@ import org.jboss.ws.metadata.umdm.WrappedParameter;
 
 final class ReflectiveMethodAccessorFactory implements AccessorFactory
 {
-   private final Class clazz;
+   private final Class<?> clazz;
 
-   ReflectiveMethodAccessorFactory(Class clazz)
+   ReflectiveMethodAccessorFactory(Class<?> clazz)
    {
       this.clazz = clazz;
    }

@@ -23,7 +23,6 @@ package org.jboss.ws.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
-import java.util.ResourceBundle;
 
 import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
@@ -34,7 +33,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
 import org.jboss.ws.core.soap.attachment.MimeConstants;
@@ -58,7 +57,6 @@ import org.w3c.dom.Element;
  */
 public final class MessageTrace
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(MessageTrace.class);
    private static final Logger msgLog = Logger.getLogger(MessageTrace.class);
    private static ServerConfig serverConfig = null;
    private static boolean serverConfigInit = false;
@@ -127,7 +125,7 @@ public final class MessageTrace
          }
          catch (Exception ex)
          {
-            msgLog.error(BundleUtils.getMessage(bundle, "CANNOT_TRACE_SOAPMESSAGE"),  ex);
+            msgLog.error(NativeMessages.MESSAGES.cannotTraceSOAPMessage(),  ex);
          }
       }
       else if (message instanceof byte[])
@@ -144,7 +142,7 @@ public final class MessageTrace
       }
       else
       {
-          msgLog.warn(BundleUtils.getMessage(bundle, "UNSUPPORTED_MESSAGE_TYPE",  message));
+          msgLog.warn(NativeMessages.MESSAGES.unsupportedMessageType(message));
       }
    }
    

@@ -24,12 +24,11 @@ package org.jboss.ws.metadata.jaxrpcmapping;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.utils.ResourceURL;
 import org.jboss.xb.binding.JBossXBException;
 import org.jboss.xb.binding.ObjectModelFactory;
@@ -46,7 +45,6 @@ import org.xml.sax.Attributes;
  */
 public class JavaWsdlMappingFactory implements ObjectModelFactory
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(JavaWsdlMappingFactory.class);
    // provide logging
    private static Logger log = Logger.getLogger(JavaWsdlMappingFactory.class);
 
@@ -70,7 +68,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
    {
       if (mappingURL == null)
       {
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "URL_CANNOT_BE_NULL"));
+         throw NativeMessages.MESSAGES.illegalNullArgument("mappingURL");
       }
 
       // setup the XML binding Unmarshaller
@@ -83,7 +81,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
       }
       catch (JBossXBException e)
       {
-         IOException ioex = new IOException(BundleUtils.getMessage(bundle, "CANNOT_PARSE",  mappingURL));
+         IOException ioex = NativeMessages.MESSAGES.cannotParse(mappingURL);
          Throwable cause = e.getCause();
          if (cause != null)
             ioex.initCause(cause);
@@ -263,7 +261,7 @@ public class JavaWsdlMappingFactory implements ObjectModelFactory
          }
          
          if (qname == null)
-            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_ANONYMOUS_QNAME",  value));
+            throw NativeMessages.MESSAGES.invalidAnonymousQName(value);
          
          typeMapping.setAnonymousTypeQName(qname);
       }

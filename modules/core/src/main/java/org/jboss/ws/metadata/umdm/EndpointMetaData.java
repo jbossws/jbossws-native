@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.metadata.umdm;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,15 +30,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.NativeLoggers;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.binding.TypeMappingImpl;
@@ -59,7 +60,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaDat
  */
 public abstract class EndpointMetaData extends ExtensibleMetaData implements InitalizableMetaData
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(EndpointMetaData.class);
    // provide logging
    private static Logger log = Logger.getLogger(EndpointMetaData.class);
 
@@ -85,7 +85,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
    // The endpoint interface name
    private String seiName;
    // The endpoint interface
-   private Class seiClass;
+   private Class<?> seiClass;
    // The optional authentication method
    private String authMethod;
    // The SOAPBinding style
@@ -141,7 +141,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
    public void setBindingId(String bindingId)
    {
       if (SUPPORTED_BINDINGS.contains(bindingId) == false)
-         throw new WSException(BundleUtils.getMessage(bundle, "UNSUPPORTED_BINDING",  bindingId));
+         throw MESSAGES.unsupportedBinding(bindingId);
 
       this.bindingId = bindingId;
    }
@@ -160,7 +160,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
       if (wsMetaData.isEagerInitialized())
       {
          if (UnifiedMetaData.isFinalRelease() == false)
-            log.warn(BundleUtils.getMessage(bundle, "SET_SEI_NAME_AFTER_EAGER_INIT"));
+            NativeLoggers.ROOT_LOGGER.loadingSettingSEIAfterEagerInit();
 
          // reinitialize
          initializeInternal();
@@ -177,9 +177,9 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
     * Load the service endpoint interface.
     * It should only be cached during eager initialization.
     */
-   public Class getServiceEndpointInterface()
+   public Class<?> getServiceEndpointInterface()
    {
-      Class tmpClass = seiClass;
+      Class<?> tmpClass = seiClass;
       if (tmpClass == null && seiName != null)
       {
          try
@@ -188,13 +188,13 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
             tmpClass = classLoader.loadClass(seiName);
             if (serviceMetaData.getUnifiedMetaData().isEagerInitialized())
             {
-               log.warn(BundleUtils.getMessage(bundle, "LOADING_SEI_AFTER_EAGER_INIT"));
+               NativeLoggers.ROOT_LOGGER.loadingSettingSEIAfterEagerInit();
                seiClass = tmpClass;
             }
          }
          catch (ClassNotFoundException ex)
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_SEI",  seiName),  ex);
+            throw new WSException(ex);
          }
       }
       return tmpClass;
@@ -214,7 +214,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
    public void setEncodingStyle(Use value)
    {
       if (value != null && use != null && !use.equals(value))
-         throw new WSException(BundleUtils.getMessage(bundle, "MIXED_STYLES_NOT_SUPPORTED"));
+         throw MESSAGES.conflictingEncodingStyles(value, use);
 
       log.trace("setEncodingStyle: " + value);
       this.use = value;
@@ -234,7 +234,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
    public void setStyle(Style value)
    {
       if (value != null && style != null && !style.equals(value))
-         throw new WSException(BundleUtils.getMessage(bundle, "MIXED_STYLES_NOT_SUPPORTED"));
+         throw MESSAGES.conflictingEncodingStyles(value, style);
 
       if (log.isTraceEnabled())
          log.trace("setStyle: " + value);
@@ -253,7 +253,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
    public void setWrappedParameterStyle(final Boolean value)
    {
       if (value != null && wrappedParameterStyle != null && !wrappedParameterStyle.equals(value))
-         throw new WSException(BundleUtils.getMessage(bundle, "MIXED_SOAP_PARAMETER_STYLES_NOT_SUPPORTED"));
+         throw MESSAGES.conflictingSOAPParameterStyles(value, wrappedParameterStyle);
 
       this.wrappedParameterStyle = value;
    }
@@ -288,7 +288,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
             }
             else
             {
-               throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_UNIQUELY_INDENTIFY_OP",  xmlName));
+               throw MESSAGES.cannotUniquelyIdentifyOp(xmlName);
             }
          }
       }
@@ -315,7 +315,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
                }
                else
                {
-                  throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_UNIQUELY_INDENTIFY_OP",  xmlName));
+                  throw MESSAGES.cannotUniquelyIdentifyOp(xmlName);
                }
             }
          }
@@ -329,7 +329,6 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
       if (opMetaDataCache.size() == 0)
       {
          // This can happen when the SEI mapping was not found
-         log.warn(BundleUtils.getMessage(bundle, "ACCESS_TO_EMPTY_OP_META_DATA_CACHE"));
          initializeInternal();
       }
 
@@ -451,7 +450,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
    {
       TypeMappingImpl typeMapping = serviceMetaData.getTypeMapping();
       List<TypeMappingMetaData> typeMappings = serviceMetaData.getTypesMetaData().getTypeMappings();
-      List<Class> registeredTypes = new ArrayList<Class>(typeMappings.size());
+      List<Class<?>> registeredTypes = new ArrayList<Class<?>>(typeMappings.size());
       for (TypeMappingMetaData tmMetaData : typeMappings)
       {
          String javaTypeName = tmMetaData.getJavaTypeName();
@@ -462,7 +461,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
 
             // TODO: Clarification. In which cases is the type already registered?
             boolean registered = false;
-            for (Class current : types)
+            for (Class<?> current : types)
             {
                if (current.getName().equals(javaTypeName))
                {
@@ -477,7 +476,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
                try
                {
                   ClassLoader classLoader = getClassLoader();
-                  Class javaType = JavaUtils.loadJavaType(javaTypeName, classLoader);
+                  Class<?> javaType = JavaUtils.loadJavaType(javaTypeName, classLoader);
 
                   if (JavaUtils.isPrimitive(javaTypeName))
                      javaType = JavaUtils.getWrapperType(javaType);
@@ -495,7 +494,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
                }
                catch (ClassNotFoundException e)
                {
-                  log.warn(BundleUtils.getMessage(bundle, "CANNOT_LOAD_CLASS", new Object[]{ xmlType,  javaTypeName}));
+                  NativeLoggers.ROOT_LOGGER.cannotLoadClassForType(xmlType, javaTypeName, e);
                }
             }
          }
@@ -505,7 +504,7 @@ public abstract class EndpointMetaData extends ExtensibleMetaData implements Ini
    private void eagerInitializeAccessors()
    {
       // Collect the list of all used types
-      List<Class> types = new ArrayList<Class>();
+      List<Class<?>> types = new ArrayList<Class<?>>();
       for (OperationMetaData opMetaData : operations)
       {
          for (ParameterMetaData paramMetaData : opMetaData.getParameters())

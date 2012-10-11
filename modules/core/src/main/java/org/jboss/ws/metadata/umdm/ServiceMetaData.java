@@ -26,19 +26,17 @@ import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.TypeMappingRegistry;
 
-import org.jboss.logging.Logger;
+import org.jboss.ws.NativeLoggers;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.binding.TypeMappingImpl;
 import org.jboss.ws.core.jaxrpc.TypeMappingRegistryImpl;
 import org.jboss.ws.core.jaxrpc.binding.jbossxb.SchemaBindingBuilder;
@@ -61,10 +59,6 @@ import org.jboss.xb.binding.sunday.unmarshalling.SchemaBinding;
  */
 public class ServiceMetaData implements InitalizableMetaData, Serializable
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(ServiceMetaData.class);
-   // provide logging
-   private static final Logger log = Logger.getLogger(ServiceMetaData.class);
-
    // The parent meta data.
    private UnifiedMetaData wsMetaData;
 
@@ -205,7 +199,7 @@ public class ServiceMetaData implements InitalizableMetaData, Serializable
             if (epMetaData != null)
             {
                // The CTS uses Service.getPort(Class) with multiple endpoints implementing the same SEI
-               log.warn(BundleUtils.getMessage(bundle, "MULTIPLE_POSSIBLE_ENDPOINTS_IMPLEMENTING_SEI",  seiName));
+               NativeLoggers.ROOT_LOGGER.multiplePossibleEndpointImplementingSEI(seiName);
             }
             epMetaData = epmd;
          }
@@ -220,7 +214,7 @@ public class ServiceMetaData implements InitalizableMetaData, Serializable
       // This happends when we have multiple port components in sharing the same wsdl port
       // The EndpointMetaData name is the wsdl port, so we cannot have multiple meta data for the same port.
       if (endpoints.get(portName) != null)
-         throw new WSException(BundleUtils.getMessage(bundle, "ENDPOINTMETADATA_NAME_MUST_BE_UNIQUE",  portName));
+         throw NativeMessages.MESSAGES.endpointMetadataMustBeUnique(portName);
 
       endpoints.put(portName, epMetaData);
    }
@@ -251,7 +245,7 @@ public class ServiceMetaData implements InitalizableMetaData, Serializable
             }
             catch (IOException e)
             {
-               throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_PARSE_MAPPING"),  e);
+               throw new WSException(e);
             }
          }
       }
@@ -308,7 +302,7 @@ public class ServiceMetaData implements InitalizableMetaData, Serializable
             }
             catch (IOException ex)
             {
-               throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_FIND_WSDL",  wsdlFile));
+               throw new IllegalStateException(ex);
             }
          }
       }
@@ -320,7 +314,7 @@ public class ServiceMetaData implements InitalizableMetaData, Serializable
       Use encStyle = getEncodingStyle();
       TypeMappingImpl typeMapping = (TypeMappingImpl)tmRegistry.getTypeMapping(encStyle.toURI());
       if (typeMapping == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "NO_TYPE_MAPPING",  encStyle));
+         throw NativeMessages.MESSAGES.noTypeMapping(encStyle);
 
       return typeMapping;
    }
@@ -339,7 +333,7 @@ public class ServiceMetaData implements InitalizableMetaData, Serializable
                }
                else if (encStyle.equals(epMetaData.getEncodingStyle()) == false)
                {
-                  throw new WSException(BundleUtils.getMessage(bundle, "CONFLICTING_ENCODING_STYLES"));
+                  throw NativeMessages.MESSAGES.conflictingEncodingStyles(encStyle, epMetaData.getEncodingStyle());
                }
             }
          }
@@ -403,7 +397,7 @@ public class ServiceMetaData implements InitalizableMetaData, Serializable
    public void assertTargetNamespace(String targetNS)
    {
       if (getServiceName().getNamespaceURI().equals(targetNS) == false)
-         throw new WSException(BundleUtils.getMessage(bundle, "NOT_WSDL_TNS",  targetNS));
+         throw NativeMessages.MESSAGES.notWsdlTargetNamespace(targetNS);
    }
 
    public String toString()

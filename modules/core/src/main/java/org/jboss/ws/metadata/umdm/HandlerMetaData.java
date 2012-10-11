@@ -25,14 +25,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.logging.Logger;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
 
@@ -44,10 +42,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
  */
 public abstract class HandlerMetaData implements InitalizableMetaData, Serializable
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(HandlerMetaData.class);
-   // provide logging
-   private final Logger log = Logger.getLogger(HandlerMetaData.class);
-   
    private transient EndpointMetaData epMetaData;
 
    // The required <handler-name> element
@@ -61,7 +55,7 @@ public abstract class HandlerMetaData implements InitalizableMetaData, Serializa
    // The optional <init-param> elements
    private List<UnifiedInitParamMetaData> initParams = new ArrayList<UnifiedInitParamMetaData>();
    // The cached handler class
-   private Class handlerClass;
+   private Class<?> handlerClass;
 
    public HandlerMetaData(HandlerType type)
    {
@@ -98,12 +92,12 @@ public abstract class HandlerMetaData implements InitalizableMetaData, Serializa
       return handlerClassName;
    }
 
-   public Class getHandlerClass()
+   public Class<?> getHandlerClass()
    {
       if (handlerClassName == null)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "HANDLER_CLASS_NAME_CANNOT_BE_NULL"));
+         throw NativeMessages.MESSAGES.handlerClassNameCannotBeNull();
       
-      Class localClass = handlerClass;
+      Class<?> localClass = handlerClass;
       if (localClass == null)
       {
          try
@@ -113,7 +107,7 @@ public abstract class HandlerMetaData implements InitalizableMetaData, Serializa
          }
          catch (ClassNotFoundException ex)
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_HANDLER",  handlerClassName),  ex);
+            throw new WSException(ex);
          }
       }
       return localClass;

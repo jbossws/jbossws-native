@@ -24,7 +24,6 @@ package org.jboss.ws.metadata.umdm;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.logging.Logger;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 
 /**
@@ -40,9 +39,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public class EndpointConfigMetaData
 {
-
-   private static Logger log = Logger.getLogger(EndpointConfigMetaData.class);
-
    private final EndpointMetaData epMetaData;
    // The optional handlers
    private List<HandlerMetaData> handlers = new ArrayList<HandlerMetaData>();
@@ -96,8 +92,6 @@ public class EndpointConfigMetaData
 
    void configHandlerMetaData()
    {
-      log.debug("Configure EndpointMetaData");
-
       List<HandlerMetaData> sepHandlers = getHandlerMetaData(HandlerType.ENDPOINT);
       clearHandlers();
 

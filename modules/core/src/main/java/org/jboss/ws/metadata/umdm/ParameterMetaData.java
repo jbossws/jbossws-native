@@ -25,7 +25,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -33,8 +32,9 @@ import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.NativeLoggers;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
@@ -51,7 +51,6 @@ import org.jboss.ws.metadata.accessor.ReflectiveMethodAccessorFactoryCreator;
  */
 public class ParameterMetaData implements InitalizableMetaData
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(ParameterMetaData.class);
    // provide logging
    private final Logger log = Logger.getLogger(ParameterMetaData.class);
 
@@ -62,7 +61,7 @@ public class ParameterMetaData implements InitalizableMetaData
    private String partName;
    private QName xmlType;
    private String javaTypeName;
-   private Class javaType;
+   private Class<?> javaType;
    private ParameterMode mode;
    private Set<String> mimeTypes;
    private boolean inHeader;
@@ -91,7 +90,7 @@ public class ParameterMetaData implements InitalizableMetaData
    public ParameterMetaData(OperationMetaData opMetaData, QName xmlName, String javaTypeName)
    {
       if (xmlName == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_NULL_XMLNAME_ARGUMENT"));
+         throw NativeMessages.MESSAGES.illegalNullArgument("xmlName");
 
       // Remove the prefixes
       if (xmlName.getNamespaceURI().length() > 0)
@@ -104,14 +103,14 @@ public class ParameterMetaData implements InitalizableMetaData
       this.partName = xmlName.getLocalPart();
    }
 
-   private static boolean matchParameter(Method method, int index, Class expectedType, Set<Integer> matches, boolean exact, boolean holder)
+   private static boolean matchParameter(Method method, int index, Class<?> expectedType, Set<Integer> matches, boolean exact, boolean holder)
    {
-      Class returnType = method.getReturnType();
+      Class<?> returnType = method.getReturnType();
 
       if (index == -1 && matchTypes(returnType, expectedType, exact, false))
          return true;
 
-      Class[] classParameters = method.getParameterTypes();
+      Class<?>[] classParameters = method.getParameterTypes();
       if (index < 0 || index >= classParameters.length)
          return false;
 
@@ -136,13 +135,13 @@ public class ParameterMetaData implements InitalizableMetaData
       return false;
    }
 
-   private static boolean matchTypes(java.lang.reflect.Type actualType, Class expectedType, boolean exact, boolean holder)
+   private static boolean matchTypes(java.lang.reflect.Type actualType, Class<?> expectedType, boolean exact, boolean holder)
    {
       if (holder && HolderUtils.isHolderType(actualType) == false)
          return false;
 
       java.lang.reflect.Type valueType = (holder ? HolderUtils.getValueType(actualType) : actualType);
-      Class valueClass = JavaUtils.erasure(valueType);
+      Class<?> valueClass = JavaUtils.erasure(valueType);
 
       return matchTypesInternal(valueClass, expectedType, exact);
    }
@@ -150,20 +149,20 @@ public class ParameterMetaData implements InitalizableMetaData
    // This duplication is needed because Class does not implement Type in 1.4, 
    // which makes retrotranslation not possible. This takes advantage of overloading to
    // prevent the problem.
-   private static boolean matchTypes(Class actualType, Class expectedType, boolean exact, boolean holder)
+   private static boolean matchTypes(Class<?> actualType, Class<?> expectedType, boolean exact, boolean holder)
    {
       if (holder && HolderUtils.isHolderType(actualType) == false)
          return false;
 
-      Class valueClass = (holder ? HolderUtils.getValueType(actualType) : actualType);
+      Class<?> valueClass = (holder ? HolderUtils.getValueType(actualType) : actualType);
 
       return matchTypesInternal(valueClass, expectedType, exact);
    }
 
-   private static boolean matchTypesInternal(Class valueClass, Class expectedType, boolean exact)
+   private static boolean matchTypesInternal(Class<?> valueClass, Class<?> expectedType, boolean exact)
    {
       // FIXME - Why do we need this hack? The method signature should _ALWAYS_ match, else we will get ambiguous or incorrect results
-      List<Class> anyTypes = new ArrayList<Class>();
+      List<Class<?>> anyTypes = new ArrayList<Class<?>>();
       anyTypes.add(javax.xml.soap.SOAPElement.class);
       anyTypes.add(org.w3c.dom.Element.class);
 
@@ -199,7 +198,7 @@ public class ParameterMetaData implements InitalizableMetaData
    public void setXmlType(QName xmlType)
    {
       if (xmlType == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_NULL_XMLTYPE"));
+         throw NativeMessages.MESSAGES.illegalNullArgument("xmlType");
 
       // Remove potential prefix
       if (xmlType.getNamespaceURI().length() > 0)
@@ -226,14 +225,14 @@ public class ParameterMetaData implements InitalizableMetaData
       // Warn if this is called after eager initialization
       UnifiedMetaData wsMetaData = opMetaData.getEndpointMetaData().getServiceMetaData().getUnifiedMetaData();
       if (wsMetaData.isEagerInitialized() && UnifiedMetaData.isFinalRelease() == false)
-         log.warn(BundleUtils.getMessage(bundle, "SET_JAVA_TYPE_NAME_AFTER_EAGER_INIT"),  new IllegalStateException());
+         NativeLoggers.ROOT_LOGGER.setJavaTypeAfterEagerInit(typeName);
       javaTypeName = typeName;
       javaType = null;
    }
 
-   public Class loadWrapperBean()
+   public Class<?> loadWrapperBean()
    {
-      Class wrapperBean = null;
+      Class<?> wrapperBean = null;
       try
       {
          ClassLoader loader = getClassLoader();
@@ -249,9 +248,9 @@ public class ParameterMetaData implements InitalizableMetaData
    /** Load the java type.
     *  It should only be cached during eager initialization.
     */
-   public Class getJavaType()
+   public Class<?> getJavaType()
    {
-      Class tmpJavaType = javaType;
+      Class<?> tmpJavaType = javaType;
       if (tmpJavaType == null && javaTypeName != null)
       {
          try
@@ -268,7 +267,7 @@ public class ParameterMetaData implements InitalizableMetaData
          }
          catch (ClassNotFoundException ex)
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_JAVA_TYPE",  javaTypeName),  ex);
+            throw new WSException(ex);
          }
       }
       return tmpJavaType;
@@ -288,7 +287,7 @@ public class ParameterMetaData implements InitalizableMetaData
       else if ("OUT".equals(mode))
          setMode(ParameterMode.OUT);
       else
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_MODE",  mode));
+         throw NativeMessages.MESSAGES.invalidMode(mode);
    }
 
    public void setMode(ParameterMode mode)
@@ -375,7 +374,7 @@ public class ParameterMetaData implements InitalizableMetaData
       StringBuilder mimeName = new StringBuilder(xmlType.getLocalPart());
       int pos = mimeName.indexOf("_");
       if (pos == -1)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_MIME_TYPE",  xmlType));
+         throw NativeMessages.MESSAGES.invalidMimeType(xmlType);
 
       mimeName.setCharAt(pos, '/');
       return mimeName.toString();
@@ -435,20 +434,20 @@ public class ParameterMetaData implements InitalizableMetaData
       {
          if (loadWrapperBean() == null)
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "WRAPPER_BEANS_AUTOGEN_NOT_SUPPORTED"));
+            throw NativeMessages.MESSAGES.jaxrpcWrapperBeanAutogenNotSupported();
          }
       }
 
       javaType = getJavaType();
       if (javaType == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_LOAD_JAVA_TYPE",  javaTypeName));
+         throw NativeMessages.MESSAGES.cannotLoad(javaTypeName);
    }
 
    private ClassLoader getClassLoader()
    {
       ClassLoader loader = opMetaData.getEndpointMetaData().getClassLoader();
       if (loader == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CLASSLOADER_NOT_AVAILABLE"));
+         throw NativeMessages.MESSAGES.classloaderNotAvailable();
       return loader;
    }
 
@@ -456,7 +455,7 @@ public class ParameterMetaData implements InitalizableMetaData
    {
       ClassLoader loader = getOperationMetaData().getEndpointMetaData().getClassLoader();
       List<WrappedParameter> wrappedParameters = getWrappedParameters();
-      Class wrapperType = getJavaType();
+      Class<?> wrapperType = getJavaType();
 
       // Standard type
       if (wrappedParameters == null)
@@ -469,7 +468,7 @@ public class ParameterMetaData implements InitalizableMetaData
 
          try
          {
-            Class type = (typeName != null) ? JavaUtils.loadJavaType(typeName, loader) : ParameterWrapping.getWrappedType(wrapped.getVariable(), wrapperType);
+            Class<?> type = (typeName != null) ? JavaUtils.loadJavaType(typeName, loader) : ParameterWrapping.getWrappedType(wrapped.getVariable(), wrapperType);
             if (type == null)
                return false;
             if (!matchParameter(method, wrapped.getIndex(), type, matches, exact, wrapped.isHolder()))

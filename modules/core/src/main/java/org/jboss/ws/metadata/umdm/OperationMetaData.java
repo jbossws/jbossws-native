@@ -21,19 +21,19 @@
  */
 package org.jboss.ws.metadata.umdm;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.ParameterMode;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeLoggers;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.soap.utils.Style;
 import org.jboss.ws.core.soap.utils.Use;
@@ -48,7 +48,6 @@ import org.w3c.dom.Element;
  */
 public class OperationMetaData extends ExtensibleMetaData implements InitalizableMetaData
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(OperationMetaData.class);
    // provide logging
    private final Logger log = Logger.getLogger(OperationMetaData.class);
 
@@ -78,9 +77,9 @@ public class OperationMetaData extends ExtensibleMetaData implements Initalizabl
       this.javaName = javaName;
 
       if (qname == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_NULL_QNAME_ARGUMENT"));
+         throw MESSAGES.illegalNullArgument("qname");
       if (javaName == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_NULL_JAVANAME_ARGUMENT",  qname));
+         throw MESSAGES.illegalNullArgument("javaName");
 
       String nsURI = qname.getNamespaceURI();
       String localPart = qname.getLocalPart();
@@ -155,7 +154,7 @@ public class OperationMetaData extends ExtensibleMetaData implements Initalizabl
    public Method getJavaMethod()
    {
       Method tmpMethod = javaMethod;
-      Class seiClass = epMetaData.getServiceEndpointInterface();
+      Class<?> seiClass = epMetaData.getServiceEndpointInterface();
       if (tmpMethod == null && seiClass != null)
       {
          for (Method method : seiClass.getMethods())
@@ -168,7 +167,7 @@ public class OperationMetaData extends ExtensibleMetaData implements Initalizabl
                if (wsMetaData.isEagerInitialized())
                {
                   if (UnifiedMetaData.isFinalRelease() == false)
-                     log.warn(BundleUtils.getMessage(bundle, "LOADING_JAVA_METHOD"),  new IllegalStateException());
+                     NativeLoggers.ROOT_LOGGER.loadingJavaMethodAfterEagerInit();
 
                   javaMethod = method;
                }
@@ -178,7 +177,7 @@ public class OperationMetaData extends ExtensibleMetaData implements Initalizabl
          }
 
          if (tmpMethod == null)
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_JAVA_METHOD",  javaName));
+            throw MESSAGES.cannotFindJavaMethod(javaName);
       }
       return tmpMethod;
    }
@@ -388,15 +387,15 @@ return false;
       if (oneWay)
       {
          if (returnParam != null)
-            throw new WSException(BundleUtils.getMessage(bundle, "ONEWAY_CANNOT_HAVE_RETURN"));
+            throw MESSAGES.onewayOperationCannotHaveReturn();
 
          if (faults.size() > 0)
-            throw new WSException(BundleUtils.getMessage(bundle, "ONEWAY_CANNOT_HAVE_CHECKEDEX"));
+            throw MESSAGES.onewayOperationCannotHaveCheckedExc();
 
          for (ParameterMetaData paramMetaData : parameters)
          {
             if (paramMetaData.getMode() != ParameterMode.IN)
-               throw new WSException(BundleUtils.getMessage(bundle, "ONEWAY_CANNOT_HAVE_INOUT"));
+               throw MESSAGES.onewayOperationCannotHaveInOutPars();
          }
       }
    }

@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.soap.AttachmentPart;
@@ -33,7 +32,8 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeLoggers;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.soap.attachment.SwapableMemoryDataSource;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
@@ -48,9 +48,6 @@ import org.jboss.xb.binding.NamespaceRegistry;
  */
 public abstract class CommonMessageContext implements Map<String, Object>
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(CommonMessageContext.class);
-   private static Logger log = Logger.getLogger(CommonMessageContext.class);
-
    public static final String REMOTING_METADATA = "org.jboss.ws.remoting.metadata";
 
    // The serialization context for this message ctx
@@ -106,7 +103,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
    public SOAPMessage getSOAPMessage()
    {
       if(message!=null && ((message instanceof SOAPMessage) == false))
-         throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "NO_SOAPMESSAGE_AVILABLE",  message.getClass()));
+         throw NativeMessages.MESSAGES.noSoapMessageAvailable(message.getClass());
       return (SOAPMessage)message;
    }
 
@@ -207,6 +204,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
          }
          catch (IllegalArgumentException ex)
          {
+            Logger log = Logger.getLogger(CommonMessageContext.class);
             if (log.isDebugEnabled())
                log.debug("Ignore: " + ex.getMessage());
          }
@@ -239,7 +237,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
 
       if(msg!=null && (msg instanceof SOAPMessage)) // in case of http binding
       {
-         Iterator it = ((SOAPMessage)msg).getAttachments();
+         Iterator<?> it = ((SOAPMessage)msg).getAttachments();
          while(it.hasNext())
          {
             AttachmentPart attachment = (AttachmentPart)it.next();
@@ -253,7 +251,7 @@ public abstract class CommonMessageContext implements Map<String, Object>
             }
             catch (SOAPException e)
             {
-               log.warn(BundleUtils.getMessage(bundle, "FAILED_TO_CLEANUP_ATTACHMENT_PART"),  e);
+               NativeLoggers.ROOT_LOGGER.failedToCleanupAttachmentPart(e);
             }
          }
       }

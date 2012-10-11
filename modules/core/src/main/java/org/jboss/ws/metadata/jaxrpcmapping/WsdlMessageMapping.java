@@ -22,11 +22,10 @@
 package org.jboss.ws.metadata.jaxrpcmapping;
 
 import java.io.Serializable;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 
 /**
  * Created by IntelliJ IDEA.
@@ -36,7 +35,6 @@ import org.jboss.ws.api.util.BundleUtils;
  */
 public class WsdlMessageMapping implements Serializable
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(WsdlMessageMapping.class);
    private static final long serialVersionUID = -3212852147033081838L;
 
    // The parent <method-param-parts-mapping> element
@@ -68,7 +66,7 @@ public class WsdlMessageMapping implements Serializable
    public void setParameterMode(String parameterMode)
    {
       if ("IN".equals(parameterMode) == false && "OUT".equals(parameterMode) == false && "INOUT".equals(parameterMode) == false)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_PARAMETER_MODE",  parameterMode));
+         throw NativeMessages.MESSAGES.invalidParameterMode(parameterMode);
       this.parameterMode = parameterMode;
    }
 

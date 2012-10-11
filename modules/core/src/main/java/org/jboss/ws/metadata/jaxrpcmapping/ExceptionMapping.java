@@ -45,7 +45,7 @@ public class ExceptionMapping implements Serializable
    // The required <wsdl-message> element
    private QName wsdlMessage;
    // The optional <constructor-parameter-order> element
-   private ArrayList constructorParameterOrder = new ArrayList();
+   private ArrayList<String> constructorParameterOrder = new ArrayList<String>();
 
    public ExceptionMapping(JavaWsdlMapping javaWsdlMapping)
    {
@@ -101,7 +101,7 @@ public class ExceptionMapping implements Serializable
       if (constructorParameterOrder.size() > 0)
       {
          sb.append("<constructor-parameter-order>");
-         for (Iterator i = constructorParameterOrder.iterator(); i.hasNext();)
+         for (Iterator<String> i = constructorParameterOrder.iterator(); i.hasNext();)
             sb.append("<element-name>").append(i.next()).append("</element-name>");
          sb.append("</constructor-parameter-order>");
       }

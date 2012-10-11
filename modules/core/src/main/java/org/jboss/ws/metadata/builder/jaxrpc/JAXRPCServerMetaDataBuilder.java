@@ -21,15 +21,16 @@
  */
 package org.jboss.ws.metadata.builder.jaxrpc;
 
-import java.util.ResourceBundle;
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.util.Set;
 
 import javax.management.ObjectName;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.NativeLoggers;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.ServiceEndpointInterfaceMapping;
 import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
@@ -59,7 +60,6 @@ import org.jboss.wsf.spi.metadata.webservices.WebservicesMetaData;
  */
 public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(JAXRPCServerMetaDataBuilder.class);
    // provide logging
    final Logger log = Logger.getLogger(JAXRPCServerMetaDataBuilder.class);
 
@@ -76,8 +76,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
          UnifiedMetaData wsMetaData = new UnifiedMetaData(dep.getRootFile());
          wsMetaData.setDeploymentName(dep.getCanonicalName());
          ClassLoader runtimeClassLoader = dep.getRuntimeClassLoader();
-         if(null == runtimeClassLoader)
-            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "RUNTIME_LOADER_CANNOT_BE_NULL"));
+         assert(runtimeClassLoader != null);
          wsMetaData.setClassLoader(runtimeClassLoader);
 
          WebservicesMetaData jaxrpcMapping = dep.getAttachment(WebservicesMetaData.class);
@@ -100,7 +99,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
             serviceMetaData.setMappingLocation(dep.getResourceResolver().resolve(mappingFile));
             JavaWsdlMapping javaWsdlMapping = serviceMetaData.getJavaWsdlMapping();
             if (javaWsdlMapping == null)
-               throw new WSException(BundleUtils.getMessage(bundle, "MAPPING_FILE_NOT_CONFIGURED"));
+               throw MESSAGES.mappingFileNotConfigured();
 
             // Build type mapping meta data
             setupTypesMetaData(serviceMetaData);
@@ -118,13 +117,12 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                {
                   String nsURI = wsdlDefinitions.getTargetNamespace();
                   portName = new QName(nsURI, portName.getLocalPart());
-                  log.warn(BundleUtils.getMessage(bundle, "ADDING_WSDL_TNS",  portName));
                   pcMetaData.setWsdlPort(portName);
                }
 
                WSDLEndpoint wsdlEndpoint = getWsdlEndpoint(wsdlDefinitions, portName);
                if (wsdlEndpoint == null)
-                  throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_PORT",  portName));
+                  throw MESSAGES.cannotFindPortInWsdl(portName);
 
                // set service name
                serviceMetaData.setServiceName(wsdlEndpoint.getWsdlService().getName());
@@ -155,7 +153,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
                   // Copy <port-component> meta data
                   EJBMetaData bmd = apMetaData.getBeanByEjbName(linkName);
                   if (bmd == null)
-                     throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_UNIFIEDBEANMETADATA",  linkName));
+                     throw MESSAGES.cannotObtainUnifiedBeanMetaData(linkName);
 
                   EJBSecurityMetaData smd = bmd.getSecurityMetaData();
                   if (smd != null)
@@ -193,7 +191,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
 
                ServiceEndpointInterfaceMapping seiMapping = javaWsdlMapping.getServiceEndpointInterfaceMapping(seiName);
                if (seiMapping == null)
-                  log.warn(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SEI_MAPPING",  seiName));
+                  NativeLoggers.ROOT_LOGGER.cannotObtainSEIMappingFor(seiName);
 
                // Setup the endpoint operations
                setupOperationsFromWSDL(sepMetaData, wsdlEndpoint, seiMapping);
@@ -221,7 +219,7 @@ public class JAXRPCServerMetaDataBuilder extends JAXRPCMetaDataBuilder
       }
       catch (Exception ex)
       {
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_BUILD_META_DATA",  ex.getMessage()),  ex);
+         throw new WSException(ex);
       }
    }
 
