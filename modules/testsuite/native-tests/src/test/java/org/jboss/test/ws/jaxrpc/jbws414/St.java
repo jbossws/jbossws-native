@@ -55,6 +55,6 @@ public class St
 
    public String toString() 
    {
-      return ref.toString();
+      return ref != null ? ref.toString() : "null";
    }
 }

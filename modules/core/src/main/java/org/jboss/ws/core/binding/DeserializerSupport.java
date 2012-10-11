@@ -33,6 +33,7 @@ import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.core.soap.SOAPContentElement;
+import org.jboss.ws.util.xml.BufferedStreamSource;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
@@ -73,7 +74,14 @@ public abstract class DeserializerSupport implements Deserializer
          Node node = ((DOMSource)source).getNode();
          xmlFragment = DOMWriter.printNode(node, false);
       }
-      else throw new UnsupportedOperationException();
+      else if (source instanceof BufferedStreamSource)
+      {
+         xmlFragment = ((BufferedStreamSource)source).toString();
+      }
+      else
+      {
+         throw new UnsupportedOperationException();
+      }
 
       return xmlFragment;
    }

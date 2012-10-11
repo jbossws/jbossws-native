@@ -71,6 +71,6 @@ public class Message
 
    public String toString()
    {
-      return "[name=" + name + ",data=" + new String(data) + "]";
+      return "[name=" + name + ",data=" + ((data != null && data.length > 0) ? new String(data) : "null") + "]";
    }
 }
