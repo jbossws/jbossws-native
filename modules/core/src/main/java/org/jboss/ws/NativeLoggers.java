@@ -190,4 +190,12 @@ public interface NativeLoggers extends BasicLogger
     @Message(id = 25177, value = "Exception caught while (preparing for) performing invocation")
     void exceptionWhilePreparingForInvocation(@Cause Throwable cause);
     
+    @LogMessage(level = WARN)
+    @Message(id = 25192, value = "Exception while processing handleFault")
+    void exceptionProcessingHandleFault(@Cause Throwable cause);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25193, value = "Multiple service endoints found for: %s")
+    void multipleServiceEndpointFoundFor(String s);
+    
 }

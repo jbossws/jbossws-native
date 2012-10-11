@@ -27,7 +27,6 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPElement;
@@ -40,7 +39,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.api.util.ServiceLoader;
 import org.jboss.ws.core.soap.utils.Style;
 import org.w3c.dom.Attr;
@@ -68,7 +67,6 @@ import org.w3c.dom.UserDataHandler;
  */
 public class SOAPPartImpl extends SOAPPart
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPPartImpl.class);
    // provide logging
    private static Logger log = Logger.getLogger(SOAPPartImpl.class);
 
@@ -171,7 +169,7 @@ public class SOAPPartImpl extends SOAPPart
          else if (node instanceof Element)
             domElement = (Element)node;
          else
-            throw new SOAPException(BundleUtils.getMessage(bundle, "UNSUPPORTED_DOMSOURCE_NODE",  node));
+            throw NativeMessages.MESSAGES.unsupportedDOMSourceNode(node);
 
          EnvelopeBuilder envBuilder = (EnvelopeBuilder) ServiceLoader.loadService(EnvelopeBuilder.class.getName(), EnvelopeBuilderDOM.class.getName());
          envBuilder.setStyle(Style.DOCUMENT);
@@ -193,12 +191,12 @@ public class SOAPPartImpl extends SOAPPart
          }
          catch (IOException e)
          {
-            throw new SOAPException(BundleUtils.getMessage(bundle, "CANNOT_PARSE_STREAM_SOURCE"),  e);
+            throw new SOAPException(e);
          }
       }
       else
       {
-         throw new SOAPException(BundleUtils.getMessage(bundle, "UNSUPPORTED_SOURCE_PARAMETER",  source));
+         throw NativeMessages.MESSAGES.unsupportedSourceParameter(source);
       }
    }
 
@@ -578,12 +576,12 @@ public class SOAPPartImpl extends SOAPPart
 
    public void setParentElement(SOAPElement parent) throws SOAPException
    {
-      throw new SOAPException(BundleUtils.getMessage(bundle, "THE_PARENT_ELEMENT_NOT_DEFINED"));
+      throw NativeMessages.MESSAGES.parentElemOfSOAPPartIsNotDefined();
    }
 
    public void setValue(String value)
    {
-      throw new IllegalStateException(BundleUtils.getMessage(bundle, "SETTING_VALUE_NOT_DEFINED"));
+      throw NativeMessages.MESSAGES.settingValueOfSOAPPartIsNotDefined();
    }
 
 }

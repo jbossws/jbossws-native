@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.core.utils;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -28,7 +30,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.imageio.ImageIO;
@@ -42,8 +43,6 @@ import javax.mail.internet.ParseException;
 import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamSource;
 
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.IOUtils;
 import org.jboss.ws.common.JavaUtils;
@@ -55,10 +54,8 @@ import org.jboss.ws.common.JavaUtils;
  */
 public class MimeUtils
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(MimeUtils.class);
-
-   private static Map<String, Class> mime2class = new HashMap<String, Class>();
-   private static Map<Class, String> class2mime = new HashMap<Class, String>();
+   private static Map<String, Class<?>> mime2class = new HashMap<String, Class<?>>();
+   private static Map<Class<?>, String> class2mime = new HashMap<Class<?>, String>();
 
    static {
       mime2class.put("text/plain", java.lang.String.class);
@@ -127,7 +124,7 @@ public class MimeUtils
     * @param mimeTypes the set of mime types to search
     * @return true if there is a match, false if not
     */
-   public static boolean isMemberOf(String mimeType, Set mimeTypes)
+   public static boolean isMemberOf(String mimeType, Set<?> mimeTypes)
    {
       if (mimeTypes.contains(mimeType))
          return true;
@@ -149,8 +146,8 @@ public class MimeUtils
     * Resolve the class for a mype type.
     * Defaults to <code>DataHandler</code> if no mapping could be found.
     */
-   public static Class resolveClass(String mimeType) {
-      Class cl = mime2class.get(mimeType);
+   public static Class<?> resolveClass(String mimeType) {
+      Class<?> cl = mime2class.get(mimeType);
       if(null==cl)
          cl = javax.activation.DataHandler.class;
       return cl;
@@ -168,9 +165,9 @@ public class MimeUtils
       return mimeType;
    }
 
-   public static String resolveMimeType(Class clazz) {
+   public static String resolveMimeType(Class<?> clazz) {
       String mimeType = "application/octet-stream";
-      for(Class cl : class2mime.keySet())
+      for(Class<?> cl : class2mime.keySet())
       {
          if(JavaUtils.isAssignableFrom(cl, clazz))
             mimeType = class2mime.get(cl);
@@ -178,7 +175,7 @@ public class MimeUtils
       return mimeType;
    }
 
-   public static ByteArrayConverter getConverterForJavaType(Class targetClazz)
+   public static ByteArrayConverter getConverterForJavaType(Class<?> targetClazz)
    {
       ByteArrayConverter converter = null;
       if(JavaUtils.isAssignableFrom(java.awt.Image.class, targetClazz))
@@ -193,7 +190,7 @@ public class MimeUtils
          converter = new RealByteArrayConverter();
       
       if(null == converter)
-         throw new WSException(BundleUtils.getMessage(bundle, "NO_BYTEARRAYCONVERTER_CLASS",  targetClazz.getName()));
+         throw MESSAGES.noByteArrayConverterFor(targetClazz.getName());
 
       return converter;
    }
@@ -215,7 +212,7 @@ public class MimeUtils
       }
 
       if(null == converter)
-          throw new WSException(BundleUtils.getMessage(bundle, "NO_BYTEARRAYCONVERTER_CONTENT_TYPE",  contentType));
+          throw MESSAGES.noByteArrayConverterFor(contentType);
 
       return converter;
    }
@@ -252,12 +249,12 @@ public class MimeUtils
             }
             catch (IOException e)
             {
-               throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_CONVERT",  obj.getClass()));
+               throw MESSAGES.failedToConvert(obj.getClass());
             }
          }
          else
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "UNABLE_TO_CONVERT",  obj.getClass()));
+            throw MESSAGES.failedToConvert(obj.getClass());
          }
 
       }
@@ -280,12 +277,12 @@ public class MimeUtils
             }
             catch (IOException e)
             {
-               throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_CONVERT",  obj.getClass()));
+               throw MESSAGES.failedToConvert(obj.getClass());
             }
          }
          else
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "UNABLE_TO_CONVERT",  obj.getClass()));
+            throw MESSAGES.failedToConvert(obj.getClass());
          }
       }
    }
@@ -305,7 +302,7 @@ public class MimeUtils
          }
          catch (IOException e)
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_CONVERT_STRING"));
+            throw MESSAGES.failedToConvert("java.lang.String");
          }
 
          return converted;
@@ -321,12 +318,12 @@ public class MimeUtils
             }
             catch (IOException e)
             {
-               throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_CONVERT",  obj.getClass()));
+               throw MESSAGES.failedToConvert(obj.getClass());
             }
          }
          else
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "UNABLE_TO_CONVERT",  obj.getClass()));
+            throw MESSAGES.failedToConvert(obj.getClass());
          }
       }
    }
@@ -347,7 +344,7 @@ public class MimeUtils
          }
          catch (IOException e)
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_CONVERT_BYTE"));
+            throw MESSAGES.failedToConvert("byte[]");
          }
 
          return converted;
@@ -364,12 +361,12 @@ public class MimeUtils
             }
             catch (IOException e)
             {
-               throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_CONVERT",  obj.getClass()));
+               throw MESSAGES.failedToConvert(obj.getClass());
             }
          }
          else
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "UNABLE_TO_CONVERT",  obj.getClass()));
+            throw MESSAGES.failedToConvert(obj.getClass());
          }
       }
    }   
@@ -389,7 +386,7 @@ public class MimeUtils
             }
             catch (IOException e)
             {
-               throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_CONVERT",  obj.getClass()));
+               throw MESSAGES.failedToConvert(obj.getClass());
             }
          }
       }

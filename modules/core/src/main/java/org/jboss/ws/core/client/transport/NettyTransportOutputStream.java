@@ -23,7 +23,6 @@ package org.jboss.ws.core.client.transport;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ResourceBundle;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -31,7 +30,7 @@ import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.handler.codec.http.DefaultHttpChunk;
 import org.jboss.netty.handler.codec.http.HttpChunk;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 
 /**
  * An output stream that sends messages using Netty.
@@ -46,7 +45,6 @@ import org.jboss.ws.api.util.BundleUtils;
  */
 public class NettyTransportOutputStream extends OutputStream
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(NettyTransportOutputStream.class);
    private Channel channel;
    private byte[] buffer;
    private int cur;
@@ -64,7 +62,7 @@ public class NettyTransportOutputStream extends OutputStream
       this.channel = channel;
       if (chunkSize <= 0)
       {
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_CHUNK_SIZE"));
+         throw NativeMessages.MESSAGES.invalidChunkSize(chunkSize);
       }
       this.cur = 0;
       this.buffer = new byte[chunkSize];
@@ -155,7 +153,7 @@ public class NettyTransportOutputStream extends OutputStream
    {
       if (!closed)
       {
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_GET_CHANNEL"));
+         throw NativeMessages.MESSAGES.cannotGetChannelFuture();
       }
       return future;
    }

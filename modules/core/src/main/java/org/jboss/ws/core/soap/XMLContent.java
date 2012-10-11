@@ -23,15 +23,14 @@ package org.jboss.ws.core.soap;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 
 import org.jboss.logging.Logger;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.CommonMessageContext;
@@ -59,7 +58,6 @@ import org.w3c.dom.NodeList;
  */
 class XMLContent extends SOAPContent
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(XMLContent.class);
    private static final Logger log = Logger.getLogger(XMLContent.class);
 
    // The well formed XML content of this element.
@@ -99,13 +97,13 @@ class XMLContent extends SOAPContent
          }
          catch (SOAPException ex)
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_EXPAND_CONTAINER_CHILDREN"),  ex);
+            throw new WSException(ex);
          }
          next = new DOMContent(container);
       }
       else
       {
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_STATE_REQUESTED",  nextState));
+         throw new IllegalArgumentException("Illegal state requested " + nextState);
       }
 
       return next;
@@ -123,12 +121,12 @@ class XMLContent extends SOAPContent
 
    public Object getObjectValue()
    {
-      throw new IllegalStateException(BundleUtils.getMessage(bundle, "OBJECT_VALUE_NOT_AVAILABLE"));
+      throw NativeMessages.MESSAGES.objectValueNotAvailable();
    }
 
    public void setObjectValue(Object objValue)
    {
-      throw new IllegalStateException(BundleUtils.getMessage(bundle, "OBJECT_VALUE_NOT_AVAILABLE"));
+      throw NativeMessages.MESSAGES.objectValueNotAvailable();
    }
 
    private Object unmarshallObjectContents()
@@ -143,8 +141,7 @@ class XMLContent extends SOAPContent
          log.debug("getObjectValue [xmlType=" + xmlType + ",javaType=" + javaType + "]");
 
       CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
-      if (msgContext == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
+      assert(msgContext != null);
 
       SerializationContext serContext = msgContext.getSerializationContext();
       ParameterMetaData pmd = container.getParamMetaData();
@@ -199,7 +196,7 @@ class XMLContent extends SOAPContent
             {
                if (!JavaUtils.isAssignableFrom(javaType, obj.getClass()))
                {
-                  throw new WSException(BundleUtils.getMessage(bundle, "JAVA_TYPE_NOT_ASSIGNABLE", new Object[]{ javaType ,  objType.getName()}));
+                  throw NativeMessages.MESSAGES.javaTypeIsNotAssignableFrom2(javaType.toString(),  objType.getName());
                }
             }
          }
@@ -242,9 +239,6 @@ class XMLContent extends SOAPContent
          }
       }
 
-      if (deserializerFactory == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_DESERIALIZER_FACTORY", new Object[]{ xmlType ,  javaType}));
-
       return deserializerFactory;
    }
 
@@ -265,7 +259,7 @@ class XMLContent extends SOAPContent
       boolean artificalElement = (SOAPContentElement.GENERIC_PARAM_NAME.equals(qname) || SOAPContentElement.GENERIC_RETURN_NAME.equals(qname));
 
       if (!artificalElement && !contentRootName.equals(qname))
-         throw new WSException(BundleUtils.getMessage(bundle, "DOES_NOT_MATCH_ELEMENT_NAME", new Object[]{ contentRootName ,  qname}));
+         throw NativeMessages.MESSAGES.doesNotMatchElementName(contentRootName, qname);
 
       // Remove all child nodes
       container.removeContents();

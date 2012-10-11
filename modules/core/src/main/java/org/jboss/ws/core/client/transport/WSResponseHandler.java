@@ -24,7 +24,6 @@ package org.jboss.ws.core.client.transport;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -41,7 +40,6 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelUpstreamHandler;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
-import org.jboss.ws.api.util.BundleUtils;
 
 /**
  * A Netty channel upstream handler that receives MessageEvent
@@ -53,7 +51,6 @@ import org.jboss.ws.api.util.BundleUtils;
 @Sharable
 public class WSResponseHandler extends SimpleChannelUpstreamHandler
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(WSResponseHandler.class);
    private FutureResult future;
 
    public WSResponseHandler()
@@ -180,7 +177,7 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
          }
          if (cancelled)
          {
-            throw new InterruptedException(BundleUtils.getMessage(bundle, "OPERATION_CANCELLED"));
+            throw new InterruptedException();
          }
          if (exception != null)
          {
@@ -200,11 +197,11 @@ public class WSResponseHandler extends SimpleChannelUpstreamHandler
          }
          if (cancelled)
          {
-            throw new InterruptedException(BundleUtils.getMessage(bundle, "OPERATION_CANCELLED"));
+            throw new InterruptedException();
          }
          if (!done)
          {
-            throw new TimeoutException(BundleUtils.getMessage(bundle, "TIMEOUT_EXCEEDED"));
+            throw new TimeoutException();
          }
          if (exception != null)
          {

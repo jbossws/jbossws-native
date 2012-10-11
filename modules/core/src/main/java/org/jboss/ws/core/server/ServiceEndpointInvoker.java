@@ -24,7 +24,6 @@ package org.jboss.ws.core.server;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.server.ServiceLifecycle;
@@ -36,7 +35,8 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeLoggers;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.CommonBinding;
@@ -70,7 +70,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public class ServiceEndpointInvoker
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(ServiceEndpointInvoker.class);
    // provide logging
    private static final Logger log = Logger.getLogger(ServiceEndpointInvoker.class);
 
@@ -85,7 +84,7 @@ public class ServiceEndpointInvoker
 
       ServerEndpointMetaData sepMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
       if (sepMetaData == null)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINT_META_DATA"));
+         throw NativeMessages.MESSAGES.cannotObtainEndpointMetaData(endpoint);
 
       bindingProvider = new CommonBindingProvider(sepMetaData);
       delegate = new HandlerDelegateJAXRPC(sepMetaData);
@@ -240,7 +239,7 @@ public class ServiceEndpointInvoker
          }
          catch (RuntimeException subEx)
          {
-            log.warn(BundleUtils.getMessage(bundle, "EXCEPTION_PROCESSING_HANDLEFAULT"),  ex);
+            NativeLoggers.ROOT_LOGGER.exceptionProcessingHandleFault(ex);
             binding.bindFaultMessage(subEx);
             ex = subEx;
          }
@@ -289,7 +288,7 @@ public class ServiceEndpointInvoker
           }
           catch (Exception ex)
           {
-              throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_ENDPOINT_INSTANCE"),  ex);
+              throw new IllegalStateException(ex);
           }
       }
    }
@@ -321,8 +320,6 @@ public class ServiceEndpointInvoker
          }
          catch (NoSuchMethodException ex)
          {
-            log.error(BundleUtils.getMessage(bundle, "CODESOURCE",  implClass.getProtectionDomain().getCodeSource()));
-            log.error(BundleUtils.getMessage(bundle, "CLASSLOADER",  implClass.getClassLoader()));
             throw ex;
          }
       }

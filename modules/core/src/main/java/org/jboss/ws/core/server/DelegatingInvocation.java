@@ -21,13 +21,10 @@
  */
 package org.jboss.ws.core.server;
 
-import java.util.ResourceBundle;
-
 import javax.xml.rpc.handler.soap.SOAPMessageContext;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.EndpointInvocation;
@@ -42,14 +39,9 @@ import org.jboss.wsf.spi.invocation.Invocation;
  */
 public class DelegatingInvocation extends Invocation
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(DelegatingInvocation.class);
    private EndpointInvocation getEndpointInvocation()
    {
-      EndpointInvocation epInv = getInvocationContext().getAttachment(EndpointInvocation.class);
-      if (epInv == null)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINT_INVOCATION"));
-
-      return epInv;
+      return getInvocationContext().getAttachment(EndpointInvocation.class);
    }
 
    @Override
@@ -94,6 +86,6 @@ public class DelegatingInvocation extends Invocation
    @Override
    public void setArgs(Object[] args)
    {
-      throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_SET_ARGS"));
+      throw new UnsupportedOperationException();
    }
 }

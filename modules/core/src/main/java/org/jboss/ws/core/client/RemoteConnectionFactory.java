@@ -21,9 +21,7 @@
  */
 package org.jboss.ws.core.client;
 
-import java.util.ResourceBundle;
-
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.api.util.ServiceLoader;
 
 /**
@@ -34,12 +32,11 @@ import org.jboss.ws.api.util.ServiceLoader;
  */
 public class RemoteConnectionFactory
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(RemoteConnectionFactory.class);
    public RemoteConnection getRemoteConnection(EndpointInfo epInfo)
    {
       String targetAddress = epInfo.getTargetAddress();
       if (targetAddress == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_TARGET_ADDRESS",  epInfo));
+         throw NativeMessages.MESSAGES.cannotObtainTargetAddressFrom(epInfo);
       
       String key = null;
       targetAddress = targetAddress.toLowerCase();
@@ -47,11 +44,11 @@ public class RemoteConnectionFactory
          key = RemoteConnection.class.getName() + ".http";
       
       if (key == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_REMOTE_CONNETION",  targetAddress));
+         throw NativeMessages.MESSAGES.cannotObtainRemoteConnectionFor(targetAddress);
       
       RemoteConnection con = (RemoteConnection)ServiceLoader.loadService(key, null, this.getClass().getClassLoader());
       if (con == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_REMOTE_CONNETION",  key));
+         throw NativeMessages.MESSAGES.cannotObtainRemoteConnectionFor(key);
       
       return con;
    }

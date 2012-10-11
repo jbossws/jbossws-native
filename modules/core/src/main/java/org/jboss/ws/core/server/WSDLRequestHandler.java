@@ -27,10 +27,9 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ResourceBundle;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.wsf.spi.management.ServerConfig;
 import org.w3c.dom.Attr;
@@ -54,7 +53,6 @@ import org.w3c.dom.NodeList;
  */
 public class WSDLRequestHandler
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLRequestHandler.class);
    // provide logging
    private static Logger log = Logger.getLogger(WSDLRequestHandler.class);
 
@@ -64,6 +62,8 @@ public class WSDLRequestHandler
 
    public WSDLRequestHandler(URL wsdlLocationFromMetadata, String wsdlPublishLocationFromMetadata, ServerConfig config)
    {
+      if (wsdlLocationFromMetadata == null)
+         throw NativeMessages.MESSAGES.illegalNullArgument("wsdlLocationFromMetadata");
       this.wsdlLocation = wsdlLocationFromMetadata;
       this.wsdlPublishLoc = wsdlPublishLocationFromMetadata;
       this.config = config;
@@ -104,10 +104,6 @@ public class WSDLRequestHandler
    private Document getDocumentForPath(URL reqURL, String wsdlHost, boolean rewriteUsingCalledURL, String resPath) throws IOException
    {
       Document wsdlDoc;
-
-      if (wsdlLocation == null)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_WSDL_LOCATION"));
-
       // get the root wsdl
       if (resPath == null)
       {
@@ -156,7 +152,7 @@ public class WSDLRequestHandler
          }
          else
          {
-            throw new IOException(BundleUtils.getMessage(bundle, "ACCESS_IS_NOT_ALLOWED",  resourceAbsPath ));
+            throw NativeMessages.MESSAGES.accessIsNotAllowed(resourceAbsPath);
          }
       }
 
@@ -315,13 +311,13 @@ public class WSDLRequestHandler
          }
          else
          {
-            log.info("Skipping rewrite of non-http address: " + orgLocation);
+            log.debug("Skipping rewrite of non-http address: " + orgLocation);
             return false;
          }
       }
       catch (URISyntaxException e)
       {
-         log.error(BundleUtils.getMessage(bundle, "SKIPPING_REWRITE_OF_INVALID_ADDRESS",  orgLocation),  e);
+         log.debug("Skipping rewrite of non-http address: " + orgLocation);
          return false;
       }
    }

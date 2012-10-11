@@ -31,6 +31,7 @@ import javax.wsdl.Part;
 import javax.xml.namespace.QName;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPException;
+import javax.xml.transform.Source;
 
 import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xs.XSElementDeclaration;
@@ -42,6 +43,7 @@ import org.jboss.ws.core.soap.utils.Use;
 import org.jboss.ws.metadata.wsdl.WSDLException;
 import org.jboss.ws.metadata.wsdl.WSDLTypes;
 import org.jboss.wsf.spi.deployment.Deployment;
+import org.w3c.dom.Node;
 
 /**
  * JBossWS-CXF exception messages
@@ -478,5 +480,65 @@ public interface NativeMessages {
     
     @Message(id = 25176, value = "Target endpoint address not set")
     WSException targetEndpointAddressNotSet();
+    
+    @Message(id = 25178, value = "No ByteArrayConverter for %s")
+    WSException noByteArrayConverterFor(String c);
+    
+    @Message(id = 25179, value = "Failed to convert %s")
+    WSException failedToConvert(Object o);
+    
+    @Message(id = 25180, value = "%s is already a javax.xml.rpc.holders.Holder")
+    IllegalArgumentException alreadyAHolder(String className);
+    
+    @Message(id = 25181, value = "%s is not a javax.xml.rpc.holders.Holder")
+    IllegalArgumentException notAHolder(Object holder);
+    
+    @Message(id = 25182, value = "Cannot find or access public 'value' field in %s")
+    IllegalArgumentException cannotFindOrAccessPublicFieldValue(Object holder);
+    
+    @Message(id = 25183, value = "Holder [%s] value not assignable: %s")
+    IllegalArgumentException holderValueNotAssignable(Object holder, Object value);
+    
+    @Message(id = 25184, value = "Object value not available")
+    IllegalStateException objectValueNotAvailable();
+    
+    @Message(id = 25185, value = "Content root name does not match element name: %s != %s")
+    WSException doesNotMatchElementName(QName contentRootName, QName elementName);
+    
+    @Message(id = 25186, value = "javaType %s is not assignable from: %s")
+    WSException javaTypeIsNotAssignableFrom2(String s1, String s2);
+    
+    @Message(id = 25187, value = "The parent element of a soap part is not defined")
+    SOAPException parentElemOfSOAPPartIsNotDefined();
+    
+    @Message(id = 25188, value = "Setting value of a soap part is not defined")
+    IllegalStateException settingValueOfSOAPPartIsNotDefined();
+    
+    @Message(id = 25189, value = "Unsupported DOMSource node: %s")
+    SOAPException unsupportedDOMSourceNode(Node node);
+    
+    @Message(id = 25190, value = "Unsupported source parameter: %s")
+    SOAPException unsupportedSourceParameter(Source s);
+    
+    @Message(id = 25191, value = "Access to '%s' resource is not allowed")
+    IOException accessIsNotAllowed(String path);
+    
+    @Message(id = 25194, value = "Cannot resolve port-component-link: %s")
+    WSException cannotResolvePortComponentLink(String pcl);
+    
+    @Message(id = 25195, value = "Cannot obtain remote connetion for %s")
+    IllegalArgumentException cannotObtainRemoteConnectionFor(Object obj);
+    
+    @Message(id = 25196, value = "Cannot obtain target address from %s")
+    IllegalArgumentException cannotObtainTargetAddressFrom(Object obj);
+    
+    @Message(id = 25197, value = "Connection is already closed")
+    IOException connectionAlreadyClosed();
+    
+    @Message(id = 25198, value = "Invalid chunk size (must be greater than 0): %s")
+    IllegalArgumentException invalidChunkSize(int size);
+    
+    @Message(id = 25199, value = "Cannot get channel future before closing the stream")
+    IllegalStateException cannotGetChannelFuture();
     
 }
