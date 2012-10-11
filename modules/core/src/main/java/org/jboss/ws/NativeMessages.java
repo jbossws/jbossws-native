@@ -30,10 +30,13 @@ import javax.wsdl.Part;
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPException;
 
+import org.apache.xerces.xni.XNIException;
+import org.apache.xerces.xs.XSElementDeclaration;
 import org.jboss.logging.Cause;
 import org.jboss.logging.Message;
 import org.jboss.logging.MessageBundle;
 import org.jboss.ws.metadata.wsdl.WSDLException;
+import org.jboss.ws.metadata.wsdl.WSDLTypes;
 import org.jboss.wsf.spi.deployment.Deployment;
 
 /**
@@ -201,5 +204,89 @@ public interface NativeMessages {
     
     @Message(id = 25067, value = "Unsupported WSDL version: %s")
     WSException unsupportedWSDLVersion(String version);
+    
+    @Message(id = 25068, value = "Cannot obtain XSTypeDefinition for: %s")
+    WSException cannotObtainXSTypeDef(QName q);
+    
+    @Message(id = 25069, value = "Illegal null argument: %s")
+    IllegalArgumentException illegalNullArgument(Object argument);
+    
+    @Message(id = 25070, value = "String passed is null")
+    WSException stringPassedIsNull();
+    
+    @Message(id = 25071, value = "Illegal null or array arg: %s")
+    IllegalArgumentException illegalNullOrArrayArgument(Class<?> clazz);
+    
+    @Message(id = 25072, value = "QName passed is null")
+    IllegalArgumentException qNamePassedIsNull();
+    
+    @Message(id = 25073, value = "Formatted String is not of format prefix:localpart: %s")
+    IllegalArgumentException formattedStringNotInFormatPrefixLocalPart(String s);
+    
+    @Message(id = 25074, value = "WSDLTypes is not an XSModelTypes: %s")
+    WSException wsdlTypesNotAnXSModelTypes(WSDLTypes wt);
+    
+    @Message(id = 25075, value = "Only Request-Only and Request-Response MEPs are allowed, WSDLInterfaceOperation = %s")
+    WSException reqOnlyAndReqResMEPsOnlySupported(QName opName);
+    
+    @Message(id = 25076, value = "Illegal property URI: %s")
+    IllegalArgumentException illegalPropertyURI(String uri);
+    
+    @Message(id = 25077, value = "Attempt to map multiple operation inputs to: %s")
+    WSException attempToMapMultipleInputs(QName q);
+    
+    @Message(id = 25078, value = "Attempt to map multiple operation outputs to: %s")
+    WSException attempToMapMultipleOutputs(QName q);
+    
+    @Message(id = 25079, value = "Cannot obtain xmlType for element: %s")
+    WSException cannotObtainXmlType(QName q);
+    
+    @Message(id = 25080, value = "Illegal feature URI: %s")
+    IllegalArgumentException illegalFeatureURI(String uri);
+    
+    @Message(id = 25081, value = "Cannot obtain the binding: %s")
+    WSException cannotObtainBinding(QName q);
+    
+    @Message(id = 25082, value = "Cannot obtain the interface associated with this endpoint: %s")
+    WSException cannotObtainInterface(QName q);
+    
+    @Message(id = 25083, value = "The prefix %s cannot be bound to any namespace other than its usual namespace, trying to bind to %s")
+    IllegalArgumentException prefixCannotBeBoundTryingBindingTo(String prefix, String to);
+    
+    @Message(id = 25087, value = "Cannot get interface for name: %s")
+    WSException cannotGetInterfaceForName(QName q);
+    
+    @Message(id = 25088, value = "Empty union type not expected")
+    WSException emptyUnionTypeNotExpected();
+    
+    @Message(id = 25089, value = "Absent variety is not supported in simple types")
+    WSException absentVariety();
+    
+    @Message(id = 25090, value = "Expected base type to be a simple type")
+    WSException baseTypeNotSimple();
+    
+    @Message(id = 25091, value = "xmlName has a null %s")
+    IllegalArgumentException xmlNameHasNull(String prop);
+    
+    @Message(id = 25092, value = "Cannot parse schema: %s")
+    WSException cannotParseSchema(String location);
+    
+    @Message(id = 25093, value = "Target Namespace of xsmodel is null")
+    WSException nullTargetNsXSModel();
+    
+    @Message(id = 25094, value = "%s is not a global element")
+    IllegalArgumentException notAGlobalElement(XSElementDeclaration el);
+    
+    @Message(id = 25095, value = "Type unidentified")
+    WSException typeUnidentified();
+    
+    @Message(id = 25096, value = "objectType should be simple type or complex type")
+    IllegalArgumentException objectTypeShouldBeSimpleOrComplex();
+    
+    @Message(id = 25098, value = "Parser should stop: %s")
+    XNIException parserShouldStop(String traceMex, @Cause Exception cause);
+    
+    @Message(id = 25099, value = "Parser should stop, the key value is %s")
+    XNIException parserShouldStopKeyValueIs(String keyValue, @Cause Exception cause);
     
 }

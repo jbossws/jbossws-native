@@ -21,13 +21,11 @@
  */
 package org.jboss.ws.metadata.wsdl.xmlschema;
 
-import java.util.ResourceBundle;
-
 import org.apache.xerces.xni.XNIException;
 import org.apache.xerces.xni.parser.XMLErrorHandler;
 import org.apache.xerces.xni.parser.XMLParseException;
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 
 /**
  *  Error Handler for the Xerces schema parser default implementation
@@ -36,7 +34,6 @@ import org.jboss.ws.api.util.BundleUtils;
  */
 public class JBossXSErrorHandler implements XMLErrorHandler
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(JBossXSErrorHandler.class);
    private static final Logger log = Logger.getLogger(JBossXSErrorHandler.class);
 
    /**
@@ -61,7 +58,7 @@ public class JBossXSErrorHandler implements XMLErrorHandler
    public void error(String domain, String key, XMLParseException xexp) throws XNIException
    {
       if ("src-include.2.1".equals(key))
-         throw new XNIException(BundleUtils.getMessage(bundle, "PARSER_SHOULD_STOP", "the key value is src-include.2.1"),  xexp);
+         throw NativeMessages.MESSAGES.parserShouldStopKeyValueIs("src-include.2.1", xexp);
 
       String errorMsg = getFormattedString(domain, key, xexp);
       log.error(errorMsg);
@@ -79,7 +76,7 @@ public class JBossXSErrorHandler implements XMLErrorHandler
    {
       String errorMsg = getFormattedString(domain, key, xexp);
       log.error(errorMsg);
-      throw new XNIException(BundleUtils.getMessage(bundle, "PARSER_SHOULD_STOP",  errorMsg),  xexp);
+      throw NativeMessages.MESSAGES.parserShouldStop(errorMsg, xexp);
    }
 
    /**

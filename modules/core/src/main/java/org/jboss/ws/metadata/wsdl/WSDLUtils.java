@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.metadata.wsdl;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -35,7 +37,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.StringTokenizer;
 
@@ -67,7 +68,6 @@ import javax.xml.rpc.holders.StringHolder;
 import org.apache.xerces.xs.XSComplexTypeDefinition;
 import org.apache.xerces.xs.XSTypeDefinition;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.jaxrpc.ParameterWrapping;
@@ -84,18 +84,17 @@ import org.jboss.xb.binding.Util;
 
 public class WSDLUtils
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLUtils.class);
    private String newline = "\n";
    private static WSDLUtils instance = new WSDLUtils();
 
-   private List wrapperlist = null;
-   private List primlist = null;
+   private List<String> wrapperlist = null;
+   private List<String> primlist = null;
 
-   private final Map primitiveMap = new HashMap();
+   private final Map<String, String> primitiveMap = new HashMap<String, String>();
 
-   private final static Map<String, Class> schemaBasicTypes = new HashMap<String, Class>();
-   private final static Map<Class, Class> holderTypes = new HashMap<Class, Class>();
-   private final static Map<Class, Class> reverseHolderTypes = new HashMap<Class, Class>();
+   private final static Map<String, Class<?>> schemaBasicTypes = new HashMap<String, Class<?>>();
+   private final static Map<Class<?>, Class<?>> holderTypes = new HashMap<Class<?>, Class<?>>();
+   private final static Map<Class<?>, Class<?>> reverseHolderTypes = new HashMap<Class<?>, Class<?>>();
 
    // Skip these methods when generating wsdl operations
    private List<String> ignoredMethods;
@@ -236,10 +235,10 @@ public class WSDLUtils
     * @param cls
     * @return true if class belongs to java.* or javax.* package
     */
-   public boolean checkIgnoreClass(Class cls)
+   public boolean checkIgnoreClass(Class<?> cls)
    {
       if (cls == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "cls"));
+         throw MESSAGES.illegalNullArgument("cls");
       //if (cls.isArray()) cls = cls.getComponentType();
       if (!cls.isArray())
       {
@@ -308,9 +307,9 @@ public class WSDLUtils
    public File createPackage(String path, String packageName)
    {
       if (packageName == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "packageName"));
+         throw MESSAGES.illegalNullArgument("packageName");
       if (path == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "path"));
+         throw MESSAGES.illegalNullArgument("path");
       String pac = packageName.replace('.', '/');
       File dir = new File(path + "/" + pac);
       dir.mkdirs();
@@ -327,9 +326,9 @@ public class WSDLUtils
    public File createPhysicalFile(File loc, String fname) throws IOException
    {
       if (loc == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "loc"));
+         throw MESSAGES.illegalNullArgument("loc");
       if (fname == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "fname"));
+         throw MESSAGES.illegalNullArgument("fname");
       File javaFile = new File(loc.getAbsolutePath() + "/" + fname + ".java");
       //Delete the javaFile if already exists
       if (javaFile.exists())
@@ -348,7 +347,7 @@ public class WSDLUtils
     * @param importList  Strings representing imports
     * @return
     */
-   public StringBuilder createClassBasicStructure(String pkgname, String fname, XSTypeDefinition type, List importList, String baseName)
+   public StringBuilder createClassBasicStructure(String pkgname, String fname, XSTypeDefinition type, List<?> importList, String baseName)
    {
       StringBuilder buf = new StringBuilder();
       writeJbossHeader(buf);
@@ -358,7 +357,7 @@ public class WSDLUtils
       buf.append(newline);
       if (importList != null)
       {
-         Iterator iter = importList.iterator();
+         Iterator<?> iter = importList.iterator();
          while (iter.hasNext())
          {
             buf.append("import " + (String)iter.next() + ";");
@@ -402,7 +401,7 @@ public class WSDLUtils
     * @param name  Field name to check
     * @return true - if public field exists, false-otherwise
     */
-   public boolean doesPublicFieldExist(Class javaType, String name)
+   public boolean doesPublicFieldExist(Class<?> javaType, String name)
    {
       Field fld = null;
       try
@@ -431,7 +430,7 @@ public class WSDLUtils
    public String firstLetterUpperCase(String fname)
    {
       if (fname == null || fname.length() == 0)
-         throw new WSException(BundleUtils.getMessage(bundle, "STRING_PASSED_IS_NULL"));
+         throw MESSAGES.stringPassedIsNull();
       //Ensure that the first character is uppercase
       final char firstChar = fname.charAt(0);
       if (Character.isLowerCase(firstChar))
@@ -448,10 +447,10 @@ public class WSDLUtils
     * @param arr
     * @return dimension of an array
     */
-   public int getArrayDimension(Class arr)
+   public int getArrayDimension(Class<?> arr)
    {
       if (arr == null || arr.isArray() == false)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_OR_ARRAY_ARG", arr));
+         throw MESSAGES.illegalNullOrArrayArgument(arr);
       int counter = 0;
       while (arr.isArray())
       {
@@ -467,7 +466,7 @@ public class WSDLUtils
     * @param cls
     * @return Jaxrpc Holder object if exists
     */
-   public Class getHolder(Class cls)
+   public Class<?> getHolder(Class<?> cls)
    {
       return holderTypes.get(cls);
    }
@@ -478,7 +477,7 @@ public class WSDLUtils
     * @param cls The jaxrpc holder type
     * @return Jaxrpc Holder object if exists
     */
-   public Class getJavaTypeForHolder(Class cls)
+   public Class<?> getJavaTypeForHolder(Class<?> cls)
    {
       if (Holder.class.isAssignableFrom(cls))
          return HolderUtils.getValueType(cls);
@@ -493,7 +492,7 @@ public class WSDLUtils
     * @return
     */
 
-   public String getMessagePartForArray(Class javaType)
+   public String getMessagePartForArray(Class<?> javaType)
    {
       StringBuilder sb = new StringBuilder();
       while (javaType.isArray())
@@ -513,13 +512,13 @@ public class WSDLUtils
     * @return just the classname
     */
 
-   public static String getJustClassName(Class cls)
+   public static String getJustClassName(Class<?> cls)
    {
       if (cls == null)
          return null;
       if (cls.isArray())
       {
-         Class c = cls.getComponentType();
+         Class<?> c = cls.getComponentType();
          return getJustClassName(c.getName());
       }
 
@@ -545,9 +544,9 @@ public class WSDLUtils
     * From the list of fields defined by this class (not superclasses)
     * get the fields that are relevant (public)
     */
-   public Field[] getPublicFields(Class cls)
+   public Field[] getPublicFields(Class<?> cls)
    {
-      ArrayList list = new ArrayList();
+      ArrayList<Field> list = new ArrayList<Field>();
 
       Field[] fld = cls.getDeclaredFields();
       for (int i = 0; i < fld.length; i++)
@@ -573,7 +572,7 @@ public class WSDLUtils
     */
    public Method[] getPublicProtectedMethods(Method[] methods)
    {
-      ArrayList list = new ArrayList();
+      ArrayList<Method> list = new ArrayList<Method>();
       int len = methods.length;
 
       for (int i = 0; i < len; i++)
@@ -596,12 +595,12 @@ public class WSDLUtils
     * @param xmlType
     * @return
     */
-   public Class getJavaType(QName xmlType)
+   public Class<?> getJavaType(QName xmlType)
    {
       if (xmlType == null)
          return null;
       String localPart = xmlType.getLocalPart();
-      return (Class)schemaBasicTypes.get(localPart);
+      return schemaBasicTypes.get(localPart);
    }
 
    /**
@@ -612,7 +611,7 @@ public class WSDLUtils
    public String getMixedCase(String str)
    {
       if (str == null || str.length() == 0)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "STRING_PASSED_IS_NULL"));
+         throw MESSAGES.stringPassedIsNull();
 
       if (str.length() == 1)
          return str.toUpperCase();
@@ -629,7 +628,7 @@ public class WSDLUtils
    public String getFormattedString(QName qn)
    {
       if (qn == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "QNAME_PASSED_IS_NULL"));
+         throw MESSAGES.qNamePassedIsNull();
       StringBuilder sb = new StringBuilder();
       String prefix = qn.getPrefix();
       String localpart = qn.getLocalPart();
@@ -651,7 +650,7 @@ public class WSDLUtils
       QName qn = null;
       int ind = formattedStr.lastIndexOf(':');
       if (ind < 0)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_FORMATTED_STRING"));
+         throw MESSAGES.formattedStringNotInFormatPrefixLocalPart(formattedStr);
       String prefix = formattedStr.substring(0, ind);
       String nsuri = null;
       if (Constants.PREFIX_XSD.equals(prefix))
@@ -683,7 +682,7 @@ public class WSDLUtils
       return pkgname;
    }
 
-   public static String getTypeNamespace(Class javaType)
+   public static String getTypeNamespace(Class<?> javaType)
    {
       return getTypeNamespace(JavaUtils.getPackageName(javaType));
    }
@@ -741,13 +740,13 @@ public class WSDLUtils
       if (types instanceof XSModelTypes)
          return ((XSModelTypes)types).getSchemaModel();
 
-      throw new WSException(BundleUtils.getMessage(bundle, "NOT_AN_XSMODELTYPES"));
+      throw MESSAGES.wsdlTypesNotAnXSModelTypes(types);
    }
 
    public static void addSchemaModel(WSDLTypes types, String namespace, JBossXSModel model)
    {
       if (!(types instanceof XSModelTypes))
-         throw new WSException(BundleUtils.getMessage(bundle, "NOT_AN_XSMODELTYPESs"));
+         throw MESSAGES.wsdlTypesNotAnXSModelTypes(types);
 
       XSModelTypes modelTypes = (XSModelTypes)types;
       modelTypes.addSchemaModel(namespace, model);
@@ -759,7 +758,7 @@ public class WSDLUtils
     * @param cls a Class object
     * @return true: A Standard jaxrpc holder
     */
-   public boolean isStandardHolder(Class cls)
+   public boolean isStandardHolder(Class<?> cls)
    {
       if (Holder.class.isAssignableFrom(cls) == false)
          return false; //Not even a holder
@@ -846,7 +845,7 @@ public class WSDLUtils
             return outputs[0];
       }
 
-      throw new WSException(BundleUtils.getMessage(bundle, "ONLY_MEPS_ARE_ALLOWED"));
+      throw MESSAGES.reqOnlyAndReqResMEPsOnlySupported(operation.getName());
    }
 
    public static WSDLInterfaceOperationInput getWsdl11Input(WSDLInterfaceOperation operation)
@@ -863,6 +862,6 @@ public class WSDLUtils
             return inputs[0];
       }
 
-      throw new WSException(BundleUtils.getMessage(bundle, "ONLY_MEPS_ARE_ALLOWED"));
+      throw MESSAGES.reqOnlyAndReqResMEPsOnlySupported(operation.getName());
    }
 }

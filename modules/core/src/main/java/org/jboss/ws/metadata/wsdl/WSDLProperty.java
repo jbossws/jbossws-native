@@ -22,11 +22,10 @@
 package org.jboss.ws.metadata.wsdl;
 
 import java.io.Serializable;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 
 /**
  * A "property" in the Features and Properties architecture represents a named runtime value which affects
@@ -42,7 +41,6 @@ import org.jboss.ws.api.util.BundleUtils;
  */
 public class WSDLProperty implements Serializable
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLProperty.class);
    private static final long serialVersionUID = -7528676719881753461L;
    
    /** A REQUIRED uri attribute information item */
@@ -56,30 +54,19 @@ public class WSDLProperty implements Serializable
     * #value if the {value} property is not empty.*/
    private QName constraint;
    
-   private QName qnameValue;
-
    public WSDLProperty(String uri, String value)
    {
       if (uri == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_PROPERTY_URI",  uri));
+         throw NativeMessages.MESSAGES.illegalPropertyURI(uri);
 
       this.uri = uri;
       this.value = value;
    }
 
-   public WSDLProperty(String uri, QName value)
-   {
-      if (uri == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_PROPERTY_URI",  uri));
-
-      this.uri = uri;
-      this.qnameValue = value;
-   }
-
    public WSDLProperty(String uri, boolean required, String value, QName constraint)
    {
       if (uri == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_PROPERTY_URI",  uri));
+         throw NativeMessages.MESSAGES.illegalPropertyURI(uri);
 
       this.uri = uri;
       this.required = required;

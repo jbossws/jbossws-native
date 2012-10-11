@@ -26,8 +26,6 @@ import java.util.Iterator;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.logging.Logger;
-
 /**
  * A Service component describes a set of endpoints (see 2.14 Endpoint [p.62] ) at which a particular
  * deployed implementation of the service is provided. The endpoints thus are in effect alternate places at
@@ -41,9 +39,6 @@ public class WSDLService extends Extendable
 {
    private static final long serialVersionUID = 1274166611190648479L;
 
-   // provide logging
-   private static final Logger log = Logger.getLogger(WSDLService.class);
-   
    // The parent WSDL definitions element.
    private final WSDLDefinitions wsdlDefinitions;
 
@@ -97,7 +92,7 @@ public class WSDLService extends Extendable
     */
    public WSDLEndpoint getEndpoint(QName portName)
    {
-      Iterator it = endpoints.iterator();
+      Iterator<WSDLEndpoint> it = endpoints.iterator();
       while (it.hasNext())
       {
          WSDLEndpoint wsdlEndpoint = (WSDLEndpoint)it.next();

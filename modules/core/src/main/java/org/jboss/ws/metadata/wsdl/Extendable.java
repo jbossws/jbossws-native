@@ -43,8 +43,8 @@ public abstract class Extendable implements Serializable
    // provide logging
    private Logger log = Logger.getLogger(getClass());
    
-   private Map features = new LinkedHashMap();
-   private Map properties = new LinkedHashMap();
+   private Map<String, WSDLFeature> features = new LinkedHashMap<String, WSDLFeature>();
+   private Map<String, WSDLProperty> properties = new LinkedHashMap<String, WSDLProperty>();
    private Map<String,List<WSDLExtensibilityElement>> extElements = new LinkedHashMap<String,List<WSDLExtensibilityElement>>();
    private List<WSDLExtensibilityElement> notUnderstoodExtElements = new LinkedList<WSDLExtensibilityElement>();
 

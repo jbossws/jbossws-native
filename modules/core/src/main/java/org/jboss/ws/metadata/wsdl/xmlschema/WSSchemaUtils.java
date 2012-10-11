@@ -21,11 +21,12 @@
  */
 package org.jboss.ws.metadata.wsdl.xmlschema;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
@@ -46,8 +47,6 @@ import org.apache.xerces.xs.XSParticle;
 import org.apache.xerces.xs.XSSimpleTypeDefinition;
 import org.apache.xerces.xs.XSTerm;
 import org.apache.xerces.xs.XSTypeDefinition;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
@@ -61,7 +60,6 @@ import org.jboss.xb.binding.NamespaceRegistry;
 
 public class WSSchemaUtils
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(WSSchemaUtils.class);
    private static final String xsNS = Constants.NS_SCHEMA_XSD;
    private static SchemaUtils utils = SchemaUtils.getInstance();
 
@@ -93,9 +91,9 @@ public class WSSchemaUtils
       List<String> knownNamespaces = Arrays.asList(nsarr);
       boolean isCustom = false;
       if (xsNS.equals(targetNS))
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT",  "xsNS"));
+         throw MESSAGES.illegalNullArgument("xsNS");
       if (checkNS == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "checkNS"));
+         throw MESSAGES.illegalNullArgument("checkNS");
       if (knownNamespaces.contains(checkNS) == false && targetNS.equals(checkNS) == false)
          isCustom = true;
       return isCustom;
@@ -246,7 +244,7 @@ public class WSSchemaUtils
       if (xsmodel == null)
          return true;
       if (namespace == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "Target Namespace of xsmodel"));
+         throw MESSAGES.illegalNullArgument("Target Namespace of xsmodel");
       XSNamedMap tmap = xsmodel.getComponentsByNamespace(XSConstants.TYPE_DEFINITION, namespace);
       XSNamedMap emap = xsmodel.getComponentsByNamespace(XSConstants.ELEMENT_DECLARATION, namespace);
 
@@ -314,7 +312,7 @@ public class WSSchemaUtils
    {
       XSTypeDefinition xst = xsel.getTypeDefinition();
       if (xst == null)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "Type xst"));
+         throw MESSAGES.illegalNullArgument("Type xst");
 
       boolean isGlobalRef = (xsel.getScope() == XSConstants.SCOPE_GLOBAL);
       boolean isAnonType = xst.getAnonymous();
@@ -370,7 +368,7 @@ public class WSSchemaUtils
    {
       XSTypeDefinition xst = decl.getTypeDefinition();
       if (xst == null)
-         throw new IllegalStateException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "Type xst"));
+         throw MESSAGES.illegalNullArgument("Type xst");
 
       boolean isGlobalRef = (decl.getScope() == XSConstants.SCOPE_GLOBAL);
       boolean isAnonType = xst.getAnonymous();
@@ -418,7 +416,7 @@ public class WSSchemaUtils
    {
       boolean isAnonType = false;
       if (XSConstants.SCOPE_GLOBAL != xsel.getScope())
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NOT_A_GLOBAL_ELEMENT"));
+         throw MESSAGES.notAGlobalElement(xsel);
 
       StringBuilder buf = new StringBuilder();
       String elname = xsel.getName();
@@ -695,9 +693,9 @@ public class WSSchemaUtils
    public void copyXSModel(XSModel xsmodel, JBossXSModel jb)
    {
       if (xsmodel == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "xsmodel"));
+         throw MESSAGES.illegalNullArgument("xsmodel");
       if (jb == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "jb"));
+         throw MESSAGES.illegalNullArgument("jb");
       //Copy all the Namespace Items
       jb.setXSNamespaceItemList(xsmodel.getNamespaceItems());
       //Copy all the elements
@@ -744,10 +742,10 @@ public class WSSchemaUtils
    private String getPrefix(String namespace)
    {
       if (namespaceRegistry == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", namespaceRegistry));
+         throw MESSAGES.illegalNullArgument(namespaceRegistry);
 
       if (namespace == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "namespace"));
+         throw MESSAGES.illegalNullArgument("namespace");
 
       // XML Namespace can only legally be assigned the XML prefix
       if (namespace.equals(Constants.NS_XML))

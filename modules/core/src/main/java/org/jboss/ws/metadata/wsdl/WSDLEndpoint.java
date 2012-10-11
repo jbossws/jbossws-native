@@ -21,13 +21,10 @@
  */
 package org.jboss.ws.metadata.wsdl;
 
-import java.util.ResourceBundle;
-
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 
 /**
  * An Endpoint component defines the particulars of a specific endpoint at which a given service is available.
@@ -39,7 +36,6 @@ import org.jboss.ws.api.util.BundleUtils;
  */
 public class WSDLEndpoint extends Extendable 
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLEndpoint.class);
    private static final long serialVersionUID = 4991302339046047865L;
 
    // provide logging
@@ -85,7 +81,7 @@ public class WSDLEndpoint extends Extendable
       {
          WSDLBinding wsdlBinding = wsdlDefinitions.getBinding(binding);
          if (wsdlBinding == null)
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_BINDING",  binding));
+            throw NativeMessages.MESSAGES.cannotObtainBinding(binding);
 
          if (wsdlBinding.getInterfaceName() != null)
          {
@@ -95,7 +91,7 @@ public class WSDLEndpoint extends Extendable
       }
 
       if (wsdlInterface == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_INTF",  name));
+         throw NativeMessages.MESSAGES.cannotObtainInterface(name);
 
       return wsdlInterface;
    }

@@ -46,8 +46,6 @@ public class JBossXSComplexTypeDefinition
    private XSParticle xspart;
    private XSObjectList annots;
 
-   private String prefix;
-
    private List<XSAttributeUse> attList = new ArrayList<XSAttributeUse>();
 
    //Content Type

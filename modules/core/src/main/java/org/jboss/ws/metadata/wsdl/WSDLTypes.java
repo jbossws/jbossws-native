@@ -25,8 +25,6 @@ import java.io.Serializable;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.logging.Logger;
-
 /**
  * WSDL types.
  *
@@ -37,9 +35,6 @@ import org.jboss.logging.Logger;
 public abstract class WSDLTypes implements Serializable
 {
    private static final long serialVersionUID = 7919937323521372194L;
-
-   // provide logging
-   static private final Logger log = Logger.getLogger(WSDLTypes.class);
 
    private WSDLDefinitions wsdlDefinitions;
    private String namespace;

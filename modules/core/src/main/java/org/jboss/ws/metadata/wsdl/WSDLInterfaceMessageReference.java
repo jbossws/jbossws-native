@@ -23,13 +23,11 @@ package org.jboss.ws.metadata.wsdl;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.Constants;
 
 /**
@@ -43,7 +41,6 @@ import org.jboss.ws.common.Constants;
  */
 public abstract class WSDLInterfaceMessageReference extends Extendable implements Comparable
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLInterfaceMessageReference.class);
    // provide logging
    protected Logger log = Logger.getLogger(getClass());
 
@@ -87,7 +84,8 @@ public abstract class WSDLInterfaceMessageReference extends Extendable implement
 
    public WSDLInterfaceMessageReference(WSDLInterfaceOperation wsdlOperation)
    {
-      log.trace("New part for wsdlOperation: " + wsdlOperation.getName());
+      if (log.isTraceEnabled())
+         log.trace("New part for wsdlOperation: " + wsdlOperation.getName());
       this.wsdlOperation = wsdlOperation;
    }
 
@@ -113,7 +111,8 @@ public abstract class WSDLInterfaceMessageReference extends Extendable implement
 
    public void setElement(QName element)
    {
-      log.trace("setElement: " + element);
+      if (log.isTraceEnabled())
+         log.trace("setElement: " + element);
       this.element = element;
    }
 
@@ -145,7 +144,7 @@ public abstract class WSDLInterfaceMessageReference extends Extendable implement
       }
 
       if (xmlType == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_XMLTYPE",  element));
+         throw NativeMessages.MESSAGES.cannotObtainXmlType(element);
 
       return xmlType;
    }

@@ -110,4 +110,20 @@ public interface NativeLoggers extends BasicLogger
     @Message(id = 25063, value = "WSDL parsing, unprocessed extension element: %s")
     void unprocessedWSDLExtensionElement(QName el);
     
+    @LogMessage(level = WARN)
+    @Message(id = 25084, value = "Multiple WSDL bindings reference the same interface: %s")
+    void multipleWSDLBindingRefs(QName qname);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25085, value = "Multiple binding operations reference: %s")
+    void multipleBindingOperationRefs(QName qname);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25086, value = "Cannot obtain binding operation for ref: %s")
+    void cannotObtainBindingOperationForRef(QName qname);
+    
+    @LogMessage(level = ERROR)
+    @Message(id = 25097, value = "Cannot parse XSModel string: %s")
+    void cannotParseXSModelString(String s, @Cause Throwable cause);
+
 }

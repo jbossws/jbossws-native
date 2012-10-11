@@ -21,11 +21,8 @@
  */
 package org.jboss.ws.metadata.wsdl.xmlschema;
 
-import java.util.ResourceBundle;
-
 import org.apache.xerces.xs.XSTypeDefinition;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 
 /**
  *  @author <mailto:Anil.Saldhana@jboss.org>Anil Saldhana
@@ -33,7 +30,6 @@ import org.jboss.ws.api.util.BundleUtils;
  */
 public class JBossXSTypeDefinition extends JBossXSObject implements XSTypeDefinition
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(JBossXSTypeDefinition.class);
    private static final long serialVersionUID = -3317350531846406564L;
    
    protected boolean anonymous = false;
@@ -74,7 +70,7 @@ public class JBossXSTypeDefinition extends JBossXSObject implements XSTypeDefini
     */
    public short getTypeCategory()
    {
-      throw new WSException(BundleUtils.getMessage(bundle, "TYPE_UNIDENTIFIED"));
+      throw NativeMessages.MESSAGES.typeUnidentified();
    }
 
    /**

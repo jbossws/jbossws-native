@@ -21,19 +21,20 @@
  */
 package org.jboss.ws.metadata.wsdl;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import javax.wsdl.Definition;
 import javax.xml.namespace.QName;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeLoggers;
 import org.jboss.ws.common.Constants;
 import org.jboss.xb.binding.NamespaceRegistry;
 import org.w3c.dom.Document;
@@ -49,7 +50,6 @@ import org.w3c.dom.Document;
  */
 public class WSDLDefinitions extends Extendable implements Serializable
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLDefinitions.class);
    private static final long serialVersionUID = 1643422922694990226L;
 
    // provide logging
@@ -123,8 +123,7 @@ public class WSDLDefinitions extends Extendable implements Serializable
       }
       else if (Constants.PREFIX_XML.equalsIgnoreCase(prefix))
       {
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CAN_NOT_BE_BPOUND",  
-               new Object[]{Constants.PREFIX_XML, nsURI}));
+         throw MESSAGES.prefixCannotBeBoundTryingBindingTo(Constants.PREFIX_XML, nsURI);
       }
       
       String pre = namespaces.getPrefix(nsURI);
@@ -161,13 +160,13 @@ public class WSDLDefinitions extends Extendable implements Serializable
    }
 
    /** Get an iterator for registered namespace URIs */
-   public Iterator getRegisteredNamespaceURIs()
+   public Iterator<String> getRegisteredNamespaceURIs()
    {
       return namespaces.getRegisteredURIs();
    }
 
    /** Get an iterator for registered prefixs */
-   public Iterator getRegisteredPrefix()
+   public Iterator<String> getRegisteredPrefix()
    {
       return namespaces.getRegisteredPrefixes();
    }
@@ -180,7 +179,7 @@ public class WSDLDefinitions extends Extendable implements Serializable
    public void setTargetNamespace(String namespaceURI)
    {
       if(namespaceURI == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_NULL_ARGUMENT", "namespaceURI"));
+         throw MESSAGES.illegalNullArgument("namespaceURI");
 
       log.trace("setTargetNamespace: " + namespaceURI);
       this.targetNamespace = namespaceURI;
@@ -194,7 +193,7 @@ public class WSDLDefinitions extends Extendable implements Serializable
    public void setWsdlNamespace(String namespaceURI)
    {
       if (Constants.NS_WSDL11.equals(namespaceURI) == false)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_DEFAULT_NAMESPACE",  namespaceURI));
+         throw MESSAGES.invalidDefaultWSDLNamespace(namespaceURI);
 
       this.wsdlNamespace = namespaceURI;
    }
@@ -271,7 +270,7 @@ public class WSDLDefinitions extends Extendable implements Serializable
          if (aux.getInterfaceName().equals(qname))
          {
             if (wsdlBinding != null)
-               log.warn(BundleUtils.getMessage(bundle, "MULTIPLE_BINDINGS_REF",  qname));
+               NativeLoggers.ROOT_LOGGER.multipleWSDLBindingRefs(qname);
 
             wsdlBinding = aux;
          }

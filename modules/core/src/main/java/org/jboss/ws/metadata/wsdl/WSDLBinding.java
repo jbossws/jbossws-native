@@ -23,13 +23,11 @@ package org.jboss.ws.metadata.wsdl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeLoggers;
+import org.jboss.ws.NativeMessages;
 
 /**
  * A Binding component describes a concrete message format and transmission protocol which may be used
@@ -42,12 +40,8 @@ import org.jboss.ws.api.util.BundleUtils;
  */
 public class WSDLBinding extends Extendable implements Serializable
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(WSDLBinding.class);
    private static final long serialVersionUID = -7699953670233209811L;
 
-   // provide logging
-   private static final Logger log = Logger.getLogger(WSDLBinding.class);
-   
    // The parent WSDL definitions element.
    private final WSDLDefinitions wsdlDefinitions;
 
@@ -91,7 +85,6 @@ public class WSDLBinding extends Extendable implements Serializable
 
    public void setInterfaceName(QName interfaceName)
    {
-      log.trace("setInterfaceName: " + name);
       this.interfaceName = interfaceName;
    }
 
@@ -99,7 +92,7 @@ public class WSDLBinding extends Extendable implements Serializable
    {
       WSDLInterface wsdlInterface = wsdlDefinitions.getInterface(interfaceName);
       if (wsdlInterface == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_GET_INTERFACE",  interfaceName));
+         throw NativeMessages.MESSAGES.cannotGetInterfaceForName(interfaceName);
       return wsdlInterface;
    }
 
@@ -140,13 +133,13 @@ public class WSDLBinding extends Extendable implements Serializable
          if (aux.getRef().equals(qname))
          {
             if (wsdlBindingOperation != null)
-               log.warn(BundleUtils.getMessage(bundle, "MULTIPLE_BINDING_OP_REFERENCE",  qname));
+               NativeLoggers.ROOT_LOGGER.multipleBindingOperationRefs(qname);
             wsdlBindingOperation = aux;
          }
       }
       
       if (wsdlBindingOperation == null)
-         log.warn(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_BINDING_OPERATION",  qname));
+         NativeLoggers.ROOT_LOGGER.cannotObtainBindingOperationForRef(qname);
          
       return wsdlBindingOperation;
    }
