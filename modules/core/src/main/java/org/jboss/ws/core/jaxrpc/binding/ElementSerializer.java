@@ -21,13 +21,11 @@
  */
 package org.jboss.ws.core.jaxrpc.binding;
 
-import java.util.ResourceBundle;
-
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.SerializationContext;
@@ -44,7 +42,6 @@ import org.w3c.dom.NamedNodeMap;
  */
 public class ElementSerializer extends SerializerSupport
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(ElementSerializer.class);
    // provide logging
    private static final Logger log = Logger.getLogger(ElementSerializer.class);
 
@@ -59,9 +56,9 @@ public class ElementSerializer extends SerializerSupport
    {
       log.debug("serialize: [xmlName=" + xmlName + ",xmlType=" + xmlType + "]");
       if (value == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ELEMENT_VALUE_CANNOT_BE_NULL"));
+         throw NativeMessages.MESSAGES.illegalNullArgument("value");
       if ((value instanceof Element) == false)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "VALUE_IS_NOT_A_ELEMENT",  value.getClass().getName()));
+         throw NativeMessages.MESSAGES.valueIsNotA(Element.class, value.getClass());
 
       String xmlFragment = DOMWriter.printNode((Element)value, false);
       return new BufferedStreamResult(xmlFragment);

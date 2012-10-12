@@ -29,9 +29,11 @@ import java.net.URL;
 import java.util.Collection;
 
 import javax.management.ObjectName;
+import javax.naming.NamingException;
 import javax.wsdl.Part;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
+import javax.xml.rpc.ServiceException;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
@@ -481,7 +483,7 @@ public interface NativeMessages {
     UnsupportedOperationException noSoapMessageAvailable(Class<?> clazz);
     
     @Message(id = 25175, value = "Cannot obtain operation meta data for %s")
-    WSException cannotObtainOperationMetaData(QName opName);
+    WSException cannotObtainOperationMetaData(Object opName);
     
     @Message(id = 25176, value = "Target endpoint address not set")
     WSException targetEndpointAddressNotSet();
@@ -647,5 +649,101 @@ public interface NativeMessages {
     
     @Message(id = 25251, value = "Don't know how to invoke method %s")
     JAXRPCException dontKnowHowToInvoke(Method method);
+    
+    @Message(id = 25252, value = "Cannot find endpoint for name: %s")
+    ServiceException cannotFindEndpointForName(QName portName);
+    
+    @Message(id = 25253, value = "Components should not use the %s method.")
+    UnsupportedOperationException shouldNotUseMethod(String m);
+    
+    @Message(id = 25254, value = "SEI does not implement java.rmi.Remote: %s")
+    String notImplementRemote(String sei);
+    
+    @Message(id = 25255, value = "Service meta data not available")
+    ServiceException serviceMetaDataNotAvailable();
+    
+    @Message(id = 25256, value = "Cannot find endpoint meta data for: %s")
+    ServiceException cannotFindEndpointMetaData(Object obj);
+    
+    @Message(id = 25261, value = "Unsupported property: %s")
+    JAXRPCException unsupportedPropery(String prop);
+    
+    @Message(id = 25262, value = "Return value not supported by: %s")
+    WSException returnValueNotSupportedBy(Object obj);
+    
+    @Message(id = 25263, value = "Call invocation failed with code [%s] because of: %s")
+    String callInvocationFailedBecauseOf(String faultCode, String faultString);
+    
+    @Message(id = 25264, value = "Call invocation failed")
+    String callInvocationFailed();
+    
+    @Message(id = 25265, value = "Different java type already registered: %s")
+    IllegalArgumentException differentJavaTypeAlreadyRegistered(String t);
+    
+    @Message(id = 25266, value = "Cannot obtain response payload")
+    JAXRPCException cannotObtainResponsePayload(@Cause Throwable cause);
+    
+    @Message(id = 25267, value = "Output parameters not available")
+    JAXRPCException outputParamsNotAvailable();
+    
+    @Message(id = 25268, value = "Cannot obtain path to PortComponentLinkServlet")
+    NamingException cannotObtainPathToPCLServlet(@Cause Throwable cause);
+    
+    @Message(id = 25270, value = "The service interface does not implement javax.xml.rpc.Service: %s")
+    JAXRPCException interfaceDoesNotImplementJAXRPCService(String intf);
+    
+    @Message(id = 25272, value = "Within a <service-ref> it's not allowed to use a SEI across different <port-component-ref>'s: %s")
+    WSException notAllowedToUseInServiceRef(String seiName);
+    
+    @Message(id = 25273, value = "Failed to narrow available endpoints by <port-component-ref> declaration")
+    WSException failedToNarrowavailableEpsByPcRef();
+    
+    @Message(id = 25275, value = "Cannot unmarshal jaxrpc-mapping file: %s")
+    WSException cannotUnmarshallJAXRPCMapping(String jaxrpcMappingFile, @Cause Throwable cause);
+    
+    @Message(id = 25276, value = "Value is not a %s: %s")
+    IllegalArgumentException valueIsNotA(Class<?> expectedClass, Class<?> actualClass);
+    
+    @Message(id = 25277, value = "Cannot obtain component xmlType: %s")
+    WSException cannotObtainComponentXmlType(Object t);
+    
+    @Message(id = 25278, value = "Cannot obtain component serializer for: %s")
+    WSException cannotObtainComponentSerializerFor(QName qname);
+    
+    @Message(id = 25279, value = "Unsupported array type: %s")
+    WSException unsupportedArrayType(Class<?> t);
+    
+    @Message(id = 25280, value = "Cannot obtain component deserializer for: %s")
+    WSException cannotObtainComponentDeserializerFor(QName qname);
+    
+    @Message(id = 25281, value = "Unsupported array dimensions: %s")
+    WSException unsupportedArrayDimensions(int l);
+    
+    @Message(id = 25282, value = "Cannot obtain attribute: %s")
+    WSException cannotObtainAttribute(QName qname);
+    
+    @Message(id = 25283, value = "Invalid xmlType: %s")
+    IllegalArgumentException invalidXmlType(QName xmlType);
+    
+    @Message(id = 25286, value = "Attribute %s found in jaxrpc-mapping but not in the schema: %s")
+    WSException attributeNotInSchema(QName attr, QName schema);
+    
+    @Message(id = 25287, value = "Element %s found in jaxrpc-mapping but not in the schema: %s")
+    WSException elementNotInSchema(QName el, QName schema);
+    
+    @Message(id = 25290, value = "Unexpected qname-scope for %s: %s")
+    WSException unexpectedQNameScope(String s1, String s2);
+    
+    @Message(id = 25291, value = "Root type %s not found in the schema.")
+    WSException rootTypeNotFoundInSchema(QName qname);
+    
+    @Message(id = 25292, value = "Cannot find required property: %s")
+    WSException cannotFindRequiredProperty(String prop);
+    
+    @Message(id = 25293, value = "Failed to marshal DOM element %s")
+    IllegalStateException failedToMarshalDOMElement(QName elem, @Cause Throwable cause);
+    
+    @Message(id = 25294, value = "The given root element name must be prefix qualified: %s")
+    IllegalArgumentException mustBePrefixQualified(QName elem);
     
 }

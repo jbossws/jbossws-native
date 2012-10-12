@@ -22,13 +22,12 @@
 package org.jboss.ws.core.jaxrpc.binding;
 
 import java.util.Calendar;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.binding.BindingException;
 import org.jboss.ws.core.binding.SerializationContext;
@@ -45,7 +44,6 @@ import org.w3c.dom.NamedNodeMap;
  */
 public class CalendarSerializer extends SerializerSupport
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(CalendarSerializer.class);
    // provide logging
    private static final Logger log = Logger.getLogger(CalendarSerializer.class);
 
@@ -62,7 +60,7 @@ public class CalendarSerializer extends SerializerSupport
       else if (Constants.TYPE_LITERAL_DATETIME.equals(xmlType))
          valueStr = SimpleTypeBindings.marshalDateTime((Calendar)value);
       else
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_XMLTYPE",  xmlType));
+         throw NativeMessages.MESSAGES.invalidXmlType(xmlType);
 
       NamespaceRegistry nsRegistry = serContext.getNamespaceRegistry();
       String xmlFragment = wrapValueStr(xmlName, valueStr, nsRegistry, null, attributes, true);

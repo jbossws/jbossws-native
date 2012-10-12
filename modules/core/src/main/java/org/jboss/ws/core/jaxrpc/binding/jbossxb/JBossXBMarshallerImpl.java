@@ -25,13 +25,10 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashMap;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaWsdlMapping;
 import org.jboss.ws.metadata.jaxrpcmapping.JavaXmlTypeMapping;
@@ -50,11 +47,6 @@ import org.xml.sax.ContentHandler;
  * @since 05-Jul-2006
  */
 public class JBossXBMarshallerImpl implements JBossXBMarshaller {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(JBossXBMarshallerImpl.class);
-
-   // provide logging
-   private static final Logger log = Logger.getLogger(JBossXBMarshallerImpl.class);
-
    // The marshaller properties
    private HashMap properties = new HashMap();
 
@@ -184,7 +176,7 @@ public class JBossXBMarshallerImpl implements JBossXBMarshaller {
    public Object getProperty(String name)
    {
       if (name == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NAME_PARAMETER_IS_NULL"));
+         throw NativeMessages.MESSAGES.illegalNullArgument("name");
 
       return properties.get(name);
    }
@@ -197,7 +189,7 @@ public class JBossXBMarshallerImpl implements JBossXBMarshaller {
    public void setProperty(String name, Object value)
    {
       if (name == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NAME_PARAMETER_IS_NULL"));
+         throw NativeMessages.MESSAGES.illegalNullArgument("name");
 
       properties.put(name, value);
    }
@@ -216,16 +208,16 @@ public class JBossXBMarshallerImpl implements JBossXBMarshaller {
    private void assertRequiredProperties()
    {
       if (getProperty(JBossXBConstants.JBXB_SCHEMA_READER) == null && getProperty(JBossXBConstants.JBXB_XS_MODEL) == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_REQUIRED_PROPERTY",  JBossXBConstants.JBXB_XS_MODEL));
+         throw NativeMessages.MESSAGES.cannotFindRequiredProperty(JBossXBConstants.JBXB_XS_MODEL);
 
       if (getProperty(JBossXBConstants.JBXB_JAVA_MAPPING) == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_REQUIRED_PROPERTY",  JBossXBConstants.JBXB_JAVA_MAPPING));
+         throw NativeMessages.MESSAGES.cannotFindRequiredProperty(JBossXBConstants.JBXB_JAVA_MAPPING);
 
       QName xmlName = (QName)getProperty(JBossXBConstants.JBXB_ROOT_QNAME);
       if (xmlName == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_FIND_REQUIRED_PROPERTY",  JBossXBConstants.JBXB_ROOT_QNAME));
+         throw NativeMessages.MESSAGES.cannotFindRequiredProperty(JBossXBConstants.JBXB_ROOT_QNAME);
 
       if (xmlName.getNamespaceURI().length() > 0 && xmlName.getPrefix().length() == 0)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "MUST_BE_PREFIX_QUALIFIED",  xmlName));
+         throw NativeMessages.MESSAGES.mustBePrefixQualified(xmlName);
    }
 }

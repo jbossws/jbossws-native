@@ -24,7 +24,6 @@ package org.jboss.ws.core.jaxrpc.client.serviceref;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.ResourceBundle;
 
 import javax.naming.BinaryRefAddr;
 import javax.naming.NamingException;
@@ -32,7 +31,7 @@ import javax.naming.Reference;
 import javax.naming.Referenceable;
 import javax.naming.StringRefAddr;
 
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.wsf.spi.SPIProvider;
 import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.management.ServerConfig;
@@ -51,7 +50,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
  */
 public final class NativeServiceReferenceableJAXRPC implements Referenceable
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(NativeServiceReferenceableJAXRPC.class);
    public static final String SERVICE_REF_META_DATA = "SERVICE_REF_META_DATA";
    public static final String PORT_COMPONENT_LINK = "PORT_COMPONENT_LINK";
    public static final String PORT_COMPONENT_LINK_SERVLET = "PORT_COMPONENT_LINK_SERVLET";
@@ -99,7 +97,7 @@ public final class NativeServiceReferenceableJAXRPC implements Referenceable
             }
             catch (Exception ex)
             {
-               throw new NamingException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_PATH",  ex));
+               throw NativeMessages.MESSAGES.cannotObtainPathToPCLServlet(ex);
             }
          }
       }
@@ -120,7 +118,7 @@ public final class NativeServiceReferenceableJAXRPC implements Referenceable
       }
       catch (IOException e)
       {
-         throw new NamingException(BundleUtils.getMessage(bundle, "CANNOT_MARSHALL_SERVICE_REF_META_DATA",  e.toString()));
+         throw new NamingException(e.toString());
       }
       return baos.toByteArray();
    }

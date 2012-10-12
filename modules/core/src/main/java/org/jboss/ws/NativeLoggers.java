@@ -40,6 +40,7 @@ import org.jboss.logging.Cause;
 import org.jboss.logging.LogMessage;
 import org.jboss.logging.Message;
 import org.jboss.logging.MessageLogger;
+import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 
 /**
  * JBossWS-CXF log messages
@@ -272,5 +273,49 @@ public interface NativeLoggers extends BasicLogger
     @LogMessage(level = ERROR)
     @Message(id = 25250, value = "JAX-RPC Service error")
     void jaxRpcServiceError(@Cause Throwable cause);
+    
+    @LogMessage(level = INFO)
+    @Message(id = 25257, value = "Deprecated use of <call-properties> on JAXRPC Stub. Use <stub-properties>")
+    void deprecatedUseOfCallPropsOnJAXRPCStub();
+    
+    @LogMessage(level = DEBUG)
+    @Message(id = 25258, value = "Adding client side handler to endpoint '%s': %s")
+    void addingClientSideHandlerToEndpoint(QName portName, Object handlerInfo);
+    
+    @LogMessage(level = INFO)
+    @Message(id = 25259, value = "Using jaxrpc-mapping from: %s")
+    void useJaxRpcMappingFrom(URL mappingURL);
+    
+    @LogMessage(level = DEBUG)
+    @Message(id = 25260, value = "Add handler to: %s%s")
+    void addHandlerTo(QName portName, HandlerMetaDataJAXRPC handler);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25269, value = "Cannot set endpoint address for port-component-link, unsuported number of endpoints.")
+    void cannotSetEndpointAddressForPCL();
+    
+    @LogMessage(level = ERROR)
+    @Message(id = 25271, value = "Cannot create Service")
+    void cannotCreateService(@Cause Throwable cause);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25274, value = "Unable to narrow port selection for %s")
+    void unableToNarrowPortSelection(Object obj);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25284, value = "Cannot obtain TypeBinding for: %s")
+    void cannotObtainTypeBindingFor(QName type);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25285, value = "Ambiguous binding for attribute: %s")
+    void ambiguosBinding(String attr);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25288, value = "Type definition not found in schema: %s")
+    void typeDefinitionNotInSchema(QName qname);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25289, value = "Global element not found in schema: %s")
+    void globalElementNotInSchema(QName qname);
     
 }

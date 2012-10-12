@@ -21,9 +21,10 @@
  */
 package org.jboss.ws.core.jaxrpc.binding;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.lang.reflect.Array;
 import java.util.Iterator;
-import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 import javax.xml.namespace.QName;
@@ -31,8 +32,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.JavaUtils;
@@ -52,7 +51,6 @@ import org.w3c.dom.Element;
  */
 public class SOAPArrayDeserializer extends DeserializerSupport
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPArrayDeserializer.class);
    // provide logging
    private static final Logger log = Logger.getLogger(SOAPArrayDeserializer.class);
 
@@ -71,7 +69,7 @@ public class SOAPArrayDeserializer extends DeserializerSupport
          paramMetaData.setSOAPArrayCompType(compXmlType);
 
          if (compXmlType == null)
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_COMPONENT_XMLTYPE",  paramMetaData.getPartName()));
+            throw MESSAGES.cannotObtainComponentXmlType(paramMetaData.getPartName());
 
          Class compJavaType = getJavaTypeForComponentType(compXmlType, serContext);
 
@@ -85,18 +83,17 @@ public class SOAPArrayDeserializer extends DeserializerSupport
          AbstractDeserializerFactory compDeserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(compJavaType, compXmlType);
          if (compDeserializerFactory == null)
          {
-            log.warn(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_COMPONENT_DESERIALIZER", new Object[]{ compJavaType.getName() , compXmlType }));
             compDeserializerFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(null, compXmlType);
          }
 
          if (compDeserializerFactory == null)
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_COMPONENT_DESERIALIZER_FOR", compXmlType));
+            throw MESSAGES.cannotObtainComponentDeserializerFor(compXmlType);
 
          // Get the component type deserializer
          componentDeserializer = (DeserializerSupport)compDeserializerFactory.getDeserializer();
 
          if (arrDims.length < 1 || 2 < arrDims.length)
-            throw new WSException(BundleUtils.getMessage(bundle, "UNSUPPORTED_ARRAY_DIMENSIONS",  arrDims));
+            throw MESSAGES.unsupportedArrayDimensions(arrDims.length);
 
          Iterator it = DOMUtils.getChildElements(soapElement);
          if (arrDims.length == 1)
@@ -150,7 +147,7 @@ public class SOAPArrayDeserializer extends DeserializerSupport
       QName attrQName = new QName(Constants.URI_SOAP11_ENC, "arrayType");
       QName arrayType = DOMUtils.getAttributeValueAsQName(arrayElement, attrQName);
       if (arrayType == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ATTRIBUTE",  attrQName));
+         throw MESSAGES.cannotObtainAttribute(attrQName);
 
       String localPart = arrayType.getLocalPart();
       int dimIndex = localPart.indexOf("[");
@@ -169,7 +166,7 @@ public class SOAPArrayDeserializer extends DeserializerSupport
       QName attrQName = new QName(Constants.URI_SOAP11_ENC, "arrayType");
       QName arrayType = DOMUtils.getAttributeValueAsQName(arrayElement, attrQName);
       if (arrayType == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ATTRIBUTE",  attrQName));
+         throw MESSAGES.cannotObtainAttribute(attrQName);
 
       String nsURI = arrayType.getNamespaceURI();
       String localPart = arrayType.getLocalPart();
@@ -184,7 +181,7 @@ public class SOAPArrayDeserializer extends DeserializerSupport
       TypeMappingImpl typeMapping = serContext.getTypeMapping();
       Class javaType = typeMapping.getJavaType(compXmlType);
       if (javaType == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_JAVATYPE",  compXmlType));
+         throw MESSAGES.cannotObtainAttribute(compXmlType);
 
       return JavaUtils.getWrapperType(javaType);
    }

@@ -29,7 +29,7 @@ import javax.xml.rpc.Service;
 import javax.xml.rpc.ServiceException;
 import javax.xml.rpc.ServiceFactory;
 
-import org.jboss.logging.Logger;
+import org.jboss.ws.NativeLoggers;
 
 /**
  * Service class acts as a factory for:
@@ -44,9 +44,6 @@ import org.jboss.logging.Logger;
  */
 public class ServiceFactoryImpl extends ServiceFactory
 {
-   // provide logging
-   private final Logger log = Logger.getLogger(ServiceFactoryImpl.class);
-   
    /**
     * Create an instance of the generated service implementation class for a given service interface, if available.
     *
@@ -120,7 +117,7 @@ public class ServiceFactoryImpl extends ServiceFactory
       
       URL mappingURL = SecurityActions.getResource(cl, "META-INF/jaxrpc-mapping.xml");
       if (mappingURL != null)
-         log.info("Use jaxrpc-mapping from: " + mappingURL);
+         NativeLoggers.JAXRPC_LOGGER.useJaxRpcMappingFrom(mappingURL);
       
       return createService(wsdlURL, serviceName, mappingURL, null);
    }

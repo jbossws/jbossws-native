@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.core.jaxrpc.client.serviceref;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,7 +40,6 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 import javax.naming.Context;
 import javax.naming.Name;
@@ -47,12 +48,10 @@ import javax.naming.RefAddr;
 import javax.naming.Reference;
 import javax.naming.spi.ObjectFactory;
 import javax.xml.namespace.QName;
-import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.Service;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeLoggers;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.jaxrpc.client.ServiceExt;
 import org.jboss.ws.core.jaxrpc.client.ServiceImpl;
@@ -83,7 +82,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
  */
 public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(NativeServiceObjectFactoryJAXRPC.class);
    // provide logging
    private static final Logger log = Logger.getLogger(NativeServiceObjectFactoryJAXRPC.class);
 
@@ -125,7 +123,7 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
          }
          catch (IOException ex)
          {
-            NamingException ne = new NamingException(BundleUtils.getMessage(bundle, "CANNOT_UNMARSHALL_SERVICE_REF_META_DATA"));
+            NamingException ne = new NamingException();
             ne.setRootCause(ex);
             throw ne;
          }
@@ -176,7 +174,7 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
                EndpointRegistry epRegistry = spiProvider.getSPI(EndpointRegistryFactory.class).getEndpointRegistry();
                Endpoint endpoint = epRegistry.resolve( new PortComponentResolver(pcLink) );
                if (endpoint == null)
-                  throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_RESOLVE_PORT_COMPONENT_LINK",  pcLink));
+                  throw MESSAGES.cannotResolvePortComponentLink(pcLink);
 
                ServerEndpointMetaData sepMetaData = endpoint.getAttachment(ServerEndpointMetaData.class);
                endpointAddress = sepMetaData.getEndpointAddress();
@@ -207,7 +205,7 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
             }
             else
             {
-               log.warn(BundleUtils.getMessage(bundle, "CANNOT_SET_ENDPOINT_ADDRESS"));
+               NativeLoggers.JAXRPC_LOGGER.cannotSetEndpointAddressForPCL();
             }
          }
 
@@ -221,7 +219,7 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
          ClassLoader contextCL = SecurityActions.getContextClassLoader();
          Class<?> siClass = SecurityActions.loadClass(contextCL, serviceRef.getServiceInterface());
          if (Service.class.isAssignableFrom(siClass) == false)
-            throw new JAXRPCException(BundleUtils.getMessage(bundle, "NOT_IMPLEMENT_SERVICE",  siClass.getName()));
+            throw MESSAGES.interfaceDoesNotImplementJAXRPCService(siClass.getName());
 
          // load all service endpoint interface classes
          for (UnifiedPortComponentRefMetaData pcr : serviceRef.getPortComponentRefs())
@@ -231,7 +229,7 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
             {
                Class<?> seiClass = contextCL.loadClass(seiName);
                if (Remote.class.isAssignableFrom(seiClass) == false)
-                  throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NOT_IMPLEMENT_REMOTE",  seiClass.getName()));
+                  throw new IllegalArgumentException(MESSAGES.notImplementRemote(seiClass.getName()));
             }
          }
 
@@ -243,7 +241,7 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
       }
       catch (Exception ex)
       {
-         log.error(BundleUtils.getMessage(bundle, "CANNOT_CREATE_SERVICE"),  ex);
+         NativeLoggers.JAXRPC_LOGGER.cannotCreateService(ex);
          throw ex;
       }
    }
@@ -263,7 +261,7 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
 
             // Constraint#1: within a service-ref it's not allowed to use a SEI across different pcref's
             if (pcrefs.get(seiName) != null)
-               throw new WSException(BundleUtils.getMessage(bundle, "NOT_ALLOWED_TO_USE",  seiName));
+               throw MESSAGES.notAllowedToUseInServiceRef(seiName);
             
             pcrefs.put(seiName, pcref);
          }
@@ -297,7 +295,7 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
 
                // Constraint: Dont exclude all of them ;)
                if (pcRef2EndpointMapping.size() > 0 && (pcRef2EndpointMapping.size() == narrowedEndpoints.size()))
-                  throw new WSException(BundleUtils.getMessage(bundle, "FAILED_TO_NARROW_ENDPOINTS"));
+                  throw MESSAGES.failedToNarrowavailableEpsByPcRef();
 
                for (QName q : narrowedEndpoints)
                {
@@ -309,7 +307,7 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
             else
             {
                // TODO: In case there is more then one EMPD this should cause an exception
-               log.warn(BundleUtils.getMessage(bundle, "UNABLE_TO_NARROW_PORT_SELECTION",  pcref));
+               NativeLoggers.JAXRPC_LOGGER.unableToNarrowPortSelection(pcref);
             }
          }
       }
@@ -341,7 +339,7 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
          }
          catch (Exception e)
          {
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_UNMARSHALL_JAXRPC_MAPPING_FILE",  mappingFile),  e);
+            throw MESSAGES.cannotUnmarshallJAXRPCMapping(mappingFile, e);
          }
       }
       return javaWsdlMapping;

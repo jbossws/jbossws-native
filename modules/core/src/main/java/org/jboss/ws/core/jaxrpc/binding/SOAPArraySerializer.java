@@ -21,14 +21,12 @@
  */
 package org.jboss.ws.core.jaxrpc.binding;
 
-import java.util.ResourceBundle;
+import static org.jboss.ws.NativeMessages.MESSAGES;
 
 import javax.xml.namespace.QName;
 import javax.xml.transform.Result;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.binding.AbstractSerializerFactory;
@@ -50,7 +48,6 @@ import org.w3c.dom.NamedNodeMap;
  */
 public class SOAPArraySerializer extends SerializerSupport
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPArraySerializer.class);
    // provide logging
    private static final Logger log = Logger.getLogger(SOAPArraySerializer.class);
 
@@ -81,7 +78,7 @@ public class SOAPArraySerializer extends SerializerSupport
       try
       {
          if (paramMetaData == null)
-            throw new IllegalStateException(BundleUtils.getMessage(bundle, "USE_SERIALIZE"));
+            throw new IllegalStateException();
 
          QName compXmlName = paramMetaData.getXmlName();
          QName compXmlType = paramMetaData.getSOAPArrayCompType();
@@ -103,18 +100,17 @@ public class SOAPArraySerializer extends SerializerSupport
          }
 
          if (compXmlType == null)
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_COMPONENT_XMLTYPE",  compJavaType));
+            throw MESSAGES.cannotObtainComponentXmlType(compJavaType);
 
          // Get the component type serializer factory
          log.debug("Get component serializer for: [javaType=" + compJavaType.getName() + ",xmlType=" + compXmlType + "]");
          AbstractSerializerFactory compSerializerFactory = (AbstractSerializerFactory)typeMapping.getSerializer(compJavaType, compXmlType);
          if (compSerializerFactory == null)
          {
-            log.warn(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_COMPONENT_SERIALIZER", new Object[]{ compJavaType.getName() ,  compXmlType }));
             compSerializerFactory = (AbstractSerializerFactory)typeMapping.getSerializer(null, compXmlType);
          }
          if (compSerializerFactory == null)
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_COMPONENT_SERIALIZER",  compXmlType));
+            throw MESSAGES.cannotObtainComponentSerializerFor(compXmlType);
 
          // Get the component type serializer
          compSerializer = (SerializerSupport)compSerializerFactory.getSerializer();
@@ -128,7 +124,7 @@ public class SOAPArraySerializer extends SerializerSupport
          buffer = new StringBuilder("<" + nodeName + " xmlns:" + Constants.PREFIX_SOAP11_ENC + "='" + Constants.URI_SOAP11_ENC + "' ");
 
          if (!(value instanceof Object[]))
-            throw new WSException(BundleUtils.getMessage(bundle, "UNSUPPORTED_ARRAY_TYPE",  javaType));
+            throw MESSAGES.unsupportedArrayType(javaType);
 
          Object[] objArr = (Object[])value;
          String arrayDim = "" + objArr.length;

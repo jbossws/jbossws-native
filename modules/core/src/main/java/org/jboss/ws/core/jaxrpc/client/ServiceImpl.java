@@ -21,6 +21,8 @@
  */
 package org.jboss.ws.core.jaxrpc.client;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.io.Externalizable;
 import java.io.IOException;
 import java.io.ObjectInput;
@@ -34,7 +36,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -46,8 +47,7 @@ import javax.xml.rpc.handler.HandlerChain;
 import javax.xml.rpc.handler.HandlerInfo;
 import javax.xml.rpc.handler.HandlerRegistry;
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeLoggers;
 import org.jboss.ws.common.ResourceLoaderAdapter;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCClientMetaDataBuilder;
@@ -79,10 +79,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedStubPropertyMetaData;
  */
 public class ServiceImpl implements ServiceExt, Serializable, Externalizable
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(ServiceImpl.class);
-   // provide logging
-   private static final Logger log = Logger.getLogger(ServiceImpl.class);
-
    // The service meta data that is associated with this JAXRPC Service
    private transient ServiceMetaData serviceMetaData;
    private QName serviceName;
@@ -291,7 +287,7 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
    {
       EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
       if (epMetaData == null)
-         throw new ServiceException(BundleUtils.getMessage(bundle, "CANNOT_FIND_ENDPOINT",  portName));
+         throw MESSAGES.cannotFindEndpointForName(portName);
 
       List<Call> calls = new ArrayList<Call>();
       for (OperationMetaData opMetaData : epMetaData.getOperations())
@@ -314,7 +310,7 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
     */
    public HandlerRegistry getHandlerRegistry()
    {
-      throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "SHOULD_NOT_USE_METHOD", "getHandlerRegistry()"));
+      throw MESSAGES.shouldNotUseMethod("getHandlerRegistry()");
    }
 
    /**
@@ -333,7 +329,7 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
     */
    public TypeMappingRegistry getTypeMappingRegistry()
    {
-      throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "SHOULD_NOT_USE_METHOD", "getTypeMappingRegistry()"));
+      throw MESSAGES.shouldNotUseMethod("getTypeMappingRegistry()");
    }
 
    /**
@@ -371,14 +367,14 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
    public Remote getPort(Class seiClass) throws ServiceException
    {
       if (seiClass == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SEI_CLASS_CANNOT_BE_NULL"));
+         throw MESSAGES.illegalNullArgument("seiClass");
 
       String seiName = seiClass.getName();
       if (Remote.class.isAssignableFrom(seiClass) == false)
-         throw new ServiceException(BundleUtils.getMessage(bundle, "NOT_IMPLEMENT_REMOTE",  seiName));
+         throw new ServiceException(MESSAGES.notImplementRemote(seiName));
 
       if (serviceMetaData == null)
-         throw new ServiceException(BundleUtils.getMessage(bundle, "SERVICE_META_DATA_NOT_AVAILABLE"));
+         throw MESSAGES.serviceMetaDataNotAvailable();
 
       try
       {
@@ -390,7 +386,7 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
          }
 
          if (epMetaData == null)
-            throw new ServiceException(BundleUtils.getMessage(bundle, "CANNOT_FIND_ENDPOINT_META_DATA",  seiName));
+            throw MESSAGES.cannotFindEndpointMetaData(seiName);
 
          return createProxy(seiClass, epMetaData);
       }
@@ -400,7 +396,7 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
       }
       catch (Exception ex)
       {
-         throw new ServiceException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_PROXY"),  ex);
+         throw new ServiceException(ex);
       }
    }
 
@@ -414,18 +410,18 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
    public Remote getPort(QName portName, Class seiClass) throws ServiceException
    {
       if (seiClass == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "SEI_CLASS_CANNOT_BE_NULL"));
+         throw MESSAGES.illegalNullArgument("seiClass");
 
       if (serviceMetaData == null)
-         throw new ServiceException(BundleUtils.getMessage(bundle, "SERVICE_META_DATA_NOT_AVAILABLE"));
+         throw MESSAGES.serviceMetaDataNotAvailable();
 
       String seiName = seiClass.getName();
       if (Remote.class.isAssignableFrom(seiClass) == false)
-         throw new ServiceException(BundleUtils.getMessage(bundle, "NOT_IMPLEMENT_REMOTE",  seiName));
+         throw new ServiceException(MESSAGES.notImplementRemote(seiName));
 
       EndpointMetaData epMetaData = serviceMetaData.getEndpoint(portName);
       if (epMetaData == null)
-         throw new ServiceException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_ENDPOINT_META_DATA",  portName));
+         throw MESSAGES.cannotFindEndpointMetaData(portName);
 
       try
       {
@@ -440,7 +436,7 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
       }
       catch (Exception ex)
       {
-         throw new ServiceException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_PROXY"),  ex);
+         throw new ServiceException(ex);
       }
    }
 
@@ -451,7 +447,7 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
 
       // JBoss-4.0.x does not support <stub-properties>
       if (initCallProperties(call, seiClass.getName()) > 0)
-         log.info("Deprecated use of <call-properties> on JAXRPC Stub. Use <stub-properties>");
+         NativeLoggers.JAXRPC_LOGGER.deprecatedUseOfCallPropsOnJAXRPCStub();
 
       PortProxy handler = new PortProxy(call);
       ClassLoader cl = epMetaData.getClassLoader();
@@ -561,7 +557,7 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
             hConfig.put(HandlerType.class.getName(), jaxrpcMetaData.getHandlerType());
             HandlerInfo info = new HandlerInfo(hClass, hConfig, headerArr);
 
-            log.debug("Adding client side handler to endpoint '" + portName + "': " + info);
+            NativeLoggers.JAXRPC_LOGGER.addingClientSideHandlerToEndpoint(portName, info);
             handlerInfos.add(info);
          }
 
