@@ -32,7 +32,7 @@ import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPException;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.core.CommonMessageContext;

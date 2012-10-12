@@ -42,7 +42,7 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageOutputStream;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 
 /**
  * <code>ImageDataContentHandler</code> is a JAF content handler that handles

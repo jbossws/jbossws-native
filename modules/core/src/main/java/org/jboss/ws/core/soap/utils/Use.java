@@ -23,7 +23,7 @@ package org.jboss.ws.core.soap.utils;
 
 import java.util.ResourceBundle;
 
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 import org.jboss.ws.common.Constants;
 
 /** A type-safe enumeration for encoding use.

@@ -34,7 +34,7 @@ import javax.activation.DataSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 import org.jboss.ws.common.IOUtils;
 
 /**

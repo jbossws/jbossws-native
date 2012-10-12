@@ -40,7 +40,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 import org.jboss.ws.api.util.ServiceLoader;
 import org.jboss.ws.common.IOUtils;
 import org.jboss.ws.core.CommonMessageContext;

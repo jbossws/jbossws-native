@@ -39,7 +39,7 @@ import javax.xml.soap.SOAPException;
 
 import org.jboss.util.Base64;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 import org.jboss.ws.common.IOUtils;
 
 /**

@@ -34,7 +34,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPFault;
 import javax.xml.soap.Text;
 
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Comment;

@@ -31,7 +31,7 @@ import javax.xml.soap.SOAPException;
 import javax.xml.soap.Text;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
 import org.w3c.dom.Attr;

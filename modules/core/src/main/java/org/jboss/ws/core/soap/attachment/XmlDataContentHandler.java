@@ -33,7 +33,7 @@ import javax.activation.DataContentHandler;
 import javax.activation.DataSource;
 import javax.xml.transform.stream.StreamSource;
 
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 import org.jboss.ws.common.IOUtils;
 
 /**

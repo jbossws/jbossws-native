@@ -39,7 +39,7 @@ import javax.mail.internet.ParseException;
 import javax.xml.soap.AttachmentPart;
 
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 
 /**
  * Abstract MutilPartRelatedDecoder decodes a mime multipart/related stream.

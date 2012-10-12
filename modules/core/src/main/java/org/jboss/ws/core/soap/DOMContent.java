@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 import org.jboss.ws.core.soap.utils.XMLFragment;
 
 /**

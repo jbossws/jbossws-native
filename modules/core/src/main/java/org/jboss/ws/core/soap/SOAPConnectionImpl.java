@@ -27,7 +27,7 @@ import javax.xml.soap.SOAPConnection;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 import org.jboss.ws.core.client.HTTPRemotingConnection;
 import org.jboss.ws.core.client.RemoteConnection;
 import org.jboss.ws.core.client.SOAPProtocolConnectionHTTP;

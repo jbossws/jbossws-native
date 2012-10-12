@@ -30,7 +30,7 @@ import javax.activation.CommandMap;
 import javax.activation.DataContentHandler;
 import javax.activation.MailcapCommandMap;
 
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 
 import com.sun.mail.handlers.multipart_mixed;
 import com.sun.mail.handlers.text_html;

@@ -24,7 +24,7 @@ package org.jboss.ws.core.soap;
 import java.util.ResourceBundle;
 
 import org.apache.xerces.dom.DocumentImpl;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 import org.jboss.ws.common.DOMUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.CDATASection;

@@ -35,7 +35,7 @@ import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.core.soap.BundleUtils;
 import org.jboss.ws.core.client.UnMarshaller;
 import org.jboss.ws.core.client.transport.NettyClient;
 
