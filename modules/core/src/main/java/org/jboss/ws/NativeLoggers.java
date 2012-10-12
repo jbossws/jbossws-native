@@ -32,6 +32,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.xml.namespace.QName;
+import javax.xml.rpc.handler.Handler;
 import javax.xml.rpc.handler.HandlerInfo;
 
 import org.jboss.logging.BasicLogger;
@@ -49,6 +50,8 @@ import org.jboss.logging.MessageLogger;
 public interface NativeLoggers extends BasicLogger
 {
     NativeLoggers ROOT_LOGGER = org.jboss.logging.Logger.getMessageLogger(NativeLoggers.class, "org.jboss.ws.native");
+    NativeLoggers CLIENT_LOGGER = org.jboss.logging.Logger.getMessageLogger(NativeLoggers.class, "org.jboss.ws.native.client");
+    NativeLoggers JAXRPC_LOGGER = org.jboss.logging.Logger.getMessageLogger(NativeLoggers.class, "org.jboss.ws.native.jaxrpc");
     
     @LogMessage(level = ERROR)
     @Message(id = 25006, value = "Cannot process metrics")
@@ -197,5 +200,77 @@ public interface NativeLoggers extends BasicLogger
     @LogMessage(level = WARN)
     @Message(id = 25193, value = "Multiple service endoints found for: %s")
     void multipleServiceEndpointFoundFor(String s);
+    
+    @LogMessage(level = ERROR)
+    @Message(id = 25201, value = "Error while parsing headers for configuring keep-alive, closing connection.")
+    void errorParsingHeadersForConfiguringKeepAlive(@Cause Throwable cause);
+    
+    @LogMessage(level = ERROR)
+    @Message(id = 25204, value = "Channel closed by remote peer while sending message.")
+    void channelClosed();
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25205, value = "Can't set chunk size from call properties, illegal value provided.")
+    void cannotSetChunkSize();
+    
+    @LogMessage(level = DEBUG)
+    @Message(id = 25217, value = "Could not find keytore url.")
+    void couldNotFindKeystore(@Cause Throwable cause);
+    
+    @LogMessage(level = DEBUG)
+    @Message(id = 25218, value = "Could not find truststore url.")
+    void couldNotFindTruststore(@Cause Throwable cause);
+    
+    @LogMessage(level = ERROR)
+    @Message(id = 25226, value = "Cannot deserialize fault detail")
+    void cannotDeserializeFaultDetail(@Cause Throwable cause);
+    
+    @LogMessage(level = ERROR)
+    @Message(id = 25227, value = "Error creating SOAPFault message")
+    void errorCreatingSoapFaultMessage(@Cause Throwable cause);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25229, value = "Empty namespace URI with fault code %s, assuming: %s")
+    void emptyNamespaceURI(QName q, String s);
+    
+    @LogMessage(level = INFO)
+    @Message(id = 25231, value = "Ignoring Call.SOAPACTION_USE_PROPERTY because of BP-1.0 R2745, R2745")
+    void ignoreCallSoapActionUseProperty();
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25240, value = "Handler is in state DOES_NOT_EXIST, skipping Handler.handleRequest for: %s")
+    void handlerDoesNotExistSkippingHandleRequest(Handler h);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25241, value = "Handler is in state DOES_NOT_EXIST, skipping Handler.handleResponse for: %s")
+    void handlerDoesNotExistSkippingHandleResponse(Handler h);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25242, value = "Handler is in state DOES_NOT_EXIST, skipping Handler.handleFault for: %s")
+    void handlerDoesNotExistSkippingHandleFault(Handler h);
+    
+    @LogMessage(level = WARN)
+    @Message(id = 25243, value = "RuntimeException in handler method, transition to does not exist")
+    void handlerTransitionToDoesNotExist();
+    
+    @LogMessage(level = ERROR)
+    @Message(id = 25244, value = "RuntimeException in request handler")
+    void runtimeExceptionInRequestHandler(@Cause Throwable cause);
+    
+    @LogMessage(level = ERROR)
+    @Message(id = 25245, value = "RuntimeException in response handler")
+    void runtimeExceptionInResponseHandler(@Cause Throwable cause);
+    
+    @LogMessage(level = ERROR)
+    @Message(id = 25246, value = "Cannot trace SOAP message")
+    void cannotTraceJAXRPCSoapMessage(@Cause Throwable cause);
+    
+    @LogMessage(level = ERROR)
+    @Message(id = 25247, value = "Cannot create handler instance for: %s")
+    void cannotCreateHandlerInstance(Object handlerInfo, @Cause Throwable cause);
+    
+    @LogMessage(level = ERROR)
+    @Message(id = 25250, value = "JAX-RPC Service error")
+    void jaxRpcServiceError(@Cause Throwable cause);
     
 }

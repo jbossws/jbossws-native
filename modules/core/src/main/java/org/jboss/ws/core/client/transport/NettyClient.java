@@ -29,7 +29,6 @@ import java.net.URL;
 import java.nio.channels.ClosedChannelException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +38,6 @@ import java.util.regex.Pattern;
 import javax.net.ssl.SSLEngine;
 import javax.xml.rpc.Stub;
 
-import org.jboss.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferOutputStream;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -53,7 +51,8 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 import org.jboss.netty.handler.ssl.SslHandler;
 import org.jboss.util.Base64;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeLoggers;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.WSTimeoutException;
 import org.jboss.ws.core.client.Marshaller;
@@ -70,12 +69,10 @@ import org.jboss.ws.core.client.transport.WSResponseHandler.Result;
  */
 public class NettyClient
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(NettyClient.class);
    public static final String RESPONSE_CODE = "org.jboss.ws.core.client.transport.NettyClient#ResponseCode";
    public static final String RESPONSE_CODE_MESSAGE = "org.jboss.ws.core.client.transport.NettyClient#ResponseCodeMessage";
    public static final String PROTOCOL = "org.jboss.ws.core.client.transport.NettyClient#Protocol";
    public static final String RESPONSE_HEADERS = "org.jboss.ws.core.client.transport.NettyClient#ResponseHeaders";
-   private static Logger log = Logger.getLogger(NettyClient.class);
    
    private Marshaller marshaller;
    private UnMarshaller unmarshaller;
@@ -122,7 +119,7 @@ public class NettyClient
 	   {
 		   if (NettyTransportHandler.getHttpKeepAliveSet())
 		   {
-			   log.info("Retrying with a new connection..."); //because using keep-alive connections it's possible to try re-using closed connections before they've been evicted
+			   //because using keep-alive connections it's possible to try re-using closed connections before they've been evicted
 			   return invokeInternal(reqMessage, targetAddress, oneway, additionalHeaders, callProps);
 		   }
 		   else
@@ -141,7 +138,7 @@ public class NettyClient
       }
       catch (MalformedURLException e)
       {
-         throw new RuntimeException(BundleUtils.getMessage(bundle, "INVALID_ADDRESS",  targetAddress),  e);
+         throw new RuntimeException(e);
       }
       
       NettyTransportHandler transport = NettyTransportHandler.getInstance(target, NettyHelper.getChannelPipelineFactory(getSSLHandler(target, callProps)));
@@ -213,10 +210,12 @@ public class NettyClient
         	 Throwable t = ee.getCause();
         	 throw t != null ? t : ee;
          }
-	 catch (TimeoutException te) 
-	 {
-	    throw new WSTimeoutException(BundleUtils.getMessage(bundle, "RECEIVE_TIMEOUT"),  receiveTimeout == null ? -1 : receiveTimeout);
-	 }
+      	 catch (TimeoutException te) 
+      	 {
+      	    WSTimeoutException e = NativeMessages.MESSAGES.receiveTimeout();
+      	    e.setTimeout(receiveTimeout == null ? -1 : receiveTimeout);
+      	    throw e;
+      	 }
          resHeaders = result.getResponseHeaders();
          resMetadata = result.getMetadata();
          Object resMessage = oneway ? null : unmarshaller.read(result.getResponse(), resMetadata, resHeaders);
@@ -232,7 +231,7 @@ public class NettyClient
       }
       catch (ClosedChannelException cce)
       {
-         log.error(BundleUtils.getMessage(bundle, "CHANNEL_CLOSED"));
+         NativeLoggers.CLIENT_LOGGER.channelClosed();
          transport.end();
          throw cce;
       }
@@ -243,7 +242,7 @@ public class NettyClient
       }
       catch (TimeoutException te) 
       {
-	 throw new WSTimeoutException(BundleUtils.getMessage(bundle, "CONNECTION_TIMEOUT"),  connectionTimeout == null ? -1 : connectionTimeout);
+         throw NativeMessages.MESSAGES.connectionTimeout(connectionTimeout == null ? -1 : connectionTimeout);
       }
       catch (IOException ioe)
       {
@@ -255,7 +254,7 @@ public class NettyClient
       }
       catch (Throwable t)
       {
-         IOException io = new IOException(BundleUtils.getMessage(bundle, "COULD_NOT_TRANSMIT_MESSAGE"));
+         IOException io = NativeMessages.MESSAGES.couldNotTransmitMessage();
          io.initCause(t);
          transport.end();
          throw io;
@@ -348,7 +347,7 @@ public class NettyClient
          }
          catch (Exception e)
          {
-            log.warn(BundleUtils.getMessage(bundle, "CAN_NOT_SET_CHUNK_SIZE"));
+            NativeLoggers.CLIENT_LOGGER.cannotSetChunkSize();
          }
       }
    }

@@ -27,10 +27,8 @@ import java.net.InetSocketAddress;
 import java.net.URL;
 import java.security.AccessController;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
-import org.jboss.logging.Logger;
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFactory;
@@ -38,7 +36,8 @@ import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpVersion;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeLoggers;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.api.util.ServiceLoader;
 import org.jboss.ws.common.Constants;
 
@@ -52,8 +51,6 @@ import org.jboss.ws.common.Constants;
  */
 public class NettyTransportHandler
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(NettyTransportHandler.class);
-   private static Logger log = Logger.getLogger(NettyTransportHandler.class);
    private static final int DEFAULT_KEEP_ALIVE_CONS = 5;
    
    private URL url;
@@ -165,7 +162,7 @@ public class NettyTransportHandler
          NettyHelper.awaitUninterruptibly(connectFuture, timeout);
          if (!connectFuture.isSuccess())
          {
-            ConnectException ce = new ConnectException(BundleUtils.getMessage(bundle, "COULD_NOT_CONNECT_TO",  url.getHost()));
+            ConnectException ce = NativeMessages.MESSAGES.couldNotConnectTo(url.getHost());
             ce.initCause(connectFuture.getCause());
             throw ce;
          }
@@ -259,7 +256,7 @@ public class NettyTransportHandler
       }
       catch (Exception ex)
       {
-         log.error(BundleUtils.getMessage(bundle, "ERROR_WHILE_PARSING_HEADERS"), ex);
+         NativeLoggers.CLIENT_LOGGER.errorParsingHeadersForConfiguringKeepAlive(ex);
          keepAliveConnections = -1;
          keepingAlive = false;
       }

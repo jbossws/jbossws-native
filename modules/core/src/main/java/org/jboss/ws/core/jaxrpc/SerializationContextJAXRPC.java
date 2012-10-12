@@ -21,14 +21,10 @@
  */
 package org.jboss.ws.core.jaxrpc;
 
-import java.util.ResourceBundle;
-
 import javax.xml.namespace.QName;
 
 import org.apache.xerces.xs.XSModel;
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.core.binding.SerializationContext;
@@ -49,7 +45,6 @@ import org.jboss.ws.metadata.umdm.TypesMetaData;
  */
 public class SerializationContextJAXRPC extends SerializationContext
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(SerializationContextJAXRPC.class);
    // provide logging
    private static final Logger log = Logger.getLogger(SerializationContextJAXRPC.class);
 
@@ -120,8 +115,7 @@ public class SerializationContextJAXRPC extends SerializationContext
    public XSModel getXsModel()
    {
       SOAPMessageContextJAXRPC msgContext = (SOAPMessageContextJAXRPC)MessageContextAssociation.peekMessageContext();
-      if (msgContext == null)
-         throw new WSException(BundleUtils.getMessage(bundle, "MESSAGECONTEXT_NOT_AVAILABLE"));
+      assert(msgContext != null);
 
       OperationMetaData opMetaData = msgContext.getOperationMetaData();
       ServiceMetaData serviceMetaData = opMetaData.getEndpointMetaData().getServiceMetaData();

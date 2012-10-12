@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -43,7 +42,8 @@ import javax.xml.soap.SOAPEnvelope;
 import javax.xml.soap.SOAPMessage;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeLoggers;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.core.soap.SOAPEnvelopeImpl;
@@ -63,7 +63,6 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.Handler
  */
 public abstract class HandlerChainBaseImpl implements HandlerChain
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(HandlerChainBaseImpl.class);
    private static Logger log = Logger.getLogger(HandlerChainBaseImpl.class);
 
    public static final int STATE_DOES_NOT_EXIST = 0;
@@ -146,7 +145,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
       }
       catch (Exception ex)
       {
-         throw new JAXRPCException(BundleUtils.getMessage(bundle, "CANNOT_INITIALIZE_HANDLER_CHAIN"),  ex);
+         throw new JAXRPCException(ex);
       }
 
       // set state to created
@@ -305,7 +304,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
          }
          catch (RuntimeException e)
          {
-            log.error(BundleUtils.getMessage(bundle, "RUNTIMEEXCEPTION_IN_REQUEST_HANDLER"),  e);
+            NativeLoggers.JAXRPC_LOGGER.runtimeExceptionInRequestHandler(e);
             doNext = false;
             throw e;
          }
@@ -382,7 +381,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
          }
          catch (RuntimeException rte)
          {
-            log.error(BundleUtils.getMessage(bundle, "RUNTIMEEXCEPTION_IN_RESPONSE_HANDLER"),  rte);
+            NativeLoggers.JAXRPC_LOGGER.runtimeExceptionInResponseHandler(rte);
             doNext = false;
             throw rte;
          }
@@ -472,7 +471,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
       }
       catch (Exception ex)
       {
-         log.error(BundleUtils.getMessage(bundle, "CANNOT_TRACE_SOAP_MESSAGE"),  ex);
+         NativeLoggers.JAXRPC_LOGGER.cannotTraceJAXRPCSoapMessage(ex);
          return null;
       }
    }
@@ -500,7 +499,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
             }
             catch (Exception ex)
             {
-               log.error(BundleUtils.getMessage(bundle, "CANNOT_CREATE_HANDLER_INSTANCE",  entry.info),  ex);
+               NativeLoggers.JAXRPC_LOGGER.cannotCreateHandlerInstance(entry.info, ex);
             }
          }
       }
@@ -512,7 +511,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
    protected Handler getHandlerAt(int pos)
    {
       if (pos < 0 || handlers.size() <= pos)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "NO_HANDLER_AT_POSITION",  pos));
+         throw NativeMessages.MESSAGES.noHandlerAtPosition(pos);
 
       HandlerEntry entry = (HandlerEntry)handlers.get(pos);
       return entry.handler;
@@ -530,7 +529,7 @@ public abstract class HandlerChainBaseImpl implements HandlerChain
       public HandlerEntry(HandlerWrapper handler, HandlerInfo info, HandlerType type)
       {
          if (handler == null || info == null)
-            throw new IllegalStateException(BundleUtils.getMessage(bundle, "INVALID_HANDLER_ENTRY"));
+            throw NativeMessages.MESSAGES.invalidHandlerEntry();
 
          if (type == null)
          {

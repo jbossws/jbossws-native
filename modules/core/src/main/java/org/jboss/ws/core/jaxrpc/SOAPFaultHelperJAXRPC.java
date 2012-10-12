@@ -21,10 +21,11 @@
  */
 package org.jboss.ws.core.jaxrpc;
 
+import static org.jboss.ws.NativeMessages.MESSAGES;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
@@ -48,8 +49,6 @@ import javax.xml.transform.dom.DOMSource;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.NativeLoggers;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPFaultException;
@@ -76,7 +75,6 @@ import org.w3c.dom.Element;
  */
 public class SOAPFaultHelperJAXRPC
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(SOAPFaultHelperJAXRPC.class);
    // provide logging
    private static Logger log = Logger.getLogger(SOAPFaultHelperJAXRPC.class);
    /**
@@ -134,7 +132,7 @@ public class SOAPFaultHelperJAXRPC
                // Get the deserializer from the type mapping
                AbstractDeserializerFactory desFactory = (AbstractDeserializerFactory)typeMapping.getDeserializer(javaType, xmlType);
                if (desFactory == null)
-                  throw new JAXRPCException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_DESERIALIZER_FACTORY",  xmlType));
+                  throw MESSAGES.cannotObtainDeserializerFactory(xmlType);
 
                try
                {
@@ -153,7 +151,7 @@ public class SOAPFaultHelperJAXRPC
                   DeserializerSupport des = (DeserializerSupport)desFactory.getDeserializer();
                   Object userEx = des.deserialize(xmlName, xmlType, xmlFragment, serContext);
                   if (userEx == null || (userEx instanceof Exception) == false)
-                     throw new WSException(BundleUtils.getMessage(bundle, "INVALID_DESERIALIZATION_RESULT",  userEx));
+                     throw MESSAGES.invalidDeserializationResult(userEx);
 
                   faultEx.initCause((Exception)userEx);
                }
@@ -163,7 +161,7 @@ public class SOAPFaultHelperJAXRPC
                }
                catch (Exception ex)
                {
-                  log.error(BundleUtils.getMessage(bundle, "CANNOT_DESERIALIZE_FAULT_DETAIL"),  ex);
+                  NativeLoggers.JAXRPC_LOGGER.cannotDeserializeFaultDetail(ex);
                }
             }
             else
@@ -213,7 +211,7 @@ public class SOAPFaultHelperJAXRPC
       }
 
       Throwable faultCause = faultEx.getCause();
-      NativeLoggers.ROOT_LOGGER.soapRequestException(faultCause != null ? faultCause : faultEx);
+      NativeLoggers.JAXRPC_LOGGER.soapRequestException(faultCause != null ? faultCause : faultEx);
 
       try
       {
@@ -226,8 +224,8 @@ public class SOAPFaultHelperJAXRPC
       }
       catch (Exception ex)
       {
-         log.error(BundleUtils.getMessage(bundle, "ERROR_CREATING_SOAPFAULT_MESSAGE"),  ex);
-         throw new JAXRPCException(BundleUtils.getMessage(bundle, "CANNOT_CREATE_SOAPFAULT_MESSAGE",  faultEx));
+         NativeLoggers.JAXRPC_LOGGER.errorCreatingSoapFaultMessage(ex);
+         throw MESSAGES.cannotCreateSoapFaultMessage(faultEx);
       }
    }
 
@@ -283,7 +281,7 @@ public class SOAPFaultHelperJAXRPC
             // Get the serializer from the type mapping
             AbstractSerializerFactory serFactory = (AbstractSerializerFactory)typeMapping.getSerializer(javaType, xmlType);
             if (serFactory == null)
-               throw new JAXRPCException(BundleUtils.getMessage(bundle, "CANNOT_OBTAIN_SERIALIZER_FACTORY",  xmlType));
+               throw MESSAGES.cannotObtainSerializerFactory(xmlType);
 
             try
             {
@@ -347,19 +345,19 @@ public class SOAPFaultHelperJAXRPC
    private static void assertFaultCode(QName faultCode)
    {
       if (faultCode == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "FAULTCODE_CANNOT_BE_NULL"));
+         throw MESSAGES.illegalNullArgument("faultCode");
 
       // For lazy folkes like the CTS that don't bother to give
       // a namesapce URI, assume they use a standard code
       String nsURI = faultCode.getNamespaceURI();
       if ("".equals(nsURI))
       {
-         log.warn(BundleUtils.getMessage(bundle, "EMPTY_NAMESPACE_URI", new Object[]{ faultCode , Constants.NS_SOAP11_ENV}));
+         NativeLoggers.JAXRPC_LOGGER.emptyNamespaceURI(faultCode , Constants.NS_SOAP11_ENV);
          faultCode = new QName(Constants.NS_SOAP11_ENV, faultCode.getLocalPart());
       }
 
       // WS-I allows non custom faultcodes if you use a non soap namespace
       if (Constants.NS_SOAP11_ENV.equals(nsURI) && allowedFaultCodes.contains(faultCode) == false)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "ILLEGAL_FAULTCODE", new Object[]{ faultCode ,  allowedFaultCodes}));
+         throw MESSAGES.illegalFaultCode(faultCode, allowedFaultCodes);
    }
 }

@@ -34,7 +34,7 @@ import org.jboss.xb.binding.NamespaceRegistry;
  */
 public abstract class SerializationContext
 {
-   private Class javaType;
+   private Class<?> javaType;
    
    private TypeMappingImpl typeMapping;
    // The namespace registry that is valid for this serialization context
@@ -67,12 +67,12 @@ public abstract class SerializationContext
       return namespaceRegistry;
    }
 
-   public Class getJavaType()
+   public Class<?> getJavaType()
    {
       return javaType;
    }
 
-   public void setJavaType(Class javaType)
+   public void setJavaType(Class<?> javaType)
    {
       this.javaType = javaType;
    }

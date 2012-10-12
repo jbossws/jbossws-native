@@ -27,7 +27,6 @@ import java.util.Map;
 
 import javax.xml.rpc.handler.MessageContext;
 
-import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.binding.SerializationContext;
 import org.jboss.ws.core.jaxrpc.SerializationContextJAXRPC;
@@ -48,8 +47,6 @@ import org.jboss.xb.binding.NamespaceRegistry;
  */
 public abstract class MessageContextJAXRPC extends CommonMessageContext implements MessageContext
 {
-   private static Logger log = Logger.getLogger(MessageContextJAXRPC.class);
-
    public static final String SERVLET_CONTEXT = "javax.xml.ws.servlet.context";
    public static final String SERVLET_REQUEST = "javax.xml.ws.servlet.request";
    public static final String SERVLET_RESPONSE = "javax.xml.ws.servlet.response";
@@ -84,7 +81,6 @@ public abstract class MessageContextJAXRPC extends CommonMessageContext implemen
 
    public static CommonMessageContext processPivot(CommonMessageContext requestContext)
    {
-      log.debug("Begin response processing");
       return requestContext;
    }
 

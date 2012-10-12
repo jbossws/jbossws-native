@@ -33,13 +33,13 @@ import java.rmi.Remote;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import javax.xml.rpc.JAXRPCException;
 import javax.xml.rpc.Service;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeLoggers;
+import org.jboss.ws.NativeMessages;
 
 /**
  * This is the proxy that implements the service interface .
@@ -51,7 +51,6 @@ import org.jboss.ws.api.util.BundleUtils;
  */
 public class ServiceProxy implements InvocationHandler, Serializable, Externalizable
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(ServiceProxy.class);
    // provide logging
    private static final Logger log = Logger.getLogger(ServiceProxy.class);
 
@@ -152,7 +151,7 @@ public class ServiceProxy implements InvocationHandler, Serializable, Externaliz
             return retObj;
          }
 
-         throw new JAXRPCException(BundleUtils.getMessage(bundle, "NOT_KNOW_HOW_TO_INVOKE",  method));
+         throw NativeMessages.MESSAGES.dontKnowHowToInvoke(method);
       }
       catch (Exception e)
       {
@@ -170,7 +169,7 @@ public class ServiceProxy implements InvocationHandler, Serializable, Externaliz
       if (ex instanceof InvocationTargetException)
          th = ((InvocationTargetException)ex).getTargetException();
 
-      log.error(BundleUtils.getMessage(bundle, "SERVICE_ERROR"),  th);
+      NativeLoggers.JAXRPC_LOGGER.jaxRpcServiceError(th);
       throw th;
    }
 

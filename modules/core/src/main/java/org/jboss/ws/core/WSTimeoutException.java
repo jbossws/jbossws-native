@@ -31,9 +31,19 @@ public class WSTimeoutException extends RuntimeException
 {
    private long timeout;
    
+   public WSTimeoutException(String message)
+   {
+      super(message);
+   }
+   
    public WSTimeoutException(String message, long timeout)
    {
       super(message);
+      this.timeout = timeout;
+   }
+   
+   public void setTimeout(long timeout)
+   {
       this.timeout = timeout;
    }
 

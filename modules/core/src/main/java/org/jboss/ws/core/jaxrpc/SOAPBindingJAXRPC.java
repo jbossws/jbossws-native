@@ -25,7 +25,7 @@ import javax.xml.rpc.Call;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPMessage;
 
-import org.jboss.logging.Logger;
+import org.jboss.ws.NativeLoggers;
 import org.jboss.ws.core.jaxrpc.handler.MessageContextJAXRPC;
 import org.jboss.ws.core.soap.utils.MessageContextAssociation;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
@@ -38,9 +38,6 @@ import org.jboss.ws.metadata.umdm.OperationMetaData;
  */
 class SOAPBindingJAXRPC  
 {
-   // provide logging
-   private static Logger log = Logger.getLogger(SOAPBindingJAXRPC.class);
-   
    public void setSOAPActionHeader(OperationMetaData opMetaData, SOAPMessage reqMessage)
    {
       MessageContextJAXRPC msgContext = (MessageContextJAXRPC)MessageContextAssociation.peekMessageContext();
@@ -57,7 +54,7 @@ class SOAPBindingJAXRPC
       // present with an empty string as its value.
 
       if (msgContext.getProperty(Call.SOAPACTION_USE_PROPERTY) != null)
-         log.info("Ignore Call.SOAPACTION_USE_PROPERTY because of BP-1.0 R2745, R2745");
+         NativeLoggers.JAXRPC_LOGGER.ignoreCallSoapActionUseProperty();
 
       String soapActionProperty = (String)msgContext.getProperty(Call.SOAPACTION_URI_PROPERTY);
       if (soapActionProperty != null)

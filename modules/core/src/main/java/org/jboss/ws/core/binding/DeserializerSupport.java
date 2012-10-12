@@ -21,15 +21,12 @@
  */
 package org.jboss.ws.core.binding;
 
-import java.util.ResourceBundle;
-
 import javax.xml.namespace.QName;
 import javax.xml.rpc.encoding.Deserializer;
 import javax.xml.transform.Source;
 import javax.xml.transform.dom.DOMSource;
 
-import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.DOMUtils;
 import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.core.soap.SOAPContentElement;
@@ -44,8 +41,6 @@ import org.w3c.dom.Node;
  */
 public abstract class DeserializerSupport implements Deserializer
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(DeserializerSupport.class);
-   private static final Logger log = Logger.getLogger(DeserializerSupport.class);
    private static final QName XSI_NIL = new QName("http://www.w3.org/2001/XMLSchema-instance", "nil");
 
    public Object deserialize(SOAPContentElement soapElement, SerializationContext serContext) throws BindingException
@@ -95,9 +90,9 @@ public abstract class DeserializerSupport implements Deserializer
          if (nodeType == Node.ELEMENT_NODE)
          {
             return (Element)node;
-         } else throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "ONLY_ELEMENT_NODES_ARE_SUPPORTED"));
+         } else throw NativeMessages.MESSAGES.onlyElementNotesSupported();
       }
-      else throw new UnsupportedOperationException(BundleUtils.getMessage(bundle, "ONLY_DOMSOURCE_IS_SUPPORTED"));
+      else throw NativeMessages.MESSAGES.onlyDOMSourceSupported();
    }
    
 

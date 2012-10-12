@@ -23,12 +23,15 @@ package org.jboss.ws;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.ConnectException;
 import java.net.URL;
 import java.util.Collection;
 
 import javax.management.ObjectName;
 import javax.wsdl.Part;
 import javax.xml.namespace.QName;
+import javax.xml.rpc.JAXRPCException;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPException;
 import javax.xml.transform.Source;
@@ -38,7 +41,9 @@ import org.apache.xerces.xs.XSElementDeclaration;
 import org.jboss.logging.Cause;
 import org.jboss.logging.Message;
 import org.jboss.logging.MessageBundle;
+import org.jboss.ws.core.WSTimeoutException;
 import org.jboss.ws.core.binding.BindingException;
+import org.jboss.ws.core.soap.utils.Style;
 import org.jboss.ws.core.soap.utils.Use;
 import org.jboss.ws.metadata.wsdl.WSDLException;
 import org.jboss.ws.metadata.wsdl.WSDLTypes;
@@ -540,5 +545,107 @@ public interface NativeMessages {
     
     @Message(id = 25199, value = "Cannot get channel future before closing the stream")
     IllegalStateException cannotGetChannelFuture();
+    
+    @Message(id = 25200, value = "Could not connect to %s")
+    ConnectException couldNotConnectTo(String host);
+    
+    @Message(id = 25202, value = "Timeout after: %s ms")
+    WSTimeoutException timeout(Long timeout);
+    
+    @Message(id = 25203, value = "Receive timeout")
+    WSTimeoutException receiveTimeout();
+    
+    @Message(id = 25206, value = "Could not transmit message")
+    IOException couldNotTransmitMessage();
+    
+    @Message(id = 25207, value = "Connection timeout %s")
+    WSTimeoutException connectionTimeout(Long timeout);
+    
+    @Message(id = 25208, value = "Can not set remoting socket factory with null protocol")
+    IllegalArgumentException cannotSetRemotingSocketFactory();
+    
+    @Message(id = 25209, value = "Error creating server socket factory SSL context")
+    IOException errorCreatingServerSocketFactorySSLContext(@Cause Exception cause);
+    
+    @Message(id = 25210, value = "Error creating socket factory SSL context")
+    IOException errorCreatingSocketFactorySSLContext(@Cause Exception cause);
+    
+    @Message(id = 25211, value = "Can not find keystore url.")
+    IOException cannotFindKeystoreUrl(@Cause Exception cause);
+    
+    @Message(id = 25212, value = "Error initializing server socket factory SSL context")
+    IOException errorInitializingServerSocketFactorySSLContext(@Cause Exception cause);
+    
+    @Message(id = 25213, value = "Can not find truststore url.")
+    IOException cannotFindTruststoreUrl(@Cause Exception cause);
+    
+    @Message(id = 25214, value = "Error initializing socket factory SSL context")
+    IOException errorInitializingSocketFactorySSLContext(@Cause Exception cause);
+    
+    @Message(id = 25215, value = "Can not find key entry for key store (%s) with given alias (%s)")
+    IOException cannotFindKeyEntry(URL ksUrl, String alias);
+    
+    @Message(id = 25216, value = "Can not find store file for url because store url is null")
+    String nullStoreURL();
+    
+    @Message(id = 25219, value = "Cannot compare IQName to %s")
+    IllegalArgumentException cannotCompareIQNameTo(Object obj);
+    
+    @Message(id = 25220, value = "Only element nodes are supported")
+    UnsupportedOperationException onlyElementNotesSupported();
+    
+    @Message(id = 25221, value = "Only DOMSource is supported")
+    UnsupportedOperationException onlyDOMSourceSupported();
+    
+    @Message(id = 25222, value = "Unsupported encoding style: %s")
+    JAXRPCException unsupportedEncodingStyle(String s);
+    
+    @Message(id = 25223, value = "Cannot obtain deserializer factory for: %s")
+    JAXRPCException cannotObtainDeserializerFactory(QName qname);
+    
+    @Message(id = 25224, value = "Cannot obtain serializer factory for: %s")
+    JAXRPCException cannotObtainSerializerFactory(QName qname);
+    
+    @Message(id = 25225, value = "Invalid deserialization result: %s")
+    WSException invalidDeserializationResult(Object res);
+    
+    @Message(id = 25228, value = "Cannot create SOAPFault message")
+    JAXRPCException cannotCreateSoapFaultMessage(@Cause Throwable cause);
+    
+    @Message(id = 25230, value = "Illegal faultcode '%s', allowed values are: %s")
+    IllegalArgumentException illegalFaultCode(QName fc, Collection<QName> allowed);
+    
+    @Message(id = 25232, value = "RoleSource was not available")
+    IllegalStateException roleSourceNotAvailable();
+    
+    @Message(id = 25233, value = "Cannot generate xsd schema for: %s")
+    JAXRPCException cannotGenerateXsdSchemaFor(QName qname, @Cause Throwable cause);
+    
+    @Message(id = 25234, value = "Cannot generate XSModel")
+    WSException cannotGenerateXsdModel();
+    
+    @Message(id = 25235, value = "Unexpected style: %s")
+    WSException unexpectedStyle(Style style);
+    
+    @Message(id = 25236, value = "Cannot generate XSModel")
+    WSException unexpectedParameterStyle();
+    
+    @Message(id = 25237, value = "Operation is not document/literal (wrapped)")
+    WSException operationIsNotDocLitWrapped();
+    
+    @Message(id = 25238, value = "Cannot generate a type when there is no wrapped parameter")
+    WSException cannotGenerateTypeWithNoWrappedParams();
+    
+    @Message(id = 25239, value = "Could not generate wrapper type: %s")
+    WSException cannotGenerateWrapperType(String type, @Cause Throwable cause);
+    
+    @Message(id = 25248, value = "No handler at position: %s")
+    IllegalArgumentException noHandlerAtPosition(int p);
+    
+    @Message(id = 25249, value = "Invalid handler entry")
+    IllegalStateException invalidHandlerEntry();
+    
+    @Message(id = 25251, value = "Don't know how to invoke method %s")
+    JAXRPCException dontKnowHowToInvoke(Method method);
     
 }

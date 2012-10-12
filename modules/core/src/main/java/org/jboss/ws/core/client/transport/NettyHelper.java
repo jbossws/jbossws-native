@@ -25,7 +25,6 @@ import static org.jboss.netty.channel.Channels.pipeline;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
@@ -36,7 +35,7 @@ import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestEncoder;
 import org.jboss.netty.handler.codec.http.HttpResponseDecoder;
 import org.jboss.netty.handler.ssl.SslHandler;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.core.WSTimeoutException;
 
 /**
@@ -48,7 +47,6 @@ import org.jboss.ws.core.WSTimeoutException;
  */
 public class NettyHelper
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(NettyHelper.class);
    public static final String RESPONSE_HANDLER_NAME = "handler";
    
    public static ChannelPipelineFactory getChannelPipelineFactory()
@@ -92,7 +90,7 @@ public class NettyHelper
          boolean bool = future.awaitUninterruptibly(timeout);
          if (!bool)
          {
-            throw new WSTimeoutException(BundleUtils.getMessage(bundle, "TIMEOUT"),  timeout);
+            throw NativeMessages.MESSAGES.timeout(timeout);
          }
       }
       else

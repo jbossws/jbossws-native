@@ -23,14 +23,11 @@ package org.jboss.ws.core.jaxrpc;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import javax.xml.namespace.QName;
-import javax.xml.rpc.JAXRPCException;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.WSException;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.metadata.wsdl.xmlschema.JBossXSModel;
 import org.jboss.ws.tools.JavaToXSD;
 
@@ -42,7 +39,7 @@ import org.jboss.ws.tools.JavaToXSD;
  */
 public class SchemaGenerator
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(SchemaGenerator.class);
+//   private static final ResourceBundle bundle = BundleUtils.getBundle(SchemaGenerator.class);
    // provide logging
    private static final Logger log = Logger.getLogger(SchemaGenerator.class);
 
@@ -71,7 +68,7 @@ public class SchemaGenerator
 
          JBossXSModel xsModel = javaToXSD.generateForSingleType(xmlType, javaType);
          if (xsModel == null)
-            throw new WSException(BundleUtils.getMessage(bundle, "CANNOT_GENERATE_XSMODEL"));
+            throw NativeMessages.MESSAGES.cannotGenerateXsdModel();
 
          if(log.isDebugEnabled()) log.debug("\n" + xsModel.serialize());
          return xsModel;
@@ -82,7 +79,7 @@ public class SchemaGenerator
       }
       catch (Exception e)
       {
-         throw new JAXRPCException(BundleUtils.getMessage(bundle, "CANNOT_GENERATE_XSDSCHEMA",  xmlType),  e);
+         throw NativeMessages.MESSAGES.cannotGenerateXsdSchemaFor(xmlType, e);
       }
    }
 
@@ -102,6 +99,6 @@ public class SchemaGenerator
    {
       String nsURI = xmlType.getNamespaceURI();
       if (nsURI.length() == 0)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "INVALID_NAMESPACE_FOR_TYPE",  xmlType));
+         throw new IllegalArgumentException();
    }
 }

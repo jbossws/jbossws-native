@@ -30,7 +30,6 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.namespace.QName;
@@ -39,7 +38,7 @@ import javax.xml.rpc.encoding.SerializerFactory;
 import javax.xml.rpc.encoding.TypeMapping;
 
 import org.jboss.logging.Logger;
-import org.jboss.ws.api.util.BundleUtils;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.JavaUtils;
 import org.jboss.ws.common.utils.HashCodeUtil;
@@ -68,7 +67,6 @@ import org.jboss.ws.core.jaxrpc.binding.SimpleSerializerFactory;
  */
 public abstract class TypeMappingImpl implements TypeMapping
 {
-   private static final ResourceBundle bundle = BundleUtils.getBundle(TypeMappingImpl.class);
    // provide logging
    private static final Logger log = Logger.getLogger(TypeMappingImpl.class);
 
@@ -150,9 +148,9 @@ public abstract class TypeMappingImpl implements TypeMapping
    private void registerInternal(Class javaType, IQName xmlType, SerializerFactory sf, DeserializerFactory df)
    {
       if (javaType == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "JAVATYPE_CANNOT_BE_NULL",  xmlType));
+         throw NativeMessages.MESSAGES.illegalNullArgument("javaType");
       if (xmlType == null)
-         throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "XMLTYPE_CANNOT_BE_NULL",  javaType));
+         throw NativeMessages.MESSAGES.illegalNullArgument("xmlType");
 
       KeyPair kPair = new KeyPair(xmlType, javaType);
       FactoryPair fPair = new FactoryPair(sf, df);
@@ -708,7 +706,7 @@ public abstract class TypeMappingImpl implements TypeMapping
 
       public boolean equals(Object object) {
          if(!(object instanceof IQName))
-            throw new IllegalArgumentException(BundleUtils.getMessage(bundle, "CANNOT_COMPARE_IQNAME",  object));
+            throw NativeMessages.MESSAGES.cannotCompareIQNameTo(object);
 
          IQName iqn = (IQName)object;
          return (iqn.namespace == this.namespace && iqn.localPart == this.localPart);
