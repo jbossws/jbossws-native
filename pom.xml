@@ -56,12 +56,12 @@
 
   <!-- Properties -->
   <properties>
-    <jbossws.api.version>1.0.2-SNAPSHOT</jbossws.api.version>
-    <jbossws.spi.version>2.1.1-SNAPSHOT</jbossws.spi.version>
-    <jbossws.common.version>2.1.1-SNAPSHOT</jbossws.common.version>
-    <jbossws.common.tools.version>1.1.1-SNAPSHOT</jbossws.common.tools.version>
-    <jbossws.shared.testsuite.version>4.1.1-SNAPSHOT</jbossws.shared.testsuite.version>
-    <jbossws.jboss712.version>4.1.1-SNAPSHOT</jbossws.jboss712.version>
+    <jbossws.api.version>1.0.1.Final</jbossws.api.version>
+    <jbossws.spi.version>2.1.0.Final</jbossws.spi.version>
+    <jbossws.common.version>2.1.0.Final</jbossws.common.version>
+    <jbossws.common.tools.version>1.1.0.Final</jbossws.common.tools.version>
+    <jbossws.shared.testsuite.version>4.1.0.Final</jbossws.shared.testsuite.version>
+    <jbossws.jboss712.version>4.1.0.Final</jbossws.jboss712.version>
     <jboss712.version>7.1.2.Final</jboss712.version>
     <jboss720.version>7.2.0.Alpha1-SNAPSHOT</jboss720.version>
     <javassist.version>3.15.0-GA</javassist.version>
