@@ -30,7 +30,7 @@
       <groupId>org.jboss.ws.native</groupId>
       <artifactId>jbossws-native-resources</artifactId>
       <version>${project.version}</version>
-      <classifier>jboss712</classifier>
+      <classifier>jboss713</classifier>
     </dependency>
 
     <dependency>
@@ -60,7 +60,7 @@
 
     <dependency>
       <groupId>org.jboss.ws</groupId>
-      <artifactId>jbossws-jboss712-server-integration</artifactId>
+      <artifactId>jbossws-jboss713-server-integration</artifactId>
       <scope>provided</scope>
     </dependency>
 

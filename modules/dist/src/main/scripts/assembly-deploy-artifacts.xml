@@ -59,9 +59,9 @@
        <outputDirectory>deploy-artifacts/lib</outputDirectory>
        <unpack>false</unpack>
        <includes>
-         <include>org.jboss.ws:jbossws-jboss712-server-integration:jar</include>
+         <include>org.jboss.ws:jbossws-jboss713-server-integration:jar</include>
        </includes>
-       <outputFileNameMapping>jbossws-jboss712.jar</outputFileNameMapping>
+       <outputFileNameMapping>jbossws-jboss713.jar</outputFileNameMapping>
        <scope>provided</scope>
        <useProjectArtifact>false</useProjectArtifact>
     </dependencySet>

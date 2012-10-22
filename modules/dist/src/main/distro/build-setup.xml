@@ -34,10 +34,10 @@
     <property file="${target.properties.file}"/>
     <property name="jboss.server.instance" value="default"/>
 
-    <property name="jboss712.available.file" value="${jboss712.home}/jboss-modules.jar"/>
+    <property name="jboss713.available.file" value="${jboss713.home}/jboss-modules.jar"/>
     <property name="jboss720.available.file" value="${jboss720.home}/jboss-modules.jar"/>
 
-    <available property="jboss712.available" file="${jboss712.available.file}"/>
+    <available property="jboss713.available" file="${jboss713.available.file}"/>
     <available property="jboss720.available" file="${jboss720.available.file}"/>
 
     <tstamp>

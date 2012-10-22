@@ -31,7 +31,7 @@
 
     <copy
       file="${src.dir}/jbossws-native-config-as7.xml"
-      tofile="${dest.dir}/jbossws-jboss712/jbossws.beans/META-INF/stack-specific-deployment-aspects.xml"
+      tofile="${dest.dir}/jbossws-jboss713/jbossws.beans/META-INF/stack-specific-deployment-aspects.xml"
     />
 
     <copy

@@ -42,7 +42,7 @@
        <param name="installserver" value="${deploy.structure}"/>
        <param name="thirdpartydir" value="${deploy.artifacts.dir}"/>
        <param name="jbossid" value="${jbossws.integration.target}"/>
-       <param name="modules-jbossid" value="jboss712"/>
+       <param name="modules-jbossid" value="jboss713"/>
      </antcall>
    </target>
 
@@ -69,32 +69,32 @@
    </target>
 
    <!-- ================================================================== -->
-   <!-- Deployment jboss712                                                -->
+   <!-- Deployment jboss713                                                -->
    <!-- ================================================================== -->
 
-   <target name="target-jboss712">
-     <property name="jbossws.integration.target" value="jboss712"/>
+   <target name="target-jboss713">
+     <property name="jbossws.integration.target" value="jboss713"/>
      <echo message="jbossws.integration.target=${jbossws.integration.target}" file="${target.properties.file}"/>
    </target>
 
-   <target name="deploy-jboss712" depends="undeploy-jboss712,deploy-structure-jboss71x" description="Deploy jbossws to jboss712">
-     <fail message="Not available: ${jboss712.available.file}" unless="jboss712.available"/>
-     <copy todir="${jboss712.home}" overwrite="true" verbose="true">
+   <target name="deploy-jboss713" depends="undeploy-jboss713,deploy-structure-jboss71x" description="Deploy jbossws to jboss713">
+     <fail message="Not available: ${jboss713.available.file}" unless="jboss713.available"/>
+     <copy todir="${jboss713.home}" overwrite="true" verbose="true">
        <fileset dir="${deploy.structure}">
          <exclude name="**/jboss/as/webservices/**/module.xml"/>
        </fileset>
      </copy>
      <!-- Install org/jboss/as/webservices module.xml separately since it needs to reference libs already on the AS -->
-     <installModules targetDir="${jboss712.home}/modules">
+     <installModules targetDir="${jboss713.home}/modules">
        <fileset dir="${deploy.structure}/modules">
          <include name="**/jboss/as/webservices/**/module.xml"/>
        </fileset>
      </installModules>
    </target>
 
-   <target name="undeploy-jboss712" depends="target-jboss712,init" description="Remove jbossws from jboss712">
-     <fail message="Not available: ${jboss712.available.file}" unless="jboss712.available"/>
-     <macro-undeploy-jbossws-modules targetdir="${jboss712.home}" defaultmodulesconf="${jbossws.default.modules.conf}"  modifyjbossintegration="true"/>
+   <target name="undeploy-jboss713" depends="target-jboss713,init" description="Remove jbossws from jboss713">
+     <fail message="Not available: ${jboss713.available.file}" unless="jboss713.available"/>
+     <macro-undeploy-jbossws-modules targetdir="${jboss713.home}" defaultmodulesconf="${jbossws.default.modules.conf}"  modifyjbossintegration="true"/>
    </target>
 
    <!-- ================================================================== -->

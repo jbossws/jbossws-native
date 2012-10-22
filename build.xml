@@ -65,18 +65,18 @@
       <arg value="help:effective-settings"/>
     </exec>
     <xmlproperty file="${dist.output.dir}/effective-settings.xml" keeproot="false"/>
-    <condition property="jboss712.home" value="${profiles.profile.properties.jboss712.home}">
-      <isset property="profiles.profile.properties.jboss712.home"/>
+    <condition property="jboss713.home" value="${profiles.profile.properties.jboss713.home}">
+      <isset property="profiles.profile.properties.jboss713.home"/>
     </condition>
     <condition property="jboss720.home" value="${profiles.profile.properties.jboss720.home}">
       <isset property="profiles.profile.properties.jboss720.home"/>
   </condition>
 
-  <fail message="jboss home not set, use jboss712.home=value or jboss720.home=value to set">
+  <fail message="jboss home not set, use jboss713.home=value or jboss720.home=value to set">
      <condition>
       <and>
        <not>
-         <isset property="jboss712.home"/>
+         <isset property="jboss713.home"/>
        </not>
        <not>
          <isset property="jboss720.home"/>
@@ -86,7 +86,7 @@
     </fail>
 
     <echo/>
-    <echo message="jboss712.home=${jboss712.home}"/>
+    <echo message="jboss713.home=${jboss713.home}"/>
     <echo message="jboss720.home=${jboss720.home}"/>
   </target>
 

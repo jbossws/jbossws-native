@@ -250,19 +250,19 @@
     </profile>
 
     <!--
-    Name:  jboss712
-    Descr: JBoss-7.1.2 specific options
+    Name:  jboss713
+    Descr: JBoss-7.1.3 specific options
     -->
     <profile>
-      <id>jboss712</id>
+      <id>jboss713</id>
       <properties>
-        <jboss.version>${jboss712.version}</jboss.version>
-        <jbossws.integration.target>jboss712</jbossws.integration.target>
+        <jboss.version>${jboss713.version}</jboss.version>
+        <jbossws.integration.target>jboss713</jbossws.integration.target>
       </properties>
       <dependencies>
         <dependency>
           <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss712-tests-integration</artifactId>
+          <artifactId>jbossws-jboss713-tests-integration</artifactId>
         </dependency>
       </dependencies>
       <build>
