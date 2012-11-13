@@ -21,10 +21,14 @@
  */
 package org.jboss.ws.tools.wsdl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -109,6 +113,7 @@ import org.jboss.ws.metadata.wsdl.xsd.SchemaUtils;
 import org.jboss.ws.tools.JavaToXSD;
 import org.jboss.wsf.common.DOMUtils;
 import org.jboss.wsf.common.DOMWriter;
+import org.jboss.wsf.common.IOUtils;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -267,7 +272,8 @@ public class WSDL11Reader
    {
       for (File current : tempFiles)
       {
-         current.deleteOnExit();
+    	 //TODO: look at how to remove tmp file correctly
+         //current.delete();
       }
    }
 
@@ -530,6 +536,17 @@ public class WSDL11Reader
       importElement.setAttribute("namespace", Constants.URI_SOAP11_ENC);
       schemaEl.insertBefore(importElement, DOMUtils.getFirstChildElement(schemaEl));
 
+      byte[] wsdlContent = null;
+
+      InputStream inputStream = wsdlLoc.openStream();
+     
+      ByteArrayOutputStream bout = new ByteArrayOutputStream();
+      IOUtils.copyStream(bout, inputStream);
+      wsdlContent = bout.toByteArray();
+      inputStream.close();
+      bout.close();
+
+
       String targetNS = getOptionalAttribute(schemaEl, "targetNamespace");
       File tmpFile = null;
 
@@ -544,14 +561,14 @@ public class WSDL11Reader
       {
          log.trace("processSchemaInclude: [targetNS=" + targetNS + ",parentURL=" + wsdlLoc + "]");
 
-         tmpFile = SchemaUtils.getSchemaTempFile(targetNS, getFileName(wsdlLoc));
+         tmpFile = SchemaUtils.getSchemaTempFile(targetNS, wsdlContent);
          tempFiles.add(tmpFile);
 
          publishedLocations.put(wsdlLoc, tmpFile.toURL());
       }
       else
       {
-         tmpFile = SchemaUtils.getSchemaTempFile("no_namespace", getFileName(wsdlLoc));
+         tmpFile = SchemaUtils.getSchemaTempFile("no_namespace", wsdlContent);
          tempFiles.add(tmpFile);
 
          publishedLocations.put(wsdlLoc, tmpFile.toURL());
