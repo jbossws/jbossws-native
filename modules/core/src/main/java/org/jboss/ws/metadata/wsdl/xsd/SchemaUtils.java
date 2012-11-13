@@ -513,7 +513,7 @@ public class SchemaUtils
 
    /** Get the temp file for a given namespace
     */
-   public static File getSchemaTempFile(String targetNS,  byte[] fileContent) throws IOException
+   public static File getSchemaTempFile(String targetNS, String fileName) throws IOException
    {
       if (targetNS.length() == 0)
          throw new IllegalArgumentException("Invalid null target namespace");
@@ -544,11 +544,11 @@ public class SchemaUtils
       fname = fname.replace('#', '_');
 
       File file = null;
-      if (fileContent != null)
+      if (fileName != null)
       {
          try
          {
-            String fileNameHash = toHexString(MessageDigest.getInstance("MD5").digest(fileContent));
+            String fileNameHash = toHexString(MessageDigest.getInstance("MD5").digest(fileName.getBytes("UTF-8")));
             if(tmpdir == null)
             {
                tmpdir = (File) AccessController.doPrivileged(new PrivilegedAction() {
