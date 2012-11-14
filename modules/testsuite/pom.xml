@@ -362,6 +362,9 @@
                 <!--# [JBWS-2217] Fix BPEL jaxrpc samples -->
                 <exclude>org/jboss/test/ws/jaxrpc/samples/wsbpel/hello/*TestCase.*</exclude>
 
+                <!--After JBPAPP-9520 we don't delete temporary file -->
+                <exclude>org/jboss/test/ws/jaxrpc/jbws1205/*TestCase.*</exclude>
+
                 <!--# JMS not supported in EAP51x -->
                 <exclude>org/jboss/test/ws/jaxrpc/samples/jmstransport/JMSTransportTestCase.*</exclude>
                 <exclude>org/jboss/test/ws/jaxws/samples/jmstransport/JMSTransportTestCase.*</exclude>
