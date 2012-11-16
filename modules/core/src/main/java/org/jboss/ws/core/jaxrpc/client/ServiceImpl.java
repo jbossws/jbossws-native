@@ -58,7 +58,6 @@ import org.jboss.ws.metadata.umdm.HandlerMetaDataJAXRPC;
 import org.jboss.ws.metadata.umdm.OperationMetaData;
 import org.jboss.ws.metadata.umdm.ServiceMetaData;
 import org.jboss.ws.metadata.umdm.UnifiedMetaData;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedHandlerMetaData.HandlerType;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedInitParamMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
@@ -204,7 +203,6 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
       String nsURI = portName.getNamespaceURI();
       serviceMetaData.assertTargetNamespace(nsURI);
       CallImpl call = new CallImpl(this, portName, null);
-      initCallProperties(call, null);
       return call;
    }
 
@@ -226,7 +224,6 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
       serviceMetaData.assertTargetNamespace(nsURI);
       QName opName = new QName(nsURI, operationName);
       CallImpl call = new CallImpl(this, portName, opName);
-      initCallProperties(call, null);
       return call;
    }
 
@@ -247,7 +244,6 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
       serviceMetaData.assertTargetNamespace(portName.getNamespaceURI());
       serviceMetaData.assertTargetNamespace(opName.getNamespaceURI());
       CallImpl call = new CallImpl(this, portName, opName);
-      initCallProperties(call, null);
       return call;
    }
 
@@ -263,7 +259,6 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
    public Call createCall() throws ServiceException
    {
       CallImpl call = new CallImpl(this);
-      initCallProperties(call, null);
       return call;
    }
 
@@ -445,10 +440,6 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
       CallImpl call = new CallImpl(this, epMetaData);
       initStubProperties(call, seiClass.getName());
 
-      // JBoss-4.0.x does not support <stub-properties>
-      if (initCallProperties(call, seiClass.getName()) > 0)
-         NativeLoggers.JAXRPC_LOGGER.deprecatedUseOfCallPropsOnJAXRPCStub();
-
       PortProxy handler = new PortProxy(call);
       ClassLoader cl = epMetaData.getClassLoader();
       Remote proxy = (Remote)Proxy.newProxyInstance(cl, new Class[] { seiClass, Stub.class, StubExt.class }, handler);
@@ -477,41 +468,6 @@ public class ServiceImpl implements ServiceExt, Serializable, Externalizable
             }
          }
       }
-      return propCount;
-   }
-
-   private int initCallProperties(CallImpl call, String seiName)
-   {
-      setupHandlerChain(call.getEndpointMetaData());
-
-      // nothing to do
-      if (usrMetaData == null)
-         return 0;
-
-      int propCount = 0;
-
-      // General properties
-      for (UnifiedCallPropertyMetaData prop : usrMetaData.getCallProperties())
-      {
-         call.setProperty(prop.getPropName(), prop.getPropValue());
-         propCount++;
-      }
-
-      if (seiName != null)
-      {
-         for (UnifiedPortComponentRefMetaData upcRef : usrMetaData.getPortComponentRefs())
-         {
-            if (seiName.equals(upcRef.getServiceEndpointInterface()))
-            {
-               for (UnifiedCallPropertyMetaData prop : upcRef.getCallProperties())
-               {
-                  call.setProperty(prop.getPropName(), prop.getPropValue());
-                  propCount++;
-               }
-            }
-         }
-      }
-
       return propCount;
    }
 

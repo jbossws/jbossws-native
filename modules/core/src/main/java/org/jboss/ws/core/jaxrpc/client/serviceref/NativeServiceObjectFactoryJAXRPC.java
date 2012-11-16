@@ -24,11 +24,8 @@ package org.jboss.ws.core.jaxrpc.client.serviceref;
 import static org.jboss.ws.NativeMessages.MESSAGES;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.net.URL;
@@ -36,22 +33,15 @@ import java.net.URLEncoder;
 import java.rmi.Remote;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
-import javax.naming.Context;
-import javax.naming.Name;
-import javax.naming.NamingException;
-import javax.naming.RefAddr;
-import javax.naming.Reference;
-import javax.naming.spi.ObjectFactory;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.Service;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.NativeLoggers;
+import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.core.jaxrpc.client.ServiceExt;
 import org.jboss.ws.core.jaxrpc.client.ServiceImpl;
@@ -67,7 +57,8 @@ import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.management.EndpointRegistry;
 import org.jboss.wsf.spi.management.EndpointRegistryFactory;
-import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedCallPropertyMetaData;
+import org.jboss.wsf.spi.management.ServerConfig;
+import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedPortComponentRefMetaData;
 import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
 
@@ -80,54 +71,15 @@ import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
  * @author Thomas.Diesler@jboss.org
  * @since 15-April-2004
  */
-public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
+public final class NativeServiceObjectFactoryJAXRPC
 {
    // provide logging
    private static final Logger log = Logger.getLogger(NativeServiceObjectFactoryJAXRPC.class);
 
-   /**
-    * Creates an object using the location or reference information specified.
-    * <p/>
-    *
-    * @param obj         The possibly null object containing location or reference
-    *                    information that can be used in creating an object.
-    * @param name        The name of this object relative to <code>nameCtx</code>,
-    *                    or null if no name is specified.
-    * @param nameCtx     The context relative to which the <code>name</code>
-    *                    parameter is specified, or null if <code>name</code> is
-    *                    relative to the default initial context.
-    * @param environment The possibly null environment that is used in
-    *                    creating the object.
-    * @return The object created; null if an object cannot be created.
-    * @throws Exception if this object factory encountered an exception
-    *                   while attempting to create an object, and no other object factories are
-    *                   to be tried.
-    * @see javax.naming.spi.NamingManager#getObjectInstance
-    * @see javax.naming.spi.NamingManager#getURLContext
-    */
-   public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable environment) throws Exception
+   public Object getObjectInstance(final UnifiedServiceRefMetaData serviceRef)
    {
       try
       {
-         Reference ref = (Reference)obj;
-
-         // Unmarshall the ServiceRefMetaData
-         UnifiedServiceRefMetaData serviceRef = null;
-         RefAddr metaRefAddr = ref.get(NativeServiceReferenceableJAXRPC.SERVICE_REF_META_DATA);
-         ByteArrayInputStream bais = new ByteArrayInputStream((byte[])metaRefAddr.getContent());
-         try
-         {
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            serviceRef = (UnifiedServiceRefMetaData)ois.readObject();
-            ois.close();
-         }
-         catch (IOException ex)
-         {
-            NamingException ne = new NamingException();
-            ne.setRootCause(ex);
-            throw ne;
-         }
-
          ServiceImpl jaxrpcService = null;
          URL wsdlLocation = serviceRef.getWsdlLocation();
          if (wsdlLocation != null)
@@ -149,21 +101,11 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
 
          ServiceMetaData serviceMetaData = jaxrpcService.getServiceMetaData();
 
-         // Set any service level properties
-         if (serviceRef.getCallProperties().size() > 0)
-         {
-            Properties callProps = new Properties();
-            serviceMetaData.setProperties(callProps);
-            for (UnifiedCallPropertyMetaData prop : serviceRef.getCallProperties())
-               callProps.setProperty(prop.getPropName(), prop.getPropValue());
-         }
-
          // The web service client using a port-component-link, the contet is the URL to
          // the PortComponentLinkServlet that will return the actual endpoint address
-         RefAddr pcLinkRef = ref.get(NativeServiceReferenceableJAXRPC.PORT_COMPONENT_LINK);
-         if (pcLinkRef != null)
+         String pcLink = getPortComponentLink(serviceRef);
+         if (pcLink != null)
          {
-            String pcLink = (String)pcLinkRef.getContent();
             log.debug("Resolving port-component-link: " + pcLink);
 
             // First try to obtain the endpoint address loacally
@@ -187,7 +129,7 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
             // We may be remote in the esoteric case where an appclient uses the port-comonent-link feature
             if (endpointAddress == null)
             {
-               String servletPath = (String)ref.get(NativeServiceReferenceableJAXRPC.PORT_COMPONENT_LINK_SERVLET).getContent();
+               String servletPath = getPortComponentLinkServlet();
                servletPath += "?pcLink=" + URLEncoder.encode(pcLink, "UTF-8");
                InputStream is = new URL(servletPath).openStream();
                BufferedReader br = new BufferedReader(new InputStreamReader(is));
@@ -242,7 +184,30 @@ public final class NativeServiceObjectFactoryJAXRPC implements ObjectFactory
       catch (Exception ex)
       {
          NativeLoggers.JAXRPC_LOGGER.cannotCreateService(ex);
-         throw ex;
+         throw new RuntimeException(ex);
+      }
+   }
+
+   private String getPortComponentLink(UnifiedServiceRefMetaData refMetaData) {
+       for (UnifiedPortComponentRefMetaData pcr : refMetaData.getPortComponentRefs())
+       {
+          return pcr.getPortComponentLink();
+       }
+       return null;
+   }
+
+   private String getPortComponentLinkServlet() throws Exception {
+      try {
+         SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
+         ServerConfig config = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
+
+         String host = config.getWebServiceHost();
+         int port = config.getWebServicePort();
+
+         String servletURL = "http://" + host + ":" + port + "/jbossws/pclink";
+         return servletURL;
+      } catch (Exception ex) {
+         throw NativeMessages.MESSAGES.cannotObtainPathToPCLServlet(ex);
       }
    }
 

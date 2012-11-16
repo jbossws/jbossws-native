@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2010, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,18 +19,23 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.test.ws.jaxrpc.jbws723;
+package org.jboss.ws.core.client;
 
-import java.rmi.Remote;
-import java.rmi.RemoteException;
+import org.jboss.ws.core.jaxrpc.client.serviceref.NativeServiceObjectFactoryJAXRPC;
+import org.jboss.wsf.spi.metadata.j2ee.serviceref.UnifiedServiceRefMetaData;
+import org.jboss.wsf.spi.serviceref.ServiceRefFactory;
+import org.jboss.wsf.spi.serviceref.ServiceRefType;
 
 /**
- * An example of a service endpoint
- *
- * @author Thomas.Diesler@jboss.org
- * @since 26-Apr-2004
+ * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public interface OrganizationService extends Remote
+final class NativeServiceRefFactoryImpl implements ServiceRefFactory
 {
-   String getContactInfo(String organization) throws RemoteException;
+   public Object newServiceRef(final UnifiedServiceRefMetaData serviceRefMD)
+   {
+      if (serviceRefMD.getType() == ServiceRefType.JAXRPC) {
+          return new NativeServiceObjectFactoryJAXRPC().getObjectInstance(serviceRefMD);
+      }
+      throw new UnsupportedOperationException();
+   }
 }

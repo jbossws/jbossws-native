@@ -29,7 +29,6 @@ import java.net.URL;
 import java.util.Collection;
 
 import javax.management.ObjectName;
-import javax.naming.NamingException;
 import javax.wsdl.Part;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.JAXRPCException;
@@ -687,7 +686,7 @@ public interface NativeMessages {
     JAXRPCException outputParamsNotAvailable();
     
     @Message(id = 25268, value = "Cannot obtain path to PortComponentLinkServlet")
-    NamingException cannotObtainPathToPCLServlet(@Cause Throwable cause);
+    Exception cannotObtainPathToPCLServlet(@Cause Throwable cause);
     
     @Message(id = 25270, value = "The service interface does not implement javax.xml.rpc.Service: %s")
     JAXRPCException interfaceDoesNotImplementJAXRPCService(String intf);

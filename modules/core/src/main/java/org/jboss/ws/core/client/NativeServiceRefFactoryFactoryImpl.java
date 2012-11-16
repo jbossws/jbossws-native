@@ -21,24 +21,16 @@
  */
 package org.jboss.ws.core.client;
 
-import org.jboss.ws.core.jaxrpc.client.serviceref.NativeServiceRefBinderJAXRPC;
-import org.jboss.wsf.spi.serviceref.ServiceRefBinder;
-import org.jboss.wsf.spi.serviceref.ServiceRefBinderFactory;
-import org.jboss.wsf.spi.serviceref.ServiceRefHandler.Type;
+import org.jboss.wsf.spi.serviceref.ServiceRefFactory;
+import org.jboss.wsf.spi.serviceref.ServiceRefFactoryFactory;
 
 /**
  * @author <a href="mailto:ropalka@redhat.com">Richard Opalka</a>
  */
-public final class NativeServiceRefBinderFactoryImpl implements ServiceRefBinderFactory
+public final class NativeServiceRefFactoryFactoryImpl implements ServiceRefFactoryFactory
 {
-   private static final ServiceRefBinder JAXRPC_BINDER = new NativeServiceRefBinderJAXRPC();
-
-   public ServiceRefBinder newServiceRefBinder(final Type type)
+   public ServiceRefFactory newServiceRefFactory()
    {
-	  if (type == Type.JAXRPC)
-	  {
-		 return JAXRPC_BINDER;
-	  }
-	  throw new UnsupportedOperationException();
+      return new NativeServiceRefFactoryImpl();
    }
 }
