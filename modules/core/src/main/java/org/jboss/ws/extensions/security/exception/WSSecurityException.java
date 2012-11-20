@@ -72,4 +72,9 @@ public class WSSecurityException extends Exception
    {
       return faultString;
    }
+   
+   public void setInternal(boolean internal)
+   {
+      this.internal = internal;
+   }
 }
