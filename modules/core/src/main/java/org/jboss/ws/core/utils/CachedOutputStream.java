@@ -196,13 +196,19 @@ public class CachedOutputStream extends OutputStream
       {
          FileInputStream fin = new FileInputStream(tempFile);
          byte bytes[] = new byte[1024];
-         int x = fin.read(bytes);
-         while (x != -1)
+         try
          {
-            out.append(new String(bytes, 0, x, charsetName));
-            x = fin.read(bytes);
+            int x = fin.read(bytes);
+            while (x != -1)
+            {
+               out.append(new String(bytes, 0, x, charsetName));
+               x = fin.read(bytes);
+            }
          }
-         fin.close();
+         finally
+         {
+            fin.close();
+         }
       }
    }
 
