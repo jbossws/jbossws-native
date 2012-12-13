@@ -27,6 +27,7 @@ import static org.jboss.ws.common.integration.WSHelper.isJaxrpcJseDeployment;
 import static org.jboss.ws.common.integration.WSHelper.isJaxrpcDeployment;
 
 import org.jboss.ws.common.integration.AbstractDeploymentAspect;
+import org.jboss.ws.core.soap.MessageFactoryImpl;
 import org.jboss.ws.metadata.builder.jaxrpc.JAXRPCServerMetaDataBuilder;
 import org.jboss.ws.metadata.umdm.EndpointMetaData;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
@@ -74,6 +75,10 @@ public class UnifiedMetaDataDeploymentAspect extends AbstractDeploymentAspect
             sepMetaData.setEndpoint(ep);
 
             ep.addAttachment(ServerEndpointMetaData.class, sepMetaData);
+            
+            MessageFactoryImpl messageFactory = new MessageFactoryImpl();
+            messageFactory.setStyle(sepMetaData.getStyle());
+            ep.addAttachment(MessageFactoryImpl.class, messageFactory);
 
             String targetBean = ep.getTargetBeanName();
             if (targetBean != null)

@@ -50,6 +50,7 @@ import org.jboss.ws.WSException;
 import org.jboss.ws.common.Constants;
 import org.jboss.ws.common.DOMWriter;
 import org.jboss.ws.common.IOUtils;
+import org.jboss.ws.common.management.AbstractServerConfig;
 import org.jboss.ws.core.CommonBinding;
 import org.jboss.ws.core.CommonBindingProvider;
 import org.jboss.ws.core.CommonMessageContext;
@@ -68,15 +69,11 @@ import org.jboss.ws.core.soap.utils.MessageContextAssociation;
 import org.jboss.ws.core.soap.utils.SOAPUtils;
 import org.jboss.ws.core.utils.ThreadLocalAssociation;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
-import org.jboss.wsf.spi.SPIProvider;
-import org.jboss.wsf.spi.SPIProviderResolver;
 import org.jboss.wsf.spi.deployment.Endpoint;
 import org.jboss.wsf.spi.deployment.EndpointState;
 import org.jboss.wsf.spi.invocation.InvocationContext;
 import org.jboss.wsf.spi.invocation.RequestHandler;
 import org.jboss.wsf.spi.management.EndpointMetrics;
-import org.jboss.wsf.spi.management.ServerConfig;
-import org.jboss.wsf.spi.management.ServerConfigFactory;
 import org.w3c.dom.Document;
 
 /**
@@ -87,29 +84,20 @@ import org.w3c.dom.Document;
  */
 public class RequestHandlerImpl implements RequestHandler
 {
-   protected ServerConfig serverConfig;
-   protected MessageFactoryImpl msgFactory;
-
-   public RequestHandlerImpl()
+   private static RequestHandlerImpl me;
+   
+   RequestHandlerImpl()
    {
-      final SPIProvider spiProvider = SPIProviderResolver.getInstance().getProvider();
-      final ServerConfig serverConfig = spiProvider.getSPI(ServerConfigFactory.class).getServerConfig();
-      
-      this.init(serverConfig);
+      //NOOP
    }
    
-   public RequestHandlerImpl(final ServerConfig serverConfig)
+   static synchronized RequestHandlerImpl getInstance()
    {
-      if (serverConfig == null) 
-         throw MESSAGES.serverConfigCannotBeNull();
-      
-      this.init(serverConfig);
-   }
-
-   private void init(final ServerConfig serverConfig)
-   {
-      this.serverConfig = serverConfig;
-      this.msgFactory = new MessageFactoryImpl();
+      if (me == null)
+      {
+         me = new RequestHandlerImpl();
+      }
+      return me;
    }
    
    public void handleHttpRequest(Endpoint endpoint, HttpServletRequest req, HttpServletResponse res, ServletContext context) throws ServletException, IOException
@@ -346,7 +334,7 @@ public class RequestHandlerImpl implements RequestHandler
 
          SOAPMessage reqMessage;
 
-         msgFactory.setStyle(sepMetaData.getStyle());
+         MessageFactoryImpl msgFactory = ep.getAttachment(MessageFactoryImpl.class);
          reqMessage = msgFactory.createMessage(headers, inputStream);
 
          // Associate current message with message context
@@ -417,7 +405,7 @@ public class RequestHandlerImpl implements RequestHandler
             ROOT_LOGGER.trace("END handleRequest: " + ep.getName());
       }
    }
-
+   
    private long initRequestMetrics(Endpoint endpoint)
    {
       long beginTime = 0;
@@ -556,7 +544,7 @@ public class RequestHandlerImpl implements RequestHandler
       URL wsdlLocation = epMetaData.getServiceMetaData().getWsdlLocation();
       String wsdlPublishLoc = epMetaData.getServiceMetaData().getWsdlPublishLocation();
 
-      WSDLRequestHandler wsdlRequestHandler = new WSDLRequestHandler(wsdlLocation, wsdlPublishLoc, serverConfig);
+      WSDLRequestHandler wsdlRequestHandler = new WSDLRequestHandler(wsdlLocation, wsdlPublishLoc, AbstractServerConfig.getServerIntegrationServerConfig());
       Document document = wsdlRequestHandler.getDocumentForPath(reqURL, resPath);
 
       OutputStreamWriter writer = new OutputStreamWriter(outputStream);
