@@ -31,7 +31,7 @@
   <packaging>pom</packaging>
   <description>JBossWS Native stack</description>
 
-  <version>4.1.1-SNAPSHOT</version>
+  <version>4.1.1.CR1</version>
 
   <!-- Parent -->
   <parent>
@@ -42,9 +42,9 @@
 
   <!-- Source Control Management -->
   <scm>
-    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossws/stack/native/trunk</connection>
-    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossws/stack/native/trunk</developerConnection>
-    <url>http://fisheye.jboss.com/viewrep/JBossWS/stack/native/trunk</url>
+    <connection>scm:svn:http://anonsvn.jboss.org/repos/jbossws/stack/native/tags/jbossws-native-4.1.1.CR1</connection>
+    <developerConnection>scm:svn:https://svn.jboss.org/repos/jbossws/stack/native/tags/jbossws-native-4.1.1.CR1</developerConnection>
+    <url>http://fisheye.jboss.com/viewrep/JBossWS/stack/native/tags/jbossws-native-4.1.1.CR1</url>
   </scm>
 
   <!-- Modules -->
@@ -57,11 +57,11 @@
   <!-- Properties -->
   <properties>
     <jbossws.api.version>1.0.1.Final</jbossws.api.version>
-    <jbossws.spi.version>2.1.1-SNAPSHOT</jbossws.spi.version>
-    <jbossws.common.version>2.1.1-SNAPSHOT</jbossws.common.version>
+    <jbossws.spi.version>2.1.1.CR1</jbossws.spi.version>
+    <jbossws.common.version>2.1.1.CR1</jbossws.common.version>
     <jbossws.common.tools.version>1.1.0.Final</jbossws.common.tools.version>
     <jbossws.shared.testsuite.version>4.1.0.Final</jbossws.shared.testsuite.version>
-    <jbossws.jboss713.version>4.1.1-SNAPSHOT</jbossws.jboss713.version>
+    <jbossws.jboss713.version>4.1.1.CR1</jbossws.jboss713.version>
     <jboss713.version>7.1.3.Final</jboss713.version>
     <jboss720.version>7.2.0.Alpha1-SNAPSHOT</jboss720.version>
     <javassist.version>3.15.0-GA</javassist.version>
