@@ -22,7 +22,11 @@
   ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
   -->
 
-<module xmlns="urn:jboss:module:1.1" name="org.jboss.xb">
+<module xmlns="urn:jboss:module:1.1" name="org.jboss.ws.spi">
+
+    <properties>
+        <property name="jboss.api" value="private"/>
+    </properties>
 
     <resources>
         <!-- Insert resources here -->
@@ -30,9 +34,11 @@
 
     <dependencies>
         <module name="javax.api"/>
-        <module name="org.apache.xerces" services="import"/>
+        <module name="javax.servlet.api"/>
+        <module name="javax.xml.stream.api"/>
+        <module name="javax.xml.ws.api"/>
         <module name="org.jboss.logging"/>
-        <module name="org.jboss.common-core"/>
+        <module name="org.jboss.ws.api"/>
+        <module name="org.jboss.as.webservices"/>
     </dependencies>
-
 </module>

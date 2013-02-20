@@ -22,13 +22,32 @@
   ~ 02110-1301 USA, or see the FSF site: http://www.fsf.org.
   -->
 
-<module xmlns="urn:jboss:module:1.1" name="org.jboss.ws.native.jbossws-native-services">
+<module xmlns="urn:jboss:module:1.1" name="org.jboss.ws.native.jbossws-native-core">
+
+    <properties>
+        <property name="jboss.api" value="private"/>
+    </properties>
 
     <resources>
         <!-- Insert resources here -->
     </resources>
 
     <dependencies>
-
+        <module name="javax.api" />
+        <module name="javax.servlet.api" />
+        <module name="javax.mail.api" />
+        <module name="javax.wsdl4j.api" />
+        <module name="javax.xml.stream.api" />
+        <module name="javax.xml.rpc.api" />
+        <module name="org.apache.xerces" services="import"/>
+        <module name="org.javassist" />
+        <module name="org.jboss.netty" />
+        <module name="org.jboss.xb" />
+        <module name="org.jboss.ws.api" />
+        <module name="org.jboss.ws.spi" />
+        <module name="org.jboss.ws.common" />
+        <module name="org.jboss.ws.native.jbossws-native-services" services="import"/>
+        <module name="org.jboss.common-core" />
+        <module name="org.jboss.logging" />
     </dependencies>
 </module>
