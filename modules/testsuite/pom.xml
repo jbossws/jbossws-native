@@ -250,19 +250,19 @@
     </profile>
 
     <!--
-    Name:  jboss713
-    Descr: JBoss-7.1.3 specific options
+    Name:  jboss720
+    Descr: JBoss-7.2.0 specific options
     -->
     <profile>
-      <id>jboss713</id>
+      <id>jboss720</id>
       <properties>
-        <jboss.version>${jboss713.version}</jboss.version>
-        <jbossws.integration.target>jboss713</jbossws.integration.target>
+        <jboss.version>${jboss720.version}</jboss.version>
+        <jbossws.integration.target>jboss720</jbossws.integration.target>
       </properties>
       <dependencies>
         <dependency>
           <groupId>org.jboss.ws</groupId>
-          <artifactId>jbossws-jboss713-tests-integration</artifactId>
+          <artifactId>jbossws-jboss720-tests-integration</artifactId>
         </dependency>
       </dependencies>
       <build>
@@ -281,14 +281,14 @@
     </profile>
 
     <!--
-    Name:  jboss720
-    Descr: JBoss-7.2.0 specific options
+    Name:  jboss800
+    Descr: JBoss-8.0.0 specific options
     -->
     <profile>
-      <id>jboss720</id>
+      <id>jboss800</id>
       <properties>
-        <jboss.version>${jboss720.version}</jboss.version>
-        <jbossws.integration.target>jboss720</jbossws.integration.target>
+        <jboss.version>${jboss800.version}</jboss.version>
+        <jbossws.integration.target>jboss800</jbossws.integration.target>
       </properties>
       <dependencies>
         <dependency>
