@@ -60,7 +60,7 @@
     <jbossws.spi.version>2.1.1.Final</jbossws.spi.version>
     <jbossws.common.version>2.1.1.Final</jbossws.common.version>
     <jbossws.common.tools.version>1.1.0.Final</jbossws.common.tools.version>
-    <jbossws.shared.testsuite.version>4.1.0.Final</jbossws.shared.testsuite.version>
+    <jbossws.shared.testsuite.version>4.2.0-SNAPSHOT</jbossws.shared.testsuite.version>
     <jbossws.jboss720.version>4.2.0-SNAPSHOT</jbossws.jboss720.version>
     <jboss720.version>7.2.0.Final</jboss720.version>
     <jboss800.version>8.0.0.Alpha1-SNAPSHOT</jboss800.version>
