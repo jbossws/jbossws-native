@@ -25,16 +25,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
+import javax.xml.soap.SOAPConstants;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.WebServiceException;
+import javax.xml.ws.soap.SOAPFaultException;
+import javax.xml.ws.soap.SOAPBinding;
 
 import org.jboss.logging.Logger;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.CommonSOAPFaultException;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.core.soap.SOAPMessageImpl;
+import org.jboss.ws.core.soap.SOAPFaultImpl;
 import org.jboss.ws.extensions.security.exception.InvalidSecurityHeaderException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.jboss.ws.extensions.security.nonce.DefaultNonceFactory;
@@ -263,18 +267,62 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       return newList;
    }
 
-   private CommonSOAPFaultException convertToFault(WSSecurityException e)
+   private RuntimeException convertToFault(WSSecurityException e) throws SOAPException
    {
       return convertToFault(e, VERBOSE_EXCEPTION_REPORTING);
    }
    
-   private CommonSOAPFaultException convertToFault(WSSecurityException e, boolean verbose)
+   private RuntimeException convertToFault(WSSecurityException e, boolean verbose) throws SOAPException
    {
-      if (verbose) {
-         return new CommonSOAPFaultException(e.getFaultCode(), e.getFaultString());
-      } else {
-         QName faultCode = new QName(Constants.JBOSS_WSSE_NS, "GenericError", Constants.JBOSS_WSSE_PREFIX);
-         return new CommonSOAPFaultException(faultCode, "A WS-Security error occurred.");
+      //Try to reduce redundant stack trace elements printed to log
+      chopStackTrace(e);
+      log.error("Original WSSecurityException: ", e);
+
+      if(isSOAP12())
+      {
+         SOAPFaultImpl fault = new SOAPFaultImpl(
+            org.jboss.ws.Constants.PREFIX_ENV, 
+            org.jboss.ws.Constants.NS_SOAP12_ENV
+         );
+
+         if(e.isInternalError())
+            fault.setFaultCode(SOAPConstants.SOAP_RECEIVER_FAULT);
+         else
+            fault.setFaultCode(SOAPConstants.SOAP_SENDER_FAULT);
+
+         fault.appendFaultSubcode(e.getFaultCode());
+         fault.setFaultString(e.getFaultString());
+
+         return new SOAPFaultException(fault);
+      }
+      else
+      {
+         if (verbose) 
+         {
+            return new CommonSOAPFaultException(e.getFaultCode(), e.getFaultString());
+         } 
+         else 
+         {
+            QName faultCode = new QName(Constants.JBOSS_WSSE_NS, "GenericError", Constants.JBOSS_WSSE_PREFIX);
+            return new CommonSOAPFaultException(faultCode, "A WS-Security error occurred.");
+         }
+      }
+   }
+
+   private void chopStackTrace(Exception e)
+   {
+      StackTraceElement[] original = e.getStackTrace();
+      int cutOffElement = 0;
+      for(; cutOffElement < original.length; cutOffElement++)
+      {
+         StackTraceElement elem = original[cutOffElement];
+         String className = elem.getClassName();
+         if("javax.servlet.http.HttpServlet".equals(className))
+         {
+            StackTraceElement[] newSte = new StackTraceElement[cutOffElement + 1];
+            System.arraycopy(original, 0, newSte, 0, cutOffElement + 1);
+            e.setStackTrace(newSte);
+         }
       }
    }
 
@@ -367,5 +415,21 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       Requires requires = (config != null) ? config.getRequires() : null;
       return requires != null && (!fault || requires.includesFaults());
 
+   }
+
+   private static boolean isSOAP12()
+   {
+      CommonMessageContext msgContext = MessageContextAssociation.peekMessageContext();
+      if (msgContext != null)
+      {
+         EndpointMetaData emd = msgContext.getEndpointMetaData();
+         String bindingId = emd.getBindingId();
+         if (SOAPBinding.SOAP12HTTP_BINDING.equals(bindingId) || SOAPBinding.SOAP12HTTP_MTOM_BINDING.equals(bindingId))
+         {
+            return true;
+         }
+      }
+
+      return false;
    }
 }

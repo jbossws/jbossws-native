@@ -39,6 +39,7 @@ public class FailedCheckException extends WSSecurityException
       super(faultString);
       setFaultCode(faultCode);
       setFaultString(faultString);
+      internal = false;
    }
 
    public FailedCheckException(Throwable cause)
@@ -46,6 +47,7 @@ public class FailedCheckException extends WSSecurityException
       super(faultString);
       setFaultCode(faultCode);
       setFaultString(faultString);
+      internal = false;
    }
 
    public FailedCheckException(String message)
@@ -60,5 +62,6 @@ public class FailedCheckException extends WSSecurityException
       super(message, cause);
       setFaultCode(faultCode);
       setFaultString(message);
+      internal = false;
    }
 }

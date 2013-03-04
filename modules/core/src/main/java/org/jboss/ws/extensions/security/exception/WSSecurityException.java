@@ -30,7 +30,7 @@ import org.jboss.ws.extensions.security.Constants;
  */
 public class WSSecurityException extends Exception
 {
-   private boolean internal = false;
+   protected boolean internal = false;
 
    private QName faultCode = new QName(Constants.JBOSS_WSSE_NS, "InternalError", Constants.JBOSS_WSSE_PREFIX);
 

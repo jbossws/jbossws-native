@@ -800,7 +800,7 @@ public class SOAPFaultImpl extends SOAPBodyElementDoc implements SOAPFault
 
    public void writeElement(Writer writer)
    {
-      new DOMWriter(writer).print(this);
+      new DOMWriter(writer).setCompleteNamespaces(false).print(this);
    }
 
    private static SOAPElement getChildElement(SOAPElement element, QName name)

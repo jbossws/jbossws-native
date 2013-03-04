@@ -39,6 +39,7 @@ public class FailedAuthenticationException extends WSSecurityException
       super(faultString);
       setFaultCode(faultCode);
       setFaultString(faultString);
+      internal = false;
    }
 
    public FailedAuthenticationException(Throwable cause)
@@ -46,6 +47,7 @@ public class FailedAuthenticationException extends WSSecurityException
       super(faultString);
       setFaultCode(faultCode);
       setFaultString(faultString);
+      internal = false;
    }
 
    public FailedAuthenticationException(String message)
@@ -53,6 +55,7 @@ public class FailedAuthenticationException extends WSSecurityException
       super(message);
       setFaultCode(faultCode);
       setFaultString(message);
+      internal = false;
    }
 
    public FailedAuthenticationException(String message, Throwable cause)
@@ -60,5 +63,6 @@ public class FailedAuthenticationException extends WSSecurityException
       super(message, cause);
       setFaultCode(faultCode);
       setFaultString(message);
+      internal = false;
    }
 }
