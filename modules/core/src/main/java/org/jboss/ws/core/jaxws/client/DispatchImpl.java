@@ -38,6 +38,7 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Source;
 import javax.xml.ws.AsyncHandler;
 import javax.xml.ws.Binding;
+import javax.xml.ws.soap.SOAPBinding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Dispatch;
 import javax.xml.ws.EndpointReference;
@@ -53,6 +54,7 @@ import javax.xml.ws.soap.SOAPFaultException;
 import org.jboss.logging.Logger;
 import org.jboss.util.NotImplementedException;
 import org.jboss.ws.WSException;
+import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.CommonMessageContext;
 import org.jboss.ws.core.ConfigProvider;
 import org.jboss.ws.core.EndpointMetadataProvider;
@@ -228,6 +230,7 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
          msgContext.setEndpointMetaData(epMetaData);
          msgContext.setSOAPMessage(reqMsg);
          msgContext.putAll(reqContext);
+         configureMTOM(msgContext, reqMsg);
          // Try to find out the operation metadata corresponding to the message we're sending
          msgContext.setOperationMetaData(getOperationMetaData(epMetaData,reqMsg));
 
@@ -303,6 +306,23 @@ public class DispatchImpl<T> implements Dispatch<T>, ConfigProvider, EndpointMet
           MessageContextAssociation.popMessageContext();
       }
       return retObj;
+   }
+
+   /* This will enable MTOM if the BindingId is MTOM-enabled
+    * or if the MTOMFeature was passed in to the createDispatch method
+    */
+   private void configureMTOM(CommonMessageContext msgContext, SOAPMessageImpl reqMsg)
+   {
+      if(getBinding() instanceof SOAPBinding)
+      {
+         SOAPBinding soapBinding = (SOAPBinding)getBinding();
+         if(soapBinding.isMTOMEnabled())
+         {
+            log.info("Enabling MTOM for this request");
+            msgContext.put(StubExt.PROPERTY_MTOM_ENABLED, true);
+            reqMsg.setXOPMessage(true);
+         }
+      }
    }
 
    private Object invokeInternalNonSOAP(Object obj) throws IOException
