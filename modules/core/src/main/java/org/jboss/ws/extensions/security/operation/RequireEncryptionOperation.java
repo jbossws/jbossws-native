@@ -21,17 +21,52 @@
  */
 package org.jboss.ws.extensions.security.operation;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
+import org.jboss.logging.Logger;
+import org.jboss.ws.extensions.security.SecurityDecoder;
 import org.jboss.ws.extensions.security.Target;
 
 
 public class RequireEncryptionOperation extends RequireTargetableOperation
 {
+   private List<String> allowedKeyWrapAlgorithms;
+   
+   private List<String> allowedEncAlgorithms;
 
-   public RequireEncryptionOperation(List<Target> targets)
-   {
+   public RequireEncryptionOperation(List<Target> targets) {
       super(targets);
    }
    
+   public RequireEncryptionOperation(List<Target> targets, String keyWrapAlgorithms, String algorithms)
+   {
+      super(targets);
+      this.allowedEncAlgorithms = parseStringList(algorithms);
+      this.allowedKeyWrapAlgorithms = parseStringList(keyWrapAlgorithms);
+   }
+   
+   public void setupDecoder(SecurityDecoder decoder) {
+      if (allowedEncAlgorithms == null) {
+         Logger.getLogger(RequireEncryptionOperation.class).warn("No 'algorithms' provided for 'encryption' configuration requirement!");
+      }
+      decoder.setAllowedEncAlgorithms(allowedEncAlgorithms);
+      if (allowedKeyWrapAlgorithms == null) {
+         Logger.getLogger(RequireEncryptionOperation.class).warn("No 'keyWrapAlgorithms' provided for 'encryption' configuration requirement!");
+      }
+      decoder.setAllowedKeyWrapAlgorithms(allowedKeyWrapAlgorithms);
+   }
+   
+   private List<String> parseStringList(String s) {
+      List<String> result = null;
+      if (s != null && s.trim().length() > 0) {
+         StringTokenizer st = new StringTokenizer(s, ", ", false);
+         result = new LinkedList<String>();
+         while (st.hasMoreTokens()) {
+            result.add(st.nextToken());
+         }
+      }
+      return result;
+   }
 }

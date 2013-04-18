@@ -21,6 +21,7 @@
  */
 package org.jboss.ws.metadata.wsse;
 
+
 /**
  * <code>Sign</code> represents the sign tag, which declares that a message
  * should be signed.
@@ -29,13 +30,19 @@ package org.jboss.ws.metadata.wsse;
  */
 public class RequireEncryption extends Targetable
 {
-   private static final long serialVersionUID = 3765798680988205647L;
+   private static final long serialVersionUID = 3765798680988205648L;
    
    private boolean includeFaults;
+   
+   private String keyWrapAlgorithms;
+   
+   private String algorithms;
 
-   public RequireEncryption(boolean includeFaults)
+   public RequireEncryption(boolean includeFaults, String keyWrapAlgorithms, String algorithms)
    {
       this.includeFaults = includeFaults;
+      this.algorithms = algorithms;
+      this.keyWrapAlgorithms = keyWrapAlgorithms;
    }
 
    public boolean isIncludeFaults()
@@ -47,4 +54,25 @@ public class RequireEncryption extends Targetable
    {
       this.includeFaults = includeFaults;
    }
+   
+   public String getdKeyWrapAlgorithms()
+   {
+      return keyWrapAlgorithms;
+   }
+
+   public void setKeyWrapAlgorithms(String keyWrapAlgorithms)
+   {
+      this.keyWrapAlgorithms = keyWrapAlgorithms;
+   }
+
+   public String getAlgorithms()
+   {
+      return algorithms;
+   }
+
+   public void setAlgorithms(String algorithms)
+   {
+      this.algorithms = algorithms;
+   }
+
 }

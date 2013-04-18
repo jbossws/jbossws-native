@@ -499,7 +499,7 @@ public class WSSecurityOMFactory implements ObjectModelFactory
          if (value != null)
             includeFaults = (Boolean) SimpleTypeBindings.unmarshal(SimpleTypeBindings.XS_BOOLEAN_NAME, value, null);
 
-         return new RequireEncryption(includeFaults);
+         return new RequireEncryption(includeFaults, attrs.getValue("", "keyWrapAlgorithms"), attrs.getValue("", "algorithms"));
       }
       else if ("timestamp".equals(localName))
       {

@@ -131,13 +131,15 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       }
 
       SecurityDecoder decoder = new SecurityDecoder(securityStore, factory, configuration.getTimestampVerification(), authenticate);
+      
+      List<RequireOperation> operations = buildRequireOperations(config, fault);
+      
+      decoder.init(operations);
 
       decoder.decode(message.getSOAPPart(), secHeaderElement);
 
       if (log.isTraceEnabled())
          log.trace("Decoded Message:\n" + DOMWriter.printNode(message.getSOAPPart(), true));
-
-      List<RequireOperation> operations = buildRequireOperations(config, fault);
 
       decoder.verify(operations);
       if (log.isDebugEnabled())
@@ -351,7 +353,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       if (requireEncryption != null && (!fault || requireEncryption.isIncludeFaults()))
       {
          List<Target> targets = convertTargets(requireEncryption.getTargets());
-         operations.add(new RequireEncryptionOperation(targets));
+         operations.add(new RequireEncryptionOperation(targets, requireEncryption.getdKeyWrapAlgorithms(), requireEncryption.getAlgorithms()));
       }
 
       return operations;

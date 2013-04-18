@@ -35,7 +35,6 @@ import org.jboss.ws.extensions.security.element.Token;
 import org.jboss.ws.extensions.security.element.UsernameToken;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
 import org.jboss.ws.extensions.security.nonce.NonceFactory;
-import org.jboss.ws.extensions.security.operation.AuthorizeOperation;
 import org.jboss.ws.extensions.security.operation.DecryptionOperation;
 import org.jboss.ws.extensions.security.operation.ReceiveUsernameOperation;
 import org.jboss.ws.extensions.security.operation.ReceiveX509Certificate;
@@ -45,7 +44,6 @@ import org.jboss.ws.extensions.security.operation.RequireSignatureOperation;
 import org.jboss.ws.extensions.security.operation.SignatureVerificationOperation;
 import org.jboss.ws.extensions.security.operation.TimestampVerificationOperation;
 import org.jboss.ws.metadata.wsse.Authenticate;
-import org.jboss.ws.metadata.wsse.Authorize;
 import org.jboss.ws.metadata.wsse.TimestampVerification;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -74,6 +72,10 @@ public class SecurityDecoder
    private HashSet<String> signedIds = new HashSet<String>();
 
    private HashSet<String> encryptedIds = new HashSet<String>();
+   
+   private List<String> allowedKeyWrapAlgorithms;
+   
+   private List<String> allowedEncAlgorithms;
 
    public SecurityDecoder(SecurityStore store, NonceFactory nonceFactory, TimestampVerification timestampVerification, Authenticate authenticate)
    {
@@ -137,7 +139,7 @@ public class SecurityDecoder
       encryptedIds.clear();
 
       SignatureVerificationOperation signatureVerifier = new SignatureVerificationOperation(header, store);
-      DecryptionOperation decrypter = new DecryptionOperation(header, store);
+      DecryptionOperation decrypter = new DecryptionOperation(header, store, allowedEncAlgorithms);
 
       for (SecurityProcess process : header.getSecurityProcesses())
       {
@@ -159,6 +161,17 @@ public class SecurityDecoder
          }
       }      
       
+   }
+   
+   public void init(List<RequireOperation> requireOperations) {
+      if (requireOperations != null) {
+         for (RequireOperation operation : requireOperations) {
+            if (operation instanceof RequireEncryptionOperation) {
+               ((RequireEncryptionOperation)operation).setupDecoder(this);
+               break;
+            }
+         }
+      }
    }
 
    public void verify(List<RequireOperation> requireOperations) throws WSSecurityException
@@ -189,7 +202,7 @@ public class SecurityDecoder
    public void decode(Document message, Element headerElement) throws WSSecurityException
    {
       this.headerElement = headerElement;
-      this.header = new SecurityHeader(this.headerElement, store);
+      this.header = new SecurityHeader(this.headerElement, store, allowedKeyWrapAlgorithms);
       this.message = message;
 
       decode();
@@ -201,4 +214,15 @@ public class SecurityDecoder
       // message (required by the specification)
       detachHeader();
    }
+   
+   public void setAllowedKeyWrapAlgorithms(List<String> allowedKeyWrapAlgorithms)
+   {
+      this.allowedKeyWrapAlgorithms = allowedKeyWrapAlgorithms;
+   }
+
+   public void setAllowedEncAlgorithms(List<String> allowedEncAlgorithms)
+   {
+      this.allowedEncAlgorithms = allowedEncAlgorithms;
+   }
+
 }

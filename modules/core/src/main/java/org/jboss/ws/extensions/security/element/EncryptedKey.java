@@ -23,6 +23,8 @@ package org.jboss.ws.extensions.security.element;
 
 import java.security.PrivateKey;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 
@@ -64,7 +66,7 @@ public class EncryptedKey implements SecurityProcess
    private static final String DEFAULT_ALGORITHM = "rsa_15";
    static
    {
-      keyWrapAlgorithms = new HashMap<String, String>(2);
+      keyWrapAlgorithms = new HashMap<String, String>(4);
       keyWrapAlgorithms.put("rsa_15", XMLCipher.RSA_v1dot5);
       keyWrapAlgorithms.put("rsa_oaep", XMLCipher.RSA_OAEP);
    }
@@ -86,7 +88,7 @@ public class EncryptedKey implements SecurityProcess
       this.tokenRefType = tokenRefType;
    }
 
-   public EncryptedKey(Element element, KeyResolver resolver) throws WSSecurityException
+   public EncryptedKey(Element element, KeyResolver resolver, List<String> allowedAlgorithms) throws WSSecurityException
    {
       org.apache.xml.security.encryption.EncryptedKey key;
       XMLCipher cipher;
@@ -103,6 +105,27 @@ public class EncryptedKey implements SecurityProcess
       }
 
       KeyInfo info = key.getKeyInfo();
+      boolean supportedKeyWrapAlg = false; 
+      final String kwa = key.getEncryptionMethod().getAlgorithm();
+      for (Iterator<String> it = keyWrapAlgorithms.values().iterator(); it.hasNext() && !supportedKeyWrapAlg; ) {
+         String s = it.next();
+         if (s.equals(kwa)) {
+            supportedKeyWrapAlg = true;
+         }
+      }
+      if (!supportedKeyWrapAlg) {
+         throw new WSSecurityException("Unsupported key wrap algorithm in received message: " + kwa);
+      }
+      if (allowedAlgorithms != null && !allowedAlgorithms.isEmpty()) {
+         boolean found = false;
+         for (Iterator<String> it = allowedAlgorithms.iterator(); it.hasNext() && !found; ) {
+            found = kwa.equals(keyWrapAlgorithms.get(it.next()));
+         }
+         if (!found) {
+            throw new WSSecurityException("Unexpected key wrap algorithm in received message: " + kwa);
+         }
+      }
+      
 
       if (info == null)
          throw new WSSecurityException("EncryptedKey element did not contain KeyInfo");

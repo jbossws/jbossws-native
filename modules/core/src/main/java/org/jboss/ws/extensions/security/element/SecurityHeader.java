@@ -23,6 +23,7 @@ package org.jboss.ws.extensions.security.element;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.jboss.ws.extensions.security.BinarySecurityTokenValidator;
 import org.jboss.ws.extensions.security.Constants;
@@ -54,13 +55,13 @@ public class SecurityHeader implements SecurityElement
 
    // Looks like this is only for embedded tokens
    private LinkedList<SecurityTokenReference> securityTokenReferences = new LinkedList<SecurityTokenReference>();
-
+   
    public SecurityHeader(Document document)
    {
       this.document = document;
    }
 
-   public SecurityHeader(Element element, SecurityStore store) throws WSSecurityException
+   public SecurityHeader(Element element, SecurityStore store, List<String> allowedKeyWrapAlgorithms) throws WSSecurityException
    {
       document = element.getOwnerDocument();
       KeyResolver resolver = new KeyResolver(store);
@@ -84,7 +85,7 @@ public class SecurityHeader implements SecurityElement
          else if (tag.equals("Signature"))
             securityProcesses.add(new Signature(child, resolver));
          else if (tag.equals("EncryptedKey"))
-            securityProcesses.add(new EncryptedKey(child, resolver));
+            securityProcesses.add(new EncryptedKey(child, resolver, allowedKeyWrapAlgorithms));
          else if (tag.equals("ReferenceList"))
             throw new UnsupportedSecurityTokenException("ReferenceLists outside of encrypted keys (shared secrets) are not supported.");
 

@@ -23,6 +23,8 @@ package org.jboss.ws.extensions.security.operation;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.crypto.SecretKey;
 
@@ -47,11 +49,14 @@ public class DecryptionOperation implements DecodingOperation
    private SecurityHeader header;
 
    private SecurityStore store;
+   
+   private List<String> allowedEncAlgorithms;
 
-   public DecryptionOperation(SecurityHeader header, SecurityStore store) throws WSSecurityException
+   public DecryptionOperation(SecurityHeader header, SecurityStore store, List<String> allowedEncAlgorithms) throws WSSecurityException
    {
       this.header = header;
       this.store = store;
+      this.allowedEncAlgorithms = allowedEncAlgorithms;
    }
 
    private boolean isContent(Element element)
@@ -99,6 +104,15 @@ public class DecryptionOperation implements DecodingOperation
       }
 
       String alg = getEncryptionAlgorithm(element);
+      if (allowedEncAlgorithms != null && !allowedEncAlgorithms.isEmpty()) {
+         boolean found = false;
+         for (Iterator<String> it = allowedEncAlgorithms.iterator(); it.hasNext() && !found; ) {
+            found = alg.equals(EncryptionAlgorithms.getAlgorithm(it.next()));
+         }
+         if (!found) {
+            throw new WSSecurityException("Unexpected encryption algorithm in received message: " + alg);
+         }
+      }
       try
       {
          XMLCipher cipher = XMLCipher.getInstance(alg);
