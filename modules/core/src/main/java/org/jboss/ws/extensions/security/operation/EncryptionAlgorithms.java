@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.apache.xml.security.encryption.XMLCipher;
 
-final class EncryptionAlgorithms
+public final class EncryptionAlgorithms
 {
    /** --- Keep private for security reasons --- **/
    private static class Algorithm
@@ -47,7 +47,7 @@ final class EncryptionAlgorithms
    private static Map<String, String> algorithmsID;
    /** ----------------------------------------- **/
 
-   static final String DEFAULT_ALGORITHM = "aes-128";
+   public static final String DEFAULT_ALGORITHM = "aes-128";
 
    static
    {
@@ -69,26 +69,26 @@ final class EncryptionAlgorithms
       algorithmsID = Collections.unmodifiableMap(algorithmsID);
    }
    
-   static boolean hasAlgorithm(String id) {
+   public static boolean hasAlgorithm(String id) {
       return algorithms.containsKey(id);
    }
    
-   static String getAlgorithm(String id) {
+   public static String getAlgorithm(String id) {
       Algorithm alg = algorithms.get(id);
       return alg == null ? null : alg.xmlName;
    }
    
-   static String getAlgorithmJceName(String id) {
+   public static String getAlgorithmJceName(String id) {
       Algorithm alg = algorithms.get(id);
       return alg == null ? null : alg.jceName;
    }
    
-   static int getAlgorithmSize(String id) {
+   public static int getAlgorithmSize(String id) {
       Algorithm alg = algorithms.get(id);
       return alg == null ? null : alg.size;
    }
    
-   static String getAlgorithmID(String xmlName) {
+   public static String getAlgorithmID(String xmlName) {
       return algorithmsID.get(xmlName);
    }
 }

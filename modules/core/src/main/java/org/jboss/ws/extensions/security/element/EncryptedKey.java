@@ -37,6 +37,7 @@ import org.jboss.ws.extensions.security.Util;
 import org.jboss.ws.extensions.security.exception.FailedCheckException;
 import org.jboss.ws.extensions.security.exception.InvalidSecurityHeaderException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
+import org.jboss.ws.extensions.security.operation.EncryptionAlgorithms;
 import org.jboss.ws.extensions.security.operation.EncryptionOperation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -88,7 +89,7 @@ public class EncryptedKey implements SecurityProcess
       this.tokenRefType = tokenRefType;
    }
 
-   public EncryptedKey(Element element, KeyResolver resolver, List<String> allowedAlgorithms) throws WSSecurityException
+   public EncryptedKey(Element element, KeyResolver resolver, List<String> allowedKeyWrapAlgorithms, List<String> allowedEncAlgorithms) throws WSSecurityException
    {
       org.apache.xml.security.encryption.EncryptedKey key;
       XMLCipher cipher;
@@ -116,9 +117,9 @@ public class EncryptedKey implements SecurityProcess
       if (!supportedKeyWrapAlg) {
          throw new WSSecurityException("Unsupported key wrap algorithm in received message: " + kwa);
       }
-      if (allowedAlgorithms != null && !allowedAlgorithms.isEmpty()) {
+      if (allowedKeyWrapAlgorithms != null && !allowedKeyWrapAlgorithms.isEmpty()) {
          boolean found = false;
-         for (Iterator<String> it = allowedAlgorithms.iterator(); it.hasNext() && !found; ) {
+         for (Iterator<String> it = allowedKeyWrapAlgorithms.iterator(); it.hasNext() && !found; ) {
             found = kwa.equals(keyWrapAlgorithms.get(it.next()));
          }
          if (!found) {
@@ -145,6 +146,15 @@ public class EncryptedKey implements SecurityProcess
       String alg = getKeyAlgorithm(element);
       if (alg == null)
          throw new WSSecurityException("Could not determine encrypted key algorithm!");
+      if (allowedEncAlgorithms != null && !allowedEncAlgorithms.isEmpty()) {
+         boolean found = false;
+         for (Iterator<String> it = allowedEncAlgorithms.iterator(); it.hasNext() && !found; ) {
+            found = alg.equals(EncryptionAlgorithms.getAlgorithm(it.next()));
+         }
+         if (!found) {
+            throw new WSSecurityException("Unexpected encryption algorithm in received message: " + alg);
+         }
+      }
 
       try
       {

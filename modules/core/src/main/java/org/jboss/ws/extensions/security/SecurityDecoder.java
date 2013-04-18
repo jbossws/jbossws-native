@@ -202,7 +202,7 @@ public class SecurityDecoder
    public void decode(Document message, Element headerElement) throws WSSecurityException
    {
       this.headerElement = headerElement;
-      this.header = new SecurityHeader(this.headerElement, store, allowedKeyWrapAlgorithms);
+      this.header = new SecurityHeader(this.headerElement, store, allowedKeyWrapAlgorithms, allowedEncAlgorithms);
       this.message = message;
 
       decode();
