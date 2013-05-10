@@ -32,8 +32,10 @@ import org.apache.xml.security.keys.KeyInfo;
 import org.jboss.ws.extensions.security.Constants;
 import org.jboss.ws.extensions.security.KeyResolver;
 import org.jboss.ws.extensions.security.Util;
+import org.jboss.ws.extensions.security.exception.FailedCheckException;
 import org.jboss.ws.extensions.security.exception.InvalidSecurityHeaderException;
 import org.jboss.ws.extensions.security.exception.WSSecurityException;
+import org.jboss.ws.extensions.security.operation.EncryptionOperation;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -128,7 +130,16 @@ public class EncryptedKey implements SecurityProcess
       }
       catch (XMLSecurityException e)
       {
-         throw new WSSecurityException("Could not parse encrypted key: " + e.getMessage(), e);
+         try
+         {
+            this.secretKey = EncryptionOperation.generateSecretKey(alg);
+         }
+         catch (Exception ex)
+         {
+            WSSecurityException exception = new FailedCheckException(e);
+            exception.setInternal(true);
+            throw exception;
+         }
       }
 
       this.document = element.getOwnerDocument();
