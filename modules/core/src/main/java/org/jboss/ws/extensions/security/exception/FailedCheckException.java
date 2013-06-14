@@ -32,7 +32,7 @@ public class FailedCheckException extends WSSecurityException
 {
    public static final QName faultCode = new QName(Constants.WSSE_NS, "FailedCheck", Constants.WSSE_PREFIX);
 
-   public static final String faultString = "The signature or decryption was invalid.";
+   public static final String faultString = "The signature or decryption was invlaid.";
 
    public FailedCheckException()
    {

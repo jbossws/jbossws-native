@@ -75,7 +75,6 @@ public class EncryptionOperation implements EncodingOperation
    }
 
    private static HashMap<String, Algorithm> algorithms;
-   private static HashMap<String, String> algorithmsID;
 
    private static final String DEFAULT_ALGORITHM = "aes-128";
 
@@ -89,12 +88,6 @@ public class EncryptionOperation implements EncodingOperation
       algorithms.put("aes-192-gcm", new Algorithm("AES", XMLCipher.AES_192_GCM, 192));
       algorithms.put("aes-256-gcm", new Algorithm("AES", XMLCipher.AES_256_GCM, 256));
       algorithms.put("tripledes", new Algorithm("TripleDes", XMLCipher.TRIPLEDES, 168));
-      
-      algorithmsID = new HashMap<String, String>(4);
-      algorithmsID.put(XMLCipher.AES_128, "aes-128");
-      algorithmsID.put(XMLCipher.AES_192, "aes-192");
-      algorithmsID.put(XMLCipher.AES_256, "aes-256");
-      algorithmsID.put(XMLCipher.TRIPLEDES, "tripledes");
    }
 
    public EncryptionOperation(List<Target> targets, String alias, String algorithm, String wrap, String tokenRefType, String securityDomainAliasLabel)
@@ -137,7 +130,7 @@ public class EncryptionOperation implements EncodingOperation
       }
    }
 
-   private static SecretKey getSecretKey(String algorithm) throws WSSecurityException
+   public SecretKey getSecretKey(String algorithm) throws WSSecurityException
    {
       Algorithm alg = algorithms.get(algorithm);
 
@@ -151,11 +144,6 @@ public class EncryptionOperation implements EncodingOperation
       {
          throw new WSSecurityException(e.getMessage());
       }
-   }
-   
-   public static SecretKey generateSecretKey(String alg) throws WSSecurityException
-   {
-      return getSecretKey(algorithmsID.get(alg));
    }
    
    public void process(Document message, SecurityHeader header, SecurityStore store) throws WSSecurityException

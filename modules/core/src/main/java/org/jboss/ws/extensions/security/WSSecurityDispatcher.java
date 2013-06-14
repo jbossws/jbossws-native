@@ -76,8 +76,6 @@ public class WSSecurityDispatcher implements WSSecurityAPI
 {
    // provide logging
    private static Logger log = Logger.getLogger(WSSecurityDispatcher.class);
-   
-   private static boolean VERBOSE_EXCEPTION_REPORTING = Boolean.getBoolean("org.jboss.ws.native.security.verbose_exception_reporting");
 
    public void decodeMessage(WSSecurityConfiguration configuration, SOAPMessage message, Config operationConfig) throws SOAPException
    {
@@ -90,7 +88,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
       if (secHeaderElement == null)
       {
          if (hasRequirements(config, fault))
-            throw convertToFault(new InvalidSecurityHeaderException("This service requires <wsse:Security>, which is missing."), true);
+            throw convertToFault(new InvalidSecurityHeaderException("This service requires <wsse:Security>, which is missing."));
       }
 
       try
@@ -265,17 +263,7 @@ public class WSSecurityDispatcher implements WSSecurityAPI
 
    private CommonSOAPFaultException convertToFault(WSSecurityException e)
    {
-      return convertToFault(e, VERBOSE_EXCEPTION_REPORTING);
-   }
-   
-   private CommonSOAPFaultException convertToFault(WSSecurityException e, boolean verbose)
-   {
-      if (verbose) {
-         return new CommonSOAPFaultException(e.getFaultCode(), e.getFaultString());
-      } else {
-         QName faultCode = new QName(Constants.JBOSS_WSSE_NS, "GenericError", Constants.JBOSS_WSSE_PREFIX);
-         return new CommonSOAPFaultException(faultCode, "A WS-Security error occurred.");
-      }
+      return new CommonSOAPFaultException(e.getFaultCode(), e.getFaultString());
    }
 
    private List<RequireOperation> buildRequireOperations(Config operationConfig, boolean fault)

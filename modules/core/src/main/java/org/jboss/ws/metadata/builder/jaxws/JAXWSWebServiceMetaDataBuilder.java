@@ -459,18 +459,13 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       serviceMetaData.setWsdlLocation(wsdlFile.toURL());
    }
 
-  
    private File computeTempWsdlFile(ServiceMetaData serviceMetaData, File dir, String wsdlName) throws IOException
    {
       File wsdlFile = null;
       try
       {
-         //JBPAPP-10625 - Use both namespaceURI and deploymentName to create a unique file name for each endpoint.
-         String namespaceURI = serviceMetaData.getServiceName().getNamespaceURI();
-         String deploymentName = serviceMetaData.getUnifiedMetaData().getDeploymentName();
-         byte[] uniqueName = (namespaceURI+deploymentName).getBytes("UTF-8");
-                  
-         String deploymentNameHash = toHexString(MessageDigest.getInstance("MD5").digest(uniqueName));
+         byte[] deploymentName = serviceMetaData.getUnifiedMetaData().getDeploymentName().getBytes("UTF-8");
+         String deploymentNameHash = toHexString(MessageDigest.getInstance("MD5").digest(deploymentName));
          wsdlFile = new File(dir + File.separator + wsdlName + "_" + deploymentNameHash + ".wsdl");
       }
       catch(NoSuchAlgorithmException ex)

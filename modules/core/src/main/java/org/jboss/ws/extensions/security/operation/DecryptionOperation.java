@@ -107,7 +107,7 @@ public class DecryptionOperation implements DecodingOperation
       }
       catch (XMLEncryptionException e)
       {
-         throw new FailedCheckException(e);
+         throw new FailedCheckException("Decryption was invalid.");
       }
       catch (Exception e)
       {

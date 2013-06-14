@@ -33,6 +33,7 @@ import javax.xml.ws.soap.SOAPFaultException;
 import junit.framework.Test;
 
 import org.jboss.ws.core.StubExt;
+import org.jboss.ws.extensions.security.exception.FailedAuthenticationException;
 import org.jboss.wsf.test.JBossWSTest;
 import org.jboss.wsf.test.JBossWSTestSetup;
 
@@ -49,7 +50,9 @@ public class JBWS1999TestCase extends JBossWSTest
 
    private final String TARGET_ENDPOINT_ADDRESS = "http://" + getServerHost() + ":8080/jaxws-jbws1999";
 
-   private static final String FAULT_CODE = "jboss-wsse:GenericError";
+   private static final String FAULT_CODE = "wsse:FailedAuthentication";
+
+   private static final String FAULT_STRING = FailedAuthenticationException.faultString;
 
    public static Test suite() throws Exception
    {
@@ -108,6 +111,8 @@ public class JBWS1999TestCase extends JBossWSTest
          SOAPFault fault = sfe.getFault();
          String faultCode = fault.getFaultCode();
          assertEquals("Fault Code", FAULT_CODE, faultCode);
+         String faultString = fault.getFaultString();
+         assertEquals("Fault String", FAULT_STRING, faultString);
       }
 
    }
@@ -144,6 +149,8 @@ public class JBWS1999TestCase extends JBossWSTest
          SOAPFault fault = sfe.getFault();
          String faultCode = fault.getFaultCode();
          assertEquals("Fault Code", FAULT_CODE, faultCode);
+         String faultString = fault.getFaultString();
+         assertEquals("Fault Message", FAULT_STRING, faultString);
       }
    }
 
@@ -166,6 +173,8 @@ public class JBWS1999TestCase extends JBossWSTest
          SOAPFault fault = sfe.getFault();
          String faultCode = fault.getFaultCode();
          assertEquals("Fault Code", FAULT_CODE, faultCode);
+         String faultString = fault.getFaultString();
+         assertEquals("Fault Message", FAULT_STRING, faultString);
       }
    }
 
