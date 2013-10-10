@@ -26,6 +26,7 @@ import java.util.Iterator;
 import org.jboss.ws.NativeLoggers;
 import org.jboss.ws.metadata.umdm.ServerEndpointMetaData;
 import org.jboss.wsf.spi.deployment.Endpoint;
+import org.jboss.wsf.spi.deployment.EndpointState;
 import org.jboss.wsf.spi.management.EndpointResolver;
 
 /**
@@ -55,16 +56,19 @@ public class PortComponentResolver implements EndpointResolver
       while(endpoints.hasNext())
       {
          Endpoint auxEndpoint = endpoints.next();
-         ServerEndpointMetaData sepMetaData = auxEndpoint.getAttachment(ServerEndpointMetaData.class);
-         if (pcName.equals(sepMetaData.getPortComponentName()))
+         if (EndpointState.STARTED.equals(auxEndpoint.getState()))
          {
-            if (endpoint != null)
+            ServerEndpointMetaData sepMetaData = auxEndpoint.getAttachment(ServerEndpointMetaData.class);
+            if (pcName.equals(sepMetaData.getPortComponentName()))
             {
-               NativeLoggers.ROOT_LOGGER.multipleServiceEndpointFoundFor(pcLink);
-               endpoint = null;
-               break;
+               if (endpoint != null)
+               {
+                  NativeLoggers.ROOT_LOGGER.multipleServiceEndpointFoundFor(pcLink);
+                  endpoint = null;
+                  break;
+               }
+               endpoint = auxEndpoint;
             }
-            endpoint = auxEndpoint;
          }
 
       }
