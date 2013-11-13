@@ -8,7 +8,7 @@
   <parent>
     <groupId>org.jboss.ws.native</groupId>
     <artifactId>jbossws-native</artifactId>
-    <version>3.1.2.SP15</version>
+    <version>3.1.2.SP15-patch-01</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
@@ -50,8 +50,7 @@
   <!-- Build -->
   <build>
     <plugins>
-      <plugin>
-         <!-- PRE: scm is correctly configured in parent pom -->
+      <!--<plugin>
          <groupId>org.codehaus.mojo</groupId>
          <artifactId>buildnumber-maven-plugin</artifactId>
          <executions>
@@ -69,7 +68,7 @@
            </items>
            <doUpdate>false</doUpdate>
          </configuration>
-      </plugin>
+      </plugin>-->
       <plugin>
          <artifactId>maven-war-plugin</artifactId>
          <configuration>
