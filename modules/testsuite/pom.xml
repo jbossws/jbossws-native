@@ -318,27 +318,89 @@
           <groupId>org.jboss.jbossas</groupId>
           <artifactId>jboss-as-webservices</artifactId>
           <version>${jboss.version}</version>
+          <exclusions>
+            <exclusion>
+              <groupId>sun-jaxws</groupId>
+              <artifactId>jaxws-api</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>sun-jaxws</groupId>
+              <artifactId>jsr181-api</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>quartz</groupId>
+              <artifactId>quartz</artifactId>
+            </exclusion>
+          </exclusions>
         </dependency>
         <!-- END -->
         <dependency>
           <groupId>org.hibernate</groupId>
           <artifactId>hibernate</artifactId>
           <version>${hibernate.version}</version>
+          <exclusions>
+            <exclusion>
+              <groupId>javax.transaction</groupId>
+              <artifactId>jta</artifactId>
+            </exclusion>
+          </exclusions>
         </dependency>
         <dependency>
           <groupId>org.jboss.jbossas</groupId>
           <artifactId>jboss-as-ejb3</artifactId>
           <version>${jboss.version}</version>
+          <exclusions>
+            <exclusion>
+              <groupId>org.jboss.jbossas</groupId>
+              <artifactId>jboss-as-server</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>sun-jaxws</groupId>
+              <artifactId>jaxws-api</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>sun-jaxws</groupId>
+              <artifactId>jsr181-api</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>javax.security</groupId>
+              <artifactId>jacc</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>javax.security</groupId>
+              <artifactId>jaas</artifactId>
+            </exclusion>
+            <exclusion>
+              <groupId>quartz</groupId>
+              <artifactId>quartz</artifactId>
+            </exclusion>
+          </exclusions>
         </dependency>
         <dependency>
           <groupId>org.jboss.jbossas</groupId>
           <artifactId>jboss-as-security</artifactId>
           <version>${jboss.version}</version>
+          <exclusions>
+            <exclusion>
+              <groupId>javax.security</groupId>
+              <artifactId>jaas</artifactId>
+            </exclusion>
+          </exclusions>
         </dependency>
         <dependency>
           <groupId>org.hornetq</groupId>
           <artifactId>hornetq-jms-client</artifactId>
           <version>${hornetq.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.naming</groupId>
+          <artifactId>jnp-client</artifactId>
+          <version>5.0.3.GA_CP02</version>
+        </dependency>
+        <dependency>
+          <groupId>org.jboss.naming</groupId>
+          <artifactId>jnpserver</artifactId>
+          <version>5.0.3.GA_CP02</version>
         </dependency>
       </dependencies>
       <build>
