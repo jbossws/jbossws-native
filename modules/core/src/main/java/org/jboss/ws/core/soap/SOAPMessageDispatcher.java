@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2013, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -24,6 +24,7 @@ package org.jboss.ws.core.soap;
 import java.util.Iterator;
 
 import javax.xml.namespace.QName;
+import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.Name;
 import javax.xml.soap.SOAPBody;
 import javax.xml.soap.SOAPBodyElement;
@@ -100,14 +101,39 @@ public class SOAPMessageDispatcher
             if (epMetaData.getStyle() == Style.RPC)
                throw new SOAPException("Empty SOAP body with no child element not supported for RPC");
 
-            // [JBWS-1125] Support empty soap body elements
-            for (OperationMetaData opAux : epMetaData.getOperations())
-            {
-               if (opAux.getParameters().size() == 0)
+            
+            String soapAction = null;
+            final MimeHeaders mh = soapMessage.getMimeHeaders();
+            if (mh != null) {
+               final String[] array = mh.getHeader("SOAPAction");
+               if (array != null && array.length > 0) {
+                  soapAction = array[0];
+                  if (soapAction != null && soapAction.startsWith("\"") && soapAction.endsWith("\"")) {
+                     soapAction = soapAction.substring(1, soapAction.length() - 1);
+                  }
+               }
+            }
+            
+            if (soapAction != null && soapAction.length() > 0) {
+               for (OperationMetaData opAux : epMetaData.getOperations())
                {
-                  log.debug ("Dispatching empty SOAP body");
-                  opMetaData = opAux;
-                  break;
+                  if (soapAction.equals(opAux.getSOAPAction())) {
+                     opMetaData = opAux;
+                     break;
+                  }
+               }
+            }
+
+            if (opMetaData == null) {
+               // [JBWS-1125] Support empty soap body elements
+               for (OperationMetaData opAux : epMetaData.getOperations())
+               {
+                  if (opAux.getParameters().size() == 0)
+                  {
+                     log.debug ("Dispatching empty SOAP body");
+                     opMetaData = opAux;
+                     break;
+                  }
                }
             }
          }
