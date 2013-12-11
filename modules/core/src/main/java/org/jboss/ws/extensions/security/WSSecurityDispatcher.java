@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2013, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -361,9 +361,10 @@ public class WSSecurityDispatcher implements WSSecurityAPI
 
    private Config getActualConfig(WSSecurityConfiguration configuration, Config operationConfig)
    {
-      if (operationConfig == null)
+      if (operationConfig == null && hasSubConfigs(configuration))
       {
-         //if no configuration override, we try getting the right operation config
+         //if no configuration override and the provided configuration has port /
+         //operation configs, we try getting the right operation config
          //according to the invoked operation that can be found using the context
          CommonMessageContext ctx = MessageContextAssociation.peekMessageContext();
          if (ctx != null)
@@ -387,11 +388,25 @@ public class WSSecurityDispatcher implements WSSecurityAPI
                }
             }
             if (opMetaData != null)
+            {
                operationConfig = selectOperationConfig(configuration, port, opMetaData.getQName());
+            }
+            else
+            {
+               //No operation metadata matched, meaning we don't know what operationConfig to use.
+               //This is to be solved either by removing useless operation configs or by requiring
+               //WS-Addressing to be used for telling the server which operation is being invoked
+               throw new WebServiceException("Could not determine the operation configuration to be used for processing the request");
+            }
          }
       }
       //null operationConfig means default behavior
       return operationConfig != null ? operationConfig : configuration.getDefaultConfig();
+   }
+
+   private boolean hasSubConfigs(WSSecurityConfiguration configuration)
+   {
+      return !configuration.getPorts().isEmpty();
    }
 
    private Config selectOperationConfig(WSSecurityConfiguration configuration, QName portName, QName opName)
