@@ -142,6 +142,27 @@
 			</webinf>
 		</war>
 
+        <!-- jaxws-jbpapp10905-->
+		<jar destfile="${tests.output.dir}/test-libs/jaxws-jbpapp10905.jar">
+			<fileset dir="${tests.output.dir}/test-classes">
+				<include name="org/jboss/test/ws/jaxws/jbpapp10905/*.class" />
+				<exclude name="org/jboss/test/ws/jaxws/jbpapp10905/*TestCase.class" />
+			</fileset>
+			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbpapp10905/META-INF">
+				<include name="jboss-wsse-server.xml" />
+			</metainf>
+			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbpapp10905/">
+				<include name="wsse.truststore" />
+				<include name="wsse.keystore" />
+			</metainf>
+		</jar>
+		<jar jarfile="${tests.output.dir}/test-libs/jaxws-jbpapp10905-client.jar">
+			<metainf dir="${tests.output.dir}/test-resources/jaxws/jbpapp10905">
+				<include name="wsse.truststore" />
+				<include name="wsse.keystore" />
+			</metainf>
+		</jar>
+
 		<!-- jaxws-jbpapp2143 -->
 		<war warfile="${tests.output.dir}/test-libs/jaxws-jbpapp2143.war" webxml="${tests.output.dir}/test-resources/jaxws/jbpapp2143/WEB-INF/web.xml">
 			<classes dir="${tests.output.dir}/test-classes">
