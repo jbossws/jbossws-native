@@ -85,6 +85,7 @@ public class SOAPMessageDispatcher
          SOAPBody soapBody = soapMessage.getSOAPBody();
 
          SOAPBodyElement soapBodyElement = null;
+         @SuppressWarnings("rawtypes")
          Iterator bodyChildren = soapBody.getChildElements();
          while (bodyChildren.hasNext() && soapBodyElement == null)
          {
@@ -101,28 +102,7 @@ public class SOAPMessageDispatcher
             if (epMetaData.getStyle() == Style.RPC)
                throw new SOAPException("Empty SOAP body with no child element not supported for RPC");
 
-            
-            String soapAction = null;
-            final MimeHeaders mh = soapMessage.getMimeHeaders();
-            if (mh != null) {
-               final String[] array = mh.getHeader("SOAPAction");
-               if (array != null && array.length > 0) {
-                  soapAction = array[0];
-                  if (soapAction != null && soapAction.startsWith("\"") && soapAction.endsWith("\"")) {
-                     soapAction = soapAction.substring(1, soapAction.length() - 1);
-                  }
-               }
-            }
-            
-            if (soapAction != null && soapAction.length() > 0) {
-               for (OperationMetaData opAux : epMetaData.getOperations())
-               {
-                  if (soapAction.equals(opAux.getSOAPAction())) {
-                     opMetaData = opAux;
-                     break;
-                  }
-               }
-            }
+            opMetaData = matchUsingSOAPAction(epMetaData, soapMessage);
 
             if (opMetaData == null) {
                // [JBWS-1125] Support empty soap body elements
@@ -142,6 +122,10 @@ public class SOAPMessageDispatcher
             Name soapName = soapBodyElement.getElementName();
             QName xmlElementName = new QName(soapName.getURI(), soapName.getLocalName());
             opMetaData = epMetaData.getOperation(xmlElementName);
+            
+            if (opMetaData == null) {
+               opMetaData = matchUsingSOAPAction(epMetaData, soapMessage);
+            }
          }
       }
 
@@ -161,5 +145,29 @@ public class SOAPMessageDispatcher
 
       log.debug("getDispatchDestination: " + (opMetaData != null ? opMetaData.getQName() : null));
       return opMetaData;
+   }
+   
+   private OperationMetaData matchUsingSOAPAction(final EndpointMetaData epMetaData, final SOAPMessage soapMessage) {
+      String soapAction = null;
+      final MimeHeaders mh = soapMessage.getMimeHeaders();
+      if (mh != null) {
+         final String[] array = mh.getHeader("SOAPAction");
+         if (array != null && array.length > 0) {
+            soapAction = array[0];
+            if (soapAction != null && soapAction.startsWith("\"") && soapAction.endsWith("\"")) {
+               soapAction = soapAction.substring(1, soapAction.length() - 1);
+            }
+         }
+      }
+      
+      if (soapAction != null && soapAction.length() > 0) {
+         for (OperationMetaData opAux : epMetaData.getOperations())
+         {
+            if (soapAction.equals(opAux.getSOAPAction())) {
+               return opAux;
+            }
+         }
+      }
+      return null;
    }
 }
