@@ -45,7 +45,7 @@
  <binding name='HelloBinding' type='tns:Hello'>
   <soap:binding style='rpc' transport='http://schemas.xmlsoap.org/soap/http'/>
   <operation name='echoUserType'>
-   <soap:operation soapAction=''/>
+   <soap:operation soapAction='echoUserType'/>
    <input>
     <soap:body namespace='http://org.jboss.test.ws/wsse' use='literal'/>
    </input>
@@ -54,7 +54,7 @@
    </output>
   </operation>
   <operation name='triggerException'>
-   <soap:operation soapAction=''/>
+   <soap:operation soapAction='triggerException'/>
    <input>
     <soap:body namespace='http://org.jboss.test.ws/wsse' use='literal'/>
    </input>
