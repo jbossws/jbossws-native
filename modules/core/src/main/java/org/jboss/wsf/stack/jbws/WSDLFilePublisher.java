@@ -114,22 +114,22 @@ public class WSDLFilePublisher
             WSDLDefinitions wsdlDefinitions = serviceMetaData.getWsdlDefinitions();
             new WSDLWriter(wsdlDefinitions).write(fWriter, Constants.DEFAULT_XML_CHARSET);
 
-            URL wsdlPublishURL = wsdlFile.toURL();
+            URL wsdlPublishURL = wsdlFile.toURI().toURL();
             log.info("WSDL published to: " + wsdlPublishURL);
 
             // udpate the wsdl file location 
-            serviceMetaData.setWsdlLocation(wsdlFile.toURL());
+            serviceMetaData.setWsdlLocation(wsdlPublishURL);
 
             // Process the wsdl imports
             Definition wsdl11Definition = wsdlDefinitions.getWsdlOneOneDefinition();
             if (wsdl11Definition != null)
             {
                List<String> published = new LinkedList<String>();
-               publishWsdlImports(wsdlFile.toURL(), wsdl11Definition, published);
+               publishWsdlImports(wsdlPublishURL, wsdl11Definition, published);
 
                // Publish XMLSchema imports
                Document document = wsdlDefinitions.getWsdlDocument();
-               publishSchemaImports(wsdlFile.toURL(), document.getDocumentElement(), published);
+               publishSchemaImports(wsdlPublishURL, document.getDocumentElement(), published);
             }
             else
             {
@@ -307,7 +307,7 @@ public class WSDLFilePublisher
          else
          {
             if (file.delete() == false)
-               log.warn("Cannot delete published wsdl document: " + file.toURL());
+               log.warn("Cannot delete published wsdl document: " + file.toURI().toURL());
          }
       }
 

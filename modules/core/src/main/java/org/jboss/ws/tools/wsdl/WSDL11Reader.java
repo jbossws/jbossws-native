@@ -564,14 +564,14 @@ public class WSDL11Reader
          tmpFile = SchemaUtils.getSchemaTempFile(targetNS, wsdlContent);
          tempFiles.add(tmpFile);
 
-         publishedLocations.put(wsdlLoc, tmpFile.toURL());
+         publishedLocations.put(wsdlLoc, tmpFile.toURI().toURL());
       }
       else
       {
          tmpFile = SchemaUtils.getSchemaTempFile("no_namespace", wsdlContent);
          tempFiles.add(tmpFile);
 
-         publishedLocations.put(wsdlLoc, tmpFile.toURL());
+         publishedLocations.put(wsdlLoc, tmpFile.toURI().toURL());
       }
 
       // Handle schema includes
@@ -607,7 +607,7 @@ public class WSDL11Reader
 
       if (targetNS != null)
       {
-         schemaLocationsMap.put(targetNS, tmpFile.toURL());
+         schemaLocationsMap.put(targetNS, tmpFile.toURI().toURL());
       }
       else
       {

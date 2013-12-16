@@ -109,7 +109,7 @@ public class WSDLRequestHandler
              || (wsdlPublishLoc != null 
                   && resourceAbsPath.indexOf(new File(new URL(wsdlPublishLoc).getPath()).getCanonicalPath()) >= 0))
          {
-            Element wsdlElement = DOMUtils.parse(impResourceFile.toURL().openStream());
+            Element wsdlElement = DOMUtils.parse(impResourceFile.toURI().toURL().openStream());
             wsdlDoc = wsdlElement.getOwnerDocument();
          }
          else

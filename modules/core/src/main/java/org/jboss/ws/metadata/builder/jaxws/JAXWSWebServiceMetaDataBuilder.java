@@ -456,7 +456,7 @@ public class JAXWSWebServiceMetaDataBuilder extends JAXWSServerMetaDataBuilder
       });
       writer.close();
 
-      serviceMetaData.setWsdlLocation(wsdlFile.toURL());
+      serviceMetaData.setWsdlLocation(wsdlFile.toURI().toURL());
    }
 
   
