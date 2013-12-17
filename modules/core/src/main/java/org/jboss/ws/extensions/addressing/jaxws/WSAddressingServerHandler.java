@@ -201,7 +201,12 @@ public class WSAddressingServerHandler extends GenericSOAPHandler
 			// supply the response action
 
 			OperationMetaData opMetaData = ((CommonMessageContext)msgContext).getOperationMetaData();
-
+         if (opMetaData == null)
+         {
+            // Apparently the operation couldn't be determined
+            return;
+         } 
+			
 			if (!isFault && !opMetaData.isOneWay())
 			{
 
