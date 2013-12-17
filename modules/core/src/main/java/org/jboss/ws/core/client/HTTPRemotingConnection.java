@@ -40,6 +40,7 @@ import javax.xml.ws.addressing.EndpointReference;
 import org.jboss.logging.Logger;
 import org.jboss.remoting.Client;
 import org.jboss.remoting.InvokerLocator;
+import org.jboss.remoting.Remoting;
 import org.jboss.remoting.Version;
 import org.jboss.remoting.marshal.MarshalFactory;
 import org.jboss.remoting.marshal.Marshaller;
@@ -50,6 +51,7 @@ import org.jboss.ws.core.MessageAbstraction;
 import org.jboss.ws.core.MessageTrace;
 import org.jboss.ws.core.StubExt;
 import org.jboss.ws.core.WSTimeoutException;
+import org.jboss.ws.core.client.socket.HttpsNoDelaySocketFactory;
 import org.jboss.ws.core.soap.MessageContextAssociation;
 import org.jboss.ws.feature.FastInfosetFeature;
 import org.jboss.ws.metadata.config.CommonConfig;
@@ -404,6 +406,12 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
             {
                String remotingKey = configMap.get(key);
                clientConfig.put(remotingKey, val);
+            }
+
+            // Check if tcpNoDelay is enabled
+            if (key.equals(StubExt.PROPERTY_NO_DELAY_SOCKET_ENABLED)) {
+               boolean noDelayEnabled = Boolean.valueOf(val.toString());
+               if (noDelayEnabled) metadata.put(Remoting.CUSTOM_SOCKET_FACTORY, HttpsNoDelaySocketFactory.class);
             }
          }
       }

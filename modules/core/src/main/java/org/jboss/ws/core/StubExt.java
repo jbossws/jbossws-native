@@ -73,6 +73,8 @@ public interface StubExt extends ConfigProvider, EndpointMetadataProvider
    static final String PROPERTY_MTOM_ENABLED= "org.jboss.ws.mtom.enabled";
    /** HTTP chunk size */
    static final String PROPERTY_CHUNKED_ENCODING_SIZE = "http://org.jboss.ws/http#chunksize";
+   /** The NoDelaySocketFactory */
+   static final String PROPERTY_NO_DELAY_SOCKET_ENABLED = "org.jboss.ws.socket.no.delay.socket.enabled";
 
    
    /**
