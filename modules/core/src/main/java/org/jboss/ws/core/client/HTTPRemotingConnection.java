@@ -188,7 +188,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
       // setup remoting client            
       Map<String, Object> metadata = createRemotingMetaData(reqMessage, callProps);
       Marshaller marshaller = getMarshaller();
-      UnMarshaller unmarshaller = getUnmarshaller();
+      UnMarshaller unmarshaller = getUnmarshaller(oneway);
       InvokerLocator locator = null;
       try
       {

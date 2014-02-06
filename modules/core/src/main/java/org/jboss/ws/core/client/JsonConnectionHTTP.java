@@ -41,7 +41,7 @@ import org.jboss.ws.core.soap.attachment.MimeConstants;
  */
 public class JsonConnectionHTTP extends HTTPRemotingConnection
 {
-   public UnMarshaller getUnmarshaller()
+   public UnMarshaller getUnmarshaller(boolean oneway)
    {
       return new JsonMessageUnMarshaller();
    }

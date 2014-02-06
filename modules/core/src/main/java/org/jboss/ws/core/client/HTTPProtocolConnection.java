@@ -31,7 +31,7 @@ import org.jboss.ws.core.jaxws.binding.HTTPMessageUnMarshaller;
  */
 public class HTTPProtocolConnection extends HTTPRemotingConnection
 {
-   public UnMarshaller getUnmarshaller()
+   public UnMarshaller getUnmarshaller(boolean oneway)
    {
       return new HTTPMessageUnMarshaller();
    }

@@ -38,7 +38,7 @@ public interface RemoteConnection
 {
    Marshaller getMarshaller();
 
-   UnMarshaller getUnmarshaller();
+   UnMarshaller getUnmarshaller(boolean oneway);
 
    MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway) throws IOException;
 }

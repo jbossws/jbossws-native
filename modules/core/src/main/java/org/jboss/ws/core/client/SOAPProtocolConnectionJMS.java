@@ -44,6 +44,7 @@ import javax.xml.ws.addressing.EndpointReference;
 import org.jboss.remoting.marshal.Marshaller;
 import org.jboss.remoting.marshal.UnMarshaller;
 import org.jboss.ws.core.MessageAbstraction;
+import org.jboss.ws.core.soap.OneWayUnMarshallerHTTP;
 import org.jboss.ws.core.soap.SOAPMessageMarshaller;
 import org.jboss.ws.core.soap.SOAPMessageUnMarshaller;
 
@@ -57,9 +58,12 @@ public class SOAPProtocolConnectionJMS implements RemoteConnection
 {
    private boolean waitForResponse;
 
-   public UnMarshaller getUnmarshaller()
+   public UnMarshaller getUnmarshaller(boolean oneway)
    {
-      return new SOAPMessageUnMarshaller();
+      if(oneway)
+         return new OneWayUnMarshallerHTTP();
+      else
+         return new SOAPMessageUnMarshaller();
    }
 
    public Marshaller getMarshaller()
@@ -143,7 +147,7 @@ public class SOAPProtocolConnectionJMS implements RemoteConnection
             }
 
             ByteArrayInputStream bais = new ByteArrayInputStream(responseListener.resMessage.getBytes());
-            resMessage = (MessageAbstraction)getUnmarshaller().read(bais, null);
+            resMessage = (MessageAbstraction)getUnmarshaller(oneway).read(bais, null);
          }
 
          con.stop();
