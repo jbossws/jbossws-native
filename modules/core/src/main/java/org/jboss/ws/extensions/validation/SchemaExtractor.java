@@ -26,6 +26,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.File;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.util.ArrayList;
@@ -75,11 +76,11 @@ public class SchemaExtractor
    }
    public Map<String, byte[]> getSchemas(URL wsdlURL) throws IOException
    {
-	   Map<String, byte[]> streams = new HashMap<String, byte[]>();
+      Map<String, byte[]> streams = new HashMap<String, byte[]>();
       //Get the path to the WSDL
-      Pattern p = Pattern.compile("[a-zA-Z]+\\.[a-zA-Z]+$");
-      Matcher m = p.matcher(wsdlURL.getFile());
-      path = m.replaceFirst("");
+      String wsdlFile = wsdlURL.getFile();
+      int lastSlash = wsdlFile.lastIndexOf(File.separator);
+      path = wsdlFile.substring(0, lastSlash+1);
 
       // parse the wsdl
       Element root = DOMUtils.parse(wsdlURL.openStream());
