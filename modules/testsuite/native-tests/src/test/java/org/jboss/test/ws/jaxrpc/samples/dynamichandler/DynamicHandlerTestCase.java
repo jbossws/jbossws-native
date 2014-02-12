@@ -66,14 +66,12 @@ public class DynamicHandlerTestCase extends JBossWSTest
       }
    }
 
-   public void testStaticHandlers() throws Exception
-   {
-      String res = endpoint.testHandlers("InitalMessage");
-      assertEquals("InitalMessage|ClientRequest|ServerRequest|ServerResponse|ClientResponse", res);
-   }
-
    public void testRemoveClientHandlers() throws Exception
    {
+      //ensure setup is proper.
+      String res = endpoint.testHandlers("InitalMessage");
+      assertEquals("InitalMessage|ClientRequest|ServerRequest|ServerResponse|ClientResponse", res);
+      
       HandlerRegistry registry = service.getDynamicHandlerRegistry();
       QName portName = new QName(TARGET_NAMESPACE, "HandlerTestServicePort");
 
@@ -87,7 +85,8 @@ public class DynamicHandlerTestCase extends JBossWSTest
       }
       registry.setHandlerChain(portName, infos);
 
-      String res = endpoint.testHandlers("InitalMessage");
+      res = endpoint.testHandlers("InitalMessage");
       assertEquals("InitalMessage|ServerRequest|ServerResponse", res);
    }
+   
 }
