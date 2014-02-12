@@ -40,11 +40,13 @@ import org.jboss.ws.core.soap.attachment.MimeConstants;
  */
 public class FastInfosetConnectionHTTP extends SOAPProtocolConnectionHTTP
 {
-   public UnMarshaller getUnmarshaller()
+   @Override
+   public UnMarshaller getUnmarshaller(boolean oneway)
    {
       return new FastInfosetUnMarshaller();
    }
 
+   @Override
    public Marshaller getMarshaller()
    {
       return new FastInfosetMarshaller();

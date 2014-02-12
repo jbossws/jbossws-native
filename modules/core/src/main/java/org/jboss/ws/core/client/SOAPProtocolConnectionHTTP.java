@@ -46,6 +46,7 @@ import org.jboss.ws.extensions.xop.XOPContext;
  */
 public class SOAPProtocolConnectionHTTP extends HTTPRemotingConnection
 {
+   @Override
    public UnMarshaller getUnmarshaller(boolean oneway)
    {
       if(oneway)
@@ -54,11 +55,13 @@ public class SOAPProtocolConnectionHTTP extends HTTPRemotingConnection
          return new SOAPMessageUnMarshallerHTTP();
    }
 
+   @Override
    public Marshaller getMarshaller()
    {
       return new SOAPMessageMarshaller();
    }
 
+   @Override
    public MessageAbstraction invoke(MessageAbstraction reqMessage, Object endpoint, boolean oneway) throws IOException
    {
       try
@@ -82,6 +85,7 @@ public class SOAPProtocolConnectionHTTP extends HTTPRemotingConnection
       }
    }
 
+   @Override
    protected void populateHeaders(MessageAbstraction reqMessage, Map<String, Object> metadata)
    {
       super.populateHeaders(reqMessage, metadata);

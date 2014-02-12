@@ -41,11 +41,13 @@ import org.jboss.ws.core.soap.attachment.MimeConstants;
  */
 public class JsonConnectionHTTP extends HTTPRemotingConnection
 {
+   @Override
    public UnMarshaller getUnmarshaller(boolean oneway)
    {
       return new JsonMessageUnMarshaller();
    }
 
+   @Override
    public Marshaller getMarshaller()
    {
       return new JsonMessageMarshaller();
