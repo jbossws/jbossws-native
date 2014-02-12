@@ -41,7 +41,7 @@
               <include>jboss.jaxbintros:jboss-jaxb-intros:jar</include>
               <include>org.jboss.ws:jbossws-common:jar</include>
               <include>org.jboss.ws:jbossws-spi:jar</include>
-              <include>javax.xml:jaxrpc-api:jar</include>
+              <include>org.jboss.spec.javax.xml.rpc:jboss-jaxrpc-api_1.1_spec</include>
               <include>javax.xml.ws:jaxws-api:jar</include>
               <include>javax.jws:jsr181-api</include>
               <include>org.jboss.ws.native:jbossws-native-factories:jar</include>

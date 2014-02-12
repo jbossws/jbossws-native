@@ -109,7 +109,7 @@
 	<pathelement location="${jboss.client}/jaxb-api.jar"/>
         <pathelement location="${jboss.client}/jbossws-common.jar"/>
         <pathelement location="${jboss.client}/jbossws-spi.jar"/>
-        <pathelement location="${jboss.client}/jaxrpc-api.jar"/>
+        <pathelement location="${jboss.client}/jboss-jaxrpc-api_1.1_spec.jar"/>
         <pathelement location="${jboss.client}/saaj-api.jar"/>
         <pathelement location="${jboss.client}/jbossws-native-factories.jar"/>
         <pathelement location="${jboss.client}/jbossws-native-core.jar"/>

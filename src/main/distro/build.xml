@@ -59,7 +59,7 @@
 
     <path id="ws.stack.classpath">
       <!-- Move the native API to the front of the classpath -->
-      <pathelement location="${thirdparty.dir}/jaxrpc-api.jar"/>
+      <pathelement location="${thirdparty.dir}/jboss-jaxrpc-api_1.1_spec.jar"/>
       <pathelement location="${thirdparty.dir}/saaj-api.jar"/>
       <fileset dir="${thirdparty.dir}"/>
     </path>
