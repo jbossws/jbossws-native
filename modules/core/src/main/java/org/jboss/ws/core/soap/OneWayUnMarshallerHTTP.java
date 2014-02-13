@@ -1,6 +1,6 @@
 /*
  * JBoss, Home of Professional Open Source.
- * Copyright 2006, Red Hat Middleware LLC, and individual contributors
+ * Copyright 2014, Red Hat Middleware LLC, and individual contributors
  * as indicated by the @author tags. See the copyright.txt file in the
  * distribution for a full listing of individual contributors.
  *
@@ -19,23 +19,25 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.jboss.ws.core.client;
+package org.jboss.ws.core.soap;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
 
-import javax.xml.soap.SOAPMessage;
+import org.jboss.ws.WSException;
+import org.jboss.ws.core.client.UnMarshaller;
+import org.jboss.ws.core.client.transport.NettyClient;
 
-/**
- * A remote connection 
- *
- * @author Thomas.Diesler@jboss.org
- * @since 02-Apr-2007
- */
-public interface RemoteConnection
+public class OneWayUnMarshallerHTTP implements UnMarshaller
 {
-   Marshaller getMarshaller();
-
-   UnMarshaller getUnmarshaller(boolean oneway);
-   
-   SOAPMessage invoke(SOAPMessage reqMessage, Object endpoint, boolean oneway) throws IOException;
+   public Object read(InputStream inputStream, Map<String, Object> metadata, Map<String, Object> headers) throws IOException
+   {
+      Integer resCode = (Integer)metadata.get(NettyClient.RESPONSE_CODE);
+      if(!resCode.equals(200))
+      {
+         throw new WSException("One-way operation returned invalid HTTP response: " + resCode);
+      }
+      return null;
+   }
 }

@@ -30,6 +30,7 @@ import javax.xml.soap.SOAPMessage;
 
 import org.jboss.ws.core.soap.SOAPMessageMarshaller;
 import org.jboss.ws.core.soap.SOAPMessageUnMarshallerHTTP;
+import org.jboss.ws.core.soap.OneWayUnMarshallerHTTP;
 
 /**
  * SOAPConnection implementation
@@ -40,9 +41,12 @@ import org.jboss.ws.core.soap.SOAPMessageUnMarshallerHTTP;
  */
 public class SOAPProtocolConnectionHTTP extends HTTPRemotingConnection
 {
-   public UnMarshaller getUnmarshaller()
+   public UnMarshaller getUnmarshaller(boolean oneway)
    {
-      return new SOAPMessageUnMarshallerHTTP();
+      if(oneway)
+         return new OneWayUnMarshallerHTTP();
+      else
+         return new SOAPMessageUnMarshallerHTTP();
    }
 
    public Marshaller getMarshaller()

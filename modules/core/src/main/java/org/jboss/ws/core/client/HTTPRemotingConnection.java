@@ -112,7 +112,7 @@ public abstract class HTTPRemotingConnection implements RemoteConnection
          callProps.put(StubExt.PROPERTY_CHUNKED_ENCODING_SIZE, 0);
       }
 
-      NettyClient client = new NettyClient(getMarshaller(), getUnmarshaller());
+      NettyClient client = new NettyClient(getMarshaller(), getUnmarshaller(oneway));
       if (chunkSize != null)
       {
          client.setChunkSize(chunkSize);
