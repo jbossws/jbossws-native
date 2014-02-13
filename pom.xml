@@ -63,7 +63,6 @@
     <jbossws.shared.testsuite.version>4.2.0.Beta1</jbossws.shared.testsuite.version>
     <jbossws.jboss720.version>4.3.0-SNAPSHOT</jbossws.jboss720.version>
     <jboss720.version>7.2.0.Final</jboss720.version>
-    <jboss800.version>8.0.0.Alpha1-SNAPSHOT</jboss800.version>
     <javassist.version>3.15.0-GA</javassist.version>
     <ejb.api.version>1.0.1.Final</ejb.api.version>
     <jaxrpc.api.version>1.0.0.Final</jaxrpc.api.version>
@@ -369,18 +368,6 @@
       <properties>
         <jbossws.integration.target>jboss720</jbossws.integration.target>
         <jboss.home>${jboss720.home}</jboss.home>
-      </properties>
-    </profile>
-
-    <!--
-    Name:  jboss800
-    Descr: JBoss-8.0.0 specific options
-    -->
-    <profile>
-      <id>jboss800</id>
-      <properties>
-        <jbossws.integration.target>jboss800</jbossws.integration.target>
-        <jboss.home>${jboss800.home}</jboss.home>
       </properties>
     </profile>
 

@@ -281,37 +281,6 @@
     </profile>
 
     <!--
-    Name:  jboss800
-    Descr: JBoss-8.0.0 specific options
-    -->
-    <profile>
-      <id>jboss800</id>
-      <properties>
-        <jboss.version>${jboss800.version}</jboss.version>
-        <jbossws.integration.target>jboss800</jbossws.integration.target>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>org.jboss.as</groupId>
-          <artifactId>jboss-as-webservices-tests-integration</artifactId>
-          <version>${jboss.version}</version>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <argLine>${surefire.jvm.args} ${surefire.default-mgmt-serurity.args}</argLine>
-              <excludes>
-                 <!-- no excludes ATM -->
-              </excludes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <!--
     Name:  no-jboss-bind-address
     Descr: Set the default jboss.bind.address
 

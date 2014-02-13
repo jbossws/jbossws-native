@@ -34,13 +34,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.jboss.ws.native</groupId>
-      <artifactId>jbossws-native-resources</artifactId>
-      <version>${project.version}</version>
-      <classifier>jboss800</classifier>
-    </dependency>
-
-    <dependency>
       <groupId>org.jboss.ws</groupId>
       <artifactId>jbossws-common-tools</artifactId>
       <scope>provided</scope>

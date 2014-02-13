@@ -34,11 +34,6 @@
       tofile="${dest.dir}/jbossws-jboss720/jbossws.beans/META-INF/stack-specific-deployment-aspects.xml"
     />
 
-    <copy
-      file="${src.dir}/jbossws-native-config-as7.xml"
-      tofile="${dest.dir}/jbossws-jboss800/jbossws.beans/META-INF/stack-specific-deployment-aspects.xml"
-    />
-
   </target>
 
 </project>
