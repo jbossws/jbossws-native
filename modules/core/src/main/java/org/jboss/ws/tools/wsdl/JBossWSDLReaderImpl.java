@@ -68,6 +68,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.jboss.ws.NativeMessages;
 import org.jboss.ws.common.utils.JBossWSEntityResolver;
+import org.jboss.ws.tools.ServerSideDocumentBuilder;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -2142,7 +2143,7 @@ public class JBossWSDLReaderImpl implements WSDLReader
 	private static Document getDocument(InputSource inputSource,
 													String desc) throws WSDLException
 	{
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		DocumentBuilderFactory factory = ServerSideDocumentBuilder.createDocumentBuilderFactory();
 
 		factory.setNamespaceAware(true);
 		factory.setValidating(false);

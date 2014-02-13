@@ -43,6 +43,7 @@ import org.jboss.ws.common.utils.JBossWSEntityResolver;
 import org.jboss.ws.common.utils.ResourceURL;
 import org.jboss.ws.metadata.wsdl.WSDLDefinitions;
 import org.jboss.ws.metadata.wsdl.WSDLException;
+import org.jboss.ws.tools.ServerSideDocumentBuilder;
 import org.jboss.wsf.spi.classloading.ClassLoaderProvider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -168,7 +169,7 @@ public class WSDLDefinitionsFactory
          InputStream inputStream = new ResourceURL(wsdlLocation).openStream();
          try
          {
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilderFactory factory = ServerSideDocumentBuilder.createDocumentBuilderFactory();
 
             factory.setNamespaceAware(true);
             factory.setValidating(false);
