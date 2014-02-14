@@ -838,7 +838,8 @@ public class SOAPElementImpl extends NodeImpl implements SOAPElement, SAAJVisita
 
    public void setIdAttributeNode(Attr idAttr, boolean isId) throws DOMException
    {
-      this.element.setIdAttributeNode(idAttr, isId);
+      Attr attr = element.getAttributeNodeNS(idAttr.getNamespaceURI(), idAttr.getName());
+      this.element.setIdAttributeNode(attr, isId);
    }
 
    public void setIdAttributeNS(String namespaceURI, String localName, boolean isId) throws DOMException
