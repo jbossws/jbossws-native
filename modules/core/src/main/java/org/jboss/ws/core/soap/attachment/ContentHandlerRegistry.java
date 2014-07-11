@@ -58,7 +58,9 @@ public class ContentHandlerRegistry
       addRegistryEntry(text_html.class);
       addRegistryEntry(multipart_mixed.class);
    }
-   
+
+   private static boolean isRegistered = false; // bz-1104273 workaround
+
    private static void addRegistryEntry(Class contentHandler) 
    {
       handlerRegistry.add(contentHandler);
@@ -99,5 +101,11 @@ public class ContentHandlerRegistry
       Iterator i = handlerRegistry.iterator();
       while (i.hasNext())
          registerContentHandler((Class) i.next());
-   }   
+      isRegistered = true;
+   }
+
+   public static boolean isRegistered()
+   {
+      return isRegistered;
+   }
 }

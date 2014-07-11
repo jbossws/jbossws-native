@@ -65,7 +65,9 @@ public class AttachmentPartImpl extends AttachmentPart
    public AttachmentPartImpl()
    {
        // Load JAF content handlers
-       ContentHandlerRegistry.register();
+      if (!ContentHandlerRegistry.isRegistered()) {
+         ContentHandlerRegistry.register();
+      }
    }
 
    public AttachmentPartImpl(DataHandler handler)
